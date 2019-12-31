@@ -1,0 +1,124 @@
+{template $this->mytpl('_header')}
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">
+			{if $data[0]['sign'] == "cord"}
+			我的保洁
+			{else}
+			我的绿化
+			{/if}
+		</div>
+		<div class="fui-header-right"></div>
+	</div>
+	{if $data[0]['sign'] == "cord"}
+	<div class='fui-content navbar' style="margin-left: 20px;"> 
+		{loop $data $k $v}
+				<div class="list_bot">
+					<hr/>
+					<div class="company">
+						<span>物业公司 : </span>
+						<text>{$v['pname']}</text>
+					</div>
+					<hr/>
+					<div class="area" style="margin-top: 20px;">
+						<span>打扫区域 :</span>
+						<text>{$v['area']}</text>
+					</div>
+					<hr/>
+					<div class="areacont" style="margin-top: 20px;">
+						<span>打扫内容 :</span>
+						<text>{$v['areacont']}</text>
+					</div>
+					<hr/>
+					<div class="cleantion" style="margin-top: 20px;">
+						<span>打扫情况 :</span>
+						<text>{$v['cleantion']}</text>
+					</div>
+					<hr/>
+					<div class="note" style="margin-top: 20px;">
+						<span>备注 :</span>
+						<text>{$v['note']}</text>
+					</div>
+					<hr/>
+					<div class="startdate" style="margin-top: 20px;">
+						<span>开始时间 :</span>
+						<text>{$v['startdate']}</text>
+					</div>
+					<hr/>
+					<div class="simdate" style="margin-top: 20px;">
+						<span>结束时间 :</span>
+						<text>{$v['simdate']}</text>
+					</div>
+					<hr/>	
+					<div class="imgClean" style="margin-top: 20px;">
+						{loop $v[img] $n $m}
+						<img src="../attachment/{$m}" style="width: 100px;height: 100px;">
+						{/loop}
+					</div>			
+				</div>
+			{/loop}
+    </div>	
+    {else}
+    <div class='fui-content navbar' style="margin-left: 20px;"> 
+		{loop $data $k $v}
+				<div class="list_bot">
+					<hr/>
+					<div class="company">
+						<span>物业公司 : </span>
+						<text>{$v['pname']}</text>
+					</div>
+					<hr/>
+					<div class="area" style="margin-top: 20px;">
+						<span>区域 :</span>
+						<text>{$v['area']}</text>
+					</div>
+					<hr/>
+					<div class="areacont" style="margin-top: 20px;">
+						<span>植被编号 :</span>
+						<text>{$v['vegeid']}</text>
+					</div>
+					<hr/>
+					<div class="cleantion" style="margin-top: 20px;">
+						<span>植被名称 :</span>
+						<text>{$v['vegename']}</text>
+					</div>
+					<hr/>
+					<div class="cleantion" style="margin-top: 20px;">
+						<span>种类 :</span>
+						<text>{$v['kind']}</text>
+					</div>
+					<hr/>
+					<div class="cleantion" style="margin-top: 20px;">
+						<span>数量 :</span>
+						<text>{$v['num']}</text>
+					</div>
+					<hr/>
+					<div class="note" style="margin-top: 20px;">
+						<span>备注 :</span>
+						<text>{$v['note']}</text>
+					</div>
+					<hr/>
+					<div class="startdate" style="margin-top: 20px;">
+						<span>开始时间 :</span>
+						<text>{$v['startdate']}</text>
+					</div>
+					<hr/>
+					<div class="simdate" style="margin-top: 20px;">
+						<span>结束时间 :</span>
+						<text>{$v['simdate']}</text>
+					</div>
+					<hr/>	
+					<div class="imgClean" style="margin-top: 20px;">
+						{loop $v[img] $n $m}
+						<img src="../attachment/{$m}" style="width: 100px;height: 100px;">
+						{/loop}
+					</div>			
+				</div>
+		{/loop}
+    </div>	
+    {/if}
+</div>
+{template $this->mytpl('_footer')}

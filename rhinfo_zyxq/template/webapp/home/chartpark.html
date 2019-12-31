@@ -1,0 +1,77 @@
+<div class="chart" id="chartPark"></div>
+<script type="text/javascript">
+	var chartPark = echarts.init(document.getElementById('chartPark'));
+	option_park = {
+		tooltip : {
+			trigger: 'item',
+			formatter: "{a} <br/>{b} : {c} ({d}%)"
+		},
+		legend: {
+			orient : 'vertical',
+			x : 'right',
+			data:['楼宇','车位','商铺','储物间'],
+			textStyle:{
+				color:'#fff',
+			}
+		},
+		toolbox: {
+			show : true,
+			feature : {
+				mark : {show: false},
+				dataView : {show: false, readOnly: false},
+				magicType : {
+					show: false, 
+					type: ['pie', 'funnel'],
+					option: {
+						funnel: {
+							x: '25%',
+							width: '50%',
+							funnelAlign: 'center',
+							max: 1548
+						}
+					}
+				},
+				restore : {show: false},
+				saveAsImage : {show: false}
+			}
+		},
+		calculable : true,
+		series : [
+			{
+				name:'房产数量',
+				type:'pie',
+				radius : ['50%', '70%'],
+				itemStyle : {
+					normal : {
+						label : {
+							show : false
+						},
+						labelLine : {
+							show : false
+						}
+					},
+					emphasis : {
+						label : {
+							show : true,
+							position : 'center',
+							textStyle : {
+								fontSize : '30',
+								fontWeight : 'bold'
+							}
+						}
+					}
+				},
+				data:[
+					{value:'{$qty["buildqty"]}', name:'楼宇'},
+					{value:'{$qty["parkingqty"]}', name:'车位'},
+					{value:'{$qty["garageqty"]}', name:'商铺'},
+					{value:'{$qty["elevatorqty"]}', name:'储物间'}
+				]
+			}
+		]
+	};
+	chartPark.setOption(option_park);
+	window.onresize = function() {
+		chartPark.resize();
+	};
+</script>

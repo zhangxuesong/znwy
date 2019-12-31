@@ -1,0 +1,60 @@
+﻿{if $_GPC['category']==1}
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<div class="input-group">
+			<span class="input-group-addon">选项</span>								
+			<input type="text" class="form-control"  value="" name="itemvalue[]" >	
+			<span class="input-group-addon">说明</span>
+			<input type="text" class="form-control"  value="" name="itemdesc[]">
+			<span class="input-group-btn"><button class="btn btn-warning" type="button" onclick="removeitem(this)" ><i class="fa fa-close"></i></button></span>
+		</div>			 
+	</div>
+</div>
+{elseif $_GPC['category']==2}
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<div class="input-group">
+			<span class="input-group-addon">名称</span>								
+			<input type="text" class="form-control"  value="" name="itemtitle[]">						
+			<span class="input-group-addon">表单</span>		
+			<select name="itemtype[]" class="form-control" style="width:150px">
+				<option value="text">字符串(text)</option>
+				<option value="number">数字(number)</option>
+				<option value="textarea">文本(textarea)</option>
+				<option value="radio">单选(radio)</option>
+				<option value="checkbox">多选(checkbox)</option>
+				<option value="select">下拉框(select)</option>								
+				<option value="image">上传图片(image)</option>
+			</select>	
+			<span class="input-group-addon">内容</span>
+			<input type="text" class="form-control"  value="" name="itemvalue[]" style="min-width:380px;">
+			 <div class="input-group-btn">
+				<select class="form-control" name="ischecked[]" style="width:95px">
+					<option value="1" selected>必填</option>	
+					<option value="0" >选填</option>
+				</select>
+			 </div>
+			<span class="input-group-btn"><button class="btn btn-warning" type="button" onclick="removeitem(this)" ><i class="fa fa-close"></i></button></span>
+		</div>	
+		<span class="help-block">单选、多选、下拉框请输入内容，多值请用“ | ”隔开，如：上 | 中 | 下，其它则为空</span>
+	</div>
+</div>
+{elseif $_GPC['category']==3}
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<div class="input-group">
+			<span class="input-group-addon">问题</span>								
+			<input type="text" class="form-control"  value="" name="itemtitle[]">
+		</div>	
+		<div class="input-group">
+			<span class="input-group-addon">答案</span>
+			<input type="text" class="form-control"  value="" name="itemvalue[]" style="min-width:580px;">
+			<span class="input-group-btn"><button class="btn btn-warning" type="button" onclick="removeitem(this)"><i class="fa fa-close"></i></button></span>
+		</div>	
+		<span class="help-block">答案请用“ | ”隔开，如：上 | 中 | 下</span>
+	</div>
+</div>
+{/if}

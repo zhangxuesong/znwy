@@ -1,0 +1,45 @@
+<script type="text/html" id="tpl_board_post_list">	
+    <%each list as row%>
+    <div class="fui-card fui-card-list fui-card-full post-card sns-card-list">
+        <a class='fui-card-info'  href="{php echo $this->createMobileUrl('forum',array('op'=>'comment'));}&pid=<%row.id%>&bid=<%row.boardid%>">
+        <div class='image'>
+            <img data-lazy='<%row.avatar%>' style="width:1rem;height:1rem;margin-right:3px;" />
+        </div>
+		
+        <div class="text">
+            <div class="subtitle"><%row.nickname%> 在 <font class="boardtitle"><%row.boardtitle%></font> <span class="pull-right"><%row.createtime%></span></div>           
+        </div>
+        </a>
+		
+        <div class="fui-card-content">          
+            <div class="sns-content-info">
+                <div class="sns-content-info-sub">
+                    <%row.content%>
+                </div>
+            </div>
+        </div>
+		<i class="sns-card-show">全文</i>
+        <%if row.images.length>0%>
+        <div class="fui-card-images board<%row.id%>" data-boardid="board<%row.id%>" >
+			<div class="fui-images fui-images-md image" style="height:<%row.imageheight%>px;overflow:hidden;width:100%;">
+				<%each row.images1 as img1%>
+					<img data-lazy="<%img1%>" align='top' style="width:<%row.imagewidth%>;" />
+				<%/each%>
+			</div>	
+			<%if row.images2.length>0%>
+				<div class="fui-images fui-images-md image" style="margin-top:0.2rem;height:<%row.imageheight1%>px;overflow:hidden;width:100%;">
+				<%each row.images2 as img2%>
+					<img data-lazy="<%img2%>" align='top' style="width:<%row.imagewidth1%>;" />
+				<%/each%>
+				</div>	
+			<%/if%>
+        </div>
+        <%/if%>		
+        <div class='fui-card-btns'>
+            <a href="{php echo $this->createMobileUrl('forum',array('op'=>'comment'));}&pid=<%row.id%>&bid=<%row.boardid%>"><i class="icon icon-comment"></i> <%row.postcount%></a>
+            <a href='javascript:;' class="like-good" data-isgood="<%row.isgood%>"  data-pid="<%row.id%>" data-bid="<%row.boardid%>"><i class="icon icon-good"></i> <span><%row.goodcount%></span></a>
+            <a href=""><span><i class="icon icon-browse"></i> <%row.views%></span></a>
+		</div>
+    </div>
+    <%/each%>
+</script>

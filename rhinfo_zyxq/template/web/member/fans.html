@@ -1,0 +1,214 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body"> 
+   {if $rights['query'] == 1} 
+	<div class="collapse" id="mycollapse">	
+	<form action="./index.php" method="get" class="form-horizontal" role="form" id="form-search">
+		<input type="hidden" name="c" value="site" />
+		<input type="hidden" name="a" value="entry" />
+		<input type="hidden" name="m" value="rhinfo_zyxq" />
+		<input type="hidden" name="do" value="member" />
+		<input type="hidden" name="op" value="fans" />	
+		<input type="hidden" name="direct" value="1" />
+		<input type="hidden" name="mycon" id="mycon" value="1" />
+
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">所属会员组</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<select class="form-control" name="groupid">						
+					<option value="">不限</option>
+					{loop $groups $group}
+						<option value="{$group['groupid']}" >{$group['title']}</option>
+					{/loop}
+				</select>
+			</div>
+		</div>		
+
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">是否关注</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<select class="form-control" name="follow">						
+					<option value="">不限</option>
+					<option value="1" >已关注</option>					
+					<option value="2" >未关注</option>
+				</select>
+			</div>
+		</div>		
+		
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">关键字</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<input class="form-control" name="keyword"   type="text" value="{$_GPC['keyword']}" placeholder="请输入关键字" />
+			</div>
+		</div>
+		<div class="form-inline form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">加入日期</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">				
+				<input type="text" name="startdate"  value="{$_GPC['startdate']}" placeholder="起始日期" class="datetimepicker form-control" style="padding-left:12px;" />
+				<input type="text" name="enddate"  value="{$_GPC['enddate']}" placeholder="截止日期" class="datetimepicker form-control" style="padding-left:12px;" />
+				<script type="text/javascript">
+					require(["datetimepicker"], function(){
+							var option = {
+								lang : "zh",
+								step : 5,
+								timepicker : false,
+								closeOnDateSelect : true,
+								format : "Y-m-d"
+							};
+						$(".datetimepicker[name = 'startdate']").datetimepicker(option);
+						$(".datetimepicker[name = 'enddate']").datetimepicker(option);
+					});
+				</script>
+				<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>				
+			</div>
+		</div>
+	</form>
+	</div>
+	{/if}
+	<div class="panel panel-default">
+	    <div class="panel-heading">		
+			{if $rights['query'] == 1}  
+			<a class="btn btn-primary" onclick="mycondition(this)"  data-toggle="collapse" href="#mycollapse" aria-expanded="false" aria-controls="mycollapse">
+			<i class="fa fa-angle-double-down"></i> 筛选条件</a>
+			{/if}
+			<span class="pull-right" style="line-height:38px;">共有数据：<strong id="count">{$total}</strong> 条</span> 
+	    </div>
+		
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+				<tr>
+					<th width="25"><input type="checkbox" name="selectall" id="selectall" value="" onClick="myallselect(this)"></th>
+					<th width="40">ID</th>		
+					<th width="40">头像</th>	
+					<th width="100">昵称</th>							
+					<th width="100">会员组</th>
+					<th width="60">余额</th>
+					<th width="60">积分</th>
+					<th width="100">加入日期</th>
+					<th width="60">关注</th>
+					<th width="150">操作</th>
+				</tr>
+			</thead>
+			{loop $data $k $v}
+				<tr>
+					<td><input type="checkbox" value="{$v['uid']}" name="myselect" id="myselect_{$k}"  ></td>
+					<td>{$v['uid']}</td>																													
+					<td>{if !empty($v['avatar'])}<img src="{media $v['avatar']}"  width="36" />{/if}</td>
+					<td>{$v['nickname']}</td>
+					<td>{$v['group']}</td>	
+					<td><span class="label label-warning">{$v['credit2']}</span></td>	
+					<td><span class="label label-info">{$v['credit1']}</span></td>	
+					<td>{php echo date('Y-m-d H:i',$v['createtime']);}</td>
+					<td class="td-status">
+					{if $v['follow']=='1'}<span class="label label-success radius">已关注</span>{else}<span class="label label-default radius">未关注</span>{/if}
+					</td>										
+					<td class="td-manage">
+					{if $rights['add'] == 1}						
+						<a onClick="mycredit({$v['uid']},'{$v['nickname']}',{$v['credit1']},{$v['credit2']})" href="javascript:;" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="积分余额" ><i class="fa fa-money"></i> 充值</a>						
+					{/if}	
+					{if $rights['edit'] == 1}						
+						<a onClick="mycard({$v['uid']})" href="javascript:;" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="充电桩刷卡" ><i class="fa fa-credit-card"></i> 充电卡</a>						
+					{/if}		
+					</td>					
+				</tr>
+			{/loop}				
+		</table>
+	  </div>    	  
+	</div>	
+  </div>
+</div>
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+/*全选*/
+function myallselect(select){ 
+
+	var obj = document.getElementsByName('myselect'); 
+	var tempsta = select.checked; 
+	
+	for(var k in obj){ 
+		if (obj[k].checked != tempsta) {      
+		     $("#myselect_"+k).prop("checked", tempsta);  
+		}
+	}	
+}	
+
+function mycard(uid){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'chargingcard')).$mywe['direct'];}" + "&uid=" + uid;	
+	var title = "智能充电卡";
+	var index = layer.open({
+   	    type: 2,
+		title:title,
+		content: url,
+		area: ['600px','500px'],
+		fix: true, 
+		shade:0.4,
+		resize:false
+	});	
+}
+function mycredit(uid,nickname,credit1,credit2){
+	var html = '<div class="form-group">'+				
+					'<div class="input-group">'+
+					'<span class="input-group-addon">当前积分</span>'+		
+					'<input type="text" class="form-control" readonly value="'+credit1+'">'+
+					'<span class="input-group-addon">当前余额</span>'+		
+					'<input type="text" class="form-control" readonly value="'+credit2+'">'+
+				'</div>';
+	html += '<div class="form-group">'+				
+					'<div class="input-group">'+
+					'<span class="input-group-addon">变更积分</span>'+		
+					'<input type="text" class="form-control" value="" id="credit1">'+
+					'<span class="input-group-addon">变更余额</span>'+		
+					'<input type="text" class="form-control"value="" id="credit2">'+
+				'</div><span class="help-block">&nbsp;&nbsp;输入50,则表示增加50;输入-50则表示减少50</span>';
+	var index = layer.open({
+	  type: 1,
+	  title:'会员ID：'+uid+'&nbsp;昵称：'+nickname,
+	  area: '500px;',
+	  shade: 0.4,
+	  resize: false,
+	  btn: ['确定', '取消'],
+	  btnAlign: 'c',
+	  shadeClose:true,
+	  moveType: 1 ,
+	  content:html,
+	  yes: function(){
+			var credit1 = $("#credit1").val();
+			var credit2 = $("#credit2").val();
+			$.post("{php echo mywurl('member/credit').$mywe['direct'];}",
+				{uid:uid,credit1:credit1,credit2:credit2},
+				function(data,status){
+				 if (data=='ok'){
+					layer.msg('充值成功',{icon:1});
+					layer.close(index);
+					location.reload();
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+				 }
+			});		
+	  }
+	});
+}
+function mycondition(obj){
+    var mycon = $("#mycon").val();
+	var html = '';
+	if (mycon==1){
+		html = '<i class="fa fa-angle-double-up"></i> 隐藏筛选';
+		$("#mycon").val("2");
+		$("#mycollapse").show("slow");
+	}
+	else {
+		html = '<i class="fa fa-angle-double-down"></i> 筛选条件';
+		$("#mycon").val("1");
+		$("#mycollapse").hide("slow");
+	}
+	$(obj).html(html);
+}
+</script>
+</body>
+</html>

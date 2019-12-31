@@ -1,0 +1,193 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body">  
+	{if $rights['query'] == 1} 
+	<div class="collapse" id="mycollapse">	
+	<form action="./index.php" method="get" class="form-horizontal" role="form" id="form-search">
+		<input type="hidden" name="c" value="site" />
+		<input type="hidden" name="a" value="entry" />
+		<input type="hidden" name="m" value="rhinfo_zyxq" />
+		<input type="hidden" name="do" value="garage" />
+		<input type="hidden" name="op" value="list" />	
+		<input type="hidden" name="direct" value="1" />
+		<input type="hidden" name="mycon" id="mycon" value="1" />
+		<input type="hidden" name="pid" value="{$pid}" />
+		<input type="hidden" name="rid" value="{$rid}" />
+
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">关键字</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<input class="form-control" name="keyword"   type="text" value="{$_GPC['keyword']}" placeholder="请输入编号或手机号或姓名" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+			<div class="col-sm-4 col-xs-12">
+				<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+				{if $rights['export'] == 1}
+				<button name="export" value="export" class="btn btn-default"><i class="fa fa-download"></i> 导出数据</button>
+				{/if}
+			</div>
+		</div>
+	</form>
+	</div>
+	{/if}	
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+		{if $rights['delete'] == 1}  
+		{if $_W['role'] == 'founder' || $_W['role']=='owner' || $_W['role']=='manager'}
+			<a href="javascript:;" onclick="mydeleteall({$pid},{$rid})" class="btn btn-danger"><i class="fa fa-trash-o"></i> 全部删除</a> {/if}
+		{/if}
+		{if $rights['other1'] == 1}  
+		 <div class="btn-group">
+		  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		  <i class="fa fa-plus"></i> 添加储物间 <span class="caret"></span>
+		  </button>
+			<ul class="dropdown-menu">				
+			<li><a href="javascript:;" onclick="mybatchadd({$pid},{$rid})" >批量添加</a></li>
+			<li role="separator" class="divider"></li>
+			<li><a href="javascript:;" onclick="myimport({$pid},{$rid})" >EXCEL导入</a></li>         	
+          </ul>	
+		</div>
+			
+		{/if}			
+		{if $rights['query'] == 1}  
+			<a class="btn btn-primary" onclick="mycondition(this)"  data-toggle="collapse" href="#mycollapse" aria-expanded="false" aria-controls="mycollapse">
+			<i class="fa fa-angle-double-down"></i> 筛选条件</a>
+			{/if}
+			<span class="pull-right" style="line-height:38px;">共有数据 <strong id="count">{$total}</strong> 条</span> 
+	    </div>
+  
+		<div class="panel-body">	
+			{if $rights['query'] == 1}  		
+			{loop $data $k $v}	
+			<div style="margin:15px 10px -10px 10px;">
+				{if $k > 0}<hr>{/if}
+				<span style="position:relative;padding-right:12px;" >
+				<a href="javascript:;" class="btn btn-success btn-sm" style="margin-bottom:10px;margin-right:5px;" >{$v['title']}</a>										
+				</span>
+				{loop $v['garages'] $i $r}
+					<span  style="position:relative;padding-right:12px;" onmouseenter="myrshow({$r['id']})" onmouseleave="myrhide({$r['id']})">
+						<a href="javascript:;" {if $rights['edit'] == 1} onclick="myedit({$r['id']},{$r['pid']},{$r['rid']},{$v['id']})" {/if} class="btn btn-default btn-sm" style="margin-bottom:10px;margin-right:5px;" data-toggle="tooltip" data-placement="bottom" title="" >{$r['title']}</a>
+						{if $rights['delete'] == 1}  
+						<a href="javascript:;" class="btn btn-sm" id ="rdelete{$r['id']}" style="display:none;position:absolute;right:-2px;top:-25px;" onclick="mydelete(this,{$pid},{$rid},{$r['id']})"><i class="fa fa-close"></i></a>
+						{/if}
+
+					</span>					
+				{/loop}
+				
+				<a href="javascript:;" {if $rights['other1'] == 1} {else} disabled {/if} onclick="myadd({$v['pid']},{$v['rid']},{$v['id']})" class="btn btn-default btn-sm" style="margin-bottom:10px;margin-right:5px;" data-toggle="tooltip" data-placement="bottom" title="添加储物间" ><i class="fa fa-plus"> 添加储物间</i></a>
+				
+			</div>			
+		   {/loop}	
+		{/if}			 
+		</div>
+	</div>
+  </div>
+</div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+var pid = {$pid};
+var rid = {$rid};
+
+function mydeleteall(pid,rid){ 
+	var count = parseInt($("#count").html());
+	if (count == 0){
+		return;
+	}
+	layer.confirm('确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		//取到对象数组后，循环检测它是不是被选中 
+		layer.load(1);
+		layer.close(index);
+			$.post("{php echo $this->createWebUrl($mydo,array('op'=>'deleteall')).$mywe['direct'];}",
+				{pid:pid,rid:rid},
+				function(data,status){
+					 if (data=='ok'){
+						layer.closeAll();
+						location.reload();
+					 }
+					 else{
+						layer.msg(data,{icon:0});
+						setTimeout("layer.closeAll();",2000);
+						return false;
+					 }
+				});			
+	});
+}
+function mydelete(obj,pid,rid,id){   	
+	layer.confirm('确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'delete')).$mywe['direct'];}",
+			{pid:pid,rid:rid,id:id},
+			function(data,status){
+				 if (data=='ok'){
+					$(obj).parents("span").remove();
+				 }
+				 else{
+					layer.msg('操作失败',{icon:0});
+					return;
+				 }
+			});
+		layer.close(index);
+	});
+}
+
+function mybatchadd(pid,rid){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'batchadd1','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid; 
+	window.location.href = url;
+}
+
+function myadd(pid,rid,bid){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'add1','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid + "&bid=" + bid ;
+	window.location.href = url;
+}
+
+function myedit(id,pid,rid,bid){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'edit1','category'=>$category)).$mywe['direct'];}" + "&id=" + id + "&pid=" + pid + "&rid=" + rid + "&bid=" + bid;
+	window.location.href = url;
+}
+
+function myimport(pid,rid){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'import')).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid; 
+	window.location.href = url;
+}
+function myshow(id){
+	$("#delete"+id).show();
+}
+function myhide(id){
+	$("#delete"+id).hide();
+}
+function myrshow(id){
+	$("#rdelete"+id).show();
+}
+function myrhide(id){
+	$("#rdelete"+id).hide();
+}
+function myreturn(){
+	 var url = "{php echo $this->createWeburl('region',array('op'=>$rlist,'category'=>$category)).$mywe['direct'];}";
+	 window.location.href = url;
+}
+function mycondition(obj){
+    var mycon = $("#mycon").val();
+	var html = '';
+	if (mycon==1){
+		html = '<i class="fa fa-angle-double-up"></i> 隐藏筛选';
+		$("#mycon").val("2");
+		$("#mycollapse").show("slow");
+	}
+	else {
+		html = '<i class="fa fa-angle-double-down"></i> 筛选条件';
+		$("#mycon").val("1");
+		$("#mycollapse").hide("slow");
+	}
+	$(obj).html(html);
+}
+</script>
+</body>
+</html>

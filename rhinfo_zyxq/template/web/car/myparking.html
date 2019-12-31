@@ -1,0 +1,78 @@
+﻿{template 'web/_iframe_header'}
+<div class="panel panel-default" >
+  <div class="panel-body">    
+	<div class="panel panel-default">
+  
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+				<tr>					
+					<th width="40">ID</th>					
+					<th width="150">所属主体</th>
+					<th width="150">车位名称</th>
+					<th width="80">状态</th>
+					<th width="100">业主姓名</th>
+					<th width="100">手机号码</th>
+					<th width="100">开始日期</th>
+					<th width="100">结束日期</th>
+					<th width="200">操作</th>
+				</tr>
+			</thead>
+			{loop $data $k $v}
+				<tr>					
+					<td>{$v['id']}</td>
+					<td>{$v['region']}</td>
+					<td>{$v['title']}</td>
+					<td class="td-status"><span class="label {if $v['status']=='1'}label-success{else}{if $v['status']=='2'}label-danger{else}label-default{/if}{/if} radius">{if $v['status']=='1'}已租{else}{if $v['status']=='2'}到期{else}空闲{/if}{/if}</span></td>
+					<td>{$v['ownername']}</td>
+					<td>{php echo !empty($v['mobile']) ? substr_replace($v['mobile'],'****',3,4):'';}</td>
+					<td>{if !empty($v['startdate'])}{php echo date('Y-m-d',$v['startdate']);}{/if}</td>
+					<td>{if !empty($v['enddate'])}{php echo date('Y-m-d',$v['enddate']);}{/if}</td>
+					<td>
+					{if $rights['other1'] == 1}
+					<a  href="javascript:;" onclick="myedit({$v['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="租赁" ><i class="fa fa-edit"></i> 租赁</a> 
+					{/if}
+					{if $rights['other2'] == 1}
+					<a  href="javascript:;" onclick="mylease({$v['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="租赁记录"><i class="fa fa-retweet"></i> 租赁记录</a>
+					{/if}
+					</td>
+				</tr>
+			{/loop}			
+		</table>
+	  </div>    	  
+	</div>	
+  </div>
+
+{template 'web/_iframe_footer'}
+
+<script type="text/javascript">
+
+/*租赁记录*/
+function mylease(id){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'myleaselog')).$mywe['direct'];}" + "&id=" + id;
+	var index = layer.open({
+   	    type: 2,
+		title:'租赁记录',
+		content: url,
+		area: ['800px','500px'],
+		fix: false, 
+		shade:0.4
+	});
+}
+
+/*编辑*/
+function myedit(id){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'mylease')).$mywe['direct'];}" + "&id=" + id;
+	var index = layer.open({
+   	    type: 2,
+		title:'车位续租',
+		content: url,
+		area: ['600px','500px'],
+		fix: false, 
+		shade:0.4
+	});
+}
+
+</script>
+</body>
+</html>

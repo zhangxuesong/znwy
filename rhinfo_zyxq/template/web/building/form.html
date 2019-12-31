@@ -1,0 +1,66 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />
+	<input type="hidden" name="id"	value="{$item['id']}" id="id">	
+	<input type="hidden" name="pid" value="{$pid}" >
+	<input type="hidden" name="rid" value="{$rid}" >
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>楼幢名称</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入楼幢名称" name="title">
+		</div>	
+	</div>
+							
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">单元数</label>
+		<div class="col-sm-5 col-lg-5 col-xs-12">
+			<input type="number" class="form-control" id="units" value="{$item['units']}" placeholder="输入单元数量" name="units">
+		</div>	
+		<label class="col-sm-1 col-md-1 control-label">单元名称后缀</label>
+		<div class="col-sm-2 col-lg-2 col-xs-12">
+			<input type="text" class="form-control" id="unitname" value="{$item['unitname']}" placeholder="如：单元或座，默认为单元" name="unitname">
+		</div>		
+	</div>
+
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">总楼层数</label>
+		<div class="col-sm-5 col-lg-5 col-xs-12">
+			<input type="number" class="form-control" id="floors" value="{$item['floors']}" placeholder="输入总楼层数量" name="floors">
+		</div>	
+		<label class="col-sm-1 col-md-1 control-label">房屋编号位数</label>
+			<div class="col-sm-2 col-lg-2 col-xs-12">
+				<input type="text" class="form-control" id="roomdigit" value="" placeholder="房屋编号位数，默认2位" name="roomdigit">
+		</div>		
+	</div>
+	{if $operation=='add'}
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">总房屋数</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="input-group">
+				<input type="number" class="form-control" id="rooms" value="{$item['rooms']}" placeholder="输入总房屋数量" name="rooms">
+				 <span class="input-group-btn">
+					<button class="btn btn-success" type="button" id="batchroom" onclick="mybatchroom()" ><i class="fa fa-plus"></i> 自动生成房号</button>
+				 </span>
+			</div>
+			<span class="help-block">此数量只是记录，不参加计算</span>
+		</div>
+	</div>
+	{else}
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">总房屋数</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="number" class="form-control" id="rooms" value="{$item['rooms']}" placeholder="输入总房屋数量" name="rooms">
+			<span class="help-block">此数量只是记录，不参加计算</span>
+		</div>
+	</div>	
+	{/if}				
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="checkbox"  id="isbarn" name="isbarn" value="1" {if $item['isbarn']==1} checked {/if}> 是否有储物间或自行车库	
+			&nbsp;&nbsp;&nbsp;&nbsp;	
+				<input type="checkbox"  id="isunit" name="isunit" value="1" {if $item['isunit']==1} checked {/if} > 房屋编号是否依单元从1开始	
+			<span class="help-block">用于楼宇下设有储物间或自行车库</span>
+		</div>
+	</div>
+	<div id="myroom"> </div>
+</form>

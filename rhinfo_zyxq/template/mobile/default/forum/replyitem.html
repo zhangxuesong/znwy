@@ -1,0 +1,59 @@
+{loop $list $row}
+	<p></p>
+	<div class="fui-list external reply-list"  data-pid ="{$row['id']}"	  data-nickname="{$row['nickname']}">	
+		<a class="fui-list-media reply-avatar" href="#" >
+			<img src="{$row['avatar']}" class="round">
+		</a>
+		<div class="fui-list-inner">
+			<div class="text click">
+				<span class="pull-right">{$row['floor']}楼</span>
+				{$row['nickname']}
+
+				{if $row['isAuthor']}
+				<span class="level-label fui-label fui-label-warning level-label">楼主</span>
+				{/if}
+
+				{if $row['isManager']}
+				<span class="level-label fui-label fui-label-danger level-label">版主</span>
+				{/if}
+
+			</div>
+			<div class="text text-reply  click">{$row['content']}</div>
+
+			{if count($row['images'])>0}
+			<div class="text images">
+				<div class="fui-card-images" style="height:100px;overflow:hidden;" >
+					{loop $row['images'] $img}
+					<img src="{$img}" style="width:{$row['imagewidth']}" />
+					{/loop}
+				</div>
+			</div>
+			{/if}
+			{if $row['parent']}
+			<div class="text text-parent">
+				<span class="org">{$row['parent']['nickname']}</span>: {$row['parent']['content']}>
+			</div>
+			{/if}		
+
+			<div class="text text-time">
+				<span class="pull-right">
+					<a href="javascript:;" class="link link-reply" ><i class="icon icon-comment"></i> 回复&nbsp;&nbsp;</a>
+					<a href="javascript:;" class="link link-good" isgood="{$row['isgood']}" ><i class="icon icon-appreciate{if $row['isgood']>0}fill{/if}"></i>
+						<span class="zandiv">{if $row['goodcount']}{$row['goodcount']}{else}赞{/if}</span>&nbsp;&nbsp;</a>
+					<a class="link link-complain-list" data-id="{$row['id']}" href="javascript:void(0);">
+						<i class="icon icon-warning"></i> <span>投诉</span>
+					</a>
+
+				{if $isManager || $isSuperManager}
+					{if $row['checked']!==1}
+						<a href="javascript:;" class="link link-check " ><i class="icon icon-check"></i> 审核&nbsp;&nbsp;</a>
+					{/if}
+					<a href="javascript:;" class="link link-delete" ><i class="icon icon-delete"></i> 删除</a>
+				{/if}
+					</span>
+
+				{$row['createtime']}
+			</div>
+		</div>
+	</div>
+{/loop}

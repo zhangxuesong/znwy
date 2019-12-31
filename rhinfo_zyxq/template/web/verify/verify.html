@@ -1,0 +1,50 @@
+﻿{template 'common/header'}
+<div class="panel panel-default">
+	<div class="panel-heading">微信域名验证文件上传</div>
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" name="myform" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">选择文件</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<input type="file" id="upfile" class="form-control" title="请选择微信域名验证文件" accept="text/plain" name="upfile">
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">					
+					<a href="javascript:;" class="btn btn-primary"  onclick="mysubmit(this)"><i class="fa fa-check"></i> 提交<a/>
+					<a href="javascript:history.go(-1);" class="btn btn-default"><i class="fa fa-reply"></i> 返回<a/>
+				</div>	
+			</div>
+
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<img src="../addons/rhinfo_zyxq/static/web/images/verify.jpg" class="img-responsive"/>
+				</div>	
+			</div>			
+		</form>	
+    </div>
+</div>
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	var url = "{php echo $this->createWebUrl('verify');}";
+	var filename = document.myform.upfile.value;	
+    if (filename=='') {
+	  alert("没有选择任何文件！");
+	  return;
+	}
+	myprocess(obj);
+    $("#myform").submit();
+}
+function myprocess(obj){
+	var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/> 处理中...';
+	$(obj).html(html);  
+	$(obj).attr("disabled", "disabled"); 
+}
+</script> 
+
+{template 'common/footer'}

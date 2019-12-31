@@ -1,0 +1,91 @@
+<script type="text/javascript" >
+var direct = "{$mywe['direct']}";
+$(function(){ 
+	$("a,button").on("click",function(){
+		$.get("{php echo $this->createWebUrl('check_login',array('direct'=>1));}",function(data,status){
+         if (data=='1'){
+			if (direct!=""){ //物业
+				location.reload();
+			}
+		 }
+		 else if (data=='2'){  //超时
+		    if (direct==''){
+				location.reload();
+			}			
+		 }		 
+		 else{	
+			{if $_W['uid']>0}
+				location.reload();
+			{else}
+				{if $this->syscfg['isproperty']==1}				
+					window.location.href="{php echo mywurl('property/login',array('direct'=>1),1);}";
+				{else}
+					window.location.href="{php echo mywurl('auth/login',array('direct'=>1));}";
+				{/if}
+			{/if}
+		 }		 
+	  });
+	});		
+});
+function myinitpage(){
+	var url = "{php echo $this->createWebUrl('query',array('op'=>'initpage')).$mywe['direct'];}";
+	var title = "初始默认页面设置";
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url,
+		area: ['80%','600px'],
+		fix: false, 
+		shade:0.4
+	});	
+}
+function initpage_hide(){
+	$("#initpage").hide();
+}
+{if $_W['role'] == 'founder'}	
+	function mysys(){
+	   	var url = "{php echo $this->createWebUrl('sysset',array('op'=>'secsys')).$mywe['direct'];}";
+		var title = "栏目设置";
+		var index = layer.open({
+			type: 2,
+			title: title,
+			content: url,
+			area: ['600px','600px'],
+			fix: false, 
+			shade:0.4
+		});		
+	}
+	function myprg(){
+	   	var url = "{php echo $this->createWebUrl('sysset',array('op'=>'secprg')).$mywe['direct'];}";
+		var title = "菜单设置";
+		var index = layer.open({
+			type: 2,
+			title: title,
+			content: url,
+			area: ['600px','600px'],
+			fix: false, 
+			shade:0.4
+		});		
+	}
+	function myaccount(){
+	   	var url = "{php echo $this->createWebUrl('sysset',array('op'=>'account')).$mywe['direct'];}";
+		var title = "公众号权限设置";
+		var index = layer.open({
+			type: 2,
+			title: title,
+			content: url,
+			area: ['600px','600px'],
+			fix: false, 
+			maxmin: true,
+			skin: 'layui-layer-molv', //样式类名
+			shade:0.4
+		});	
+		layer.full(index);
+	}
+{/if}	
+</script>
+
+<script type="text/javascript" src="../addons/rhinfo_zyxq/static/lib/layer3.03/layer.js"></script> 
+<script type="text/javascript" src="../addons/rhinfo_zyxq/static/lib/jquery/jquery.contextmenu.r2.js"></script> 
+<script type="text/javascript" src="../addons/rhinfo_zyxq/static/web/ui/js/ui.min.js"></script> 
+<script type="text/javascript" src="../addons/rhinfo_zyxq/static/web/ui.admin/js/ui.admin.js"></script> 

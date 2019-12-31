@@ -1,0 +1,161 @@
+{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+  	<div class="panel-body">
+  		<div class="panel panel-default"> 
+	  		<div class="panel-heading">
+				<a href="javascript:;" onclick="mydelselect()" class="btn btn-danger"><i class="fa fa-trash-o"></i> 批量删除</a>
+   		    	<a href="javascript:;" onclick="myadd()" class="btn btn-info">
+				<i class="fa fa-plus"></i> 添加绿化信息</a>
+				<input type="text" name="" style="width: 230px;height: 35px;line-height: 35px;border: 0;text-align:center;border-radius: 5px;background:white;outline:none;position: absolute;top:77px;left: 265px;" placeholder=" 请输入公司名称、种类" value="{$content}"><i class="fa fa-search" style="display: block;width: 35px;height:35px;line-height: 35px;position: absolute;left:480px;top:77px;text-align:center;border-radius: 0pc 5px 5px 0px;color: white;font-size:20px;background:lightgray;" onclick="mysearch(this)" id="mycon"></i>
+				<span class="pull-right" style="line-height:38px;">共有数据：<strong id="count">{$total}</strong> 条</span> 
+	    	 </div>
+		    <div class="panel-body table-responsive">
+			  	<table class="table table-hover">
+					<thead class="navbar-inner">
+						<tr>
+							<th width="25"><input type="checkbox" value="" onClick="myallselect(this)"></th>
+							<th width="50">序号</th>
+							<th width="100">所属公司</th>
+							<th width="100">小区</th>
+							<th width="150">地段</th>
+							<th width="80">负责人</th>
+							<th width="100">植被编号</th>
+							<th width="100">植被名称</th>	
+							<th width="80">种类</th>
+							<th width="80">树龄</th>
+							<th width="80">数量</th>
+							<th width="150">开始时间</th>
+							<th width="150">结束时间</th>
+							<th width="170">操作</th>
+						</tr>
+					</thead>
+						{loop $data $k $v}
+						<tr>
+							<td widtd="25"><input type="checkbox" value="{$v['id']}" name="myselect" id="myselect_{$k}"></th>
+							<td>{$v['id']}</td>
+							<td>{$v['pname']}</td>												
+							<td>{$v['rname']}</td>
+							<td>{$v['area']}</td>												
+							<td>{$v['hname']}</td>												
+							<td>{$v['vegeid']}</td>												
+							<td>{$v['vegename']}</td>												
+							<td>{$v['kind']}</td>												
+							<td>{$v['treeage']}</td>												
+							<td>{$v['num']}</td>												
+							<td>{$v['startdate']}</td>												
+							<td>{$v['simdate']}</td>
+							<td>	
+								<a href="javascript:;" onclick="myedit( {$v['id']} )" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="编辑" ><i class="fa fa-edit"></i> 编辑</a>
+								<a href="javascript:;" onclick="mydel(this, {$v['id']} )" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="删除"><i class="fa fa-trash"></i> 删除</a>
+							</td>												
+						</tr>
+						{/loop}		
+				</table>
+			</div>
+			<div class="pager">
+				{$pager}
+			</div>
+		</div>
+  	</div>	
+</div>
+
+{template 'web/_iframe_footer'}
+<script type="text/javascript">
+/* 添加记录 */
+function myadd(){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'gInfoAdd')).$mywe['direct'];}";
+	window.location.href = url;
+}
+/* 编辑 */
+function myedit(id){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'greenedit')).$mywe['direct'];}" + "&id=" + id;
+	window.location.href = url;
+}
+/* 删除 */
+function mydel(obj,id){
+	var loadindex = layer.load(2);
+	$.ajax({
+		url: "{php echo $this->createWeburl($mydo,array('op'=>'greendel')).$mywe['direct'];}" + "&id=" + id,
+		type: 'DELETE',
+		cache: false, 
+		data: $("#myform").serializeObject(),	
+		success:function(data){
+			layer.close(loadindex);
+			layer.msg("删除成功!",{icon:1});
+			setTimeout(function(){
+				var url = "{php echo $this->createWeburl($mydo,array('op'=>'green')).$mywe['direct'];}";
+	 			location.href = url;
+			},1500);
+		} 
+	});
+}
+/*全选*/
+function myallselect(select){
+	//选中
+	var obj = document.getElementsByName('myselect'); 
+	var tempsta = select.checked; 
+	
+	for(var k in obj){ 
+		if (obj[k].checked != tempsta) {      
+		     $("#myselect_"+k).prop("checked", tempsta);  
+		}
+	}	
+}
+/* 批量删除 */
+function mydelselect(){
+	//统计
+	var count = parseInt($("#count").html());
+	if (count == 0){
+		return ;
+	}
+	//获取所选项
+	var obj = document.getElementsByName('myselect');	//选择所有name="myselect" id="myselect_{$k}" 的对象，返回数组 
+	var i = 0;
+	for( var j in obj ){
+		if( obj[j].checked ){
+			i++;
+		}
+	}
+
+	if (i==0){
+		layer.msg('请选择要删除的对象.',{icon:0});
+	   	return ;
+	}
+
+	layer.confirm('将删除所选的相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		//取到对象数组后，循环检测它是不是被选中 
+		layer.load(1);
+		layer.close(index);
+		for(var k in obj){ 
+			if (obj[k].checked) {//如果选中,则删除                
+				$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+				{op:"greendel",id:obj[k].value},
+				function(data,status){
+					 if (status == "success"){
+					 	layer.msg("删除成功",{icon:1});
+					 }
+					 else{
+						layer.msg(data,{icon:0});
+						return false;
+					 }
+				});		
+			}
+		}
+		setTimeout(function(){
+			 layer.closeAll();
+			 location.reload();
+		  },1500);	
+	});
+}
+/* 搜索 */
+function mysearch(obj){
+	var mycontent = $("#mycon").prev().val();
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'grsearch')).$mywe['direct'];}" + "&mycontent=" + mycontent;
+	window.location.href = url;
+}
+</script>
+</body>
+</html>

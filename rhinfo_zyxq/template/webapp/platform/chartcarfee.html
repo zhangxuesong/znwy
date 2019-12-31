@@ -1,0 +1,56 @@
+<span class="echart-title">停车收费</span>
+<span class="echart-count">总金额：<strong>{$total}</strong>&nbsp;元</span>
+<div id="chartCarfee"></div>
+<script language='javascript'>
+	var chartCarfee = echarts.init(document.getElementById('chartCarfee'),'shine');	
+	option_carfee = {
+		legend: {
+			orient: 'vertical',
+			x: 'left',
+			data:['办理月卡','临时缴费','门禁控制'],
+			textStyle:{
+				color:'#fff'
+			}
+		},
+		series: [
+			{
+				name:'访问来源',
+				type:'pie',
+			   radius: ['60%', '80%'],
+				avoidLabelOverlap: false,
+				center:['70%','60px'],
+				label: {
+					normal: {
+						show: false,
+						position: 'center'
+					},
+					emphasis: {
+						show: true,
+						textStyle: {
+							fontSize: '10',
+							fontWeight: 'bold',
+							color:'#fff'
+						},
+						formatter:'{b}\n{d}%'
+					},
+					
+				},
+				labelLine: {
+					normal: {
+						show: false
+					}
+				},
+				data:[
+					{value:{$carfee_array[1]}, name:'办理月卡'},
+					{value:{$carfee_array[0]}, name:'临时缴费'},
+					{value:{$carfee_array[2]}, name:'门禁控制'}
+				]
+			}
+		]
+	};
+	chartCarfee.setOption(option_carfee);
+	autoPlay(chartCarfee,option_carfee);
+	window.onresize = function() {
+		chartCarfee.resize();
+	};
+ </script> 

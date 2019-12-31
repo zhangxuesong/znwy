@@ -1,0 +1,69 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-list-group:not(.fui-list-group-o):before,.fui-list-group:not(.fui-list-group-o):after {border-top: 0px;}
+</style>
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">{if $category==1}我的房产{else}我的储物间{/if}</div> 
+		<div class="fui-header-right">
+		{if $category==1}
+		<a  href="{php echo $this->createMobileurl($mydo,array('op'=>'myhouse','category'=>2));}">储物间</a>
+		{/if}
+		</div>
+	</div>
+	<div class='fui-content navbar' >
+		<div class='content-empty' {if !empty($list)}style='display:none'{/if}>
+			<div class="empty-bg"><i class='icon icon-location'></i></div>
+			<br/>您还没有任何房产信息
+		</div> 
+	
+	{loop $list $item}
+	<div class="fui-list-group address-item" style='margin-top:5px;' data-addressid="{$item['id']}">
+	    <div  class="fui-list" >
+		<div class="fui-list-inner">
+			<a href="{if $item['category']==2}{php echo $this->createMobileurl($mydo,array('op'=>'myfeebill','pid'=>$item['pid'],'rid'=>$item['rid'],'bid'=>$item['bid'],'tid'=>$item['tid'],'hid'=>$item['hid']));}{else}{php echo $this->createMobileUrl('home',array('op'=>'index','rid'=>$item['rid']));}{/if}">
+				<div class="title"><span class='realname'>{$item['address']}</span> </div>
+				<div class="text">
+					<span class='address'>绑定时间: {php echo date('Y-m-d',$item['ctime']);}</span>
+					<span class="remark pull-right"></span>
+				</div>			
+			</a>
+		    <div class='bar' >
+			<span class='pull-right'>
+			    {if $item['isowner']==1 && $item['category']==1}
+				{if $item['count']}
+					<a href="{php echo $this->createMobileUrl('member',array('op'=>'myhousemember','pid'=>$item['pid'],'rid'=>$item['rid'],'bid'=>$item['bid'],'tid'=>$item['tid'],'hid'=>$item['hid'],'id'=>$item['id']));}"><span class="badge badge-warning">{$item['count']}</span><i class='icon icon-people2'></i> 成员</a>&nbsp;&nbsp;&nbsp;{/if}
+					<a class="external" href="{php echo $this->createMobileUrl('member',array('op'=>'shareotype','id'=>$item['id']));}">
+					<i class='icon icon-friends'></i> 邀请家人
+					</a>
+				{/if}
+			    <a data-toggle='delete' class='external' >
+				<i class='icon icon-delete'></i> 删除
+			    </a>
+			</span>
+			{if $item['category']==1}
+			<label class='radio-inline'>
+			    <input type="radio" name='setdefault' data-toggle='setdefault'  class="fui-radio  fui-radio-danger" {if $item['isdefault']}checked{/if} /> 设置默认
+			</label>
+			{/if}
+		    </div>
+		</div>
+	    </div>
+	</div> 
+	{/loop}   	
+	 </div>
+	 
+    <div class='fui-navbar'>
+	<a href="{$url}" class='nav-item btn btn-danger external' data-nocache="true"><i class="icon icon-add"></i> {if $category==1}添加房产{else}添加储物间{/if}</a>
+    </div>
+    <script language='javascript'>
+		require(['member/house'], function (modal) {
+			modal.initList({});
+		});	
+	</script>
+</div> 
+
+{template $this->mytpl('_footer')}

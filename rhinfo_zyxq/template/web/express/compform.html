@@ -1,0 +1,95 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />
+	<input type="hidden" name="id" value="{$item['id']}" />	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>公司名称</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入公司名称" name="title" />
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>公司代号</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="compcode" value="{$item['compcode']}" placeholder="输入公司代号" name="compcode" />
+			<span class="help-block">快递100对应的快递公司代号，<a href="https://www.kuaidi100.com/openapi/api_post.shtml" target="_blank">API URL 所支持的快递公司及参数说明</a>.</span>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">联系人</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+		<input type="text" class="form-control" placeholder="输入联系人" name="contact" value="{$item['contact']}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">联系电话</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+		<input type="text" class="form-control" placeholder="输入联系电话" name="telphone" value="{$item['telphone']}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">手机号码</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+		<input type="number" class="form-control" placeholder="输入手机号码" name="mobile" value="{$item['mobile']}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定微信</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="input-group ">
+				<input type="hidden" class="form-control" id="uid" value="{$item['uid']}" name="uid">
+				<input type="hidden" class="form-control" id="openid" value="{$item['openid']}" readonly name="openid">
+				<input type="text" class="form-control" id="nickname1" value="{$item['nickname1']}" readonly name="nickname1">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" onclick="showFansDialog(this);">选择微信</button>
+				</span>
+			</div>
+		</div>	
+	</div>	
+	<script type="text/javascript">
+		function showFansDialog(elm) {
+			require(['util', 'jquery'], function(u, $){
+				var footer = '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>';
+				var modalobj = u.dialog('粉丝选择', ["{php echo $this->createWeburl('query',array('op'=>'fans')).$mywe['direct'];}"], footer, {containerName:'link-container'});
+				modalobj.find('.modal-body').css({'overflow-y':'auto' });
+				modalobj.modal('show');
+				});
+		}
+	</script>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>省/市/区</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_district('area', array('province' => $item['province'], 'city' => $item['city'], 'district' => $item['district'] ));}
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>公司地址</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+		<input type="text" class="form-control" placeholder="输入公司地址" id="address" name="address" value="{$item['address']}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">缩略图标</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_image('thumb',$item['thumb']);}
+			<span class="help-block">建议尺寸100*100</span>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">备注</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="remark" value="{$item['remark']}" placeholder="输入备注" name="remark" />
+		</div>	
+	</div>	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">状态</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<label class='radio-inline'>
+			<input type='radio' name='status' value='1'  {if $item['status']==1 } checked{/if}/> 显示
+			</label>
+			<label class='radio-inline'>
+				<input type='radio' name='status' value='0' {if empty($item['status']) || $item['status']==0 } checked{/if} /> 隐藏
+			</label>
+		</div>
+	</div>
+	</br>
+</form>	

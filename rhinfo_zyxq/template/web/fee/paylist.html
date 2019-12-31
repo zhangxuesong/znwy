@@ -1,0 +1,238 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body">  
+	<div class="panel panel-default">
+	    <div class="panel-heading" style="height:60px;">
+		{if $rights['query'] == 1} 
+			<form action="./index.php" method="get" class="form-inline" role="form" id="form-search">
+				<input type="hidden" name="c" value="site" />
+				<input type="hidden" name="a" value="entry" />
+				<input type="hidden" name="m" value="rhinfo_zyxq" />
+				<input type="hidden" name="do" value="fee" />
+				<input type="hidden" name="op" value="list" />	
+				<input type="hidden" name="direct" value="1" />						
+		
+				<div class="form-group">
+					<select class="form-control" id="rid" name="rid" style="width:160px;">						
+					    {if empty($regions)}<option value="">选择主体</option>{/if}
+						{loop $regions $regionv}
+							<option value="{$regionv['id']}" {if $regionv['id'] == $_GPC['rid']} selected {/if} >{$regionv['title']}</option>
+						{/loop}
+					</select>
+				</div>
+				<div class="form-group" >
+					<select class="form-control" id="feebilltype" name="feebilltype" onchange="renderCategory(this,'building','bid')" style="width:110px;">
+						<option value="" {if empty($_GPC['feebilltype'])}selected{/if}>选择类别</option>	
+						<option value="1" {if $_GPC['feebilltype']==1}selected{/if}>房屋</option>
+						<option value="2" {if $_GPC['feebilltype']==2}selected{/if}>商铺</option>
+						<option value="3" {if $_GPC['feebilltype']==3}selected{/if}>储物间</option>
+						<option value="4" {if $_GPC['feebilltype']==4}selected{/if}>车位</option>				
+					</select>
+				</div>
+				<div class="form-group" >
+					<select class="form-control" id="bid" name="bid" onchange="renderCategory(this,'unit','tid')" style="width:160px;">
+						<option value="" {if empty($_GPC['bid'])}selected{/if}>请选择</option>	
+						{loop $select_building $bv}
+							<option value="{$bv['id']}" {if $bv['id'] == $_GPC['bid']} selected {/if} >{$bv['title']}</option>
+						{/loop}			
+					</select>
+				</div>
+				<div class="form-group" {if $_GPC['feebilltype']==1}{else}style="display:none;"{/if} id="unit" >
+					<select class="form-control" id="tid" name="tid" style="width:150px;">
+						<option value="" {if empty($_GPC['tid'])}selected{/if}>选择单元</option>	
+						{loop $select_unit $uv}
+							<option value="{$uv['id']}" {if $uv['id'] == $_GPC['tid']} selected {/if} >{$uv['title']}</option>
+						{/loop}								
+					</select>
+				</div>
+				<div class="form-group">
+					<input class="form-control" name="keyword" type="text" value="{$_GPC['keyword']}" placeholder="输入房产或收费项目" style="width:160px;"/>
+				</div>
+				<div class="form-group">
+					<input type="text" name="startdate"  value="{$_GPC['startdate']}" placeholder="开始日期" class="datetimepicker form-control" style="width:110px;" />
+					<input type="text" name="enddate"  value="{$_GPC['enddate']}" placeholder="结束日期" class="datetimepicker form-control" style="width:110px;" />
+					<script type="text/javascript">
+						require(["datetimepicker"], function(){
+								var option = {
+									lang : "zh",
+									step : 5,
+									timepicker : false,
+									closeOnDateSelect : true,
+									format : "Y-m-d"
+								};
+							$(".datetimepicker[name = 'startdate']").datetimepicker(option);
+							$(".datetimepicker[name = 'enddate']").datetimepicker(option);
+						});
+					</script>
+				</div>				
+				<div class="form-group">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>	
+					{if $rights['export'] == 1}
+						<button name="export" value="export" class="btn btn-default"><i class="fa fa-download"></i> 导出</button>
+					{/if}
+				</div>
+					<span class="pull-right" style="line-height:38px;">总金额：<strong class="text-danger">{php echo $totalfee?$totalfee:0}</strong></span> 
+			</form>
+		{/if}			
+	    </div>
+  
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+				<tr>				
+					<th width="60">ID</th>
+					<th width="100">收费项目</th>			
+					<th width="120">所属主体</th>
+					<th width="120">楼宇或区域</th>
+					<th width="60">单元</th>
+					<th width="60">房产</th>
+					<th width="150">账单日期</th>
+					<th width="80">状态</th>
+					<th width="80">费用</th>
+					<th width="280">操作</th>
+				</tr>
+				</thead>
+			{loop $data $k $v}
+				<tr>
+					<td>{$v['id']}</td>					
+					<td>{$v['title']}{if $v['feetype']==3}公摊{/if}</td>
+					<td>{$v['region']}</td>
+					<td>{$v['building']}</td>
+					<td>{php echo empty($v['unit'])?'无':$v['unit'];}</td>
+					<td>{$v['address']}</td>
+					<td>{$v['daterange']}</td>
+					<td class="td-status">
+					{if $v['status']=='1'}<span class="label label-danger radius">未支付</span>{else}<span class="label label-success radius">已支付</span>{/if}
+					</td>
+					<td>{$v['fee']}</td>
+					<td class="td-manage">
+					{if $rights['enabled'] == 1}
+						{if $v['status']=='1'}
+							<a onClick="mydisabled(this,{$v['id']})" href="javascript:;" class="btn btn-success btn-sm" title="已支付" ><i class="fa fa-minus-circle"></i> 已支付</a>
+						{else}
+							<a onClick="myenabled(this,{$v['id']})" href="javascript:;" class="btn btn-danger btn-sm" title="未支付" ><i class="fa fa-check-circle"></i> 未支付</a>								
+						{/if}
+					{/if}
+					{if $rights['other1'] == 1}	
+					<a href="javascript:;" onclick="myedit({$v['id']},{$v['category']})"  class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="单笔收款" ><i class="fa fa-money"></i> 单笔收款</a>
+					<a href="javascript:;" onclick="mybill({$v['rid']},{$v['hid']},{$v['category']})"  class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="综合收款" ><i class="fa fa-money"></i> 综合收款</a> 
+					<a href="javascript:;" onclick="mytbill({$v['rid']},{$v['id']},{$v['hid']},{$v['category']})"  class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="合并收款" ><i class="fa fa-money"></i> 合并收款</a> 					
+					{/if}
+					
+					</td>					
+				</tr>
+			{/loop}				
+		</table>
+	  </div>    	  
+	</div>	
+  </div>
+</div>
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">			
+	window._building = {php echo json_encode($mybuilding);};
+	window._unit = {php echo json_encode($myunit);};
+	window._shoplocation = {php echo json_encode($myshoplocation);};
+	window._parklocation = {php echo json_encode($myparklocation);};
+	window._bbuilding = {php echo json_encode($mybbuilding);};
+	function renderCategory(obj,name,id){
+		var html = '';	
+		if(name=='building'){
+			var sindex = obj.options[obj.selectedIndex].value;
+			var html = '';
+			if(sindex==1){
+				name = 'building';
+				html = '<option value="0">选择楼宇</option>';
+				$("#unit").show();
+			}
+			else if(sindex==2){
+				name = 'shoplocation';
+				html = '<option value="0">选择区域</option>';
+				$("#unit").hide();
+			}
+			else if(sindex==3){
+				name = 'bbuilding';
+				html = '<option value="0">选择楼宇</option>';
+				$("#unit").hide();
+			}
+			else if(sindex==4){
+				name = 'parklocation';
+				html = '<option value="0">选择区域</option>';
+				$("#unit").hide();
+			}
+			else{
+				html = '<option value="0">请选择</option>';
+				$("#unit").hide();
+			}
+			var index = $("#rid").find("option:selected").val(); 						
+			$selectChild = $("#"+ id);
+			$("#bid").html(html);
+			
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		}
+		else if(name=='unit'){
+			var index = $("#bid").find("option:selected").val(); 				
+			$selectChild = $("#"+ id);
+			html = '<option value="0">选择单元</option>';
+			$("#tid").html(html);			
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		}
+	}
+
+
+function myedit(id,category){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'pay')).$mywe['direct'];}" + "&id=" + id + "&category=" + category;
+	window.location.href = url;
+}
+function mybill(rid,hid,category){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'mybill')).$mywe['direct'];}" + "&rid=" + rid + "&hid=" + hid + "&category=" + category;
+	var index = layer.open({
+		type: 2,
+		title:'<i class="fa fa-hand-o-right"></i> 收银台 > 综合收款',
+		content: url,
+		area: ['600px','600px'],
+		fix: false, 
+		shade:0.4,
+		maxmin: false,
+		end: function () {
+			location.reload();
+		}
+	});
+	layer.full(index);
+}
+function mytbill(rid,id,hid,category){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'mytbill')).$mywe['direct'];}" + "&rid=" + rid + "&id=" + id + "&hid=" + hid + "&category=" + category;
+	var index = layer.open({
+		type: 2,
+		title:'<i class="fa fa-hand-o-right"></i> 收银台 > 合并收款',
+		content: url,
+		area: ['600px','600px'],
+		fix: false, 
+		shade:0.4,
+		maxmin: false,
+		end: function () {
+			location.reload();
+		}
+	});
+	layer.full(index);
+}
+</script>
+</body>
+</html>

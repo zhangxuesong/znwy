@@ -1,0 +1,42 @@
+{template $this->mytpl('_header')}
+{if $item['status']==0}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170712">
+{/if}
+<div class="fui-page fui-page-current page-shop-notice-detail">
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">公告详情</div>
+        <div class="fui-header-right">
+		{if $item['status']==0}
+		<span id="btnSend" class="btn btn-success btn-sm"><i class="icon icon-check1"></i> 审核通过</span>
+		{/if}
+		</div>
+    </div>
+    <div class='fui-content navbar'>
+        <div class='fui-article'>
+            <div class="title"><b>{$item['title']}</b></div>
+            <div class='subtitle'>
+                发布时间 :{php echo date('Y-m-d H:i',$item['ctime'])}&nbsp;&nbsp;阅读:{$times}
+            </div>
+            <hr>
+            <div class='content content-block'>
+                {if $item['category']==1}{$content}{else}短信内容：{$item['remark']}{/if}
+            </div>
+        </div>
+    </div> 
+   <script language='javascript'>
+		require(['notice/board'], function (modal) {
+			modal.initDetail({id:"{$item['id']}"});
+		});
+	</script>
+</div>
+{if $item['status']==0}
+	{template $this->mytpl('_mmenu')}
+	</body>
+	</html>
+{else}
+	{template $this->mytpl('_menu')}
+	{template $this->mytpl('_footer')}
+{/if}

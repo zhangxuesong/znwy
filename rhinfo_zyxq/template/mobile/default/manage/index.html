@@ -1,0 +1,462 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170801">
+<style>
+.verify-pop {
+    position: fixed;
+}
+
+.verify-pop .qrcode {
+    width: 250px;
+    margin-left: -125px;
+    border-radius: 0.3rem;
+    height: auto;
+    overflow: hidden;
+}
+
+.verify-pop.pop .qrcode {
+    width: 90%;
+    margin-left: -45%;
+    overflow: hidden;
+    display: block;
+}
+
+.verify-pop.pop .qrcode .inner .title {
+    text-align: center;
+    font-size: 0.75rem;
+    height: 1.5rem;
+	margin-top:0.5rem;
+}
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-menu-group:before,.fui-menu-group:after{border-top:0px;}
+</style>
+<div class='fui-page fui-page-current'>
+    <div class="fui-header fui-header-success">
+        <div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+        <div class="title">物业工作台</div>
+        <div class="fui-header-right">
+		{if count($myregions)>1}<span id="myregions" style="color:#fff;"><i class="icon icon-app"></i></span>{/if}
+		</div>
+    </div>
+    <div class='fui-content navbar'>
+        <div class="headinfo">
+            <div class="userinfo">
+                <a class="fui-list external" href="{if $this->syscfg['smsprice']>0}{php echo $this->createMobileurl('service',array('op'=>'smsrecharge','rid'=>$myrid));}{else}#{/if}">
+					{if $region['thumb']}
+                    <div class="fui-list-media">
+                        <img src="{php echo tomedia($region['thumb']);}" class='round'>
+                    </div>
+					{/if}
+                    <div class="fui-list-info">
+                        <div class="title">{$region['title']}</div>
+						<div class="text">{$team['realname']}-{$team['title']}</div>
+                        <div class="subtitle">积分余额：{$region['onhand']}</div>
+						{if $this->syscfg['smsprice']>0}<div class="subtitle">短信数量：{$region['smsqty']}条</div>{/if}
+                    </div>
+                </a>
+               
+				<span class="today" id="localtime"></span>               
+            </div>
+        </div>
+
+        {if count($notices)>0 && $team['right6']}
+            <div class="fui-cell-group">
+                <div class="fui-cell index-notice">
+                    <div class="fui-cell-icon"><i class="icon icon-notice"></i>					
+					</div>
+                    <div class="fui-cell-text">
+                        <ul>
+                            {loop $notices $notice}
+                                <li>
+                                    <a  data-nocache="true" href="{php echo $this->createMobileurl('notice',array('op'=>'detail','id'=>$notice['id'],'rid'=>$myrid));}">{$notice['title']}</a>
+                                </li>
+                            {/loop}
+                        </ul>
+                    </div>
+                    <a class="fui-cell-remark" data-nocache="true" href="{php echo $this->createMobileurl($mydo,array('op'=>'notice','rid'=>$myrid));}">{if count($notices)>0} <span class="badge badge-danger">{php echo count($notices);}</span>{/if} 待审核</a>                   
+                </div>
+            </div>
+		{/if}
+		
+        <div class="fui-menu-group">
+            <a class="fui-menu-item noactive" {if $team['right1']}href="{php echo $this->createMobileurl('manage',array('op'=>'repairsta','repairdate'=>date('Y-m-d',TIMESTAMP),'rid'=>$myrid));}"{/if}>
+                <p id="today_repair">--</p>
+                <small>今日报修</small>
+            </a>
+            <a class="fui-menu-item noactive" {if $team['right2']}href="{php echo $this->createMobileurl('manage',array('op'=>'suggeststa','suggestdate'=>date('Y-m-d',TIMESTAMP),'rid'=>$myrid));}"{/if}>
+                <p id="today_suggest">--</p>
+                <small>今日投诉</small>
+            </a>
+            <a class="fui-menu-item noactive " {if $team['right2']}href="{php echo $this->createMobileurl('manage',array('op'=>'memberdate','binddate'=>date('Y-m-d',TIMESTAMP),'status'=>9,'rid'=>$myrid));}"{/if}>
+                <p id="today_member">--</p>
+                <small>今日绑定</small>
+            </a>
+        </div>
+
+            <div class="fui-cell-group">
+                <a class="fui-cell external" {if $team['right1']==1}href="{php echo $this->createMobileurl('manage',array('op'=>'steward','status'=>1,'rid'=>$myrid));}"{/if}>
+                    <div class="fui-cell-icon"><i class="icon icon-lights"></i></div>
+                    <div class="fui-cell-text">物业管家</div>
+                    <div class="fui-cell-remark"></div>
+                </a>
+            </div>
+			{if $this->syscfg['managemenustyle']==1}
+			<div class="fui-block-group col-3">   
+				{if $team['right1']}
+                    <a class="fui-block-child" href="{php echo $this->createMobileurl('manage',array('op'=>'repairsta','status'=>1,'rid'=>$myrid));}">
+                        <div class="icon text-yellow"><i class="icon icon-repair"></i></div>
+                        <div class="title">待处理报修</div>
+                        <div class="text"><span id="repair_status">--</span> 单</div>
+                    </a>
+               {/if}
+			   {if $team['right2']==1}
+                    <a class="fui-block-child" href="{php echo $this->createMobileurl('manage',array('op'=>'suggeststa','status'=>1,'rid'=>$myrid));}">
+                        <div class="icon text-yellow"><i class="icon icon-write"></i></div>
+                        <div class="title">待处理投诉</div>
+                        <div class="text"><span id="suggest_status">--</span> 笔</div>
+                    </a>
+				{/if}
+                {if $team['right3']==1}
+                    <a class="fui-block-child" href="{php echo $this->createMobileurl('manage',array('op'=>'steward','status'=>3,'rid'=>$myrid));}">
+                        <div class="icon text-yellow">
+                            <i class="icon icon-lock"></i>
+                        </div>
+                        <div class="title">将到期门禁</div>
+                        <div class="text"><span id="door_status">--</span> 个</div>
+                    </a>
+				{/if}
+					{if $team['right8']==1}
+					 <a class="fui-block-child" href="{php echo $this->createMobileurl('manage',array('op'=>'secline','rid'=>$myrid));}">
+						<div class="icon text-yellow">
+							<i class="icon icon-security"></i>
+						</div>
+						<div class="title">安防巡更</div>
+						<div class="text"></div>
+					</a>
+					{/if}
+					{if $team['right9']==1}					
+					<a class="fui-block-child" href="{php echo $this->createMobileurl('manage',array('op'=>'environ','rid'=>$myrid));}">
+						<div class="icon text-yellow">
+							<i class="icon icon-evaluate"></i>
+						</div>
+						<div class="title">环境维护</div>
+						<div class="text"></div>
+					</a>
+					{/if}
+					{if $team['right10']==1}
+					<a class="fui-block-child" href="{php echo $this->createMobileurl('progoods',array('op'=>'list','rid'=>$myrid));}">
+						<div class="icon text-yellow">
+							<i class="icon icon-tag1"></i>
+						</div>
+						<div class="title">物品登记</div>
+						<div class="text"></div>
+					</a>
+					{/if}
+					{if $team['right7']==1}
+					<a class="fui-block-child" href="{php echo $this->createMobileurl('manage',array('op'=>'selectfeeitem','rid'=>$myrid));}">
+						<div class="icon text-yellow">
+							<i class="icon icon-roundadd"></i>
+						</div>
+						<div class="title">抄表录入</div>
+						<div class="text"></div>
+					</a>
+					{/if}					
+					{if $team['right13']==1}
+					<a class="fui-block-child" href="{php echo $this->createMobileurl('manager',array('op'=>'parking','rid'=>$myrid,'status'=>0));}">
+						<div class="icon text-yellow">
+							<i class="icon icon-vipcard"></i>
+						</div>
+						<div class="title">车场管理</div>
+						<div class="text"></div>
+					</a>
+					{/if}
+					{if $team['right14']==1}
+					<a class="fui-block-child" href="{php echo $this->createMobileurl('manager',array('op'=>'devpatrol','rid'=>$myrid));}">
+						<div class="icon text-yellow">
+							<i class="icon icon-operation"></i>
+						</div>
+						<div class="title">设备巡检</div>
+						<div class="text"></div>
+					</a>
+					{/if}
+					{if $team['right1']}
+					 <a class="fui-block-child" href="{php echo $this->createMobileurl('manager',array('op'=>'repairsta','status'=>1,'rid'=>$myrid));}">
+                        <div class="icon text-yellow"><i class="icon icon-repairfill"></i></div>
+                        <div class="title">待处理内部工单</div>
+                        <div class="text"><span id="repairp_status">--</span> 单</div>
+                    </a>
+					{/if}
+            </div>
+			{else}
+            <div class="fui-block-group col-3">               
+                    <a class="fui-block-child" {if $team['right1']}href="{php echo $this->createMobileurl('manage',array('op'=>'repairsta','status'=>1,'rid'=>$myrid));}"{else}style="opacity:0.3;"{/if}>
+                        <div class="icon text-orange"><i class="icon icon-repair"></i></div>
+                        <div class="title">待处理报修</div>
+                        <div class="text"><span id="repair_status">--</span> 单</div>
+                    </a>
+               
+                    <a class="fui-block-child" {if $team['right2']==1}href="{php echo $this->createMobileurl('manage',array('op'=>'suggeststa','status'=>1,'rid'=>$myrid));}"{else}style="opacity:0.3;"{/if}>
+                        <div class="icon text-yellow"><i class="icon icon-write"></i></div>
+                        <div class="title">待处理投诉</div>
+                        <div class="text"><span id="suggest_status">--</span> 笔</div>
+                    </a>
+                
+                    <a class="fui-block-child" {if $team['right3']==1}href="{php echo $this->createMobileurl('manage',array('op'=>'steward','status'=>3,'rid'=>$myrid));}"{else}style="opacity:0.3;"{/if}>
+                        <div class="icon text-orange">
+                            <i class="icon icon-lock"></i>
+                        </div>
+                        <div class="title">将到期门禁</div>
+                        <div class="text"><span id="door_status">--</span> 个</div>
+                    </a>
+					
+					 <a class="fui-block-child" {if $team['right8']==1}href="{php echo $this->createMobileurl('manage',array('op'=>'secline','rid'=>$myrid));}"{else}style="opacity:0.3;"{/if}>
+						<div class="icon text-yellow">
+							<i class="icon icon-security"></i>
+						</div>
+						<div class="title">安防巡更</div>
+						<div class="text"></div>
+					</a>
+			 
+					
+					<a class="fui-block-child" {if $team['right9']==1}href="{php echo $this->createMobileurl('manage',array('op'=>'environ','rid'=>$myrid));}"{else}style="opacity:0.3;"{/if}>
+						<div class="icon text-orange">
+							<i class="icon icon-evaluate"></i>
+						</div>
+						<div class="title">环境维护</div>
+						<div class="text"></div>
+					</a>
+					
+					<a class="fui-block-child" {if $team['right10']==1}href="{php echo $this->createMobileurl('progoods',array('op'=>'list','rid'=>$myrid));}"{else}style="opacity:0.3;"{/if}>
+						<div class="icon text-yellow">
+							<i class="icon icon-tag1"></i>
+						</div>
+						<div class="title">物品登记</div>
+						<div class="text"></div>
+					</a>
+			   
+					<a class="fui-block-child" {if $team['right7']==1}href="{php echo $this->createMobileurl('manage',array('op'=>'selectfeeitem','rid'=>$myrid));}"{else}style="opacity:0.3;"{/if}>
+						<div class="icon text-orange">
+							<i class="icon icon-roundadd"></i>
+						</div>
+						<div class="title">抄表录入</div>
+						<div class="text"></div>
+					</a>					
+					<a class="fui-block-child" {if $team['right13']==1}href="{php echo $this->createMobileurl('manager',array('op'=>'parking','rid'=>$myrid,'status'=>0));}"{else}style="opacity:0.3;"{/if}>
+						<div class="icon text-yellow">
+							<i class="icon icon-vipcard"></i>
+						</div>
+						<div class="title">车场管理</div>
+						<div class="text"></div>
+					</a>
+					<a class="fui-block-child" {if $team['right14']==1}href="{php echo $this->createMobileurl('manager',array('op'=>'devpatrol','rid'=>$myrid));}"{else}style="opacity:0.3;"{/if}>
+						<div class="icon text-orange">
+							<i class="icon icon-operation"></i>
+						</div>
+						<div class="title">设备巡检</div>
+						<div class="text"></div>
+					</a>
+					 <a class="fui-block-child" {if $team['right1']}href="{php echo $this->createMobileurl('manager',array('op'=>'repairsta','status'=>1,'rid'=>$myrid));}"{else}style="opacity:0.3;"{/if}>
+                        <div class="icon text-yellow"><i class="icon icon-repairfill"></i></div>
+                        <div class="title">待处理内部工单</div>
+                        <div class="text"><span id="repairp_status">--</span> 单</div>
+                    </a>
+            </div>
+			{/if}
+		{if $team['right4']==1}
+        <div class="fui-cell-group">
+                <a class="fui-cell external" data-nocache="true" href="{php echo $this->createMobileUrl('manage',array('op'=>'member','status'=>9,'rid'=>$myrid));}">
+                    <div class="fui-cell-icon"><i class="icon icon-group"></i></div>
+                    <div class="fui-cell-text">住户管理</div>
+                    <div class="fui-cell-remark">{if $member_total>0} <span class="badge badge-danger">{$member_total}</span> 待审核{/if}</div>  
+                </a>
+         </div>
+		 
+        <div class="fui-block-group col-3">          
+                <a class="fui-block-child" href="{php echo $this->createMobileUrl('manage',array('op'=>'member','status'=>0,'rid'=>$myrid));}">
+                    <div class="icon text-yellow">
+                        <i class="icon icon-people"></i>
+                    </div>
+                    <div class="title">业主</div>
+                    <div class="text"><span id="member_otype0">--</span> 个</div>
+					{if $member_otype_0>0}
+					<span class="badge badge-danger" style="position:absolute;top:0.5rem;left:55%;">{$member_otype_0}</span>
+					{/if}
+                </a>
+           
+                <a class="fui-block-child" href="{php echo $this->createMobileUrl('manage',array('op'=>'member','status'=>1,'rid'=>$myrid));}">
+                    <div class="icon text-orange">
+                        <i class="icon icon-people2"></i>
+                    </div>
+                    <div class="title">成员</div>
+                    <div class="text"><span id="member_otype1">--</span> 个</div>
+					{if $member_otype_1>0}
+					<span class="badge badge-danger" style="position:absolute;top:0.5rem;left:55%;">{$member_otype_1}</span>
+					{/if}
+                </a>
+           
+                <a class="fui-block-child" href="{php echo $this->createMobileUrl('manage',array('op'=>'member','status'=>2,'rid'=>$myrid));}">
+                    <div class="icon text-yellow">
+                        <i class="icon icon-friendfill"></i>
+                    </div>
+                    <div class="title">租户</div>
+					<div class="text"><span id="member_otype2">--</span> 个</div>
+					{if $member_otype_2>0}
+					<span class="badge badge-danger" style="position:absolute;top:0.5rem;left:55%;">{$member_otype_2}</span>
+					{/if}
+                </a>          
+               
+                <a class="fui-block-child" href="{php echo $this->createMobileUrl('manage',array('op'=>'selectroom','type'=>'enterroom','rid'=>$myrid));}">
+                    <div class="icon text-orange">
+                        <i class="icon icon-shop"></i>
+                    </div>
+                    <div class="title">住户登记</div>
+                    <div class="text"></div>
+                </a>
+         
+                
+                <a class="fui-block-child" href="{php echo $this->createMobileUrl('manage',array('op'=>'selectroom','type'=>'changeroom','rid'=>$myrid));}">
+                    <div class="icon text-yellow">
+                        <i class="icon icon-order"></i>
+                    </div>
+                    <div class="title">住户变更</div>
+                    <div class="text"></div>
+                </a>
+           
+                <a class="fui-block-child" href="{php echo $this->createMobileUrl('manage',array('op'=>'selectroom','type'=>'abnroom','rid'=>$myrid));}">
+                    <div class="icon text-orange">
+                        <i class="icon icon-warn"></i>
+                    </div>
+                    <div class="title">异常登记</div>
+                    <div class="text"></div>
+                </a>
+        </div> 
+		{/if}
+		
+		{if $team['right16']==1}
+		 <div class="fui-cell-group">
+                <a class="fui-cell external" href="{php echo $this->createMobileUrl('manage',array('op'=>'fee','rid'=>$myrid));}">
+                    <div class="fui-cell-icon"><i class="icon icon-recharge"></i></div>
+                    <div class="fui-cell-text">账单管理</div>
+                    <div class="fui-cell-remark"></div>
+                </a>
+         </div>
+		 
+        <div class="fui-block-group col-3">          
+                <a class="fui-block-child" href="{php echo $this->createMobileUrl('manage',array('op'=>'fee','status'=>1,'rid'=>$myrid));}">
+                    <div class="icon text-yellow">
+                        <i class="icon icon-money"></i>
+                    </div>
+                    <div class="title">待缴费</div>
+                    <div class="text"><span id="fee_total">--</span> 元</div>
+                </a>
+           
+                <a class="fui-block-child" href="{php echo $this->createMobileUrl('manage',array('op'=>'payfee','paydate'=>date('Y-m-d',strtotime('now -30days')),'rid'=>$myrid));}">
+                    <div class="icon text-orange">
+                        <i class="icon icon-money"></i>
+                    </div>
+                    <div class="title">30天缴费</div>
+                    <div class="text"><span id="payfee_month">--</span> 元</div>
+                </a>
+           
+                <a class="fui-block-child" href="{php echo $this->createMobileUrl('manage',array('op'=>'payfee','paydate'=>date('Y-m-d',TIMESTAMP),'rid'=>$myrid));}">
+                    <div class="icon text-blue">
+                        <i class="icon icon-money"></i>
+                    </div>
+                    <div class="title">今日缴费</div>
+                    <div class="text"><span id="payfee_today">--</span> 元</div>
+                </a>          
+               
+                <a class="fui-block-child" href="{php echo $this->createMobileUrl('manage',array('op'=>'selectcharge','rid'=>$myrid));}">
+                    <div class="icon text-orange">
+                        <i class="icon icon-sponsor"></i>
+                    </div>
+                    <div class="title">上门收费</div>
+                    <div class="text"></div>
+                </a>
+         
+                <a class="fui-block-child" href="{php echo $this->createMobileurl('manager',array('op'=>'carpay','rid'=>$myrid,'status'=>0));}">
+					<div class="icon text-yellow">
+						<i class="icon icon-taxi"></i>
+					</div>
+					<div class="title">停车缴费</div>
+					<div class="text"></div>
+				</a>
+					
+                <a class="fui-block-child" href="{php echo $this->createMobileUrl('manage',array('op'=>'report','rid'=>$myrid));}">
+                    <div class="icon text-blue">
+                        <i class="icon icon-rank"></i>
+                    </div>
+                    <div class="title">统计分析</div>
+                    <div class="text"></div>
+                </a>                
+        </div>  
+		{/if}
+    </div>
+	{if !empty($myregions)}
+		<div class="pop-article-hidden" style="display: none;">
+			<div class="verify-pop pop">
+			 <div class="close"><i class="icon icon-roundclose"></i></div>
+				<div class="qrcode">
+					<div class="inner">
+						<div class="title">请选择小区</div>
+					</div>
+					<div class="fui-icon-group noborder">
+						{loop $myregions $myregion}
+							<a class="fui-icon-col" href="{php echo $this->createMobileUrl($mydo,array('op'=>'index','rid'=>$myregion['id']));}" >
+								<div class="icon"><img src="{php echo tomedia($myregion['thumb'])}" /></div>
+								<div class="text">{$myregion['title']}</div>
+							</a>
+						{/loop}
+					</div>										
+				</div>
+			</div>
+		</div>
+	{/if}
+</div>
+<script language='javascript'>
+	require(['manage/index'], function (modal) {
+		modal.init({
+		rid:{$myrid}
+		});
+	});
+    function showLocale(objD){
+		 var str,colorhead,colorfoot;
+		 var yy = objD.getYear();
+		 if(yy<1900) yy = yy+1900; 
+		 var MM = objD.getMonth()+1; 
+		 if(MM<10) MM = '0' + MM;
+		 var dd = objD.getDate(); 
+		 if(dd<10) dd = '0' + dd;
+		 var hh = objD.getHours();
+		 if(hh<10) hh = '0' + hh;
+		 var mm = objD.getMinutes();
+		 if(mm<10) mm = '0' + mm; 
+		 var ss = objD.getSeconds(); 
+		 if(ss<10) ss = '0' + ss; 
+		 var ww = objD.getDay(); 
+		 if ( ww==0 ) colorhead="<font color=\"#ff0000\">"; 
+		 if ( ww > 0 && ww < 6 ) colorhead="<font color=\"#fff\">"; 
+		 if ( ww==6 ) colorhead="<font color=\"#ffff00\">";
+		 if (ww==0) ww="星期日"; 
+		 if (ww==1) ww="星期一"; 
+		 if (ww==2) ww="星期二"; 
+		 if (ww==3) ww="星期三"; 
+		 if (ww==4) ww="星期四";  
+		 if (ww==5) ww="星期五";  
+		 if (ww==6) ww="星期六";  
+		 var colorfoot="</font>"  
+		 str = colorhead + ww + colorfoot + "<br>" + MM + "月" + dd + "日<br>" + hh + ":" + mm + ":" + ss ; 	
+		 return str; 
+	 }
+	 function tick() { 
+		 var today; 
+		 today = new Date(); 
+		 document.getElementById("localtime").innerHTML = showLocale(today);
+		 window.setTimeout("tick()", 1000); 
+	 }
+	 tick();
+ </script> 
+{template $this->mytpl('_mmenu')}
+</body>
+</html>

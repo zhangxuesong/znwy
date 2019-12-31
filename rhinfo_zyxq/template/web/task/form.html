@@ -1,0 +1,260 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+    
+	{if $_W['uid']} 
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">所属物业</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+				<option value="0">请选择</option>
+				{loop $myproperty $k $v}
+					<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+				{/loop}
+			</select>	
+			<span class="help-block">允许为空，设定后对应物业可见</span>
+		</div>
+	</div>
+	{else}
+		<input type="hidden" class="form-control" id="pid" value="{$mywe['pid']}" name="pid" />
+	{/if}
+	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">所属主体</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="rid" name="rid" onchange="renderCategory(this,'category','cid')">
+				<option value="0">请选择</option>
+				{loop $eregions $i $r}
+					<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+				{/loop}
+				{if $_W['uid']} 
+				{else}
+					{if $operation=='add'}
+						{loop $regions $i $r}
+							<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+						{/loop}
+					{/if}
+				{/if}
+			</select>
+			<span class="help-block">允许为空，设定后对应小区可见</span>
+		</div>
+	</div>	
+
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>任务主题</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入任务主题" name="title" />
+		</div>	
+	</div>	
+
+	<div class="form-group">
+	 <label class="col-sm-2 col-md-2 col-xs-12 control-label">任务方式</label>
+	  <div class="col-sm-8 col-lg-9 col-xs-12">
+		<label class="radio-inline">
+		  <input type="radio" name="tasktype" value="1" id="tasktype1" {if $_GPC['op']=='edit'}disabled{/if} {if $item[ 'tasktype']==1 || empty($item['tasktype'])} checked="checked" {/if}>后台指定</label>
+		<label class="radio-inline">
+		  <input type="radio" name="tasktype" value="2" id="tasktype2" {if $_GPC['op']=='edit'}disabled{/if} {if $item[ 'tasktype']==2} checked="checked" {/if}>开放领取</label>
+		<span class="help-block">后台指定派发任务，用户不可领取，新增后不可更改</span>
+		</div>
+	</div>
+	
+	<div class="form-group" id="bindweixin">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定微信</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="input-group ">
+				<input type="hidden" class="form-control" id="uid" value="{$item['uid']}" name="uid">
+				<input type="hidden" class="form-control" id="openid" value="{$item['openid']}" readonly name="openid">
+				<input type="text" class="form-control" id="nickname1" value="{$item['nickname1']}" readonly name="nickname1">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" onclick="showFansDialog(this);">选择微信</button>
+				</span>
+			</div>
+		</div>	
+	</div>	
+	<script type="text/javascript">
+		function showFansDialog(elm) {
+			require(['util', 'jquery'], function(u, $){
+				var footer = '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>';
+				var modalobj = u.dialog('粉丝选择', ["{php echo $this->createWeburl('query',array('op'=>'fans')).$mywe['direct'];}"], footer, {containerName:'link-container'});
+				modalobj.find('.modal-body').css({'overflow-y':'auto' });
+				modalobj.modal('show');
+				});
+		}
+	</script>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">任务类别</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="category">
+				<option value="1" {if $item['category'] == 1} selected {/if}>邀请绑定房产</option>
+				<option value="2" {if $item['category'] == 2} selected {/if} >邀请到店消费</option>
+			</select>	
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">任务图标</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_image('thumb',$item['thumb']);}
+			<span class="help-block">建议尺寸60*60</span>
+		</div>	
+	</div>
+	<div class="form-group sendtype">
+	  <label class="col-sm-2 col-md-2 col-xs-12 control-label">任务说明</label>
+	  <div class="col-sm-8 col-lg-9 col-xs-12">
+		<input type="text" name="remark" value="{$item['remark']}" class="form-control">
+	</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">开始日期</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_date('startdate',$item['startdate']);}
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">结束日期</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_date('enddate',$item['enddate']);}
+		</div>	
+	</div>
+	<div class="form-group">
+	 <label class="col-sm-2 col-md-2 col-xs-12 control-label">奖励方式</label>
+	  <div class="col-sm-8 col-lg-9 col-xs-12">
+		<label class="radio-inline">
+		  <input type="radio" name="rewardtype" value="1" id="reward1" {if $item[ 'rewardtype']==1 || empty($item['rewardtype'])} checked="checked" {/if}>积分奖励</label>
+		<label class="radio-inline">
+		  <input type="radio" name="rewardtype" value="2" id="reward2" {if $item[ 'rewardtype']==2} checked="checked" {/if}>余额奖励</label>
+		  <label class="radio-inline">
+		  <input type="radio" name="rewardtype" value="3" id="reward3" {if $item[ 'rewardtype']==3} checked="checked" {/if}>红包奖励</label>
+		<span class="help-block">红包奖励领取后直接进入微信账户</span>
+		</div>
+	</div>
+	
+	<div class="form-group">
+	   <label class="col-sm-2 col-md-2 col-xs-12 control-label">邀请人数</label>
+	  <div class="col-sm-8 col-lg-9 col-xs-12">
+		 <div class="input-group">
+			<input type="number" name="persons" value="{php echo !empty($item['persons'])?$item['persons']:1;}" class="form-control">
+			<span class="input-group-addon">人</span>
+		</div>	
+		<span class="help-block">邀请人数为任务达标要求，不可为空</span>
+		</div>
+	</div>
+	
+	<div class="form-group" id="rewardtype1">
+	  <label class="col-sm-2 col-md-2 col-xs-12 control-label">奖励积分</label>
+	   <div class="col-sm-8 col-lg-9 col-xs-12">
+	   <div class="input-group">
+			<input type="number" name="credit1" id="credit1" value="{$item['credit1']}" class="form-control">
+			<span class="input-group-addon">积分</span>
+		</div>	
+		<span class="help-block">业主中心个人积分</span></div>
+	</div>
+	
+	<div class="form-group" id="rewardtype2" style="display:none;">
+	  <label class="col-sm-2 col-md-2 col-xs-12 control-label">奖励余额</label>
+	   <div class="col-sm-8 col-lg-9 col-xs-12">
+	   <div class="input-group">
+			<input type="number" name="credit2" id="credit2" value="{$item['credit2']}" class="form-control">
+			<span class="input-group-addon">元</span>
+		</div>	
+		<span class="help-block">业主中心个人余额</span></div>
+	</div>
+	
+	<div id="rewardtype3" style="display:none;">	
+		<div class="form-group">
+		 <label class="col-sm-2 col-md-2 col-xs-12 control-label">红包金额方式</label>
+		  <div class="col-sm-8 col-lg-9 col-xs-12">
+			<label class="radio-inline">
+			  <input type="radio" name="redcate" value="1" id="category1" {if $item[ 'redcate']==1 || empty($item['redcate'])} checked="checked" {/if}>固定金额</label>
+			<label class="radio-inline">
+			  <input type="radio" name="redcate" value="2" id="category2" {if $item[ 'redcate']==2} checked="checked" {/if}>随机金额</label>
+			<span class="help-block">发放红包金额产生方式</span>
+			</div>
+		</div>
+		
+		<div class="form-group" id="redcate1">
+		   <label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>红包金额</label>
+		  <div class="col-sm-8 col-lg-9 col-xs-12">
+		  <div class="input-group">
+			<input type="number" name="amount" value="{$item['amount']}" id="amount" class="form-control">
+			<span class="input-group-addon">分</span>
+			</div>	
+			<span class="help-block">固定值,红包金额(按分计算100分＝1块钱,最少需要1块钱)</span></div>
+		</div>
+		<div id="redcate2" style="display:none;">
+			<div class="form-group">
+			   <label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>红包最小值</label>
+			  <div class="col-sm-8 col-lg-9 col-xs-12">
+			   <div class="input-group">
+				<input type="number" name="minamount" value="{$item['minamount']}" id="minamount" class="form-control">
+				<span class="input-group-addon">分</span>
+				</div>
+				<span class="help-block">最小值不要少于100,也就是1元</span>
+				</div>
+			</div>
+			
+			<div class="form-group">
+			  <label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>红包最大值</label>
+			   <div class="col-sm-8 col-lg-9 col-xs-12">
+				<div class="input-group">
+				<input type="number" name="maxamount" value="{$item['maxamount']}" id="maxamount" class="form-control">
+				<span class="input-group-addon">分</span>
+			</div>
+				<span class="help-block">最大值不要超过20000,也就是200元</span></div>
+			</div>
+		</div>
+		<div class="form-group sendtype">
+		  <label class="col-sm-2 col-md-2 col-xs-12 control-label">红包来源</label>
+		   <div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" name="from" value="{php echo !empty($item['from'])?$item['from']:'做任务奖励';}" class="form-control">
+			<span class="help-block">红包来源说明,不要超过8个汉字</span></div>
+		</div>
+		<div class="form-group sendtype">
+		  <label class="col-sm-2 col-md-2 col-xs-12 control-label">领红包附言</label>
+		  <div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" name="wishing" value="{$item['wishing']}" class="form-control">
+			<span class="help-block">红包开启后的附言或祝福语</span></div>
+		</div>	
+	</div>
+		
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">状态</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<label class='radio-inline'>
+			<input type='radio' name='status' value='1'  {if $item['status']==1 } checked{/if}/> 启用
+			</label>
+			<label class='radio-inline'>
+				<input type='radio' name='status' value='0' {if empty($item['status']) || $item['status']==0 } checked{/if} /> 禁用
+			</label>
+		</div>
+	</div>
+	</br>
+</form>	
+
+<script type="text/javascript">
+	window._region = {php echo json_encode($myregion);};				
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择</option>';
+			if (id=='rid'){
+				$("#cid").html(html);				
+			}			
+
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		});
+	}
+	function showLinkDialog(elm) {
+		var ipt = $(elm).parent().prev();
+		util.linkBrowser(function(href){		
+			ipt.val(href);			
+		});
+	}
+</script>

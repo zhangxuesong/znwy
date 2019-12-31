@@ -1,0 +1,14 @@
+<nav class="navbar navbar-default navbar-fixed-bottom">
+   <div class="col-lg-9 col-xs-12 col-sm-offset-2" style="margin-top:8px;">   
+	   <a href="javascript:;" class="btn btn-primary"  onclick="mysubmit(this)"><i class="fa fa-check"></i> 提交<a/>
+	   <a href="javascript:;" class="btn btn-default"  onclick="myreturn()"><i class="fa fa-reply"></i> 返回列表<a/>
+   </div>
+</nav>
+
+<script type="text/javascript">
+	function myprocess(obj){
+		var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/> 处理中...';
+		$(obj).html(html);  
+		$(obj).attr("disabled", "disabled"); 
+	}
+</script>

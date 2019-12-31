@@ -1,0 +1,93 @@
+{template $this->mytpl('_header')}
+
+<div class='fui-page fui-page-current sns-board-page repair-page'>
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back" ></a>
+	</div>
+	<div class="title">投诉建议</div> 
+	<div class="fui-header-right"><a href="{php echo $this->createMobileurl('service',array('op'=>'suggest'));}">历史</a></div>
+    </div>
+	
+	<div class='fui-content {if $isview}navbar{/if}'>    
+	  <div class="fui-title"><i class="icon icon-city"></i> {$housename}</div>
+	 <div class="fui-cell-group">	
+		<div class="goods-label-list">
+				<div class="goods-label-style3">
+				{loop $cate $item}
+					{if $item['id']==$suggest['cid']}
+						<span class="cl-3 cl-4 cl-2" ><strong>{$item['title']}</strong></span>
+					{/if}
+				{/loop}
+				</div>
+			<div class="pull-right">
+				<span><strong class="{$suggest['css']}">{$suggest['statustext']}</strong></span>			
+			</div>
+			<div style="clear:both;"></div>
+		</div>	 
+	 
+		 <div class='fui-cell'>			
+			 <div class='fui-cell-text'>{$suggest['content']}</div>
+		 </div> 
+         		 
+	     {if !empty($images)}
+		 <div class='fui-cell'>
+			 <div class='fui-cell-info mysuggestimg'>			 
+				 <div class="fui-images fui-images-md image suggest-images">
+				 {loop $images $image}
+					<img src="{php echo tomedia($image);}" align='top' onload="if (this.height> 100) {this.style.marginTop = (100 - this.height)/2 + 'px';}"/>
+				  {/loop}
+				 </div>			
+			 </div>
+		 </div>
+		 {/if}		 
+	</div>
+	 {if !empty($suggest_records)}
+	  <div class="fui-title">回复内容</div>
+			{loop $suggest_records $suggest_record}
+				 <div class="fui-cell-group">
+					 <div class='fui-cell'>
+						 <div class='fui-cell-label'>
+						 <img class="round" data-lazy="{$suggest_record['headimgurl']}" style="width:35px;"/>
+						  <br>
+						  <span style="color: #999;font-size: 0.6rem;">{$suggest_record['ctime']}</span>
+						 </div>
+						 <div class='fui-cell-text'>
+							 {$suggest_record['content']}
+						 </div>		 
+					 </div>  
+					
+					  {if !empty($suggest_record['images'])}  		 
+					 <div class='fui-cell'>
+						 <div class='fui-cell-info myreplyimg'>			 
+							 <div class="fui-images fui-images-md image repair-images" >
+							 {loop $suggest_record['images'] $reply_image}				    
+								<img src="{php echo tomedia($reply_image);}" align='top' onload="if (this.height> 100) {this.style.marginTop = (100 - this.height)/2 + 'px';}"/>					
+							  {/loop}
+							 </div>			
+						 </div>
+					 </div>	
+					{/if}
+				</div>
+			{/loop}	 
+			<br><br>
+	 </div>
+	 {/if}		
+	 {if $isview} 
+	 {else}
+		{if $suggest['status'] !=='8'}
+			<a class="btn btn-primary btn-add-post" href="{php echo $this->createMobileurl($mydo,array('op'=>'suggestmtrack','id'=>$suggest['id']));}"><i class="icon icon-edit2"></i></a>		
+			<input type="hidden" id="suggest_id" name="suggest_id" value="{$suggest['id']}">
+			<div class='fui-footer'>
+				<a class='btn btn-warning btn-submit block'>已处理好</a>
+			</div>			
+		{/if}
+	{/if}
+ <script language='javascript'>
+	require(['suggest/suggest'], function (modal) {
+		modal.initTrack(); 
+	});
+	</script>  
+</div> 
+
+{template $this->mytpl('_footer')}

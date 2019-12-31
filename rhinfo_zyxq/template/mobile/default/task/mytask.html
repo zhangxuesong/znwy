@@ -1,0 +1,59 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" href="../addons/rhinfo_zyxq/static/mobile/css/task.css?v={php echo time();}">
+<style type="text/css">
+    .icon {
+        width: 1em; height: 1em;
+        fill: currentColor;
+        overflow: hidden;
+    }
+</style>
+<div class="fui-page fui-page-current">
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">我的任务</div>
+        <div class="fui-header-right">
+		<a href="{php echo $this->CreateMobileUrl($mydo,array('op'=>'index'));}"><i class="icon icon-add"></i></a>
+		</div>
+    </div>
+
+    <div class="fui-content mytask-page">
+		{if empty($tasks)}
+		<div class='fui-content-inner'>
+            <div class='content-empty'>
+                <div class="empty-bg"><i class='icon icon-lights'></i></div>
+				<p>您还没有参加任务</p>	
+            </div>           
+        </div>
+		{/if}
+        <div class="zt ing">
+        {loop $tasks $k $v}
+        <div class="my-item" data-id="{$v['id']}">
+            <a class="my-title" href="{php echo $this->createMobileUrl($mydo,array('op'=>'taskinfo','id'=>$v['id'],'parentid'=>$parentid));}">
+                <div class="my-logo"><img src="{php echo tomedia($v['thumb']);}" width="100%" height="100%"></div>
+                <div class="my-right">
+                    <div class="my-task-title">{$v['title']}</div>
+                    <div class="my-task-time">已邀请{$v['count']}人</div>
+                    <div class="my-task-time">{php echo date('Y-m-d',$v['startdate']);}至{php echo date('Y-m-d',$v['enddate']);}</div>
+                </div>
+            </a>
+            <div class="my-status">
+                <div class="my-icon">
+                  {if $v['statustxt']=='进行中'}<a href="{php echo $this->createMobileUrl($mydo,array('op'=>'share','id'=>$v['id'],'parentid'=>$parentid));}"> <i class="icon icon-qrcode" ></i> <font style="font-size:0.75rem;">邀请</font></a>{/if}
+                </div>
+                <div class="my-statustext"{if $v['statustxt']=='已失效'}style="color:#666;"{/if} >{$v['statustxt']}</div>
+                <div class="my-detail">
+                    <svg class="icon" aria-hidden="true">
+                        <use xlink:href="#icon-unfold"></use>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        {/loop}       
+        </div>        
+        <div class="task-footer"></div>
+    </div>
+</div>
+
+{template $this->mytpl('_footer')}

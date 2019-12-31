@@ -1,0 +1,70 @@
+<?php
+	$_share['title'] = !empty($_share['title']) ? $_share['title'] : $_W['account']['name'];
+	$_share['imgUrl'] = !empty($_share['imgUrl']) ? $_share['imgUrl'] :$this->syscfg['siteurl'].'addons/rhinfo_zyxq/static/mobile/images/icon.jpg';
+	$_share['desc'] = !empty($_share['desc']) ? $_share['desc'] :  '来自'.$_W['fans']['nickname'].'的分享';
+	$_share['desc'] = preg_replace('/\s/i', '', str_replace('	', '', cutstr(str_replace('&nbsp;', '', ihtmlspecialchars(strip_tags($_share['desc']))), 60)));
+	if(empty($_share['link'])) {
+		$_share['link'] = '';
+		$query_string = $_SERVER['QUERY_STRING'];
+		if(!empty($query_string)) {
+			parse_str($query_string, $query_arr);
+			$query_arr['u'] = $_W['member']['uid'];
+			$query_string = http_build_query($query_arr);
+			$_share['link'] = $this->syscfg['siteurl'].'app/index.php?'. $query_string;
+		}
+	}
+?>
+<script language="javascript">
+        clearTimeout(window.interval);
+        window.interval = setTimeout(function () {
+            window.shareData = {php echo json_encode($_share);};
+            jssdkconfig = {php echo json_encode($_W['account']['jssdkconfig']);} || { jsApiList:[] };
+            jssdkconfig.debug = false;
+			jssdkconfig.jsApiList = [
+				'checkJsApi',
+				'onMenuShareTimeline',
+				'onMenuShareAppMessage',
+				'onMenuShareQQ',
+				'onMenuShareWeibo',
+				'hideMenuItems',
+				'showMenuItems',
+				'hideAllNonBaseMenuItem',
+				'showAllNonBaseMenuItem',
+				'translateVoice',
+				'startRecord',
+				'stopRecord',
+				'onRecordEnd',
+				'playVoice',
+				'pauseVoice',
+				'stopVoice',
+				'uploadVoice',
+				'downloadVoice',
+				'chooseImage',
+				'previewImage',
+				'uploadImage',
+				'downloadImage',
+				'getNetworkType',
+				'openLocation',
+				'getLocation',
+				'hideOptionMenu',
+				'showOptionMenu',
+				'closeWindow',
+				'scanQRCode',
+				'chooseWXPay',
+				'openProductSpecificView',
+				'addCard',
+				'chooseCard',
+				'openCard',
+				'openAddress'
+			];
+            wx.config(jssdkconfig);			
+            wx.ready(function () {
+                wx.showOptionMenu();
+                wx.onMenuShareAppMessage(window.shareData);
+                wx.onMenuShareTimeline(window.shareData);
+                wx.onMenuShareQQ(window.shareData);
+                wx.onMenuShareWeibo(window.shareData);
+                wx.onMenuShareQZone(window.shareData);
+            });
+        },500);
+</script> 

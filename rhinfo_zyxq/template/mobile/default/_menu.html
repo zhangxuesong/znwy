@@ -1,0 +1,196 @@
+{if !empty($user['menu']['menucolor'])}
+ <style>
+		.fui-navbar .nav-item.active,
+		.fui-navbar .nav-item:active {
+			color: {php echo $user['menu']['menucolor'];};
+		}
+		#service .mybulge {
+			background-color:{php echo $user['menu']['menucolor'];};
+		}
+    </style>
+{elseif !empty($this->syscfg['menucolor'])}
+    <style>
+		.fui-navbar .nav-item.active,
+		.fui-navbar .nav-item:active {
+			color: {php echo $this->syscfg['menucolor'];};
+		}
+		#service .mybulge {
+			background-color:{php echo $this->syscfg['menucolor'];};
+		}
+    </style>
+{else}
+	<style>
+		.fui-navbar .nav-item.active,
+		.fui-navbar .nav-item:active {
+			color: #ff6600;
+		}
+		#service .mybulge {
+			background-color:#ff6600;
+		}
+    </style>
+{/if}
+<style>
+ #service{  
+	position:fixed;
+	bottom:0;
+	left:0;
+	right:0;
+	height:2.5rem;	
+	vertical-align: middle;
+	width:2.5rem;
+	color:#999;
+	display:block;
+	margin:0 auto;
+	text-align:center;
+	z-index:99;
+	}
+ #service .mybulge {
+    position:absolute;	
+	bottom:0.5rem;
+	text-align:center;
+	vertical-align:middle;
+	line-height:2.5rem;
+	width:2.5rem;
+	height:2.5rem;	
+	padding: 0;
+	-webkit-border-radius:2.5rem;
+	-moz-border-radius:2.5rem;	
+	border-radius:2.5rem;
+	border:1px solid #ccc;
+	opacity:0.8;
+	box-shadow:0 0 3px 3px rgba(204,204,204,0.5);
+	}
+	@-webkit-keyframes scaleout {
+		0% { -webkit-transform: scale(1.0) }
+		100% {
+			-webkit-transform: scale(1.1);
+			opacity: 0;
+		}
+	}
+	@keyframes scaleout {
+		0% {
+			transform: scale(1.0);
+			-webkit-transform: scale(1.0);
+		} 100% {
+			  transform: scale(1.1);
+			  -webkit-transform: scale(1.1);
+			  opacity: 0;
+		  }
+
+	}
+#service a.active .mybulge{
+	opacity:1;
+}
+</style>
+{if !empty($user['menu'])}
+	<div class="fui-navbar">
+		{if $user['menu']['menu1url']=='#'}
+		{else}
+		<a href="{php echo empty($user['menu']['menu1url'])? $this->createMobileUrl('home'):$user['menu']['menu1url'];}" class="external nav-item {if $curr=='home'}active{/if}">
+			<span class="icon {php echo empty($user['menu']['icon1'])?'icon-home':$user['menu']['icon1'];}"></span>
+			<span class="label">{if empty($user['menu']['menu1'])}社区{else}{php echo $user['menu']['menu1'];}{/if}</span>
+		</a>
+		{/if}
+		{if $user['menu']['menu2url']=='#'}
+		{else}
+		<a href="{php echo empty($user['menu']['menu2url'])?$this->createMobileUrl('notice'):$user['menu']['menu2url'];}" class="nav-item {if $curr=='notice'}active{/if}" >
+			<span class="icon {php echo empty($user['menu']['icon2'])?'icon-mark1':$user['menu']['icon2'];}"></span>
+			<span class="label">{if empty($user['menu']['menu2'])}通知{else}{php echo $user['menu']['menu2'];}{/if}</span>
+			{if !empty($user['unreadnotice'])}
+				<span class="badge">{$user['unreadnotice']}</span>
+			{/if}
+		</a>
+		{/if}
+		{if $user['menu']['servicedisplay']==1}	
+		<a href="{php echo empty($user['menu']['menu3url'])?$this->createMobileUrl('service'):$user['menu']['menu3url'];}" class="nav-item {if $curr=='service'}active{/if}">		
+			<span class="icon {php echo empty($user['menu']['icon3'])?'icon-like1':$user['menu']['icon3'];}"></span>
+			<span class="label">{if empty($user['menu']['menu3'])}服务{else}{php echo $user['menu']['menu3'];}{/if}</span>	
+		</a>     	
+		{/if}
+		{if $user['menu']['servicedisplay']==2}
+			 <div class="nav-item">		
+				<span class="icon">&nbsp;</span>
+				<span class="label">&nbsp;</span>	
+			</div>   
+		{/if}
+		{if $user['menu']['menu4url']=='#'}
+		{else}
+		<a href="{php echo empty($user['menu']['menu4url'])?$this->createMobileUrl('steward'):$user['menu']['menu4url'];}" class="nav-item {if $curr=='steward'}active{/if}">
+			<span class="icon {php echo empty($user['menu']['icon4'])?'icon-lights':$user['menu']['icon4'];}"></span>
+			<span class="label">{if empty($user['menu']['menu4'])}管家{else}{php echo $user['menu']['menu4'];}{/if}</span>
+		</a>
+		{/if}
+		{if $user['menu']['menu5url']=='#'}
+		{else}
+		<a href="{php echo empty($user['menu']['menu5url'])?$this->createMobileUrl('member'):$user['menu']['menu5url'];}" class="nav-item {if $curr=='member'}active{/if}">
+			<span class="icon {php echo empty($user['menu']['icon5'])?'icon-person2':$user['menu']['icon5'];}"></span>
+			<span class="label">{if empty($user['menu']['menu5'])}我的{else}{php echo $user['menu']['menu5'];}{/if}</span>
+		</a>
+		{/if}
+	</div>
+	{if $user['menu']['servicedisplay']==2}
+	<div id="service">	
+		<a href="{php echo empty($user['menu']['menu3url'])?$this->createMobileUrl('service'):$user['menu']['menu3url'];}" {if $curr=='service'}class="active"{/if}>						
+			<span class="mybulge">
+				<span class="icon {php echo empty($user['menu']['icon3'])?'icon-like1':$user['menu']['icon3'];}" style="font-size:1.45rem;color:#fff;"></span>
+			</span>								
+		</a>  
+	</div>   	
+	{/if}
+}
+{else}
+	<div class="fui-navbar">
+		{if $this->syscfg['menu1url']=='#'}
+		{else}
+		<a href="{php echo empty($this->syscfg['menu1url'])? $this->createMobileUrl('home'):$this->syscfg['menu1url'];}" class="external nav-item {if $curr=='home'}active{/if}">
+			<span class="icon {php echo empty($this->syscfg['icon1'])?'icon-home':$this->syscfg['icon1'];}"></span>
+			<span class="label">{if empty($this->syscfg['menu1'])}社区{else}{php echo $this->syscfg['menu1'];}{/if}</span>
+		</a>
+		{/if}
+		{if $this->syscfg['menu2url']=='#'}
+		{else}
+		<a href="{php echo empty($this->syscfg['menu2url'])?$this->createMobileUrl('notice'):$this->syscfg['menu2url'];}" class="nav-item {if $curr=='notice'}active{/if}" >
+			<span class="icon {php echo empty($this->syscfg['icon2'])?'icon-mark1':$this->syscfg['icon2'];}"></span>
+			<span class="label">{if empty($this->syscfg['menu2'])}通知{else}{php echo $this->syscfg['menu2'];}{/if}</span>
+			{if !empty($user['unreadnotice'])}
+				<span class="badge">{$user['unreadnotice']}</span>
+			{/if}
+		</a>
+		{/if}
+		{if $this->syscfg['servicedisplay']==1}	
+		<a href="{php echo empty($this->syscfg['menu3url'])?$this->createMobileUrl('service'):$this->syscfg['menu3url'];}" class="nav-item {if $curr=='service'}active{/if}">		
+			<span class="icon {php echo empty($this->syscfg['icon3'])?'icon-like1':$this->syscfg['icon3'];}"></span>
+			<span class="label">{if empty($this->syscfg['menu3'])}服务{else}{php echo $this->syscfg['menu3'];}{/if}</span>	
+		</a>     	
+		{/if}
+		{if $this->syscfg['servicedisplay']==2}
+			 <div class="nav-item">		
+				<span class="icon">&nbsp;</span>
+				<span class="label">&nbsp;</span>	
+			</div>   
+		{/if}
+		{if $this->syscfg['menu4url']=='#'}
+		{else}
+		<a href="{php echo empty($this->syscfg['menu4url'])?$this->createMobileUrl('steward'):$this->syscfg['menu4url'];}" class="nav-item {if $curr=='steward'}active{/if}">
+			<span class="icon {php echo empty($this->syscfg['icon4'])?'icon-lights':$this->syscfg['icon4'];}"></span>
+			<span class="label">{if empty($this->syscfg['menu4'])}管家{else}{php echo $this->syscfg['menu4'];}{/if}</span>
+		</a>
+		{/if}
+		{if $this->syscfg['menu5url']=='#'}
+		{else}
+		<a href="{php echo empty($this->syscfg['menu5url'])?$this->createMobileUrl('member'):$this->syscfg['menu5url'];}" class="nav-item {if $curr=='member'}active{/if}">
+			<span class="icon {php echo empty($this->syscfg['icon5'])?'icon-person2':$this->syscfg['icon5'];}"></span>
+			<span class="label">{if empty($this->syscfg['menu5'])}我的{else}{php echo $this->syscfg['menu5'];}{/if}</span>
+		</a>
+		{/if}
+	</div>
+	{if $this->syscfg['servicedisplay']==2}
+	<div id="service">	
+		<a href="{php echo empty($this->syscfg['menu3url'])?$this->createMobileUrl('service'):$this->syscfg['menu3url'];}" {if $curr=='service'}class="active"{/if}>						
+			<span class="mybulge">
+				<span class="icon {php echo empty($this->syscfg['icon3'])?'icon-like1':$this->syscfg['icon3'];}" style="font-size:1.45rem;color:#fff;"></span>
+			</span>								
+		</a>  
+	</div>   	
+	{/if}
+{/if}

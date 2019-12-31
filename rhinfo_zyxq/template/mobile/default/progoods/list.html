@@ -1,0 +1,93 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-list:before {border-top:none;}
+.sortMenu > li{border-right:none;}
+</style>
+<div class="fui-page shop-index-page page-merch-list">
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back" ></a>
+		</div>
+        <div class="title">
+			物品清单
+		</div>
+		<div class="fui-header-right">
+			<a href="{php echo $this->CreateMobileUrl('progoods',array('op'=>'add','rid'=>$myrid));}"><i class="icon icon-add"></i></a>
+		</div>
+    </div>
+    <div class="fui-content">
+		<form action="{php echo $this->createMobileUrl($mydo,array('op'=>'list','rid'=>myrid))}" method="post">
+			<div class="fui-searchbar bar">
+				<div class="searchbar center">
+					<input type="submit" class="searchbar-cancel searchbtn" value="搜索" />
+					<div class="search-input">
+						<i class="icon icon-search"></i>
+						<input type="search" placeholder="输入关键字..." value="{$_GPC['keyword']}" class="search" name="keyword" id="keyword">
+					</div>
+				</div>
+			</div>
+		</form>
+		 <ul class="sortMenu fui-list">
+            <li class="fui-list-inner" id="sortmenu_rule" data-class="sortmenu_rule"><span id="sortmenu_rule_text">有效期</span><i class="icon icon-down"></i></li>
+			<li class="fui-list-inner" id="sortmenu_cate" data-class="sortmenu_cate"><span id="sortmenu_cate_text">分类</span><i class="icon icon-down"></i></li>
+            <li class="fui-list-inner" id="sortmenu_sort" data-class="sortmenu_sort"><span id="sortmenu_sort_text">排序</span><i class="icon icon-down"></i></li>
+            <div class="sortmenu_rule" style="display: none;">
+                <ul>
+                    <li range="1" text="1个月">1个月</li>
+                    <li range="2" text="2个月">2个月</li>
+                    <li range="3" text="3个月">3个月</li>
+                    <li range="6" text="6个月">6个月</li>
+					<li range="12" text="12个月">12个月</li>
+                </ul>
+            </div>
+            <div class="sortmenu_cate" style="display: none;">
+                <ul>
+                    <li cateid="0" text="全部分类" class="on"><i class="fa fa-th-large"></i>&nbsp;全部分类</li>
+
+                    {loop $category $item}
+						<li cateid="{$item['id']}" text="{$item['title']}">
+							{$item['title']}
+						</li>
+                    {/loop}
+
+                </ul>
+            </div>
+            <div class="sortmenu_sort" style="display: none;">
+                <ul>
+                    <li sorttype="0" text="建立日期">建立日期</li>
+                    <li sorttype="1" text="有效日期">有效日期</li>
+                 </ul>
+            </div>
+        </ul>
+        <div class="fui-mask-m sort-mask" style="display: none;"></div>
+        <div class='fui-content-inner'>
+            <div class='content-empty' style='display:none;'>
+                <i class='icon icon-lights'></i><br/>未找到相关物品<br/>	
+            </div>
+			<div class='container'></div>
+            <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+        </div>
+    </div>
+<script type="application/javascript">
+	require(['progoods/list'], function (modal) {
+		modal.init({
+		keyword:"{$_GPC['keyword']}",rid:"{$myrid}",cateid:"{$_GPC['cateid']}",range:'{$_GPC['range']}',sorttype:'{$_GPC['sorttype']}'
+		});
+	});	
+</script>
+<script id='tpl_progoods_list' type='text/html'>
+	<%each list as row%>
+	<div class='fui-list-group'>
+		<a class='fui-list' href="<%row.url%>" data-nocache="true">
+			<div class='fui-list-inner'>
+			    <div class='title'>物品编号：<span class="text-orange"><%row.goodssn%></span></div>
+				<div class='subtitle'>物品名称：<%row.title%></div>
+				<%if row.enddate!=""%><div class='text'>保修日期：<%row.startdate%>~<%row.enddate%></div><%/if%>
+			</div>
+			<div class="fui-list-angle"><div class='angle'></div></div>
+		</a>
+	</div>
+	<%/each%>		
+</script>		
+
+{template $this->mytpl('_footer')}

@@ -1,0 +1,100 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/rhui/css/mui.picker.css">
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/rhui/css/mui.poppicker.css">
+
+<style>
+.mui-btn-blue,.mui-btn-primary{
+	color: #fff;
+	border: 1px solid #04ab02;
+	background-color: #04ab02;
+}
+.mui-btn{
+	border:none;
+	background-color:none;
+}
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+</style>
+<div class='fui-page fui-page-current'>	
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">租赁缴费</div> 
+		<div class="fui-header-right" ></div>
+	</div>
+	<div class='fui-content'>	
+		<form action="{php echo $this->createMobileUrl($mydo,array('op'=>'feebill'));}" method="post" id="myform">						
+			<div class="fui-cell-group">				
+				<div class="fui-cell must">
+					<div class="fui-cell-label">收费单位</div>
+					<div class="fui-cell-info">
+						<input type="text" class='fui-input' id='myregion' name='myregion' readonly placeholder="请选择"  value="{$region['title']}" />
+						<input id="rid" type="hidden" name="rid" value="{$myrid}" />
+					</div>
+				</div>
+						
+				<div class="fui-cell must">
+					<div class="fui-cell-label">承租人</div>
+					<div class="fui-cell-info">
+						<input type="text" class='fui-input' id='mylessee' name='mylessee' readonly placeholder="请选择"  value="" />
+						<input id="lesseeid" type="hidden" name="lesseeid" value="" />
+					</div>
+				</div>
+			</div>
+		</form>
+        <div class="btn btn-success block" id="btnSubmit">下一步</div>      
+	</div>
+</div>
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.min.js"></script>		
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.picker.js"></script>			
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.poppicker.js"></script>	
+<script>
+var myregions = {php echo json_encode($regions);};	
+var mylessees = {php echo json_encode($lessees);};
+(function($, doc){
+	$.init();
+	$.ready(function() {
+		var myregionPicker = new $.PopPicker();
+		var mylesseePicker = new $.PopPicker();
+		
+		myregionPicker.setData(myregions);		
+		var regionPickerButton = doc.getElementById('myregion');
+		var ridResult = doc.getElementById('rid');
+		
+		mylesseePicker.setData(mylessees);
+		var lesseePickerButton = doc.getElementById('mylessee');
+		var lesseeidResult = doc.getElementById('lesseeid');
+		
+		regionPickerButton.addEventListener('tap', function(event) {
+			myregionPicker.show(function(items) {			
+				ridResult.value=items[0].value;
+				regionPickerButton.value=items[0].text;
+				core.json('lease/index',{rid:items[0].value}, function (json) {
+					mylesseePicker.setData(json.result.list);
+					lesseePickerButton.value = "";
+					lesseeidResult.value = "";
+					
+				}, true, true);				
+				//return false;
+			});
+		}, false);			
+		
+		lesseePickerButton.addEventListener('tap', function(event) {
+			mylesseePicker.show(function(items) {
+				if(items[0].value == null) { 
+				}
+				else{
+					lesseePickerButton.value=items[0].text;				
+					lesseeidResult.value=items[0].value;
+				}				
+				//return false;
+			});
+		}, false);
+	});
+})(mui, document);
+require(['lease/index'], function (modal) {
+	modal.init();
+});
+</script>
+{template $this->mytpl('_footer')}

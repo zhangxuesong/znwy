@@ -1,0 +1,129 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:30px;">
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/form'}	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	var pid = $("#pid").find("option:selected").val();
+	var rid = $("#rid").find("option:selected").val(); 
+	var lesseeid = $("#lesseeid").find("option:selected").val(); 
+    var title = $.trim($("#title").val());
+	var contact = $.trim($("#contact").val());
+	var mobile = $.trim($("#mobile").val());
+	var paymethod = $("#paymethod").find("option:selected").val(); 
+	var bidstr = '';
+	
+    if (pid=='0') {
+	   layer.msg("所属物业不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (rid=='0') {
+	   layer.msg("所属主体不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (title=='') {
+	   layer.msg("合同编号不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (lesseeid=='0') {
+	   layer.msg("承租人不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (contact=='') {
+	   layer.msg("联系人不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (mobile=='') {
+	   layer.msg("手机号码不能为空！",{icon:0});
+	   return;
+	}	
+	if (paymethod=='') {
+	   layer.msg("请选择缴纳方式！",{icon:0});
+	   return;
+	}
+			
+	$('#select2 option').each(function () {
+		var $option = $(this);
+		bidstr += $option.val() + ',';		
+	});
+	
+    if (bidstr=='') {
+	   layer.msg("已选择租赁区域不能为空！",{icon:0});
+	   return;
+	}
+	    
+	bidstr = bidstr.substring(0,bidstr.length - 1);
+	$("#bids").val(bidstr);	
+	
+	myprocess(obj);
+	$("#myform").submit();	
+}
+
+function myreturn(){
+	 window.history.back();
+}
+$(function(){	
+	//移到右边
+	$('#add').click(function(){
+		//先判断是否有选中
+		if(!$("#select1 option").is(":selected")){			
+			layer.msg("请选择需要移动的选项",{icon:0})
+		}
+		//获取选中的选项，删除并追加给对方
+		else{
+			$('#select1 option:selected').appendTo('#select2');
+		}	
+	});
+	
+	//移到左边
+	$('#remove').click(function(){
+		//先判断是否有选中
+		if(!$("#select2 option").is(":selected")){			
+			layer.msg("请选择需要移动的选项",{icon:0})
+		}
+		else{
+			$('#select2 option:selected').appendTo('#select1');
+		}
+	});
+	
+	//全部移到右边
+	$('#add_all').click(function(){
+		//获取全部的选项,删除并追加给对方
+		$('#select1 option').appendTo('#select2');
+	});
+	
+	//全部移到左边
+	$('#remove_all').click(function(){
+		$('#select2 option').appendTo('#select1');
+	});
+	
+	//双击选项
+	$('#select1').dblclick(function(){ //绑定双击事件
+		//获取全部的选项,删除并追加给对方
+		$("option:selected",this).appendTo('#select2'); //追加给对方
+	});
+	
+	//双击选项
+	$('#select2').dblclick(function(){
+		$("option:selected",this).appendTo('#select1');
+	});
+	
+});
+</script> 
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+{template $this->mytpl('_pheader')}
+<style>
+.fui-list-media img { width:4rem;height:4rem;}
+.fui-header:after{border-bottom:0px;}
+.fui-searchbar{margin-left:6%;width:85%;}
+</style>
+<div class="fui-page fui-page-current">
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back" ></a>
+		</div>
+        <div class="title">
+			<form action="{php echo $this->createMobileUrl('home',array('op'=>'listregion'))}" method="post" id="myform">
+				<div class="fui-searchbar bar">
+					<div class="searchbar center">
+					    <input type="hidden" name="lbs" value="{$lbs}" />
+						<input type="hidden" name="fromop" value="{$_GPC['fromop']}" id="fromop"/>
+						<input type="hidden" name="lat" value="{$_GPC[lat]}"  id="mylat">
+						<input type="hidden" name="lng" value="{$_GPC[lng]}" id="mylng">
+						<input type="hidden" name="city" value="{$_GPC[city]}" id="mycity">
+						<div class="search-input">
+							<input type="search" placeholder="输入关键字..." value="{$_GPC['keyword']}" class="search" name="keyword" id="keyword">							
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="fui-header-right">
+			<a id="mysearch"><i class="icon icon-search" style="font-size:0.95rem;"></i></a>
+		</div>
+    </div>
+    <div class="fui-content">
+        <div class='fui-content-inner'>
+            <div class='content-empty' style='display:none;'>
+                <i class='icon icon-city1'></i><br/>抱歉，没有找到呢
+				{if $this->syscfg['isaddregion']==1}
+				<br/>	
+				<i class='icon icon-add text-warning'></i>
+				<p style="margin-top:-0.8rem;"><a class="text-warning" href="{php echo $this->createMobileUrl('auth',array('op'=>'regregion'));}">添加小区</a></p>
+				{/if}		
+            </div>
+            <div class='container'></div>
+            <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+        </div>
+    </div>	
+</div>
+<script type="application/javascript">
+	wx.ready(function () {
+		asd();        
+	});
+	function asd() {
+		wx.getLocation({
+			type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+			success: function (res) {
+				var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+				var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+				var speed = res.speed; // 速度，以米/每秒计
+				var accuracy = res.accuracy; // 位置精度
+				require(['home/list'], function (modal) {
+					modal.initRegion({
+					keyword:'{$_GPC['keyword']}',
+					lbs:'{$lbs}',
+					fromop:'{$_GPC['fromop']}',
+					city:'{$_GPC['city']}',
+					range:'{php echo $this->syscfg['regionrange']}',
+					lat:latitude,
+					lng:longitude
+					});
+				});			
+			}
+		});
+	}
+</script>
+ <script id='tpl_region_list' type='text/html'>
+	<%each list as value%>
+		<div  class="fui-list store-item"
+			  data-lng="<%value.lng%>"
+			  data-lat="<%value.lat%>">
+
+			<div class="fui-list-media">
+				<%if value.thumb!=""%>
+					<a href="<%value.region_url%>">						
+					<img data-lazy="<%value.thumb%>" class="round">						
+					</a>
+				<%/if%>
+			</div>
+			<div class="fui-list-inner store-inner">
+				<a href="<%value.region_url%>">
+				<div class="title"> <span class='storename'><%value.title%></span></div>
+				<%if value.city!=""%>
+				<div class="text">
+				   <span class='address'><%value.province%><%value.city%></span>
+				</div>
+				<%/if%>
+				<%if value.address!=""%>
+				<div class="text">
+					地址: <span class='address'><%value.address%></span>
+				</div>
+				<%/if%>
+
+				<%if value.telphone!=""%>
+				<div class="text">
+					电话: <span class='address'><%value.telphone%></span>
+				</div>
+				<%/if%>
+
+				<div class="text location" style="color:green;">
+					<%if value.distance<100000%>
+					距离您:<%value.distance%>km
+					<%else%>
+					<%/if%>
+				</div>
+				</a>
+			</div>
+			<div class="fui-list-angle ">
+				<%if value.telphone!=""%><a href="tel:<%value.telphone%>" class='external '><i class=' icon icon-phone' style='color:green'></i></a><%else%><i class=' icon icon-phone' style='color:#ccc'></i><%/if%>
+				<a href="<%value.mapurl%>" class='external' ><i class='icon icon-location' style='color:#f90'></i></a>
+			</div>
+		</div>
+	<%/each%>
+	<div id="nearStore" style="display:none">
+		<div class='fui-list store-item' id='nearStoreHtml'></div>
+	</div>	
+</script>	
+{template $this->mytpl('_footer')}

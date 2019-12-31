@@ -1,0 +1,100 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-list-group:not(.fui-list-group-o):before {	
+	border-top:0px;	
+}
+.fui-list-group:not(.fui-list-group-o):after {
+	border-top:0px;	
+}
+</style>
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">邀请家人</div> 
+		<div class="fui-header-right">&nbsp;</div>
+	</div>
+	 {if $operation == 'sharehouse'}
+	<div class='fui-content' >		
+		<div class='content-empty' {if !empty($item)}style='display:none'{/if}>
+				<i class='icon icon-location'></i>
+				<br/>您还没有任何房产信息
+			</div>
+
+		<div class="fui-list-group address-item" style='margin-top:5px;' data-regionid="{$item['id']}">
+			<div  class="fui-list" >
+				<div class="fui-list-inner">
+					<div class="title"><span class='realname'>{$item['address']}</span> </div>
+					<div class="text">
+					<span class='address'>绑定时间: {php echo date('Y-m-d',$item['ctime']);}</span>
+					</div>
+					
+				</div>				
+			</div>	
+				<div  class="fui-list" >
+				<div class="fui-list-inner">
+					<div class="title text-center"><i class="icon icon-yaoshi"></i>邀请家人扫一扫</div>		
+					<div id="barcode" style="margin:1.5em 0 1.5em auto;clear:both;text-align:center;" ></div> 
+				<div class='bar' >
+				<span class='pull-left'>
+					<a class="external" href="{php echo $this->createMobileurl('member',array('op'=>'sharehouse','id'=>$item['id'],'otype'=>$_GPC['otype'],'effedate'=>$_GPC['effedate']));}">
+					<i class='icon icon-friends'></i> 再邀请一人
+					</a>			   
+				</span>
+				<span class='pull-right'>
+					<a class="external" id ='btn-share'>
+					<i class='icon icon-share'></i> 分享给家人
+					</a>			   
+				</span>
+				</div>
+		    </div>
+			</div>
+		</div> 
+		 </div>
+		<div id='cover'>
+			<div class='fui-mask-m visible'></div>
+			<div class='arrow'></div>
+			<div class='content'>请点击右上角<br/>通过【发送给朋友】<br/>邀请家人绑定</div>
+		</div>
+		{/if}
+		 {if $operation == 'gethouse'}
+		<div class='fui-content navbar' >	
+		<div class="fui-cell-group">
+			<div class="fui-cell must">
+				<div class="fui-cell-label">手机号</div>
+				<div class="fui-cell-info">
+					<input type="tel" class='fui-input' id='mobile' name='mobile' placeholder="请输入您的手机号"  value="{$user['mobile']}" maxlength="11" />
+				</div>				
+			</div>
+			<div class="fui-cell must">
+				<div class="fui-cell-label">姓名</div>
+				<div class="fui-cell-info">
+					<input type="text" class='fui-input' id='realname' name='realname' placeholder="请输入您的姓名"  value="{$user['realname']}" />
+				</div>				
+			</div>			
+			<div class="fui-cell must">
+				<div class="fui-cell-label">验证码</div>
+				<div class="fui-cell-info"><input type="tel" class='fui-input' id='verifycode' name='verifycode' placeholder="5位验证码"  value="" maxlength="5" /></div>
+				<div class="fui-cell-remark noremark"><a class="btn btn-default btn-default-o btn-sm" id="btnCode">获取验证码</a></div>
+			</div>				
+		</div>	
+		<a href='#' id='btnSubmit' class='btn btn-success block'>立即绑定</a>
+		</div>
+		{/if}
+	<script language='javascript'>require(['member/house'], function (modal) {
+			modal.initShare({
+			endtime: {php echo intval($endtime)},
+			id:"{$_GPC['id']}",
+			rid:"{$item['rid']}",
+			backurl: "{$_GPC['backurl']}"
+			});
+	});</script>
+</div> 
+
+<script type="text/javascript">
+    require(['jquery.qrcode'], function (){ 
+		$('#barcode').qrcode("{$qrcode_url}");
+	});
+</script>
+{template $this->mytpl('_footer')}

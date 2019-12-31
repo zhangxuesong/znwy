@@ -1,0 +1,121 @@
+{template $this->mytpl('_bheader')}
+<style>
+	.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+	.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+	.fui-list-group:not(.fui-list-group-o):before {border-top:0px;}
+	.fui-list-group:not(.fui-list-group-o):after {border-top:0px;}
+	input[type=radio] {
+		display: inline-block;
+		vertical-align: middle;
+		width: 20px;
+		height: 20px;
+		-webkit-appearance: none;
+		background-color: transparent;
+		border: 0;
+		outline: 0 !important;
+		line-height: 20px;
+		color: #d8d8d8;
+	}
+	input[type=radio]:after {
+		content: "";
+		display:block;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		text-align: center;
+		line-height: 14px;
+		font-size: 16px;
+		color: #fff;
+		border: 1px solid #ddd;
+		background-color: #fff;
+		box-sizing:border-box;
+	}
+	input[type=radio]:checked:after {
+		content: "L";
+		transform:matrix(-0.766044,-0.642788,-0.642788,0.766044,0,0);
+		-webkit-transform:matrix(-0.766044,-0.642788,-0.642788,0.766044,0,0);
+		border-color: #04ab02;
+		background-color: #04ab02;
+	}
+</style>
+<div class="fui-page fui-current-page">
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">优惠券</div>
+       <div class="fui-header-right">
+	   &nbsp;
+	   </div>
+    </div>
+    <div class="fui-content navbar">
+		<div class="fui-list-group">
+			<div class='fui-list'>
+				<div class="fui-list-media">
+				   <input type="radio" name="parkid" value="{$park['id']}" checked /> 
+				</div> 
+				<div class='fui-list-inner'>
+					<div class="title">{$park['title']}</div>
+					<div class="subtitle">{$park['address']}</div>
+				</div>
+				<div class="fui-list-angle">				
+				</div>
+			</div>	
+			{loop $parks $pv}
+				{if $pv['id']!=$park['id']}
+				<div class='fui-list'>
+					<div class="fui-list-media">
+					   <input type="radio" name="parkid" value="{$pv['id']}"/> 
+					</div> 
+					<div class='fui-list-inner'>
+						<div class="title">{$pv['title']}</div>
+						<div class="subtitle">{$pv['address']}</div>
+					</div>
+					<div class="fui-list-angle">				
+					</div>
+				</div>	
+				{/if}
+			{/loop}
+		</div>
+		<div class="fui-title"><i class="icon icon-taxi"> 车牌号码</i></div>
+		<div id="plate">	
+			<div class="fui-cell">
+				<div class="car_input" data-pai="{$carno}">
+					<ul class="clearfix ul_input"><li class="input_pro"><span>{$cararr[0]}</span></li><li class="input_pp input_zim"><span>{$cararr[1]}</span></li><li class="input_pp"><span>{$cararr[2]}</span></li><li class="input_pp"><span>{$cararr[3]}</span></li><li class="input_pp"><span>{$cararr[4]}</span></li><li class="input_pp"><span>{$cararr[5]}</span></li><li class="input_pp"><span>{$cararr[6]}</span></li><li class="input_pp"><span style="background:#04ab02;color:#fff;">{$cararr[7]}</span></li></ul>
+				</div>	
+			</div>
+			<div class="fui-cell-tip" >	绿色栏位为新能源牌照填写</div>
+			<div id="jp_pro"></div>	
+		</div>	
+		<input type="hidden" class='fui-input' id='carno' name='carno' value="{$carno}" /> 
+		<div class="fui-cell-group">
+			<div class="fui-cell">
+				<div class="fui-cell-label">类别</div>
+				<div class="fui-cell-info">
+					<input type="radio" name="ctype" value="1" checked />  减免金额
+					<input type="radio" name="ctype" value="2" />  减免时长									
+				</div>		
+			</div>	
+			<div class="fui-cell">
+				<div class="fui-cell-label">数量</div>
+				<div class="fui-cell-info">
+					<input type="number" placeholder="请输入相应数量" class="fui-input" id="qty" name="qty" value="" />							
+				</div>
+			</div>
+			<div class="fui-cell-tip">金额为元，时长为分钟，仅针对业主且物业欠费不可领取，每月可领取{$park['month_coupon']}张，每年可领取{$park['year_coupon']}张</div>
+		</div>
+    </div> 
+</div>
+
+ <div class='fui-navbar'>		
+	<a id="btnSubmit" class='nav-item btn btn-warning external'><i class="icon icon-discount"></i> 领优惠券</a>
+</div>
+
+<script language='javascript'>		
+	require(['car/coupon'], function (modal) {
+		modal.init();
+	});
+</script>		
+</div>
+
+{template $this->mytpl('_footer')}

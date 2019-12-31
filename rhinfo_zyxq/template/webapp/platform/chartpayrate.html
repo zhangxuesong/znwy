@@ -1,0 +1,45 @@
+<span class="echart-title">缴费率</span>
+<span class="echart-count">总金额：<strong>{$total}</strong>&nbsp;元</span>
+<div id="chartPayrate"></div>
+<script type="text/javascript">
+	var chartPayrate = echarts.init(document.getElementById('chartPayrate'),'shine');
+	option_payrate = {
+			legend: {
+			orient: 'vertical',
+			x: 'left',
+			data:['已缴金额','未缴金额'],
+			textStyle:{
+				color:'#fff'
+			},
+			show:true
+		},
+		series: [
+			{
+				name: '访问来源',
+				type: 'pie',
+				radius : '55%',
+				center: ['60%', '50%'],
+				data:[
+					{value:{$feebill_array[1]}, name:'已缴金额'},
+					{value:{$feebill_array[0]}, name:'未缴金额'},
+				],
+				label: {
+					normal: {
+						show: true,
+						textStyle: {
+							fontSize: '10',
+							fontWeight: 'bold',
+							color:'#fff'
+						},
+						formatter:'{b}\n{d}%'
+					}
+				},
+			}
+		]
+	};
+	chartPayrate.setOption(option_payrate);
+	autoPlay(chartPayrate,option_payrate);
+	window.onresize = function() {
+		chartPayrate.resize();
+	};	
+</script>

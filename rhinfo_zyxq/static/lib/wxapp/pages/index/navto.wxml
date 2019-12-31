@@ -1,0 +1,7 @@
+<!--pages/index/navto.wxml-->
+<view class="container" style='background:url({{myprg.bgimage}}) no-repeat center top #fff;'>
+   <view class="center" style='width:100%;display:flex;justify-content:center;align-items:center;height:100vh;'>
+        <navigator target="miniProgram" open-type="navigate" app-id="{{myprg.wxappid}}" path="{{myprg.wxapppage}}" extra-data="" version="release" class="btn btn-warning">授权进入</navigator>
+    </view>
+</view>   
+  

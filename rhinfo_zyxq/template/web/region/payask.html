@@ -1,0 +1,192 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+<style type="text/css">
+	.file{ position:absolute; top:0; left:0;height:36px;filter:alpha(opacity:0);opacity:0;width:85px;cursor:pointer; }
+</style>
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />	
+			<input type="hidden" name="id" value="{$item['id']}" />	
+			<input type="hidden" name="rid" value="{$_GPC['rid']}" />	
+			<div class="form-group">		
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">支付申请说明</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">			
+					 <div class="alert alert-info" role="alert"> 
+					提交相关资料且正确无误，一般2-3个工作日即可开通.<br>
+					<span class="text-danger">请务按要求上传相关资料，以下所有资料不可为空</span>
+					</div>
+				</div>
+			</div>			
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">公司名称</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" value="{$item['company']}" placeholder="输入公司名称" name="company">
+					<span class="help-block">请输入公司全称</span>
+				</div>		
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">联系人</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" value="{$item['contact']}" placeholder="输入联系人" name="contact">
+					<span class="help-block"></span>
+				</div>		
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">联系方式</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" value="{$item['telphone']}" placeholder="输入联系方式" name="telphone">
+					<span class="help-block">请输入手机号及邮箱地址</span>
+				</div>		
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">营业执照</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<div class="input-group">
+						 <input type='text' name='licimage' value="{$item['licimage']}" class='form-control' id="licimage" />  
+						 <span class="input-group-btn">
+							<input type='button' class="btn btn-default" value='选择图片' />
+							<input type="file" name="upfilelicimage" class="file" size="28" accept="image/*" onchange="document.getElementById('licimage').value=this.value" />
+						 </span>								
+					</div>	
+					{if !empty($item['licimage'])}
+					<div class="input-group " style="margin-top:.5em;">
+						<img src="{media $item['licimage']}" onerror="this.src='./resource/images/nopic.jpg'; this.title='图片未找到.'" class="img-responsive img-thumbnail"  width="150" />
+						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片" onclick="deleteImage(this)">×</em>
+					</div>	
+					{/if}
+					<span class="help-block"></span>
+				</div>	
+			</div>	
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">法人身份证正面</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<div class="input-group">
+						 <input type='text' name='icardaimage' value="{$item['icardaimage']}" class='form-control' id="icardaimage" />  
+						 <span class="input-group-btn">
+							<input type='button' class="btn btn-default" value='选择图片' />
+							<input type="file" name="upfileicardaimage" class="file" size="28" accept="image/*" onchange="document.getElementById('icardaimage').value=this.value" />
+						 </span>								
+					</div>	
+					{if !empty($item['icardaimage'])}
+					<div class="input-group " style="margin-top:.5em;">
+						<img src="{media $item['icardaimage']}" onerror="this.src='./resource/images/nopic.jpg'; this.title='图片未找到.'" class="img-responsive img-thumbnail"  width="150" />
+						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片" onclick="deleteImage(this)">×</em>
+					</div>	
+					{/if}
+					<span class="help-block"></span>
+				</div>	
+			</div>	
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">法人身份证反面</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<div class="input-group">
+						 <input type='text' name='icardbimage' value="{$item['icardbimage']}" class='form-control' id="icardbimage" />  
+						 <span class="input-group-btn">
+							<input type='button' class="btn btn-default" value='选择图片' />
+							<input type="file" name="upfileicardbimage" class="file" size="28" accept="image/*" onchange="document.getElementById('icardbimage').value=this.value" />
+						 </span>								
+					</div>	
+					{if !empty($item['icardbimage'])}
+					<div class="input-group " style="margin-top:.5em;">
+						<img src="{media $item['icardbimage']}" onerror="this.src='./resource/images/nopic.jpg'; this.title='图片未找到.'" class="img-responsive img-thumbnail"  width="150" />
+						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片" onclick="deleteImage(this)">×</em>
+					</div>	
+					{/if}
+					<span class="help-block"></span>
+				</div>	
+			</div>
+			
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">开户许可证</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<div class="input-group">
+						 <input type='text' name='accimage' value="{$item['accimage']}" class='form-control' id="accimage" />  
+						 <span class="input-group-btn">
+							<input type='button' class="btn btn-default" value='选择图片' />
+							<input type="file" name="upfileaccimage" class="file" size="28" accept="image/*" onchange="document.getElementById('accimage').value=this.value" />
+						 </span>								
+					</div>	
+					{if !empty($item['accimage'])}
+					<div class="input-group " style="margin-top:.5em;">
+						<img src="{media $item['accimage']}" onerror="this.src='./resource/images/nopic.jpg'; this.title='图片未找到.'" class="img-responsive img-thumbnail"  width="150" />
+						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片" onclick="deleteImage(this)">×</em>
+					</div>	
+					{/if}
+					<span class="help-block">有限公司需要提供开户许可证，个体户提供法人对私银行卡</span>
+				</div>	
+			</div>
+			
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">门头照</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<div class="input-group">
+						 <input type='text' name='doorimage' value="{$item['doorimage']}" class='form-control' id="doorimage" />  
+						 <span class="input-group-btn">
+							<input type='button' class="btn btn-default" value='选择图片' />
+							<input type="file" name="upfiledoorimage" class="file" size="28" accept="image/*" onchange="document.getElementById('doorimage').value=this.value" />
+						 </span>								
+					</div>	
+					{if !empty($item['doorimage'])}
+					<div class="input-group " style="margin-top:.5em;">
+						<img src="{media $item['doorimage']}" onerror="this.src='./resource/images/nopic.jpg'; this.title='图片未找到.'" class="img-responsive img-thumbnail"  width="150" />
+						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片" onclick="deleteImage(this)">×</em>
+					</div>	
+					{/if}
+					<span class="help-block">公司门头照片</span>
+				</div>	
+			</div>
+			
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">收银台照</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<div class="input-group">
+						 <input type='text' name='payimage' value="{$item['payimage']}" class='form-control' id="payimage" />  
+						 <span class="input-group-btn">
+							<input type='button' class="btn btn-default" value='选择图片' />
+							<input type="file" name="upfilepayimage" class="file" size="28" accept="image/*" onchange="document.getElementById('payimage').value=this.value" />
+						 </span>								
+					</div>	
+					{if !empty($item['payimage'])}
+					<div class="input-group " style="margin-top:.5em;">
+						<img src="{media $item['payimage']}" onerror="this.src='./resource/images/nopic.jpg'; this.title='图片未找到.'" class="img-responsive img-thumbnail"  width="150" />
+						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片" onclick="deleteImage(this)">×</em>
+					</div>	
+					{/if}
+					<span class="help-block">收银工作台照片</span>
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">备注</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" value="{$item['remark']}" placeholder="输入备注" name="remark">
+					<span class="help-block"></span>
+				</div>		
+			</div>
+		</form>	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+function deleteImage(elm){
+	$(elm).prev().attr("src", "./resource/images/nopic.jpg");
+	$(elm).parent().prev().find(".form-control").val("");
+}
+function mysubmit(obj){	
+	myprocess(obj);
+	$("#myform").submit();
+}
+
+function myreturn(){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>$rlist)).$mywe['direct'];}";	
+	location.href = url;
+}
+</script> 
+
+</body>
+</html>

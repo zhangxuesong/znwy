@@ -1,0 +1,62 @@
+﻿<div class="panel panel-default" >
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>					
+					<th width="80">ID</th>
+					<th width="150">车位名称</th>
+					<th width="100">类别</th>
+					<th width="100">业主姓名</th>					
+					<th width="100">手机号码</th>
+					<th width="80">车牌</th>
+					<th width="100">开始日期</th>
+					<th width="100">结束日期</th>
+					<th width="60">状态</th>
+					<th width="120">操作&nbsp;&nbsp;<a href="javascript:;" class="text-danger" onclick="myaddparking()"><i class="fa fa-plus"></i></a></th>
+				</tr>
+			</thead>
+			<tbody>
+				{loop $parking $pv}
+				<tr>					
+					<td>{$pv['id']}</td>
+					<td>{$pv['title']}</td>
+					<td>{php echo $pv['category']==1?'自购有产权':'公共无产权';}</td>
+					<td>{$pv['ownername']}</td>
+					<td>{$pv['mobile']}</td>
+					<td>{$pv['carno']}</td>
+					<td>{if !empty($pv['startdate'])}{php echo date('Y-m-d',$pv['startdate']);}{/if}</td>
+					<td>{if !empty($pv['enddate'])}{php echo date('Y-m-d',$pv['enddate']);}{/if}</td>	
+					<td class="td-status"><span class="label {if $pv['status']=='1'}label-success{else}{if $pv['status']=='2'}label-danger{else}label-default{/if}{/if} radius">{if $pv['status']=='1'}已租{else}{if $pv['status']=='2'}到期{else}空闲{/if}{/if}</span></td>
+					<td>
+					{if !empty($pv['relaid'])}
+					{if $rights['edit'] == 1}
+					<a href="javascript:;" onclick="myeditparking({$pv['relaid']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="修改关联车位"><i class="fa fa-edit"></i> 修改</a>{/if}			
+					{if $rights['delete'] == 1}
+					<a href="javascript:;" onclick="mydelparking(this,{$pv['relaid']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="删除关联车位"><i class="fa fa-trash"></i> 删除</a>{/if}			
+					{/if}
+					</td>		
+				</tr>
+			{/loop}	
+			</tbody>
+		</table>    	  
+	</div>	
+</div>
+<script type="text/javascript">
+function mydelparking(obj,id){
+	layer.confirm('确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl('room').$mywe['direct'];}",
+			{op:"delparking",id:id},
+			function(data,status){
+			 if (data=='ok'){
+				$(obj).parents("tr").remove();
+				layer.msg('删除成功!',{icon:1});
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+			 }
+		});		
+		layer.close(index);
+    });
+}
+</script>

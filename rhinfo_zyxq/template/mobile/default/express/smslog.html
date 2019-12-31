@@ -1,0 +1,56 @@
+{template $this->mytpl('_pheader')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170802">
+<style type="text/css">
+	.fui-navbar ~ .fui-content, .fui-content.navbar{padding:0;}
+	.fui-cell-group{margin-top:0;}
+</style>
+
+<div class='fui-page fui-page-current'>
+		<div class="fui-header">
+				<div class="fui-header-left">
+					<a class="back"></a>
+				</div>
+				<div class="title">短信记录</div>
+				<div class="fui-header-right">
+				
+				</div>
+		</div>
+		
+		<div class='fui-content'>	
+			<form action="{php echo $this->createMobileUrl($mydo,array('op'=>'smslog','sid'=>$sid));}" method="post">
+				<div class="fui-searchbar bar">
+					<div class="searchbar center">	
+						<input type="submit" class="searchbar-cancel searchbtn" value="搜索">
+						<div class="search-input">
+							<i class="icon icon-search"></i>
+							<input type="text" placeholder="请输入手机" class="search" value="{$_GPC['keyword']}" name="keyword" id="keyword" />	
+						</div>
+					</div>
+				</div>
+			</form>
+		<div class="container"></div>
+			<div class="content-empty" style="display:none;">
+				<i class="icon icon-info" ></i> <br/>没有短信记录</div>
+			<div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+		</div>
+</div>
+
+<script id='tpl_smslog_list' type='text/html'>
+	<%each list as item%>
+	  <div class="fui-list">
+		<div class="fui-list-inner">
+			<div class="subtitle"><%if item.io==0 %><font class="text-warning">发送失败&nbsp;&nbsp;<%item.mobile%></font><%else%><%item.title%><font class="text-success">&nbsp;&nbsp;<%item.mobile%></font><%/if%></div>			
+			<div class="text"><%item.ctime%>&nbsp;&nbsp;<%item.company%></div>			
+		</div>
+		<div class="fui-list-angle">
+		</div>
+	</div>
+	<%/each%>
+</script>
+<script language="javascript">
+	require(['express/express'],function(modal){
+		modal.initSmslog({sid:"{$sid}",keyword:"{$_GPC['keyword']}"});
+	});
+</script>
+
+{template $this->mytpl('_footer')}

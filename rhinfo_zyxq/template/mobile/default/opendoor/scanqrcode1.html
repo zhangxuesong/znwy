@@ -1,0 +1,65 @@
+{template $this->mytpl('_header')}
+
+<input type="hidden" id="mylat" name="mylat" value="0"/>
+<input type="hidden" id="mylng" name="mylng" value="0"/>
+
+<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key={$sysconifg['qq_lbskey']}"></script>
+<script type="application/javascript">
+    wx.ready(function () {
+        asd();        
+    });
+    function asd() {
+        wx.getLocation({
+            type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+            success: function (res) {
+                var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                var speed = res.speed; // 速度，以米/每秒计
+                var accuracy = res.accuracy; // 位置精度
+                $("#mylat").val(latitude); //OK
+				$("#mylng").val(longitude); //OK				
+            }
+        });
+    }
+
+</script>
+
+<div class="fui-page fui-page-current page-commission-index ">
+	<div class="fui-header">
+		<div class="fui-header-left">			
+		</div>
+		<div class="title">微信开门</div>
+		<div class="fui-header-right">			
+		</div>
+	</div>
+
+	<div class='fui-content member-page' >
+	
+			{if !empty($banners)}
+			<div class='fui-swipe'>
+				<div class='fui-swipe-wrapper'>
+					{loop $banners $banner}
+						<div class='fui-swipe-item' {if !empty($banner['link'])}onclick="location.href='{$banner['link']}'"{/if}><img src="{php echo tomedia($banner['thumb'])}" /></div>
+					{/loop}
+				</div>
+				<div class='fui-swipe-page'></div>
+			</div>
+			{/if}
+			<div class="fui-cube">	
+				<div class="fui-block-group-door" style="height:6rem;" >
+					<a class="fui-block-child" id="{$door['id']}" data-online="{$door['offiline']}" data-qrcode="{php echo $door['devtype']==1?1:0;}">
+						<div class="icon" {if $door['image']}><img src="{$door['image']}" style="width:2rem;height:auto;" {if $door['offline']==0}{else}class="imggray"{/if} />{else}{if $door['offline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+						<div class="title">{$door['title']}</div>
+						<div class="text"></div>
+					</a>
+				</div>				
+			</div>
+	 </div>
+	 <script language='javascript'>		
+		require(['opendoor/index'], function (modal) {
+			modal.init({});
+		});		
+	 </script>		
+</div> 
+
+{template $this->mytpl('_footer')}

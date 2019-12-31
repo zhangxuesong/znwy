@@ -1,0 +1,46 @@
+﻿<form action="" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id"  value="{$custom_item['id']}" />	
+	<div class="form-group">
+		<label class="control-label">项目名称</label>
+		<input type="text" class="form-control" id="title" value="{$custom_item['title']}" placeholder="输入项目名称" name="title" />
+	</div>
+	<div class="form-group">
+		<label class="control-label">账单周期</label>
+		<div class="input-group">
+			<input type="number" class="form-control" id="paymonths" value="{$custom_item['paymonths']}" placeholder="输入账单周期" name="paymonths" />
+			 <span class="input-group-addon">个月</span>
+		 </div>
+		 <div class="help-block">1-12个月，按季输入3个月，按半年输入6个月，按年输入12个月</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label">计算方式</label>
+		<input type="text" class="form-control"  value="{$custom_item['calmethod']}" placeholder="输入计算方式" name="calmethod" />	
+	</div>
+	<div class="form-group">
+		<label class="control-label">数量</label>
+		<input type="number" class="form-control" id='qty' value="{php echo !empty($custom_item['qty'])?$custom_item['qty']:1;}" placeholder="输入数量" name="qty" />
+	</div>
+	<div class="form-group">
+		<label class="control-label">计量单位</label>
+		<input type="text" class="form-control" id="measure" value="{$custom_item['measure']}" placeholder="输入计量单位，如：月/平方" name="measure" />
+	</div>		
+	<div class="form-group">
+		<label class="control-label">价格</label>
+		<div class="input-group">
+			<input type="number" class="form-control" id="price" value="{$custom_item['price']}" placeholder="输入单价" name="price" />
+			 <span class="input-group-addon">元</span>
+		 </div>
+	</div>
+	<div class="form-group">
+		<label class="control-label">账单日期</label>		
+			{php echo tpl_form_field_date('billdate',$custom_item['billdate']);}				
+	</div>
+
+	<div class="form-group">
+		<label class="control-label">备注</label>		
+			<input type="text" class="form-control"  value="{$custom_item['remark']}" placeholder="输入备注" name="remark" />
+		
+	</div>
+	<br>
+</form>	

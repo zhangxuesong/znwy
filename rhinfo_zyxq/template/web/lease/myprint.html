@@ -1,0 +1,95 @@
+﻿{template 'web/_print_header'}
+
+<input type="hidden" name="token" value="{$_W['token']}" />	
+<input type="hidden"  id="pid" value="{$_GPC['pid']}" name="pid" />
+<input type="hidden"  id="rid" value="{$_GPC['rid']}" name="rid" />
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div style="padding:8px;">
+		<a href="javascript:;" class="btn btn-info"  onclick="myprint()"><i class="fa fa-print"></i> 打印</a>
+		<a href="javascript:window.opener=null;window.open('','_self');window.close();" class="btn btn-default"><i class="fa fa-close"></i> 关闭</a>
+	</div>
+</nav>
+<div class="panel panel-default" style="padding:30px;" >
+	<div class="panel-body">
+		<div id="print-content">
+		{loop $leases $i $r}
+		{if !empty($r['billlist'])}
+		<div class="header"><h1 style="text-align:center;">缴费通知单</h1></div>
+		<!-- 页面顶部信息 -->
+		<p> 尊敬的{$r['lessee']},根据《物业管理条例》约定，请及时缴纳管理费及相关费用。<br>
+		我司至今仍未收到您到期应交费用共计人民币:{php echo empty($r['totalfee'])?0:$r['totalfee'];}元（详见下表），敬请您收到本通知后十五日内缴清欠款。</p>
+			 <!-- 页面记录信息 -->
+				<table >
+						<thead>
+						  <tr>
+						    <th>序号</th>
+							<th>项目</th>
+							<th>交费周期</th>
+							<th>起数</th>
+							<th>止数</th>
+							<th>数量</th>
+							<th>单位</th>
+							<th>单价</th>
+							<th>金额</th>
+							<th>备注</th>
+						  </tr>
+						</thead>
+						<tbody>
+						{loop $r['billlist'] $k $v}
+						<tr>
+							<td>{php echo $k + 1;}</td>
+							<td>{$v['title']}</td>
+							<td>{$v['daterange']}</td>						
+							<td>{php echo $v['feetype']=='3' || $v['feetype']=='4' ?'':$v['startqty'];}</td>
+							<td>{php echo $v['feetype']=='3' || $v['feetype']=='4' ?'':$v['endqty'];}</td>
+							<td>{if $v['feetype']=='3' || $v['feetype']=='4'}{else}{php echo empty($v['price'])?0:round($v['fee']/$v['price'],2);}{/if}</td>
+							<td>{$v['measure']}</td>
+							<td>{$v['price']}</td>
+							<td>{$v['fee']}</td>
+							<td></td>
+						</tr>
+						{/loop}
+						<tr>
+							<td colspan="7">合计(大写)：{php echo num_to_rmb($r['totalfee']);}</td>
+							<td colspan="4">￥{$r['totalfee']}元</td>						
+						</tr>
+					</tbody>
+			</table>
+			<!-- 页脚信息 -->
+              <div class="table-footer">
+				<span class="floatLeft" style="display:block;">{$region['title']}	联系电话：{$region['telphone']}</span>
+				<span class="floatRight" style="display:block;">{$property['title']}	投诉电话:{$property['telphone']}</span>
+			  </div>
+			 <br>
+			  <p style="text-align:right;">打印人员：{$mywe['name']}&nbsp;打印时间：{php echo date('Y-m-d H:i:s');}</p>
+			{if $i+1<count($leases)}<div class='pageBreak'></div>{/if}
+			{/if}
+			{/loop}
+		</div>
+	</div>
+</div>
+
+{template 'web/_iframe_footer'}
+
+<script type="text/javascript">
+
+function myprint(){
+  $("#print-content").printArea();
+  //setTimeout("isprint();", 0);
+}
+
+function isprint(){
+layer.confirm('打印正确吗？',{icon: 3, title:'提示'},
+	function(index){		
+        layer.close(index);
+    });
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'list')).$mywe['direct'];}";
+	 location.href = url;
+}
+</script>
+</body>
+</html>

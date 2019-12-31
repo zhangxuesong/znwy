@@ -1,0 +1,593 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/swiper/swiper.min.css">
+<style>
+.region-header{
+	position:fixed;
+	top:0;	
+	color:{php echo $this->syscfg['wethercolor']?$this->syscfg['wethercolor']:'#fff';};
+	z-index:999;
+	width:100%;
+	padding:0.2rem;
+}
+.region-header a{
+	color:{php echo $this->syscfg['wethercolor']?$this->syscfg['wethercolor']:'#fff';};
+}
+
+.verify-pop .bind {
+    width: 250px;
+	padding:0 10px 10px 10px;
+    position: absolute;
+    top: 100px;
+    z-index: 1001;
+	background:{php echo $this->syscfg['bgcolor']?$this->syscfg['bgcolor']:'#ffa64d';};
+    opacity:0.9;
+    left: 50%;
+    margin-left: -125px;
+	border-radius:6px;
+}
+.verify-pop .bind .fui-cell-group{
+	border-radius:6px;
+	background:#fff;	
+}
+.verify-pop .bind .title{
+	text-align:center;
+	padding-top:5px;
+	color:#fff;
+}
+
+.sns-card-list .boardtitle{
+	color: {php echo $this->syscfg['menucolor']?$this->syscfg['menucolor']:'#ff6600';};
+}
+.sns-content-info{max-height:4rem;line-height: 1rem;overflow: hidden;}
+.sns-card-show{padding:0 0.5rem 0.5rem;height:1.5rem;display: block;font-style: normal;color:#0290be;font-size:0.7rem;}
+
+.swiper-pagination-bullet-active{opacity:1;background:#ff6600;}
+
+.fui-images .image {
+	margin-right: 0.1rem;
+	margin-left: 0.1rem;
+}
+
+.service-page .btn-service-post.cusservice {
+    position: absolute;
+    bottom:{php echo $item['servicebottom']?$item['servicebottom']:4;}rem;
+    right:{php echo $item['serviceright']?$item['serviceright']:1;}rem;
+    width:2rem;
+    height:2rem;
+    -webkit-border-radius:2rem;
+    -moz-border-radius:2rem;
+    border-radius:2rem;
+    line-height:2rem;
+	background-color:{php echo $item['servicethumb']?'none':'#ff6600';};
+	border:{php echo $item['servicethumb']?'none':'#ff6600';};
+	opacity:0.8;
+	text-align:center;
+	z-index:99999;
+}
+
+.service-page .btn-service-post.writeforum {
+    position: absolute;
+    bottom:{php echo $this->syscfg['forumbottom']?$this->syscfg['forumbottom']:4;}rem;
+    right:{php echo $this->syscfg['forumright']?$this->syscfg['forumright']:1;}rem;
+    width:2rem;
+    height:2rem;
+    -webkit-border-radius:2rem;
+    -moz-border-radius:2rem;
+    border-radius:2rem;
+    line-height:2rem;
+	background-color:{php echo $this->syscfg['forumthumb']?'none':'#ff6600';};
+	border:{php echo $this->syscfg['forumthumb']?'none':'#ff6600';};
+	opacity:0.8;
+	text-align:center;
+}
+
+.service-page .btn-service-post .icon {
+    font-size:1.2rem;
+    font-weight:bold;
+	color:#fff;
+}
+
+.fui-cell-group:not(.fui-cell-group-o):before,.fui-cell-group .fui-cell:before{border-top:0px;}
+.fui-cell-group:after {border-bottom:0px;}
+
+#gotop{ 
+	position: fixed;
+    bottom:{php echo $item['servicebottom']?$item['servicebottom']:4;}rem;
+    left:{php echo $item['serviceright']?$item['serviceright']:1;}rem;
+    width:2rem;
+    height:2rem;
+    -webkit-border-radius:2rem;
+    -moz-border-radius:2rem;
+    border-radius:2rem;
+    line-height:2rem;
+	background-color:#ff6600;
+	border:#ff6600;
+	opacity:0.8;
+	text-align:center;
+}
+#gotop .icon {
+    font-size:1.2rem;
+    font-weight:bold;
+	color:#fff;
+}
+.fui-according {
+	position: relative;
+}
+
+.fui-according:before {
+	content: " ";
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 1px;
+	border-top: 0px solid #D9D9D9;
+	color: #fff;
+	-webkit-transform-origin: 0 0;
+	-ms-transform-origin: 0 0;
+	transform-origin: 0 0;
+	-webkit-transform: scaleY(0.5);
+	-ms-transform: scaleY(0.5);
+	transform: scaleY(0.5);
+	left: .5rem;
+}
+
+.fui-according:first-child:before {
+	display: none;
+}
+.fui-according-header {
+	position: relative;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	width: 100%;
+	padding: 0.2rem 0;
+	-moz-transition-duration: 300ms;
+	-webkit-transition-duration: 300ms;
+	transition-duration: 300ms;
+	-webkit-transition-property: background-color;
+	transition-property: background-color;
+}
+
+.fui-according-header:active {
+	background: none;
+}
+
+.fui-according-header .text {
+	-webkit-box-flex: 1;
+	-webkit-flex: 1;
+	-ms-flex: 1;
+	flex: 1;
+	color: {php echo $this->syscfg['wethercolor']?$this->syscfg['wethercolor']:'#fff';};
+	font-size: 0.75rem;text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	padding: 0 0.2rem;
+}
+
+.fui-according-header .remark {
+	color: {php echo $this->syscfg['wethercolor']?$this->syscfg['wethercolor']:'#fff';};
+	text-align: center;
+	font-size: 0.75rem;
+}
+
+.fui-according-header .remark:after {
+	content: "  ";
+	display: inline-block;
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+	height: 0.3rem;
+	width: 0.3rem;
+	border-width: 1px 1px 0 0;
+	border-color: {php echo $this->syscfg['wethercolor']?$this->syscfg['wethercolor']:'#fff';};
+	border-style: solid;
+	position: relative;
+	top: -1px;
+	margin-left: .3em;
+}
+
+.fui-according.expanded .remark:after,
+.fui-according-header:active .remark:after {
+	content: "  ";
+	display: inline-block;
+	-webkit-transform: rotate(135deg);
+	-ms-transform: rotate(135deg);
+	transform: rotate(135deg);
+	height: 0.3rem;
+	width: 0.3rem;
+	border-width: 1px 1px 0 0;
+	border-color: {php echo $this->syscfg['wethercolor']?$this->syscfg['wethercolor']:'#fff';};
+	border-style: solid;
+	position: relative;
+	top: -1px;
+	margin-left: .3em;
+}
+.fui-according-content .content-block {
+	padding: .5rem 0.2rem;
+	font-size: 0.75rem;
+	color: {php echo $this->syscfg['wethercolor']?$this->syscfg['wethercolor']:'#fff';};
+	box-sizing: border-box;
+	background:rgba(0,0,0,0.5);
+	white-space: nowrap;
+	text-overflow:ellipsis;
+	overflow: hidden;
+}
+</style>
+<div class='fui-page-group {if is_myios()}statusbar{/if}'>
+	<div class='fui-page fui-page-current shop-index-page sns-board-page service-page'>		 
+		<div class='fui-content navbar'>
+			<div class="region-header" {if empty($advs)}style="display:none;"{/if}>							
+				<div class="pull-left" style="font-size:0.7rem;{if $this->syscfg['displayweather']==1 || $this->syscfg['displayweather']==2}{else}display:none;{/if}">
+					<span id="tp-weather-widget" style="margin-top:-2px;"></span>
+				</div>
+				<div class="pull-left" style="width:50%;overflow:hide;">
+				{if count($user['houses'])>1}				
+					 <div class="fui-according">
+						<div class="fui-according-header">
+							<span class="text">{$user['address']}</span>
+							<span class="remark"></span>
+						</div>
+						<div class="fui-according-content">
+							{loop $user['houses'] $house}
+								{if $house['hid']!=$user['hid']}
+								<div class="content-block address-item" data-addressid="{$house['id']}">{$house['address']}</div>
+								{/if}
+							{/loop}
+						</div>
+					</div>
+				{else}
+				<div style="margin-top:2px;">
+					<i class="icon icon-location" style="font-size:0.7rem;margin-left:0.3rem;"></i>
+					<a href="{php echo $this->createMobileUrl('home',array('op'=>'blist'));}" data-nocache="true">
+					<span id="mylocation" style="font-size:0.7rem;">定位中...</span> <i class="icon icon-more2"></i></a>
+				</div>
+				{/if}
+				</div>					
+				<div class="pull-right" style="margin-right:0.5rem;">
+					<i class="icon icon-scanning" style="font-size:1rem;"></i>
+				</div>
+			</div>		
+			{template $this->mytpl('home/adv')}
+			{template $this->mytpl('home/nav')}		
+			{template $this->mytpl('home/notice')}
+			{template $this->mytpl('home/cube')}
+			{template $this->mytpl('home/banner')}	
+			
+			
+			{if $this->syscfg['ishome']==1}
+			<div class="fui-cell-group fui-cell-click forum-empty" style="margin-top:0.3rem;" >
+				<a class="fui-cell"  href="{php echo $this->createMobileurl('forum',array('op'=>'index','rid'=>$rid));}">
+					<div class="fui-cell-icon"><i class="icon icon-comment"></i></div>
+					<div class="fui-cell-text">社区新鲜事</div>
+					<div class="fui-cell-remark">进入</div>
+				</a>
+			</div>
+			<div class="container"></div>
+			<div class="content-empty" style="display:none;"></div>
+			<div class='infinite-loading'>
+				<span class='fui-preloader'></span>
+				<span class='text'> 正在加载...</span>
+			</div>
+			{elseif $this->syscfg['ishome']==2}
+			<div class="fui-cell-group fui-cell-click forum-empty" style="margin-top:0.3rem;">
+				<a class="fui-cell"  href="{php echo $this->createMobileurl('article',array('op'=>'index','rid'=>$rid));}">
+					<div class="fui-cell-icon"><i class="icon icon-comment"></i></div>
+					<div class="fui-cell-text">最新资讯</div>
+					<div class="fui-cell-remark">进入</div>
+				</a>
+			</div>
+			<div class="threadlist box_bg">
+				<ul><div class="container"></div></ul>
+			</div>
+			<div class="content-empty" style="display:none;"></div>
+			<div class='infinite-loading'>
+				<span class='fui-preloader'></span>
+				<span class='text'> 正在加载...</span>
+			</div>
+			{elseif $this->syscfg['ishome']==3}
+			<div id="tab" class="fui-tab fui-tab-warning" style="margin-top:0.3rem;">
+				<a data-tab="tab1" class="external active"  data-status='1'>社区论坛</a>
+				<a data-tab="tab2" class="external"  data-status='2'>最新资讯</a>
+			</div>
+			<div class="mycontainer">
+				<div class="container"></div>
+			</div>
+			<div class="content-empty" style="display:none;"></div>
+			<div class='infinite-loading'>
+				<span class='fui-preloader'></span>
+				<span class='text'> 正在加载...</span>
+			</div>
+			{elseif $this->syscfg['ishome']==4}
+			<div id="tab" class="fui-tab fui-tab-warning" style="margin-top:0.3rem;">
+				<a data-tab="tab2" class="external active"  data-status='2'>最新资讯</a>
+				<a data-tab="tab1" class="external"  data-status='1'>社区论坛</a>
+			</div>
+			<div class="mycontainer">
+				<div class="threadlist box_bg">
+					<ul><div class="container"></div></ul>
+				</div>
+			</div>
+			<div class="content-empty" style="display:none;"></div>
+			<div class='infinite-loading'>
+				<span class='fui-preloader'></span>
+				<span class='text'> 正在加载...</span>
+			</div>
+			{/if}        		
+		</div>
+		
+		{if $isbind==0}
+			 <div class="pop-region-hidden" >
+				<div class='fui-mask-m visible'></div>
+				<div class="verify-pop pop">
+					{if empty($item['forcebind'])}
+					<div class="close"><i class="icon icon-roundclose"></i></div>
+					{/if}
+						<div class="bind">
+							<div class="title">欢迎访问</div>
+							<div class="fui-cell-group fui-cell-click external">
+								<a class="fui-cell"  href="{if empty($item['register']) || $item['register']==0}{if !empty($user['mobile'])}{php echo $this->createMobileurl('member',array('op'=>'bind','rid'=>$rid));}{else}{php echo $this->createMobileurl('member',array('op'=>'rbind','rid'=>$rid));}{/if}{else}{php echo $this->createMobileurl('member',array('op'=>'reg','rid'=>$rid,'register'=>$item['register']));}{/if}">
+									<div class="fui-cell-icon"><i class="icon icon-friendadd"></i></div>
+									<div class="fui-cell-text"><p class="text text-danger">{if $item['category']==1}绑定本小区{elseif $item['category']==2 }绑定本商圈{/if}</p></div>
+									<div class="fui-cell-remark"></div>
+								</a>
+								<div class="fui-cell-tip">通过手机号码自动绑定房产信息</div>
+							</div>
+							{if empty($item['forcebind'])}
+							<div class="fui-cell-group fui-cell-click external">
+								<a class="fui-cell follow"  >
+									<div class="fui-cell-icon"><i class="icon icon-like"></i></div>
+									<div class="fui-cell-text"><p class="text text-danger">{if $item['category']==1}关注本小区{elseif $item['category']==2 }关注本商圈{/if}</p></div>
+									<div class="fui-cell-remark"></div>
+								</a>
+								<div class="fui-cell-tip">关注本小区后可浏览基本信息</div>
+							</div>	
+							{/if}
+						</div>
+				</div>
+			</div>
+		{else}
+			{if $_W['fans']['follow']=='1'}
+			{else}
+				{if $this->rhinfo_wap}
+				{else}
+					<div class="pop-region-hidden pop-region-wxapp" >
+						<div class='fui-mask-m visible'></div>
+						<div class="verify-pop pop">
+							{if $this->syscfg['forcefollow']==1}{else}<div class="close"><i class="icon icon-roundclose"></i></div>{/if} 
+								<div class="bind">
+									<div class="title">欢迎访问</div>
+									<div class="fui-cell-group fui-cell-click external">
+										<a class="fui-cell"  href="{php echo $this->syscfg['followurl']}">
+											<div class="fui-cell-icon"><i class="icon icon-friendadd"></i></div>
+											<div class="fui-cell-text"><p class="text text-danger">请关注公众号</p></div>
+											<div class="fui-cell-remark"></div>
+										</a>
+										<div class="fui-cell-tip">您还未关注【{$_W['account']['name']}】</div>
+									</div>						
+									<div class="fui-cell-group fui-cell-click external">
+										<div style="text-align:center;">{if $this->syscfg['qrcode']}<img src="{php echo tomedia($this->syscfg['qrcode']);}" width="150px;"/>{/if}</div>
+										<div class="fui-cell-tip">{php echo empty($this->syscfg['followtip'])?'请关注公众号，享受更好的服务.':$this->syscfg['followtip'];}</div>
+									</div>							
+								</div>
+						</div>
+					</div>
+				{/if}
+			{/if}
+		{/if}
+		{if $item['servicepagehome']}
+			{if $item['service']}
+				<a class="btn-service-post cusservice" href="{$item['service']}">{if $item['servicethumb']}<i class="icon"><img src="{php echo tomedia($item['servicethumb']);}" width="45"/></i>{else}{if $item['serviceicon']}<i class="icon {$item['serviceicon']}"></i>{else}<i class="icon icon-chat"></i>{/if}{/if}</a>
+			{else}
+				{if $property['service']}
+				 <a class="btn-service-post cusservice" href="{$property['service']}">{if $item['servicethumb']}<i class="icon"><img src="{php echo tomedia($item['servicethumb']);}" /></i>{else}{if $item['serviceicon']}<i class="icon {$item['serviceicon']}"></i>{else}<i class="icon icon-chat"></i>{/if}{/if}</a>
+				 {/if}
+			 {/if}
+		{/if}
+		
+		<a class="btn-service-post writeforum" style="display:none;" href="{php echo $this->createMobileUrl('forum',array('op'=>'selectboard'));}">{if $this->syscfg['forumthumb']}<i class="icon"><img src="{php echo tomedia($this->syscfg['forumthumb']);}" width="40"/></i>{else}{if $this->syscfg['forumicon']}<i class="icon {php echo $this->syscfg['forumicon']}"></i>{else}<i class="icon icon-edit2"></i>{/if}{/if}</a>
+		
+		<a id="gotop" style="display:none;">
+			<i class="icon icon-top1"></i>
+		</a>
+			 
+		<script language='javascript'>	
+			{if $this->syscfg['ishome']==1}
+				require(['home/index'], function (modal) {
+					modal.initforum({rid:"{$rid}",total_forum:"{$total_forum}",style:1})
+				});	
+			{else if $this->syscfg['ishome']==2}
+				require(['home/index'], function (modal) {
+					modal.initarticle({rid:"{$rid}",total_article:"{$total_article}",style:2})
+				});	
+			{else if $this->syscfg['ishome']==3}
+				require(['home/index'], function (modal) {
+					modal.initTwo({rid:"{$rid}",total_forum:"{$total_forum}",total_article:"{$total_article}",style:3})
+				});
+			{else if $this->syscfg['ishome']==4}
+				require(['home/index'], function (modal) {
+					modal.initTwo({rid:"{$rid}",total_forum:"{$total_forum}",total_article:"{$total_article}",style:4})
+				});
+			{else}
+				require(['home/index'], function (modal) {
+					modal.init({rid:"{$rid}"});
+				});	
+			{/if}
+		</script>	
+	</div>
+		</div>
+	</div>
+</div>
+<script type="application/javascript">
+	var latitude;
+	var longitude;
+	var gps = false;
+	var getaddr;
+	var displayweather = "{php echo $this->syscfg['displayweather'];}";
+						
+	wx.ready(function () {
+		wx.getLocation({
+			type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+			success: function (res) {
+				latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+				longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+				getaddr();  		
+			}
+		});  
+		getaddr = function(){
+			$.ajax({
+				url: 'https://apis.map.qq.com/ws/geocoder/v1/?location='+latitude+','+longitude+'&key={$sysconifg["qq_lbskey"]}&get_poi=0&output=jsonp',
+				cache: false,
+				dataType: 'jsonp',
+				jsonp: 'callback',
+				success: function(json){
+					gps = true;
+					{if empty($houses)}
+						$("#mylocation").html(json.result.address_reference.landmark_l2.title); 
+					{/if}
+					var city = json.result.address_component.district;				
+					var street = json.result.address_component.street;
+					if (displayweather=='2'){
+						$.get("{php echo $this->createMobileUrl('weather',array('op'=>'ajax','isdetail'=>0));}", {city:city,street:street}, function(data){
+							$('#tp-weather-widget').html(data);						
+						});
+					}
+				},
+				error: function(){
+					$("#mylocation").html('定位失败,<a href="javascript:history.go(0);">重新定位</a>');
+				}
+			});
+		};
+	});
+</script>
+<script type="text/javascript">
+	var forum = "{php echo $this->syscfg['ishome'];}";
+	function countHit(obj,pid,rid,bannerid,link,wxappid,wxapppage,bgimage){	
+	 core.json('service/bannerhit', {
+			pid:pid,rid:rid,bannerid:bannerid
+		}, function(ret) {
+			if (ret.status == 1) {
+				wx.miniProgram.getEnv(function(res){
+					if(res.miniprogram){
+						if(wxappid !==''){
+							var path = '/pages/index/navto?wxappid=' + wxappid +'&wxapppage=' + wxapppage +'&bgimage=' + bgimage;
+							wx.miniProgram.navigateTo({
+								url: path
+							}); 							
+						}
+						else{
+							 location.href = link;
+						}
+						return
+					}
+					else{
+					    location.href = link;
+						return
+					}
+				});			   
+			}				
+		},false, true)
+	}
+	
+	function navtourl(link,wxappid,wxapppage,bgimage){	
+		wx.miniProgram.getEnv(function(res){
+			if(res.miniprogram){
+				if(wxappid !==''){
+					var path = '/pages/index/navto?wxappid=' + wxappid +'&wxapppage=' + wxapppage +'&bgimage=' + bgimage;
+					wx.miniProgram.navigateTo({
+						url: path
+					});					
+				}
+				else{
+					 location.href = link;
+				}
+				return
+			}
+			else{
+				location.href = link;
+				return
+			}
+		});			   
+	}
+	
+	wx.miniProgram.getEnv(function(res){
+		if(res.miniprogram){		
+			$(".pop-region-wxapp").hide();
+		}		
+	});
+
+    $(function () {  
+		 $(".fui-content").bind('scroll resize', function () {
+            var scrolltop = $(".fui-content").scrollTop();
+            if (scrolltop > "500") {
+                $("#gotop").fadeIn(200);
+            } else {
+                $("#gotop").fadeOut(100);
+            }
+			if (scrolltop > "100") {
+				$(".region-header").css("background","rgba(0,0,0,0.5)");
+				$(".region-header").hide();
+			}
+			else{
+				$(".region-header").css("background","none");
+				$(".region-header").show();
+			}
+			if (forum==1 || forum==3 || forum==4){
+				if (scrolltop > "400") {
+					$(".writeforum").fadeIn(200);
+					$(".cusservice").fadeOut(100);
+				} else {
+					$(".writeforum").fadeOut(100);
+					$(".cusservice").fadeIn(200);
+				}
+			}
+        });
+        $("#gotop").unbind('click').click(function () {
+            $(".fui-content").animate({scrollTop: "0px"}, 1000)
+        });
+					
+		$(".icon-scanning").on('click',function(){
+			wx.scanQRCode({
+				needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+				scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+				success: function (res) {
+				//	var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+				}
+			});		
+		});
+		$(".address-item").on('click',function(){
+			var id = $(this).data('addressid');
+			core.json('member/setdefault', {
+				id: id
+			}, function(ret) {
+				if (ret.status == 1) {
+					location.href = core.getUrl('home/index');
+				}
+				return
+			}, true, true)
+		});
+    });	
+</script>
+{if $this->syscfg['displayweather']==1}
+<script>(function(T,h,i,n,k,P,a,g,e){g=function(){P=h.createElement(i);a=h.getElementsByTagName(i)[0];P.src=k;P.charset="utf-8";P.async=1;a.parentNode.insertBefore(P,a)};T["ThinkPageWeatherWidgetObject"]=n;T[n]||(T[n]=function(){(T[n].q=T[n].q||[]).push(arguments)});T[n].l=+new Date();if(T.attachEvent){T.attachEvent("onload",g)}else{T.addEventListener("load",g,false)}}(window,document,"script","tpwidget","//widget.seniverse.com/widget/chameleon.js"))</script>
+<script>
+	tpwidget("init", {
+		"flavor": "slim",
+		"location": "WTW48BWCWRFR",
+		"geolocation": "enabled",
+		"language": "zh-chs",
+		"unit": "c",
+		"theme": "chameleon",
+		"container": "tp-weather-widget",
+		"bubble": "disabled",
+		"alarmType": "badge",
+		"color": "{php echo $this->syscfg['wethercolor']?$this->syscfg['wethercolor']:'#FFFFFF';}",
+		"uid": "UDAFF75FD2",
+		"hash": "5dcb3137d6a9a74559e06b3dfce4b839"
+	});
+	tpwidget("show");
+	</script>
+{/if}
+{template $this->mytpl('_menu')}
+{template $this->mytpl('_footer')}

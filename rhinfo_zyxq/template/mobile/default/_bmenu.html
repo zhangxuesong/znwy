@@ -1,0 +1,37 @@
+<div class="fui-navbar">
+    <a href="{php echo $this->createMobileUrl('manage',array('op'=>'index'));}" class="external nav-item {if $mcurr=='index'}active{/if}">
+        <span class="icon icon-home"></span>
+        <span class="label">工作台</span>
+    </a>
+
+    <a {if $team['right1']==1 || $team['right2']==1 || $team['right3']==1}href="{php echo $this->createMobileUrl('manage',array('op'=>'steward'));}"{else}style="opacity:0.3;"{/if} class="external nav-item {if $mcurr=='steward'}active{/if}">
+            <span class="icon icon-lights"></span>
+            <span class="label">管家</span>
+	</a>
+	
+	 <a {if $team['right4']==1}href="{php echo $this->createMobileUrl('manage',array('op'=>'member','status'=>9));}"{else}style="opacity:0.3;"{/if} class="external nav-item {if $mcurr=='member'}active{/if}">
+            <span class="icon icon-group"></span>
+            <span class="label">住户</span>
+    </a>
+		
+	<a {if $team['right16']==1}href="{php echo $this->createMobileUrl('manage',array('op'=>'fee'));}"{else}style="opacity:0.3;"{/if} class="external nav-item {if $mcurr=='fee'}active{/if}">
+		<span class="icon icon-recharge"></span>
+		<span class="label">账单</span>
+	</a>
+
+    <a href="{php echo $this->createMobileUrl('manage',array('op'=>'my'));}" class="external nav-item {if $mcurr=='my'}active{/if}">
+        <span class="icon icon-person2"></span>
+        <span class="label">我的</span>
+    </a>
+</div>
+
+<script language="javascript">  
+	clearTimeout(window.interval);
+	window.interval = setTimeout(function () {    
+		jssdkconfig = {php echo json_encode($_W['account']['jssdkconfig']);} || { jsApiList:[] };
+		jssdkconfig.debug = false;
+		wx.ready(function () {
+			wx.hideOptionMenu();
+		});	
+	},500);
+</script>

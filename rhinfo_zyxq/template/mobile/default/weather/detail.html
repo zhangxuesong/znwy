@@ -1,0 +1,76 @@
+{if !empty($this->syscfg['bgcolor'])}
+    <style>
+        .member-page .headinfo
+        {background: {php echo $this->syscfg['bgcolor']};
+		 border-color:{php echo $this->syscfg['bgcolor']};}
+
+    </style>
+{/if}
+<style>
+.fui-icon-group  .fui-icon-col .text {
+	font-size: 0.7rem;
+}
+.fui-icon-col img{height:0.7rem;width:0.7rem;}
+.fui-icon-group  .fui-icon-col:before {border-left: 0px;}
+.fui-cell-group:not(.fui-cell-group-o):before,.fui-list-group:not(.fui-list-group-o):before,.fui-list-group:not(.fui-list-group-o):after{border-top:0px;}
+.fui-cell-group:after {border-bottom:0px;}
+.member-page .headinfo .child .num{font-size:1rem;}
+.member-page .wethertitle{text-align:center;width:100%;background:{if !empty($this->syscfg['bgcolor'])}$this->syscfg['bgcolor']{else}#ff8000{/if};padding-top:0.3rem;color:#fff;font-size:0.75rem;}
+.member-page .wethertitle p{line-height:0.9rem;}
+.member-page .wethertitle img{height:2rem;width:2rem;}
+.member-page .wethertitle .temp{position:relative;height:3rem;}
+.member-page .wethertitle .temp i{position:absolute;bottom:1.5rem;left:0;}
+.member-page .headinfo { padding-top:0rem;}
+</style>
+<div class="wethertitle">
+	<p>{$ret['city']}{if !empty($_GPC['street'])}&nbsp;&nbsp;{$_GPC['street']}{/if}</p>
+	<div><span style="font-size:3rem;line-height:3rem;">{$ret['temp']}</span><span class="temp"><i>℃</i> {$ret['aqi']['quality']}</span></div>
+	<p>{$ret['date']}&nbsp;&nbsp;{$ret['week']}</p>
+</div>
+<div class="headinfo" >	
+	<div class="child">
+		<div class="title">{$ret['winddirect']}</div>
+		<div class="num">{$ret['windpower']}</div>
+	</div>
+	<div class="child">
+		<div class="title">相对湿度</div>
+		<div class="num">{$ret['humidity']}%</div>
+	</div>
+	<div class="child">
+		<div class="title">空气指数</div>
+		<div class="num">{$ret['aqi']['ipm2_5']}</div>
+	</div>
+	<div class="water">
+		<div class="water-1"></div>
+		<div class="water-2"></div>
+	</div>  
+</div>
+<div class="fui-cell-group">	
+	{loop $ret['daily'] $i $daily}			
+		<div class="fui-icon-group col-3" {if $i==0}style="border-top:0px;"{/if}>
+		<a class="fui-icon-col">			
+			<div class="text">{if $i==0}今天{elseif $i==1}明天{else}{$daily['week']}{/if}</div>
+		</a>
+		<a class="fui-icon-col">						
+			<div class="text"><img src="../addons/rhinfo_zyxq/static/mobile/weathericon/{$daily['day']['img']}.png" /> {if $daily['day']['weather']==$daily['night']['weather']}{$daily['day']['weather']}{else}{$daily['day']['weather']}转{$daily['night']['weather']}{/if}</div>
+		</a>
+		<a class="fui-icon-col">			
+			<div class="text">{$daily['day']['temphigh']} / {$daily['night']['templow']} ℃</div>
+		</a>
+		</div>
+	{/loop}	
+</div>
+
+<div class="fui-list-group">  			
+	{loop $ret['index'] $k $index}
+	<div class="fui-list external">		
+		<div class="fui-list-media">
+			<img src="../addons/rhinfo_zyxq/static/mobile/weathericon/index_{$k}.png" class="round">
+		</div>
+		<div class="fui-list-inner">
+			<div class="subtitle">{$index['iname']}</div>		
+			<div class="text">{$index['detail']}</div>			
+		</div>		
+	</div>
+	{/loop}
+</div>

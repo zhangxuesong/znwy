@@ -1,0 +1,31 @@
+﻿<div class="form-group">
+	<input type="hidden" class="form-control" value=""  name="cateid[]">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">巡检标准</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<div class="input-group">
+			<span class="input-group-addon">名称</span>								
+			<input type="text" class="form-control"  value="" name="title[]">						
+			<span class="input-group-addon">标准</span>
+			<input type="text" class="form-control"  value="" name="desc[]" style="min-width:400px;">			
+			<span class="input-group-addon">顺序</span>
+			<input type="text" class="form-control"  value="0" name="displayorder[]">
+			<span class="input-group-btn"><button class="btn btn-warning" type="button" onclick="removeitem(this)" ><i class="fa fa-close"></i></button></span>
+		</div>	
+		<div class="input-group">							
+			<span class="input-group-addon">表单</span>		
+			<select name="itemtype[]" class="form-control" onchange="selectChange(this)">
+				<option value="text">字符串(text)</option>
+				<option value="number">数字(number)</option>
+				<option value="textarea">文本(textarea)</option>
+				<option value="radio">单选(radio)</option>
+				<option value="checkbox">多选(checkbox)</option>
+				<option value="select">下拉框(select)</option>								
+				<option value="image">上传图片(image)</option>
+			</select>					
+			<span class="input-group-addon">内容</span>
+			<input type="text" class="form-control"  value="" name="value[]" style="min-width:580px;">
+			<span class="input-group-btn selectimage"><button class="btn btn-info" type="button" onclick="showImageDialog(this)" ><i class="fa fa-photo"></i></button></span>
+		</div>
+		<span class="help-block">单选、多选、下拉框请输入内容，多值请用“ | ”隔开，如：上 | 中 | 下，其它则为空或选择参考图片</span>
+	</div>
+</div>

@@ -1,0 +1,264 @@
+﻿{template 'web/_layer_header'}
+<style>
+html { overflow-x:hidden; }
+</style>
+<nav class="navbar navbar-fixed-top" style="margin-top:5px;margin-right:20px;">
+<span class="pull-right"><a href="javascript:;" class="btn btn-success"  onclick="mysubmit(this)"><i class="fa fa-save"></i> 保存</a></span>   
+</nav> 
+<div class="panel panel-default" style="width:580px;">
+    <div class="panel-body">    
+	<form action=""  method="post" role="form" enctype="multipart/form-data" id="myform" >
+		<input type="hidden" name="token" value="{$_W['token']}" />	
+		<input type="hidden" name="id"  value="{$item['id']}" />	
+		<input type="hidden" name="category" id="category" value="{$category}" />	
+		<div class="form-group">
+			<label class="control-label"><span class="text-danger">*</span>项目名称</label>
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入项目名称" name="title" />
+		</div>
+		<div class="form-group">
+			<label class="control-label"><span class="text-danger">*</span>计费方式</label>
+			<select class="form-control" id="calmethod" name="calmethod" >
+				<option value="">请选择</option>	
+				{loop $calmethod $m $t}
+					<option value="{$t['id']}" {if $item['calmethod'] == $t['id']} selected {/if} >{$t['title']}</option>
+				{/loop}				
+			</select>
+		</div>	
+		<div class="form-group">
+			<label class="control-label">计量单位</label>
+			<input type="text" class="form-control" id="measure" value="{$item['measure']}" placeholder="输入计量单位，如：月/平方" name="measure" />
+		</div>			
+		<div class="form-group">
+			<label class="control-label"><span class="text-danger">*</span>价格</label>
+			<div class="input-group">
+				<input type="text" class="form-control" id="price" value="{$item['price']}" placeholder="输入单价" name="price" />
+				 <span class="input-group-addon">元</span>
+			 </div>
+		</div>		
+		<div class="form-group">
+			<label class="control-label"><span class="text-danger">*</span>账单周期</label>
+			<div class="input-group">
+				<input type="number" class="form-control" id="paymonths" value="{$item['paymonths']}" placeholder="输入账单周期" name="paymonths" />
+				 <span class="input-group-addon">个月</span>
+			 </div>
+			 <div class="help-block">1-12个月，按季输入3个月，按半年输入6个月，按年输入12个月</div>
+		</div>
+		
+		<div class="form-group" >
+			<label class="control-label">是否可以导入</label>
+			<div class="input-group">
+			<label class='radio-inline'><input type="radio" name="isimport" value="0" {if $item['isimport'] == 0 || empty($item['import'])} checked="true" {/if} >不可以</label>
+			<label class='radio-inline'><input type="radio" name="isimport" value="1" {if $item['isimport'] == 1} checked="true" {/if} >可以</label>
+			</div>
+			<div class="help-block">允许导入，系统将不生成账单，导入EXCEL直接生成账单</div>
+		</div>
+		
+		<div class="form-group" {if empty($feeitem_groups)}style="display:none;"{/if}>
+			<label class="control-label">所属收费分组</label>
+			<select class="form-control" id="bid" name="bid" onchange="selectChange()">
+				<option value="0">请选择</option>
+				{loop $feeitem_groups $group}
+					<option value="{$group['id']}" {if $item['bid'] == $group['id']} selected {/if} >{$group['title']}</option>
+				{/loop}	
+			</select>
+			<div class="help-block">选择已创建收费分组，为空则选择下面{php echo $category==2?'区域':'楼宇';}创建新的收费分组</div>
+		</div>
+		
+		{if ($category==0 || $category==1 || $category==2) && $operation=='additem'}			
+		<div class="form-group" id="buildings" {if empty($buildings)}style="display:none;"{/if}>
+			<label class="control-label">选择{php echo $category==2?'区域':'楼宇';}</label>
+			<!--效果html开始-->
+			<div class="selectbox">
+			<div class="select-bar">
+				<span class="text-warning">请选择</span>
+				<select multiple="multiple" id="select1" class="form-control">
+				{loop $buildings $value}
+					<option value="{$value['id']}">{$value['title']}</option>
+				{/loop}
+				</select>				
+			</div>
+
+			<div class="btn-bar">
+				<p><span id="add"><input type="button" class="btn" value=">" title="移动选择项到右侧"/></span></p>
+				<p><span id="add_all"><input type="button" class="btn" value=">>" title="全部移到右侧"/></span></p>
+				<p><span id="remove"><input type="button" class="btn" value="<" title="移动选择项到左侧"/></span></p>
+				<p><span id="remove_all"><input type="button" class="btn" value="<<" title="全部移到左侧"/></span></p>
+			</div>
+			<div class="select-bar">
+				<span class="text-success">已选择</span>
+				<select multiple="multiple" id="select2" class="form-control">
+				{loop $ebuildings $evalue}
+					<option value="{$evalue['id']}">{$evalue['title']}</option>
+				{/loop}				
+				</select>				
+			</div>	
+			</div>
+			<!--效果html结束-->
+		</div>
+		<input type="hidden" name="bids" id="bids" value="" />	
+		{/if}
+		<div class="form-group">
+			<label class="control-label">备注</label>
+			<input type="text" class="form-control" id="remark" value="{$item['remark']}" placeholder="输入备注" name="remark" />
+		</div>
+		
+		<div class="form-group" >
+			<label class="control-label">状态</label>
+			<div class="input-group">
+			<label class='radio-inline'><input type="radio" name="status" value="1" {if $item['status'] == 1 || empty($item['status'])} checked="true" {/if} >启用</label>
+			<label class='radio-inline'><input type="radio" name="status" value="2" {if $item['status'] == 2} checked="true" {/if} >禁用</label>										
+			</div>
+		</div>
+		<br>
+	</form>	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+
+
+<script type="text/javascript">
+var category = "{$category}";
+var operation = "{$operation}";
+$(function(){	
+	//移到右边
+	$('#add').click(function(){
+		//先判断是否有选中
+		if(!$("#select1 option").is(":selected")){			
+			layer.msg("请选择需要移动的选项",{icon:0})
+		}
+		//获取选中的选项，删除并追加给对方
+		else{
+			$('#select1 option:selected').appendTo('#select2');
+		}	
+	});
+	
+	//移到左边
+	$('#remove').click(function(){
+		//先判断是否有选中
+		if(!$("#select2 option").is(":selected")){			
+			layer.msg("请选择需要移动的选项",{icon:0})
+		}
+		else{
+			$('#select2 option:selected').appendTo('#select1');
+		}
+	});
+	
+	//全部移到右边
+	$('#add_all').click(function(){
+		//获取全部的选项,删除并追加给对方
+		$('#select1 option').appendTo('#select2');
+	});
+	
+	//全部移到左边
+	$('#remove_all').click(function(){
+		$('#select2 option').appendTo('#select1');
+	});
+	
+	//双击选项
+	$('#select1').dblclick(function(){ //绑定双击事件
+		//获取全部的选项,删除并追加给对方
+		$("option:selected",this).appendTo('#select2'); //追加给对方
+	});
+	
+	//双击选项
+	$('#select2').dblclick(function(){
+		$("option:selected",this).appendTo('#select1');
+	});
+});
+function mysubmit(obj){
+	var title = $.trim($("#title").val());
+	var price = $.trim($("#price").val());
+	var paymonths = $.trim($("#paymonths").val());
+	var calmethod = $("#calmethod").find("option:selected").val(); 
+	var bidstr = '';    
+	if (title=='') {
+	   layer.msg("项目名称不能为空！",{icon:0});
+	   return;
+	}
+	if (calmethod=='') {
+	   layer.msg("计费方式不能为空！",{icon:0});
+	   return;
+	}
+	if (paymonths=='') {
+	   layer.msg("缴费周期不能为空！",{icon:0});
+	   return;
+	}
+	if(operation=='additem'){
+		if(category==0){
+			$('#select2 option').each(function () {
+				var $option = $(this);
+				bidstr += $option.val() + ',';		
+			});
+			
+			if (bidstr=='') {
+			   layer.msg("已选择不能为空！",{icon:0});
+			   return;
+			}
+				
+			bidstr = bidstr.substring(0,bidstr.length - 1);
+			$("#bids").val(bidstr);	
+		}
+		if(category==1 || category==2){
+			var bid = $("#bid").find("option:selected").val(); 
+			if(bid==0){
+				$('#select2 option').each(function () {
+					var $option = $(this);
+					bidstr += $option.val() + ',';		
+				});
+				
+				if (bidstr=='') {
+				   layer.msg("已选择不能为空！",{icon:0});
+				   return;
+				}			
+				bidstr = bidstr.substring(0,bidstr.length - 1);
+				$("#bids").val(bidstr);	
+			}
+		}	
+	}
+	myprocess(obj);
+	var loadindex = layer.load(2);			
+	$.ajax({  
+         type : "post",  
+          url : "{php echo $this->createWebUrl($mydo,array('op'=>$operation,'rid'=>$_GPC['rid'])).$mywe['direct'];}",  
+          data : $("#myform").serializeObject(),   
+          async : false,  
+          success : function(data){
+			  layer.close(loadindex);
+			  if(data!='ok'){
+				 layer.msg(data,{icon:0});
+				  myreset(obj);
+				 return
+			  }					
+			  layer.msg('保存成功!',{icon:1});
+			  setTimeout(function(){
+				  var index = parent.layer.getFrameIndex(window.name);
+				  parent.layer.close(index);
+			  },2000);
+          }  
+     }); 
+}
+function selectChange(){
+   var objS = document.getElementById("bid");
+   var value = objS.options[objS.selectedIndex].value;
+   if(value==0){
+	  $("#buildings").show();
+   }
+   else{
+	   $("#buildings").hide();
+   }
+}
+ function myprocess(obj){
+	var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/> 处理中...';
+	$(obj).html(html);  
+	$(obj).attr("disabled", "disabled"); 
+}
+function myreset(obj){
+	var html = '<i class="fa fa-save"></i> 保存';
+	$(obj).html(html);  
+	$(obj).removeAttr("disabled"); 
+}
+</script> 
+
+</body>
+</html>

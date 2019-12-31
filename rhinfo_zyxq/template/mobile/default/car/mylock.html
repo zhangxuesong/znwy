@@ -1,0 +1,80 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-list-group:not(.fui-list-group-o):before,.fui-list-group:not(.fui-list-group-o):after {border-top: 0px;}
+</style>
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">我的车锁</div>
+		<div class="fui-header-right">
+			<a href="{php echo $this->CreateMobileUrl('car',array('op'=>'addlock'));}"><i class="icon icon-add"></i></a>
+		</div>
+	</div>
+	<div class='fui-content'> 			
+		{if !empty($list) || !empty($sharelist)}
+			{loop $list $item}
+			<div class="fui-list-group address-item" style='margin-top:5px;'  data-addressid="{$item['id']}">
+				<div  class="fui-list" >
+				<div class="fui-list-inner">
+					<a href="{php echo $this->createMobileUrl($mydo,array('op'=>'sharepark','parklockid'=>$item['id']));}">
+					<div class="title"><span class='realname'>{$item['title']}</span> </div>
+					<div class="text">
+						<span class='address'>{$item['region']} {$item['remark']}</span>
+						<span class="remark pull-right"></span>
+					</div>	
+					</a>					
+					<div class='bar' >				
+					<span class="pull-left"> <a data-toggle='delete' class='external'><i class='icon icon-delete text-danger'></i> 删除</a></span>	
+					<span class='pull-right'>	
+						{if !empty($item['parklock'])}
+							&nbsp;&nbsp;
+							<a data-toggle='control' class='external' data-lockid="{$item['id']}" data-online="{$item['parklock']['onlineState']}" data-updown="{$item['parklock']['updownState']}">
+								<i class="icon icon-lock {if $item['parklock']['onlineState']==1}text-warning{/if}"></i> {if $item['parklock']['updownState']==1}上升{else}下降{/if}			
+							</a>
+						{/if}
+					</span>			
+					</div>
+				</div>
+				</div>
+			</div> 
+			{/loop}
+			{loop $sharelist $sitem}
+				<div class="fui-list-group address-item" style='margin-top:5px;'  data-addressid="{$sitem['parklockid']}">
+					<div  class="fui-list" >
+					<div class="fui-list-inner">						
+						<div class="title"><span class='realname'>{$sitem['title']}</span> </div>
+						<div class="text">
+							<span class='address'>{$sitem['region']}</span>							
+						</div>												
+						<div class='bar' >				
+						<span class="pull-left"><i class='icon icon-clock text-danger'></i> {php echo !empty($sitem['starttime'])?date('Y-m-d H:i',$sitem['starttime']):''}~{php echo !empty($sitem['endtime'])?date('Y-m-d H:i',$sitem['endtime']):''}</a></span>	
+						<span class='pull-right'>	
+							{if !empty($sitem['parklock'])}
+								&nbsp;&nbsp;
+								<a data-toggle='control' class='external' data-lockid="{$sitem['parklockid']}" data-online="{$sitem['parklock']['onlineState']}" data-updown="{$sitem['parklock']['updownState']}">
+									<i class="icon icon-lock {if $sitem['parklock']['onlineState']==1}text-warning{/if}"></i> {if $sitem['parklock']['updownState']==1}上升{else}下降{/if}			
+								</a>
+							{/if}
+						</span>			
+						</div>
+					</div>
+					</div>
+				</div> 
+			{/loop}
+		{else}
+			<div class='content-empty'>
+				 <div class="empty-bg"><i class='icon icon-lock'></i></div>
+				<p>您还没有任何车锁信息</p>
+			</div>
+		{/if}
+    </div>
+	<script language='javascript'>		
+		require(['car/lock'], function (modal) {
+			modal.initCtrl();
+		});
+	</script>
+ </div>
+ 
+{template $this->mytpl('_footer')}

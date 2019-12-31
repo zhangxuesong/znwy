@@ -1,0 +1,87 @@
+{template $this->mytpl('_header')}
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/rharea.min.js"></script>  
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/rhui/css/rharea.css">
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170802">
+
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">账单管理</div>
+		<div class="fui-header-right"></div>
+	</div>
+
+	<div class='fui-content navbar'>
+		<div id="tab" class="fui-tab fui-tab-success">
+		   <a data-tab="tab1" class="external {if $status==0 || empty($status)}active{/if}"  data-status='0'>全部</a>
+			<a data-tab="tab2" class="external {if $status==1}active{/if}"  data-status='1'>待缴费</a>
+			<a data-tab="tab3" class="external {if $status==2}active{/if}"  data-status='2'>已缴费</a>
+		</div>
+		<form action="{php echo $this->createMobileUrl('manage',array('op'=>'fee','rid'=>$myrid));}" method="post">
+			<div class="fui-searchbar bar">
+				<div class="searchbar center">
+					<input type="hidden" name="status" id="status" value="{$status}" />					
+					<input type="submit" class="searchbar-cancel searchbtn" value="搜索">
+					<div class="search-input">
+						<i class="icon icon-search"></i>
+						<input type="search" placeholder="请选择房产" readonly class="search" name="myroom" id="myroom" />
+						<input id="room" type="hidden" name="room" />						
+					</div>
+				</div>
+			</div>
+		</form>
+		
+		<div class="container"></div>
+		<div class="content-empty" style="display:none;">
+		<i class="icon icon-comment"></i> <br/>暂时没有任何内容</div>
+        <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+	</div>  
+	<script type="text/html" id="tpl_feebill_list">
+		<%each list as item%>
+			<a class="fui-list" href="<%item.url%>">
+				<div class="fui-list-media">
+					<div class="text-center" >
+						<i class="icon icon-money <%if item.status==1%>text-warning<%else%>text-success<%/if%>" style="font-size:2rem;"></i>						
+					</div>
+				</div>
+				<div class="fui-list-inner">
+					<div class="title"><%item.address%></div>
+					<div class="subtitle"><%item.title%>:<font class="text-danger"><%item.fee%></font>&nbsp;&nbsp;单价: <%item.price%>&nbsp;<%item.measure%></div>
+					<div class="text">账单周期：<%item.daterange%><%if item.feetype==2%>&nbsp;用量：<%item.threeqty%><%/if%>
+					<%if item.paydate!==""%><span class="pull-right">缴费日期：<%item.paydate%></span><%/if%>
+					</div>					
+				</div>
+				 <div class="angle"></div>
+			</a>			 
+		<%/each%>
+	</script>
+	<script language='javascript'>
+		var buildings = {php echo json_encode($mybuilding);};	
+		var units = {php echo json_encode($myunit);};
+		var rooms = {php echo json_encode($myroom);};
+		var myarea = new RHArea();
+		myarea.init({
+			'trigger': '#myroom',
+			'valueTo': '#room',
+			'keys': {
+				id: 'id',
+				name: 'title'
+			},
+			'type': 2,
+			'data': [buildings,units,rooms]
+		});
+		
+		require(['manage/fee'], function (modal) {
+			modal.initList({
+			rid:"{$myrid}",			
+			room:"{$_GPC['room']}",
+			status:"{$_GPC['status']}"
+			});
+		});
+	</script>
+ </div>
+
+{template $this->mytpl('_mmenu')}
+</body>
+</html>

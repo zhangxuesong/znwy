@@ -1,0 +1,86 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+.fui-list-group:not(.fui-list-group-o):before {	border-top:0px;	}
+.fui-list-group:not(.fui-list-group-o):after {border-top:0px;}
+</style>
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">我的设置</div>
+		<div class="fui-header-right"><button class="btn btn-success btn-sm" id="btn-submit">保存</button></div>
+	</div>
+	<div class='fui-content'> 
+		<form id="myform">
+		 <input type="hidden" value="{$item['uid']}" name="uid" id="uid" />
+          <div class="fui-list-group">
+            <div class="fui-list">                
+                <input type="hidden" id="avatar" value="{$item['avatar']}" name="avatar"/>				
+                <div class="fui-list-inner">
+                    <div class="title">头像</div>
+                </div>
+                <div class="fui-list-media">
+                    <img src="{php echo tomedia($item['avatar'])}" class="circle" id="showavatar" />
+                </div>
+            </div>
+        </div>		
+        <div class="fui-cell-group">
+		    {if $user['mobile']}
+			<div class="fui-cell">
+				<div class="fui-cell-label">手机号</div>
+				<div class="fui-cell-info">
+					<input type="tel" class='fui-input' id='mobile' name='mobile' readonly placeholder="请输入您的手机号"  value="{$user['mobile']}" maxlength="11" />
+				</div>				
+				<div  class="fui-cell-remark external">
+					<a href="{php echo $this->createMobileurl('member',array('op'=>'chgbind'));}">更换手机号</a>
+				</div>
+			</div>
+			{/if}
+			<div class="fui-cell">
+                <div class="fui-cell-label">真实姓名</div>
+                <div class="fui-cell-info">
+                    <input type="text" placeholder="请输入真实姓名" class="fui-input" value="{$item['realname']}" name='realname' id="realname" />
+                </div>
+            </div>
+			<div class="fui-cell">
+                <div class="fui-cell-label">昵称</div>
+                <div class="fui-cell-info">
+                    <input type="text" placeholder="请输入昵称" class="fui-input" value="{$item['nickname']}" name='nickname' id="nickname" />
+                </div>
+            </div>
+			{if $this->syscfg['memberfield']==1}
+				{loop $fields $field}
+					{if $field['field']=='avatar' || $field['field']=='realname' || $field['field']=='nickname' || $field['field']=='mobile'}
+					{elseif $field['field']=='gender'}
+					<div class="fui-cell">
+						<div class="fui-cell-label">性别</div>
+						<div class="fui-cell-info">
+							<input type="radio" name="gender" value="1" {if empty($item['gender']) || $item['gender']==1 } checked{/if} />男
+							<input type="radio" name="gender" value="2" {if $item['gender']==2 } checked{/if} />女
+						</div>
+					</div>
+					{else}
+					 <div class="fui-cell {if $field['required']==1}must{/if}">				  
+						<div class="fui-cell-label">{$field['title']}</div>
+						<div class="fui-cell-info">
+							<input type="text" placeholder="请输入{$field['title']}" class="fui-input" value="{$item[$field['field']]}" id="{$field['field']}" name="{$field['field']}" />
+						</div>
+					</div>
+					{/if}
+				{/loop}
+			{/if}
+        </div>
+        </form>     
+    </div>
+ </div>
+ 
+<script language='javascript'>		
+	require(['service/member'], function (modal) {
+		modal.init();
+	}); 
+</script>
+
+{template $this->mytpl('_footer')}

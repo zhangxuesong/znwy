@@ -1,0 +1,31 @@
+{template $this->mytpl('_header')}
+<div class="fui-page fui-page-current">
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">设备管理</div>
+        <div class="fui-header-right"></div>
+    </div>
+    <div class="fui-content">
+       
+    </div>
+</div>
+<script>
+    $(function (){
+        $(".task-item-pickup").click(function () {
+            var id = $(this).attr('data-id');
+            if (id == '0') return;
+			core.json('task/index',{id:id}, function(ret){
+					if (ret.status != 1) {
+					    RhUI.toast.show(ret.result.message);
+						return
+					}
+					RhUI.alert(ret.result.message, '', function() {	
+					    location.href = core.getUrl('task/mytask');
+					});
+				},false,true);
+        });
+    })
+</script>
+{template $this->mytpl('_footer')}

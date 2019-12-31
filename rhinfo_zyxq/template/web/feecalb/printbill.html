@@ -1,0 +1,99 @@
+﻿{template 'web/_print_header'}
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="pull-right" style="padding:8px;">
+		<a href="javascript:;" class="btn btn-info"  onclick="myprint()"><i class="fa fa-print"></i> 打印</a>		
+	</div>
+</nav>
+
+<div class="panel panel-default" style="padding:30px;" >
+	<div class="panel-body" id="myprintarea" >
+		<div id="print-content">
+		<div class="header"><h1 style="text-align:center;">收费凭证</h1></div>
+		<!-- 页面顶部信息 -->
+		<p> 缴费日期:{php echo !empty($item['paydate'])?date('Y-m-d',$item['paydate']):date('Y-m-d',TIMESTAMP);}&nbsp;&nbsp;业主：{php echo $room['ownername']?$room['ownername']:'未登记';}&nbsp;{if !empty($room['mobile'])}手机：{$room['mobile']}{/if}&nbsp;房产:{$item['address']}&nbsp;&nbsp;应缴金额：{$item['totalfee']}元<span class="pull-right">凭证编号：{$printpznum}</span></p>
+			 <!-- 页面记录信息 -->
+				<table>
+						<thead>
+						  <tr>
+						    <th>序号</th>
+							<th>项目</th>
+							<th>交费周期</th>
+							<th>数量</th>
+							<th>单位</th>
+							<th>单价</th>
+							<th>金额</th>
+							<th>违约金</th>
+							<th>抵扣</th>								
+							<th>实收</th>
+							<th>备注</th>
+						  </tr>
+						</thead>
+						<tbody>
+						{loop $data $k $v}
+						<tr>
+							<td>{php echo $k + 1;}</td>
+							<td>{$v['title']}</td>
+							<td>{php echo $region['isprintdate']==1 && $v['feetype']==2?date('Y-m-d',$v['startdate']).'~'.date('Y-m-d',$v['enddate']):$v['daterange'];}</td>						
+							<td>{if $v['feetype']=='2'}{$v['threeqty']}(起止{$v['startqty']}~{$v['endqty']}){elseif $v['feetype']=='3' || $v['feetype']=='4'}{else}{if !empty($v['threeqty'])}{$v['threeqty']}{else}{php echo empty($v['price'])?0:round($v['fee']/$v['price'],2);}{/if}{/if}</td>
+							<td>{$v['measure']}</td>
+							<td>{$v['price']}</td>
+							<td>{$v['fee']}</td>
+							<td>{$v['latefee']}</td>
+							<td>{$v['creditfee']}</td>
+							<td>{$v['payfee']}</td>
+							<td>{php echo $region['isprintremark']==1?$v['remark']:'';}</td>
+						</tr>
+						{/loop}
+						<tr>
+							<td colspan="5" >建筑面积：{$room['buildarea']}&nbsp;使用面积：{$room['usearea']}&nbsp;附加面积：{$room['addarea']}</td>
+							<td colspan="3" >合计(大写)：{$item['ctotalfee']}</td>
+							<td colspan="2">&yen;&nbsp;{$item['totalfee']}元</td>	
+							<td colspan="3">{$paytype}</td>
+						</tr>
+					</tbody>
+			</table>
+			<!-- 页脚信息 -->
+            <div class="table-footer" style="position:relative;height:100px;">
+				<span class="floatLeft" style="display:block;">{$region['title']}	联系电话：{$region['telphone']}</span>
+				<span class="floatRight" style="display:block;">{$property['title']}	投诉电话:{$property['telphone']}</span>
+			    <br>
+				<p style="text-align:right;">操作人员：{$mywe['name']}&nbsp;打印时间：{php echo date('Y-m-d H:i:s');}</p>
+				{if !empty($region['qrurl'])}<img src="{php echo $this->createqrcode($region['qrurl']);}" style="position:absolute;width:85px;height:85px;top:20px;left:10px;"/>{/if}
+				<img src="{$item['qrurl']}" style="position:absolute;width:80px;height:80px;top:23px;left:100px;"/>
+				{if !empty($region['sealimage'])}<img src="{php echo tomedia($region['sealimage']);}" style="position:absolute;top:-50px;right:30px;opacity:0.9;filter:alpha(opacity=90);"/>{/if}
+			</div>
+		</div>
+	</div>
+</div>
+
+{template 'web/_iframe_footer'}
+
+<script type="text/javascript">
+
+var billids = "{$billids}";
+
+function myprint(){
+  $("#myprintarea").printArea();
+  setTimeout("isprint();", 1000);
+}
+
+function isprint(){
+layer.confirm('打印正确吗？',{icon: 3, title:'提示'},
+	function(index){		
+        layer.close(index);
+		var loadindex = layer.load(2);
+		$.post("{php echo $this->createWebUrl('feecalb',array('op'=>'printbill')).$mywe['direct'];}",
+			{billids:billids},
+			function(data,status){
+			 layer.close(loadindex);
+		});			
+    });
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'paybill')).$mywe['direct'];}";
+	 location.href = url;
+}
+</script>
+</body>
+</html>

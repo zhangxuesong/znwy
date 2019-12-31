@@ -1,0 +1,76 @@
+{template $this->mytpl('_header')}
+{if !empty($this->syscfg['btncolor'])}
+    <style>
+		#btnSubmit {
+			background-color:{php echo $this->syscfg['btncolor']};
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+		}
+		#btnSubmit:active,
+		#btnSubmit.disabled {
+			background: {php echo $this->syscfg['btncolor']};			
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+			opacity:0.5;
+		}
+    </style>
+{/if}
+<style>
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+</style>
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">人脸认证</div>
+		<div class="fui-header-right">&nbsp;</div>
+	</div>
+
+	<div class='fui-content'>
+		 <div class="fui-title">
+			<i class="icon icon-city"></i> {$region['title']}-{$item['title']}
+		 </div>
+		 <div class="fui-cell-group">
+			 <div class='fui-cell'>
+				 <div class='fui-cell-label'>照片</div>
+				 <div class='fui-cell-info'>			 
+					 <ul class="fui-images fui-images-xs" id="images"></ul>
+					 <div class="fui-uploader fui-uploader-xs"
+						 data-max="1" 
+						 data-count="0"> 
+						 {if $this->rhinfo_isweixin == false}
+						  <input type="file" name='imgFile0' id='imgFile0' multiple="" accept="image/*" >
+						 {/if}
+					 </div>
+				 </div>
+			 </div>
+			 <div class="fui-cell noactive">
+				<div class="fui-cell-label ">他人认证</div>
+				<div class="fui-cell-info">
+					<input type="checkbox" class="fui-switch fui-switch-small fui-switch-success pull-right" name="other" id="other"/>
+				</div>
+			</div>
+		</div>
+		<div class="fui-cell-group" id="otherdisplay" style="display:none;">			
+			<div class="fui-cell">
+				<div class="fui-cell-label">手机号码</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input' id='mobile' name='mobile' placeholder="手机号码"  value="" /></div>				
+			</div>
+			<div class="fui-cell">
+				<div class="fui-cell-label">姓名</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input' id='nickname' name='nickname' placeholder="输入昵称或姓名"  value="" /></div>				
+			</div>
+		 </div>		
+		<a href='#' id='btnSubmit' class='btn btn-success block'>立即认证</a>
+  </div>  
+
+	<script language='javascript'>
+		require(['opendoor/index'], function (modal) {
+		  	modal.initFace({id:'{$id}',doors:0});
+		});
+	</script>
+
+</div>
+{template $this->mytpl('_footer')}

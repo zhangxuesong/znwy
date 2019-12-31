@@ -1,0 +1,171 @@
+{template $this->mytpl('_header')}
+<style>
+input[type=radio] {
+    display: inline-block;
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: 0;
+    outline: 0 !important;
+    line-height: 20px;
+    color: #d8d8d8;
+}
+input[type=radio]:after {
+    content: "";
+    display:block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 14px;
+    font-size: 16px;
+    color: #fff;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    box-sizing:border-box;
+}
+input[type=radio]:checked:after {
+    content: "L";
+    transform:matrix(-0.766044,-0.642788,-0.642788,0.766044,0,0);
+    -webkit-transform:matrix(-0.766044,-0.642788,-0.642788,0.766044,0,0);
+    border-color: #04ab02;
+    background-color: #04ab02;
+}
+
+.login-page {
+    background: #ff3f3;
+    margin: 0;
+    position: absolute;
+}
+
+.login-page .headinfo {
+    position: relative;
+    height: auto;   
+    padding-top: 1rem;
+	background: #fff;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+	text-align: center;
+}
+
+.login-page .headinfo .setbtn {
+    height: 1.2rem;
+    width: 1.2rem;
+    position: absolute;
+    top: 0.2rem;
+    right: 0.5rem;
+    font-size: 1.2rem;
+    color: #fff;
+    line-height: 1.2rem;
+    text-align: center;
+}
+
+.login-page .headinfo .child {
+    width: 100%;
+    height: auto;
+    padding-bottom: 1.2rem;
+    text-align: center;
+}
+
+.login-page .headinfo .child.userinfo {
+    width: 100%;
+    color: #fff;
+}
+
+.login-page .headinfo .child.userinfo .face {
+    height: 3.8rem;
+    width: 3.8rem;
+    background: #fff;
+    margin: auto;
+    border-radius: 0.5rem;
+    border: 0.1rem solid #fff;
+}
+
+.login-page .headinfo .child.userinfo .face img {
+    height: 3.6rem;
+    width: 3.6rem;
+    border-radius: 0.5rem;
+    display: block;
+}
+.login-page .headinfo .child.userinfo .name {
+    height: 1.2rem;
+    padding-top: 0.2rem;
+    font-size: 0.8rem;
+    color: #666;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.login-page .headinfo .child.userinfo .face.radius{
+    border-radius: 0.5rem;
+}
+.login-page .headinfo .child.userinfo .face.radius img{
+    border-radius: 0.5rem;
+}
+.fui-cell-group:not(.fui-cell-group-o):before,.fui-cell-group .fui-cell:before{border-top:0px;}
+.fui-cell-group:after {border-bottom:0px;}
+.fui-cell-group .fui-cell{height: 2.4rem;border-bottom:1px solid #EEE;margin:0 5px}
+</style>
+
+<div class='fui-page  fui-page-current'>	
+    <div class='fui-content login-page'>		
+		<div class="headinfo" >			
+			<div class="child userinfo">
+				<div class="face">
+				<img src="{if tomedia('headimg_'.$_W['acid'].'.jpg')}{php echo tomedia('headimg_'.$_W['acid'].'.jpg');}{else}../addons/rhinfo_zyxq/static/web/ui.admin/images/zylogo.png{/if}"/>
+				</div>
+				<div class="name">{if empty($this->syscfg['wxtitle'])}{$_W['account']['name']}{else}{php echo $this->syscfg['wxtitle'];}{/if}</div>
+				<div class="level" ></div>
+			</div>
+		</div>
+		<div class="fui-cell-group">
+			<div class="fui-cell">
+				<div class="fui-cell-label">手机号码</div>
+				<div class="fui-cell-info">
+				<input type="tel" class='fui-input' id='mobile' name='mobile' placeholder="请输入您的手机"  value="" maxlength="11" />
+				</div>
+			</div>
+			<div class="fui-cell" id="pwd">
+				<div class="fui-cell-label">登录密码</div>
+				<div class="fui-cell-info"><input type="password" class='fui-input' id='password' name='password' placeholder="请输入您的密码"  value="" /></div>
+				<div class="fui-cell-remark noremark"></div>
+			</div>			
+			<div class="fui-cell" style="display:none;" id="verify">
+				<div class="fui-cell-label">验证码</div>
+				<div class="fui-cell-info"><input type="tel" class='fui-input' id='verifycode' name='verifycode' placeholder="5位验证码"  value="" maxlength="5" /></div>
+				<div class="fui-cell-remark noremark"><a class="btn btn-default btn-default-o btn-sm" id="btnCode">获取验证码</a></div>
+			</div>	
+			<div class="fui-cell noactive">
+                <div class="fui-cell-label ">验证登录</div>
+                <div class="fui-cell-info">
+                    <input type="checkbox" class="fui-switch fui-switch-small fui-switch-success pull-right" name="verifylogin" id="verifylogin"/>
+                </div>
+            </div>
+		</div>
+		<a href='#' id='btnSubmit' class='btn btn-success block'>登录</a>
+		 <div class="fui-cell-title" style="padding:0rem 1.5rem;text-align:center;">
+			<a href="{php echo $this->createMobileUrl($mydo,array('op'=>'register'));}" class="text-default account-login-link external">我要注册</a>&nbsp;|&nbsp;<a href="{php echo $this->createMobileUrl($mydo,array('op'=>'forget'));}" class="text-default account-login-link external">忘记密码 </a>
+		 </div>
+		<script language="javascript">	
+			require(['member/auth'], function (modal) {
+				modal.init({
+					endtime: {php echo intval($endtime)}
+				});
+			});
+		</script>		 
+	</div>
+</div>
+
+{template $this->mytpl('_footer')}

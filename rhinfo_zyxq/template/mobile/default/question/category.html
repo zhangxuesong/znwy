@@ -1,0 +1,32 @@
+{template $this->mytpl('_header')}
+<div class='fui-page fui-page-current'>
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">{$secprg['title']}</div>
+        <div class="fui-header-right">
+            <a class="icon icon-home external" href="{php echo $this->createMobileUrl($mydo);}"></a>
+        </div>
+    </div>
+    <div class='fui-content'>
+        {if count($category)>0}
+            <div class="fui-cell-group qa-title">
+                <div class="fui-cell">
+                    <div class="fui-cell-text">全部分类</div>
+                </div>
+            </div>
+            <div class="fui-icon-group col-4 noborder">
+                {loop $category $item}
+                    <a class="fui-icon-col external" href="{php echo $this->createMobileUrl($mydo, array('op'=>'list','cate'=>$item['id']));}">
+                        <div class="icon">
+                            {if !empty($item['thumb'])}<img src="{php echo tomedia($item['thumb'])}"/>{/if}
+                        </div>
+                        <div class="text">{$item['title']}</div>
+                    </a>
+                {/loop}
+            </div>
+        {/if}
+    </div>
+</div>
+{template $this->mytpl('_footer')}

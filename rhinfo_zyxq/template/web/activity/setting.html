@@ -1,0 +1,27 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:30px;" >
+    <div class="panel-body">    
+		{php include $this->mywtpl('setform')}	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){	
+	myprocess(obj);
+	$("#myform").submit();		
+}
+
+function myreturn(){
+	 window.history.go(-1);
+}
+
+</script> 
+
+</body>
+</html>

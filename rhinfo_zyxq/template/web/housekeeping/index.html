@@ -1,0 +1,155 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<style type="text/css">
+.nav-tabs li a { padding: 3px 10px;}
+</style>
+
+<div class="panel panel-default" {if $_W['uid']} style="padding-top:50px;" {else}style="padding-top:50px;"{/if}>
+    <div class="panel-body">    
+		<!-- Nav tabs -->		
+		<ul class="nav nav-tabs" role="tablist" id="mytabs">
+		  <li role="presentation" class="active"><a href="#property" role="tab" data-toggle="tab">{if $_W['uid']}功能入口{else}物业设置{/if}</a></li>
+		  {if $_W['uid']}
+		  <li role="presentation"><a href="#base" role="tab" data-toggle="tab">基本设置</a></li>		  
+		  <li role="presentation"><a href="#other" role="tab" data-toggle="tab">风格样式</a></li>
+		  <li role="presentation"><a href="#share" role="tab" data-toggle="tab">关注及分享</a></li>
+		  <li role="presentation"><a href="#pay" role="tab" data-toggle="tab">支付设置</a></li>
+		  <li role="presentation"><a href="#tpl" role="tab" data-toggle="tab">通知模板</a></li>
+		  <li role="presentation"><a href="#sms" role="tab" data-toggle="tab">短信设置</a></li>
+		  <li role="presentation"><a href="#copyright" role="tab" data-toggle="tab">版权设置</a></li>
+		  {/if}
+		</ul>	
+			<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >		
+				<input type="hidden" name="token" value="{$_W['token']}" />			
+				<input type="hidden" {if $_W['uid']}value="{$item['id']}"{else}value="{$company['id']}"{/if} name="id" />      
+				<!-- Tab panes -->
+				<div class="tab-content">
+				  <div role="tabpanel" class="tab-pane active" id="property">{if $_W['uid']}{template 'web/sysset/enter'}{else}{template 'web/sysset/property'}{/if}</div>
+				  {if $_W['uid']}
+				  <div role="tabpanel" class="tab-pane" id="base">{template 'web/sysset/base'}</div>
+				  <div role="tabpanel" class="tab-pane" id="pay">{template 'web/sysset/pay'}</div>
+				  <div role="tabpanel" class="tab-pane" id="other">{template 'web/sysset/other'}</div>
+				  <div role="tabpanel" class="tab-pane" id="share">{template 'web/sysset/share'}</div>
+				  <div role="tabpanel" class="tab-pane" id="tpl">{template 'web/sysset/tpl'}</div>
+				  <div role="tabpanel" class="tab-pane" id="sms">{template 'web/sysset/sms'}</div>
+				  <div role="tabpanel" class="tab-pane" id="copyright">{template 'web/sysset/company'}</div>
+				  {/if}
+				</div>	
+			</form>	
+	</div>
+ </div>
+ 
+ <div>
+
+<nav class="navbar navbar-default navbar-fixed-bottom">
+   <div class="col-sm-8 col-lg-9 col-xs-12 col-sm-offset-2" style="margin-top:8px;">   
+	   <a href="javascript:;" class="btn btn-primary"  onclick="mysubmit(this)"><i class="fa fa-check"></i> 保存<a/>
+   </div>
+</nav>
+
+{template 'web/_layer_footer'}
+
+<script type="text/javascript">	
+
+var smstype = "{$item['smstype']}";
+
+if(smstype==1 || smstype==""){
+	juhetxt();
+}
+
+if(smstype==2 || smstype==3){
+	dayutxt();
+}
+	
+if (smstype=='0' || smstype == '' || smstype=='1'){
+   $("#alidayu").hide();
+   $("#alisms").hide();
+}
+
+if (smstype=='2'){
+   $("#juhe").hide();
+   $("#alisms").hide();
+}
+
+if (smstype=='3'){
+   $("#juhe").hide();
+   $("#alidayu").hide();
+}
+	
+ $("input[name=smstype]").click(function(){
+	  switch($("input[name=smstype]:checked").attr("id")){	
+	  case "sms1":			
+		   $("#juhe").show();
+		   $("#alidayu").hide();
+		    $("#alisms").hide();
+		   juhetxt();
+		   break;
+	  case "sms2":			
+		   $("#juhe").hide();
+		   $("#alidayu").show();
+		    $("#alisms").hide();
+		   dayutxt();
+		   break;	
+	  case "sms3":			
+		   $("#juhe").hide();
+		   $("#alidayu").hide();
+		   $("#alisms").show();
+		   dayutxt();
+		   break;	
+	  default:
+		   break;
+		}
+ });
+ 
+function juhetxt(){
+	$("#verifyidtxt").html("验证码模板ID参考格式:【签名】您的验证码是#code#,如非本人操作,请忽略本短信.");
+	$("#feeidtxt").html("物业缴费模板ID参考格式:【签名】尊敬的#name#业主及住户,您最新物业账单已出.待交费周期:#daterange#,累计物业费金额#money#.请尽快缴纳,如有疑问,请咨询#phone#.");
+	$("#noticeidtxt").html("通知模板ID参考格式:【签名】物业通知:#title#,尊敬的#name#业主及住户,#content#,联系电话:#phone#.");
+	$("#repairidtxt").html("报修模板ID参考格式:【签名】新报修信息:#content#,联系电话:#phone#.");
+	$("#suggestidtxt").html("投诉建议模板ID参考格式:【签名】新投诉建议信息:#content#,联系电话:#phone#.");
+}
+
+function dayutxt(){
+	$("#verifyidtxt").html("验证码模板ID参考格式:【签名】您的验证码是${code},如非本人操作,请忽略本短信.");
+	$("#feeidtxt").html("物业缴费模板ID参考格式:【签名】尊敬的${name}业主及住户,您最新物业账单已出.待交费周期:${daterange},累计物业费金额${money}.请尽快缴纳,如有疑问,请咨询${phone}.");
+	$("#noticeidtxt").html("通知模板ID参考格式:【签名】物业通知:${title},尊敬的${name}业主及住户,${content},联系电话:${phone}.");
+	$("#repairidtxt").html("报修模板ID参考格式:【签名】新报修信息:${content},联系电话:${phone}.");
+	$("#suggestidtxt").html("投诉建议模板ID参考格式:【签名】新投诉建议信息:${content},联系电话:${phone}.");
+}
+function mysubmit(obj){	
+	var t1 = document.getElementById("myform").getElementsByTagName("input");  
+    for(i=0;i < t1.length;i++) {  
+        if(t1[i].type == "checkbox")  {  
+		   if(!(t1[i].checked)) {  
+			   t1[i].checked = true;  
+			   t1[i].value = "0";  
+		   }  
+        }  
+    } 
+	
+	myprocess(obj);
+	$("#myform").submit();
+}
+
+function myprocess(obj){
+	var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/> 处理中...';
+	$(obj).html(html);  
+	$(obj).attr("disabled", "disabled"); 
+}
+
+$('.js-clip').each(function(){
+	util.clip(this, $(this).attr('data-url'));
+});	
+
+require(['bootstrap'], function ($) {
+	$('[data-toggle="popover"]').popover({
+		container: $(document.body)
+	});
+});
+
+
+</script>
+
+</body>
+</html>

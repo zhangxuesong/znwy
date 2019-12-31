@@ -1,0 +1,56 @@
+<span class="echart-title">已缴账单</span>
+<span class="echart-count">总金额：<strong>{$total}</strong>&nbsp;元</span>
+<div id="chartFeebill"></div>
+<script language='javascript'>
+	var chartFeebill = echarts.init(document.getElementById('chartFeebill'),'shine');
+	option_feebill = {
+		legend: {
+			orient: 'vertical',
+			x: 'left',
+			data:['在线支付','现金支付','其他支付'],
+			textStyle:{
+				color:'#fff'
+			}
+		},
+		series: [
+			{
+				name:'访问来源',
+				type:'pie',
+			    radius: ['60%', '80%'],
+				avoidLabelOverlap: false,
+				center:['70%','60px'],
+				label: {
+					normal: {
+						show: false,
+						position: 'center'
+					},
+					emphasis: {
+						show: true,
+						textStyle: {
+							fontSize: '10',
+							fontWeight: 'bold',
+							color:'#fff'
+						},
+						formatter:'{b}\n{d}%'
+					},
+					
+				},
+				labelLine: {
+					normal: {
+						show: false
+					}
+				},
+				data:[
+					{value:{$feebill_array[0]}, name:'在线支付'},
+					{value:{$feebill_array[1]}, name:'现金支付'},
+					{value:{$feebill_array[2]}, name:'其他支付'}
+				]
+			}
+		]
+	};
+	chartFeebill.setOption(option_feebill);
+	autoPlay(chartFeebill,option_feebill);
+	window.onresize = function() {
+		chartFeebill.resize();
+	};
+ </script> 

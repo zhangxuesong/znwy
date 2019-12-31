@@ -1,0 +1,46 @@
+<span class="echart-title">男女比例</span>
+<span class="echart-count">总共有：<strong>{$total}</strong>&nbsp;人</span>
+<div id="chartMember"></div>
+<script type="text/javascript">
+	var chartMember = echarts.init(document.getElementById('chartMember'),'shine');
+	option_member = {
+			legend: {
+			orient: 'vertical',
+			x: 'left',
+			data:['男','女','保密'],
+			textStyle:{
+				color:'#fff'
+			},
+			show:true
+		},
+		series: [
+			{
+				name: '访问来源',
+				type: 'pie',
+				radius : '55%',
+				center: ['60%', '50%'],
+				data:[
+					{value:{$member_array[0]}, name:'男'},
+					{value:{$member_array[1]}, name:'女'},
+					{value:{$member_array[2]}, name:'保密'},
+				],
+				label: {
+					normal: {
+						show: true,
+						textStyle: {
+							fontSize: '10',
+							fontWeight: 'bold',
+							color:'#fff'
+						},
+						formatter:'{b}\n{d}%'
+					}
+				},
+			}
+		]
+	};
+	chartMember.setOption(option_member);
+	autoPlay(chartMember,option_member);
+	window.onresize = function() {
+		chartMember.resize();
+	};	
+</script>

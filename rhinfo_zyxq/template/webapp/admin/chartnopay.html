@@ -1,0 +1,67 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title">未缴账单统计</h3>
+		<span class="count">欠费总金额：<strong>{$total}</strong> 元</span>
+	</div>
+	<div class="panel-body">
+		<div class="chart" id="chartNoPay"></div>
+	</div>
+</div>
+<script type="text/javascript">
+	var chartNoPay = echarts.init(document.getElementById('chartNoPay'));
+		option_nopay = {
+			tooltip : {
+				trigger: 'axis'
+			},
+			legend: {
+				data:['欠费金额'],
+				textStyle:{
+					color:'#fff',
+				}
+			},
+			toolbox: {
+				show : true,
+				feature : {
+					magicType : {show: true, type: ['line', 'bar']},
+					restore : {show: true},
+					saveAsImage : {show: true}
+				}
+			},
+			calculable : true,
+			xAxis : [
+				{
+					type : 'category',
+					boundaryGap : false,
+					data :[{php echo implode(',',$xAxis_data);}],
+					axisLabel: {
+						textStyle: {
+							color: '#fff',//坐标值得具体的颜色
+						}
+					}
+				}
+			],
+			yAxis : [
+				{
+					type : 'value',
+					axisLabel: {
+						textStyle: {
+							color: '#fff',//坐标值得具体的颜色
+						}
+					}
+				}
+			],
+			series : [				
+				{
+					name:'欠费金额',
+					type:'line',
+					smooth:true,
+					itemStyle: {normal: {areaStyle: {type: 'default'}}},
+					data:[{php echo implode(',',$series_data);}]
+				},				
+			]
+		};
+	chartNoPay.setOption(option_nopay);
+	window.onresize = function() {
+		chartNoPay.resize();
+	};
+</script>

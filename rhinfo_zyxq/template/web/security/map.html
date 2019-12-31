@@ -1,0 +1,61 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+<style type="text/css">
+*{
+    margin:0px;
+    padding:0px;
+}
+
+#container{
+	min-width:600px;
+	min-height:767px;
+}
+</style>
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body">  
+    <div id="container">
+	
+	</div>	
+  </div>
+
+<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key={$sysconifg['qq_lbskey']}"></script>
+<script type="text/javascript">
+var position = {php echo json_encode($data);};
+init();
+function init(){
+    var center = new qq.maps.LatLng({$region['lat']},{$region['lng']});
+    var map = new qq.maps.Map(document.getElementById("container"), {
+        center: center,
+        zoom: 18
+    });
+    var infoWin = new qq.maps.InfoWindow({
+        map: map
+    });
+	var latlngs = new Array();	
+	
+	for(var k=0; k< position.length; k++){
+		latlngs[k] = new qq.maps.LatLng(position[k].lat,position[k].lng);		
+	}	
+    for(var i = 0;i < latlngs.length; i++) {		
+        (function(n){
+            var marker = new qq.maps.Marker({
+                position: latlngs[n],
+                map: map
+            });	
+            qq.maps.event.addListener(marker, 'click', function() {
+                infoWin.open();
+                infoWin.setContent('<div style="text-align:center;white-space:'+
+                'nowrap;margin:10px;">巡更点：' +
+                position[n].title + '</div>');
+                infoWin.setPosition(latlngs[n]);				
+            });			
+        })(i);
+    }
+}
+function myreturn(){
+	 window.history.go(-1);
+}
+</script>
+{template 'web/_iframe_footer'}
+</body>
+</html>

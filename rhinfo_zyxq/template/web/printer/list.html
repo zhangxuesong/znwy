@@ -1,0 +1,113 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<style type="text/css">
+.nav-tabs li a { padding: 3px 10px;}
+</style>
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body"> 
+	<ul class="nav nav-tabs">		 		  
+		  <li><a href="{php echo $this->createWeburl('category',array('op'=>'list','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >分类设置</a></li>		
+		  <li><a href="{php echo $this->createWeburl('sms',array('op'=>'base','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >基本设置</a></li>
+		  <li><a href="{php echo $this->createWeburl('sms',array('op'=>'fee','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >账单设置</a></li>
+		 {if !empty($_W['uid'])}<li><a href="{php echo $this->createWeburl('sms',array('op'=>'market','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >策略设置</a></li>{/if}
+		  <li class="active"><a href="{php echo $this->createWeburl('printer',array('op'=>'list','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >云打印机</a></li>
+		 <li ><a href="{php echo $this->createWeburl('sms',array('op'=>'index','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >短信设置</a></li>
+		 {if !empty($_W['uid'])} <li><a href="{php echo $this->createWeburl('sms',array('op'=>'intelligence','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >智慧设置</a></li>{/if}
+		 <li><a href="{php echo $this->createWeburl('sms',array('op'=>'door','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >其他设置</a></li>
+	</ul>
+	<br>
+	<div class="tab-content">			
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				{if $rights['add'] == 1}	
+			      <a href="javascript:;" onclick="myadd({$pid},{$rid})" class="btn btn-info">
+					<i class="fa fa-plus"></i> 添加打印机</a>{/if}								
+				<span class="pull-right" style="line-height:38px;">共有数据：<strong id="count">{$total}</strong> 条</span> 
+			</div>  
+			<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+				<tr>					
+					<th width="40">ID</th>
+					<th >打印机品牌</th>				
+					<th >打印类型</th>
+					<th >打印机编号</th>
+					<th>状态</th>
+					<th >备注</th>
+					<th >操作</th>
+				</tr>
+			</thead>
+			{loop $data $k $v}
+				<tr>					
+					<td>{$v['id']}</td>
+					<td>{$v['printbrand']}</td>
+					<td>{$v['printtype']}</td>
+					<td>{$v['printno']}</td>
+					<td class="td-status">
+					{if $v['status']=='1'}<span class="label label-success radius">启用</span>{else}<span class="label label-default radius">禁用</span>{/if}
+					</td>
+					<td>{$v['remark']}</td>
+					<td>
+					{if $rights['edit'] == 1}	
+					<a href="javascript:;" onclick="myedit({$v['id']},{$v['pid']},{$v['rid']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="编辑" ><i class="fa fa-edit"></i> 编辑</a> {/if}
+					{if $rights['delete'] == 1}
+					<a href="javascript:;" onclick="mydelete(this,{$v['pid']},{$v['rid']},{$v['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="删除"><i class="fa fa-trash"></i> 删除</a>{/if}					
+					</td>					
+				</tr>
+			{/loop}				
+		</table>
+	  </div> 
+  </div>  
+	</div>
+	</div>	
+  </div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+var pid = {$pid};
+var rid = {$rid};
+
+
+function myadd(pid,rid){
+	var url = "{php echo $this->createWeburl('printer',array('op'=>'add','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid ;
+	window.location.href = url;
+}
+
+
+function mydelete(obj,pid,rid,id){   	
+	layer.confirm('确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){		
+		$.post("{php echo $this->createWebUrl('printer',array('op'=>'delete')).$mywe['direct'];}",
+			{pid:pid,rid:rid,id:id},
+			function(data,status){
+				 if (data=='ok'){
+					$(obj).parents("tr").remove();
+					var count = $("#count").html();
+					$("#count").html(count - 1);
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+					return;
+				 }
+			});		
+		layer.close(index);
+	});
+}
+
+
+function myedit(id,pid,rid){
+	var url = "{php echo $this->createWeburl('printer',array('op'=>'edit')).$mywe['direct'];}" + "&id=" + id + "&pid=" + pid + "&rid=" + rid; 
+	window.location.href = url;
+}
+function myreturn(){
+	var url = "{php echo $this->createWeburl('region',array('op'=>$rlist)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid;	
+	window.location.href = url;
+}
+
+</script>
+</body>
+</html>

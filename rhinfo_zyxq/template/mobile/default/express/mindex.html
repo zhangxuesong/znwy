@@ -1,0 +1,288 @@
+{template $this->mytpl('_pheader')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170801">
+<style>
+.verify-pop {
+    position: fixed;
+}
+
+.verify-pop .qrcode {
+    width: 250px;
+    margin-left: -125px;
+    border-radius: 0.3rem;
+    height: auto;
+    overflow: hidden;
+}
+
+.verify-pop.pop .qrcode {
+    width: 90%;
+    margin-left: -45%;
+    overflow: hidden;
+    display: block;
+}
+
+.verify-pop.pop .qrcode .popbtn {
+   	position: relative;
+	margin:0 auto;
+	width:100%;
+	text-align:center;
+}
+.verify-pop.pop .qrcode .popbtn a{
+	margin:0.8rem;
+}
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-menu-group:before,.fui-menu-group:after{border-top:0px;}
+</style>
+<div class='fui-page fui-page-current'>
+    <div class="fui-header fui-header-success">
+        <div class="fui-header-left"><a class="back" ></a></div>
+        <div class="title">我的工作台</div>
+        <div class="fui-header-right">
+			{if $ismanager == true}
+			<a  href="{php echo $this->createMobileurl($mydo,array('op'=>'myset','sid'=>$sid));}">
+				<i class="icon icon-settings" style="font-size:0.8rem;"></i>
+			</a>    
+			{/if}
+		</div>
+    </div>
+    <div class='fui-content'>
+        <div class="headinfo">
+            <div class="userinfo">
+                <a class="fui-list external" href="{if $this->syscfg['smsprice']>0}{php echo $this->createMobileurl('service',array('op'=>'smsstore','sid'=>$sid));}{else}#{/if}">
+					{if $store['thumb']}
+                    <div class="fui-list-media">
+                        <img src="{php echo tomedia($store['thumb']);}" class='round'>
+                    </div>
+					{/if}
+                    <div class="fui-list-info">
+                        <div class="title">{$store['title']}</div>
+						<div class="text">{$fans['nickname']}</div>
+                        {if $this->syscfg['smsprice']>0}<div class="subtitle">短信数量:{$store['smsqty']}条</div>{/if}
+                    </div>
+                </a>
+               
+				<span class="today" id="localtime"></span>               
+            </div>
+        </div>		
+        <div class="fui-menu-group">
+            <a class="fui-menu-item noactive" href="{php echo $this->createMobileurl($mydo,array('op'=>'express','cate'=>2,'today'=>1,'ctime'=>date('Y-m-d',TIMESTAMP),'sid'=>$sid));}">
+                <p id="today_repair">--</p>
+                <small>今日取件</small>
+            </a>
+            <a class="fui-menu-item noactive" href="{php echo $this->createMobileurl($mydo,array('op'=>'express','cate'=>1,'today'=>1,'ctime'=>date('Y-m-d',TIMESTAMP),'sid'=>$sid));}">
+                <p id="today_suggest">--</p>
+                <small>今日寄件</small>
+            </a>
+            <a class="fui-menu-item noactive" href="{php echo $this->createMobileurl($mydo,array('op'=>'express','cate'=>4,'today'=>1,'ctime'=>date('Y-m-d',TIMESTAMP),'sid'=>$sid));}">
+                <p id="today_member">--</p>
+                <small>今日签收</small>
+            </a>
+        </div>
+			<div class="fui-cell-group">
+			<a class="fui-cell external">
+				<div class="fui-cell-icon"><i class="icon icon-all1"></i></div>
+				<div class="fui-cell-text">快件管理</div>
+				 <div class="fui-cell-remark"><i class="icon icon-scan text-warning"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon icon-edit text-success"></i>&nbsp;&nbsp;&nbsp;&nbsp;核销</div>  
+			</a>
+		</div>
+		<div class="fui-block-group col-3">               
+			<a class="fui-block-child" href="{php echo $this->createMobileurl($mydo,array('op'=>'express','sid'=>$sid,'cate'=>2));}">
+				<div class="icon text-orange">
+					<i class="icon icon-box"></i>
+				</div>
+				<div class="title">待取件</div>
+				<div class="text"><span id="express_take">--</span> 件</div>
+			</a>  
+	   
+			<a class="fui-block-child" href="{php echo $this->createMobileurl($mydo,array('op'=>'express','sid'=>$sid,'cate'=>1));}">
+				<div class="icon text-yellow">
+					<i class="icon icon-box"></i>
+				</div>
+				<div class="title">待寄件</div>
+				<div class="text"><span id="express_send">--</span> 件</div>
+			</a>
+			 
+			 <a class="fui-block-child" href="{php echo $this->createMobileurl($mydo,array('op'=>'express','sid'=>$sid,'cate'=>3));}">
+				<div class="icon text-orange">
+					<i class="icon icon-box"></i>
+				</div>
+				<div class="title">待通知</div>
+				<div class="text"><span id="express_notice">--</span> 件</div>
+			</a>
+			 <a class="fui-block-child" href="{php echo $this->createMobileurl($mydo,array('op'=>'add','sid'=>$sid));}">
+				<div class="icon text-yellow">
+					<i class="icon icon-productfeatures"></i>
+				</div>
+				<div class="title">单件入库</div>
+				<div class="text"></div>
+			</a>
+			<a class="fui-block-child" href="{php echo $this->createMobileurl($mydo,array('op'=>'batchadd','sid'=>$sid));}">
+				<div class="icon text-orange">
+					<i class="icon icon-productfeatures"></i>
+				</div>
+				<div class="title">批量入库</div>
+				<div class="text"></div>
+			</a>
+			<a class="fui-block-child" href="{php echo $this->createMobileurl($mydo,array('op'=>'tabexpress','sid'=>$sid,'cate'=>2));}">
+				<div class="icon text-yellow">
+					<i class="icon icon-search"></i>
+				</div>
+				<div class="title">快件查询</div>
+				<div class="text"></div>
+			</a>
+		</div>
+		
+		  <div class="fui-cell-group">
+                <a class="fui-cell external" href="{php echo $this->createMobileurl($mydo,array('op'=>'qrcode','sid'=>$sid));}">
+                    <div class="fui-cell-icon"><i class="icon icon-shop"></i></div>
+                    <div class="fui-cell-text">译站管理</div>
+					<div class="fui-cell-remark"><i class="icon icon-qrcode text-danger"></i>&nbsp;&nbsp;&nbsp;&nbsp;收款</div>  
+                </a>
+            </div>
+            <div class="fui-block-group col-3">    
+					<a class="fui-block-child" {if $ismanager == true} href="{php echo $this->createMobileurl($mydo,array('op'=>'payfee','sid'=>$sid,'paydate'=>date('Y-m-d',TIMESTAMP)));}"{/if}>
+						<div class="icon text-orange">
+							<i class="icon icon-money"></i>
+						</div>
+						<div class="title">今日交易</div>
+						<div class="text"><span id="payfee_today">--</span> 元</div>
+					</a>  
+			   
+					<a class="fui-block-child" {if $ismanager == true} href="{php echo $this->createMobileurl($mydo,array('op'=>'payfee','sid'=>$sid,'paydate'=>date('Y-m-d',strtotime('now -7days'))));}"{/if}>
+						<div class="icon text-yellow">
+							<i class="icon icon-money"></i>
+						</div>
+						<div class="title">7天交易</div>
+						<div class="text"><span id="payfee_week">--</span> 元</div>
+					</a>
+					 
+					 <a class="fui-block-child" {if $ismanager == true} href="{php echo $this->createMobileurl($mydo,array('op'=>'payfee','sid'=>$sid,'paydate'=>date('Y-m-d',strtotime('now -30days'))));}"{/if}>
+						<div class="icon text-orange">
+							<i class="icon icon-money"></i>
+						</div>
+						<div class="title">30天交易</div>
+						<div class="text"><span id="payfee_month">--</span> 元</div>
+					</a>					
+					<a class="fui-block-child" href="{php echo $this->createMobileurl($mydo,array('op'=>'money','sid'=>$sid));}">
+						<div class="icon text-yellow">
+							<i class="icon icon-sponsor"></i>
+						</div>
+						<div class="title">结算</div>
+						<div class="text"></div>
+					</a>
+			   
+					<a class="fui-block-child" href="{php echo $this->createMobileurl($mydo,array('op'=>'charge','sid'=>$sid));}">
+						<div class="icon text-orange">
+							<i class="icon icon-scanning"></i>
+						</div>
+						<div class="title">收款</div>
+						<div class="text"></div>
+					</a>
+					<a class="fui-block-child" href="{php echo $this->createMobileurl($mydo,array('op'=>'statistics','sid'=>$sid));}">
+						<div class="icon text-yellow">
+							<i class="icon icon-rank"></i>
+						</div>
+						<div class="title">统计</div>
+						<div class="text"></div>
+					</a>
+			   
+					<a class="fui-block-child" href="{php echo $this->createMobileurl($mydo,array('op'=>'smslog','sid'=>$sid));}">
+						<div class="icon text-orange">
+							<i class="icon icon-mail"></i>
+						</div>
+						<div class="title">短信</div>
+						<div class="text"></div>
+					</a>
+					{if $ismanager == true}
+					<a class="fui-block-child" href="{php echo $this->createMobileurl($mydo,array('op'=>'cabinet','sid'=>$sid));}">
+						<div class="icon text-yellow">
+							<i class="icon icon-group"></i>
+						</div>
+						<div class="title">快递柜</div>
+						<div class="text"></div>
+					</a>
+					<a class="fui-block-child" href="{php echo $this->createMobileurl($mydo,array('op'=>'employee','sid'=>$sid));}">
+						<div class="icon text-orange">
+							<i class="icon icon-group"></i>
+						</div>
+						<div class="title">员工管理</div>
+						<div class="text"></div>
+					</a>
+					{/if}
+            </div>
+		<div class="pop-takeexpress-hidden" style="display:none;">
+			<div class='fui-mask-m visible'></div>
+			<div class="verify-pop pop">
+				<div class="qrcode">
+					<div class='fui-cell-group'>	
+						<div class='fui-cell must'>
+							<div class='fui-cell-label'>取件码</div>
+							<div class='fui-cell-info'><input type='text' class='fui-input' id="expresssn" value=""></div>				
+							<div class="fui-cell-remark noremark"></div>
+						</div>						
+					</div>
+					<div class="popbtn">
+						<a class='btn btn-sm btn-default btn-close'>取消</a>
+						<a class='btn btn-sm btn-default btn-submit'>确定</a>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+</div>
+<script language='javascript'>
+	require(['express/mindex'], function (modal) {
+		modal.init({
+		sid:"{$sid}"
+		});
+	});
+    function showLocale(objD){
+		 var str,colorhead,colorfoot;
+		 var yy = objD.getYear();
+		 if(yy<1900) yy = yy+1900; 
+		 var MM = objD.getMonth()+1; 
+		 if(MM<10) MM = '0' + MM;
+		 var dd = objD.getDate(); 
+		 if(dd<10) dd = '0' + dd;
+		 var hh = objD.getHours();
+		 if(hh<10) hh = '0' + hh;
+		 var mm = objD.getMinutes();
+		 if(mm<10) mm = '0' + mm; 
+		 var ss = objD.getSeconds(); 
+		 if(ss<10) ss = '0' + ss; 
+		 var ww = objD.getDay(); 
+		 if ( ww==0 ) colorhead="<font color=\"#ff0000\">"; 
+		 if ( ww > 0 && ww < 6 ) colorhead="<font color=\"#fff\">"; 
+		 if ( ww==6 ) colorhead="<font color=\"#ffff00\">";
+		 if (ww==0) ww="星期日"; 
+		 if (ww==1) ww="星期一"; 
+		 if (ww==2) ww="星期二"; 
+		 if (ww==3) ww="星期三"; 
+		 if (ww==4) ww="星期四";  
+		 if (ww==5) ww="星期五";  
+		 if (ww==6) ww="星期六";  
+		 var colorfoot="</font>"  
+		 str = colorhead + ww + colorfoot + "<br>" + MM + "月" + dd + "日<br>" + hh + ":" + mm + ":" + ss ; 	
+		 return str; 
+	 }
+	 function tick() { 
+		 var today; 
+		 today = new Date(); 
+		 document.getElementById("localtime").innerHTML = showLocale(today);
+		 window.setTimeout("tick()", 1000); 
+	 }
+	tick();
+ </script> 
+ <script language='javascript'>	
+	clearTimeout(window.interval);
+	window.interval = setTimeout(function () {    
+		jssdkconfig = {php echo json_encode($_W['account']['jssdkconfig']);} || { jsApiList:[] };
+		jssdkconfig.debug = false;
+		jssdkconfig.jsApiList = ['scanQRCode'];
+		wx.config(jssdkconfig);	
+		wx.ready(function () {
+			wx.hideOptionMenu();
+		});
+	},500);
+</script>
+</body>
+</html>

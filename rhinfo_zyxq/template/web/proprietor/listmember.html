@@ -1,0 +1,114 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body">  
+		
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+		{if $rights['delete'] == 1}  
+			{if $_W['role'] == 'founder'}
+				<a href="javascript:;" onclick="mydeleteall({$rid})" class="btn btn-danger"><i class="fa fa-trash-o"></i> 全部删除</a>
+			{/if}
+		{/if}
+		{if $rights['add'] == 1}
+   		    <a href="javascript:;" onclick="myadd()" class="btn btn-info">
+			<i class="fa fa-plus"></i> 添加成员</a>{/if}
+
+			<span class="pull-right" style="line-height:38px;">共有 <strong id="count">{$total}</strong> 条</span> 
+	    </div>
+  
+		<div class="panel-body">	
+        {if $rights['query'] == 1}  		
+			{loop $data $k $v}				
+				<span class="pull-left" style="position:relative;padding-right:12px;" {if $rights['delete'] == 1} onmouseenter="myshow({$v['id']})" onmouseleave="myhide({$v['id']})" {/if}>				      
+				    <a href="javascript:;" onMouseOver="$(this).tooltip('show')" {if $rights['edit'] == 1} onclick="myedit({$v['id']})" {/if} class="btn btn-default"   style="margin-bottom:10px;margin-right:5px;padding-top:20px;padding-bottom:20px;height:100px;width:100px;border:none;" data-toggle="tooltip" data-placement="bottom" title="{$v['mobile']}" ><i class="fa fa-user {if $v['level']==1}text-danger{elseif $v['level']==2}text-info{else}text-success{/if}" style="font-size:40px;margin-bottom:5px;"></i><br>{$v['realname']}</a>										
+					{if $rights['delete'] == 1}  
+					<a href="javascript:;" class="btn btn-sm" id ="delete{$v['id']}" title="删除" style="display:none;position:absolute;right:-5px;top:-15px;" onclick="mydelete(this,{$v['id']})"><i class="fa fa-close"></i></a>
+					{/if}
+					{if $rights['edit'] == 1}  
+					<a href="javascript:;" class="btn btn-sm" id ="edit{$v['id']}" title="编辑" style="display:none;position:absolute;right:-6px;bottom:5px;" onclick="myedit({$v['id']})"><i class="fa fa-pencil"></i></a>
+					{/if}
+				</span>	
+			{/loop}	
+		{/if}
+	    </div>  
+	</div>	
+  </div>
+</div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+
+function mydeleteall(rid){ 
+	var count = parseInt($("#count").html());
+	if (count == 0){
+		return;
+	}
+	layer.confirm('将删除下属所有相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		layer.load(1);
+		layer.close(index);
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'deleteall')).$mywe['direct'];}",
+			{rid:rid},
+			function(data,status){
+				 if (data=='ok'){
+					layer.closeAll();
+					location.reload();
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+					setTimeout("layer.closeAll();",2000);
+					return false;
+				 }
+			});		
+	});	
+}
+function mydelete(obj,id){ 	
+	layer.confirm('将删除下属所有相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'delmember')).$mywe['direct'];}",
+			{id:id},
+			function(data,status){
+				 if (data=='ok'){
+					$(obj).parents("span").remove();
+					var count = $("#count").html();
+					$("#count").html(count - 1);
+					layer.msg('删除成功!',{icon:1});
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+			 }
+			});	
+		layer.close(index);
+	});	
+}
+function myadd(){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'addmember','rid'=>$_GPC['rid'])).$mywe['direct'];}";
+	window.location.href = url;
+}
+
+function myedit(id){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'editmember','rid'=>$_GPC['rid'])).$mywe['direct'];}" + "&id=" + id;
+	window.location.href = url;
+}
+
+function myshow(id){
+	$("#delete"+id).show();
+	$("#edit"+id).show();
+}
+function myhide(id){
+	$("#delete"+id).hide();
+	$("#edit"+id).hide();
+}
+
+function myreturn(){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'mlist')).$mywe['direct'];}";	
+	window.location.href = url;
+}
+
+</script>
+</body>
+</html>

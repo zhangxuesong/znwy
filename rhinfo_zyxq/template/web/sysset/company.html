@@ -1,0 +1,138 @@
+﻿<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">平台状态</label>
+	<div class="col-sm-7 col-lg-8 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="isclose" value="1" {if $item['isclose']==1 } checked{/if} /> 关闭</label>
+		<label  class="radio-inline">
+			<input type="radio" name="isclose" value="0" {if empty($item['isclose']) || $item['isclose']==0 } checked{/if} /> 开启</label>
+		<span class="help-block">关闭状态手机端无访问</span>			
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">平台关闭原因</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="closereason" value="{$item['closereason']}" placeholder="输入关闭原因" name="closereason">	
+		<span class="help-block">关闭状态前端提示文字</span>	
+	</div>		
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">平台关闭跳转地址</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="closeurl" value="{$item['closeurl']}" placeholder="输入关闭跳转地址" name="closeurl">		
+		<span class="help-block">链接地址请包含http(s)</span>	
+	</div>		
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">平台服务电话</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="telphone" value="{$item['telphone']}" placeholder="输入电话号码" name="telphone">		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">平台看板密码</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" name="board_password" value="{$item['board_password']}" placeholder="输入看板密码" />					
+	</div>	
+</div>	
+<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">平台管理员</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<div class="input-group ">
+				<input type="hidden" class="form-control" id="uid" value="{$item['uid']}" name="uid">
+				<input type="hidden" class="form-control" id="openid" value="{$item['openid']}" name="openid">
+				<input type="text" class="form-control" id="nickname1" value="{$item['nickname1']}" readonly name="nickname1">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" onclick="showFansDialog(this);">选择微信</button>
+				</span>
+			</div>
+		</div>	
+	</div>	
+	<script type="text/javascript">
+		function showFansDialog(elm) {
+			require(['util', 'jquery'], function(u, $){
+				var footer = '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>';
+				var modalobj = u.dialog('粉丝选择', ["{php echo $this->createWeburl('query',array('op'=>'fans')).$mywe['direct'];}"], footer, {containerName:'link-container'});
+				modalobj.find('.modal-body').css({'overflow-y':'auto' });
+				modalobj.modal('show');
+				});
+		}
+	</script>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">平台后台标题</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入后台标题" name="title">
+		<span class="help-block">无LOGO时则显示</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">平台后台LOGO</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		{php echo tpl_form_field_image('logo',$item['logo']);}
+		<span class="help-block">建议尺寸60*300</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业后台标题</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="ptitle" value="{$item['ptitle']}" placeholder="输入后台标题" name="ptitle">
+		<span class="help-block">无LOGO时则显示</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业后台LOGO</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		{php echo tpl_form_field_image('plogo',$item['plogo']);}
+		<span class="help-block">建议尺寸60*300</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业后台背景</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		{php echo tpl_form_field_image('pbackground',$item['pbackground']);}
+		<span class="help-block">建议尺寸1600*1024</span>
+	</div>	
+</div>
+
+ <div class="form-group">
+	   <label class="col-xs-12 col-sm-2 col-md-2 control-label">物业后台颜色</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+		  {php echo tpl_form_field_color('pbgcolor',$item['pbgcolor'])}
+		  <span class="help-block">为空取默认颜色</span>
+		</div>
+ </div> 
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业后台版权信息</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<textarea class="form-control" id="copyright"  name="copyright" autocomplete="off">{$item['copyright']}</textarea>
+		<span class="help-block">自定义后台底部信息，支持HTML</span>	
+	</div>		
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">前台标题</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="wxtitle" value="{$item['wxtitle']}" placeholder="输入前台标题" name="wxtitle">
+		<span class="help-block">微信端标题信息</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">前台版权信息</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<textarea class="form-control" id="wxcopyright"  name="wxcopyright" autocomplete="off">{$item['wxcopyright']}</textarea>
+		<span class="help-block">自定义微信端底部信息，支持HTML</span>	
+	</div>		
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">统计代码</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<textarea class="form-control" id="statistic"  name="statistics" autocomplete="off" rows="5">{$item['statistics']} </textarea>
+		<span class="help-block">微信端统计代码</span>	
+	</div>		
+</div>

@@ -1,0 +1,23 @@
+2019-12-28 19:19:31 wechat_pay_success :
+------------
+String:
+array (
+  'appid' => 'wx4b92a73e0a1e9667',
+  'attach' => '2',
+  'bank_type' => 'OTHERS',
+  'cash_fee' => '10',
+  'fee_type' => 'CNY',
+  'is_subscribe' => 'Y',
+  'mch_id' => '1523144651',
+  'nonce_str' => 'css2VFGS',
+  'openid' => 'oWc2c0SMLrZT4GVh757zLTMJsXzE',
+  'out_trade_no' => '2019122819190200001472905928',
+  'result_code' => 'SUCCESS',
+  'return_code' => 'SUCCESS',
+  'sign' => '9F1B81E239A93DBFB7D62FF207C2403A',
+  'time_end' => '20191228191930',
+  'total_fee' => '10',
+  'trade_type' => 'JSAPI',
+  'transaction_id' => '4200000452201912283205467041',
+)
+

@@ -1,0 +1,67 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+body {
+	font-family: "宋体",Verdana, Geneva, sans-serif;
+	font-size: 20px;
+}
+
+#print-content {
+	width: 90%;
+	margin: 10px auto;
+}
+
+#print-content h1 {
+	font-size: 30x;
+	text-align: center;
+}
+
+.headInfo {
+	margin: 5px auto;
+	height: 16px;
+}
+
+.floatLeft {
+	float: left;
+}
+
+.floatRight {
+	float: right;
+}
+
+.table-footer {
+	width:100%;
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+	border: 1px solid #000 !important;
+	padding:5px 0px;
+}
+
+
+td,th {
+	border: 1px solid #000 !important;
+	text-align: center;
+	padding: 3px 5px;
+	font-size:20px;
+}
+
+
+
+#print-content .header{ height:50px; position:relative;}
+#print-content .header h1{ padding-top:10px;}
+
+@page {
+  size: auto;  /* auto is the initial value */
+  margin: 0mm; /* this affects the margin in the printer settings */
+}
+	
+@media print {
+	.pageBreak {page-break-after:always;}
+	.noPrint{
+		display:none;
+	}
+}

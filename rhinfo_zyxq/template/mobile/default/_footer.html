@@ -1,0 +1,15 @@
+<script language="javascript">
+	wx.miniProgram.getEnv(function(res) {
+		if(res.miniprogram === false){	
+			require(['service/util'], function (modal) {
+				modal.init();
+			}); 
+		}		
+	});
+	require(['init']);
+</script>
+{template $this->mytpl('_share')}
+{php echo html_entity_decode($this->syscfg['statistics']);}
+</body>
+</html>
+

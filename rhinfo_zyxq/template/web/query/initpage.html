@@ -1,0 +1,114 @@
+﻿{template 'web/_iframe_header'}
+<style>
+html { overflow-x:hidden; }
+</style>
+<nav class="navbar navbar-fixed-top" style="margin-top:15px;margin-right:30px;">
+<span class="pull-right"><a href="javascript:;" class="btn btn-success"  onclick="mysubmit(this)"><i class="fa fa-save"></i> 保存</a></span>   
+</nav> 
+
+<div class="panel panel-default">
+  <div class="panel-body">    
+	<div class="panel panel-default">
+		<div class="panel-body table-responsive">
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+		<input type="hidden" name="token" value="{$_W['token']}" />	
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+				<tr>
+					<th width="60">标题</th>				
+					<th width="300">图片</th>
+					<th width="100">链接地址</th>
+					<th width="60">操作</th>
+				</tr>
+			</thead>			
+			{loop $advs $k $av}
+				<tr>
+					<td>
+					<input type="hidden"  value="1" name="category[]" class="form-control" />
+					<input type="text"  value="{$av['title']}" name="title[]" class="form-control" /></td>
+					<td>{php echo tpl_form_field_image('thumb[]',$av['thumb']);}</td>
+					<td>
+					<div class="input-group ">
+						<input type="text" class="form-control"  value="{$av['link']}" name="link[]" id="link{$k}" />
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" onclick="myshowLinkDialog(this);">内部链接</button>
+							<button class="btn btn-default" type="button" onclick="showLinkDialog(this);">系统链接</button>
+						</span>
+					</div>
+					</td>					
+					<td class="td-manage">	
+					<a title="删除" href="javascript:;" onclick="mydel(this)" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="删除"><i class="fa fa-trash"></i> 删除</a></td>
+				</tr>
+			{/loop}		
+			{loop $navs $i $nv}
+				<tr>
+					<td>
+					<input type="hidden"  value="0" name="category[]" class="form-control" />
+					<input type="text"  value="{$nv['title']}" name="title[]" class="form-control" /></td>
+					<td>{php echo tpl_form_field_image('thumb[]',$nv['thumb']);}</td>
+					<td>
+					<div class="input-group ">
+						<input type="text" class="form-control"  value="{$nv['link']}" name="link[]" id="link{$i}" />
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" onclick="myshowLinkDialog(this);">内部链接</button>
+							<button class="btn btn-default" type="button" onclick="showLinkDialog(this);">系统链接</button>
+						</span>
+					</div>
+					</td>					
+					<td class="td-manage">	
+					<a title="删除" href="javascript:;" onclick="mydel(this)" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="删除"><i class="fa fa-trash"></i> 删除</a></td>
+				</tr>
+			{/loop}	
+		</table>
+		</form>
+	  </div>    	  
+	</div>	
+  </div>
+{template 'web/_iframe_footer'}
+
+<script type="text/javascript">
+function mysubmit(obj){
+	myprocess(obj);
+	$("#myform").submit();
+	parent.initpage_hide();
+	myreturn();	
+}
+function myprocess(obj){
+	var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/> 处理中...';
+	$(obj).html(html);  
+	$(obj).attr("disabled", "disabled"); 
+}
+function mydel(obj){
+	window.scrollTo(0,0);
+	layer.confirm('确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){	
+		$(obj).parents("tr").remove();
+		layer.msg('删除成功!',{icon:1});		
+		layer.close(index);
+    });
+}
+function showLinkDialog(elm) {
+	var ipt = $(elm).parent().prev();
+	util.linkBrowser(function(href){		
+		ipt.val(href);			
+	});
+}
+function myshowLinkDialog(elm) {
+	var ipt = $(elm).parent().prev();
+	require(["util","jquery"], function(u, $){
+		var myurl = ipt.attr('id');			
+		var footer = '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>';
+		var modalobj = util.dialog('请选择链接',["{php echo $this->createWeburl('query',array('op'=>'url')).$mywe['direct'];}&myurl=" + myurl],footer,{containerName:'icon-container'});
+		modalobj.modal({'keyboard': false});
+		modalobj.find('.modal-dialog').css({'width':'70%'});
+		modalobj.find('.modal-body').css({'height':'70%','overflow-y':'scroll'});
+		modalobj.modal('show');
+	});	
+}
+function myreturn(){
+	var index = parent.layer.getFrameIndex(window.name); 
+	parent.layer.close(index);	
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+﻿{template 'web/_iframe_header'}
+
+<div class="panel panel-default" >
+  <div class="panel-body">  
+	<div class="panel panel-default">	
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+				<tr>					
+					<th width="40">ID</th>
+					<th width="100">业主姓名</th>	
+					<th width="100">手机号码</th>	
+					<th width="100">车牌号码</th>		
+					<th width="100">开始日期</th>	
+					<th width="100">结束日期</th>
+					<th width="100">操作</th>
+				</tr>
+			</thead>
+			{loop $data $k $v}
+				<tr>
+					<td>{$v['id']}</td>					
+					<td>{$v['ownername']}</td>
+					<td>{$v['mobile']}</td>
+					<td>{$v['carno']}</td>
+					<td>{php echo date('Y-m-d', $v['startdate']);}</td>
+					<td>{php echo date('Y-m-d', $v['enddate']);}</td>
+					<td>					
+					{if $rights['delete'] == 1}
+					<a href="javascript:;" onclick="mydel(this,{$v['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="删除"><i class="fa fa-trash"></i> 删除</a>{/if}
+					
+					</td>					
+				</tr>
+			{/loop}				
+		</table>
+		{$pager}
+	  </div>    	  
+	</div>	
+  </div>
+
+{template 'web/_iframe_footer'}
+
+<script type="text/javascript">
+
+/*删除*/
+function mydel(obj,id){
+	layer.confirm('确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+			{op:"dellog",id:id},
+			function(data,status){
+			 if (data=='ok'){
+				$(obj).parents("tr").remove();
+				var count = $("#count").html();
+				$("#count").html(count - 1);
+				layer.msg('删除成功!',{icon:1});
+			 }
+			 else{
+				layer.msg('操作失败',{icon:0});
+			 }
+		});
+		layer.close(index);
+    });
+}
+
+</script>
+</body>
+</html>

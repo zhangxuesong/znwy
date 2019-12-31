@@ -1,0 +1,129 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />
+	<input type="hidden" name="id" value="{$item['id']}" id="id" />
+	<input type="hidden" name="pid" value="{$pid}" />
+	<input type="hidden" name="rid" value="{$rid}" />
+	<input type="hidden" name="bid" value="{$bid}" />
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>储物间名称</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入车库名，如：103" name="title" />
+		</div>	
+	</div>
+
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">建筑面积</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="number" class="form-control" id="buildarea" value="{$item['buildarea']}" placeholder="输入建筑面积" name="buildarea" />
+		</div>	
+	</div>
+
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">使用面积</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="number" class="form-control" id="usearea" value="{$item['usearea']}" placeholder="输入建筑面积" name="usearea" />
+		</div>	
+	</div>
+
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">附加面积</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="number" class="form-control" id="addarea" value="{$item['addarea']}" placeholder="输入附加面积" name="addarea" />
+		</div>	
+	</div>				
+
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">业主姓名</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="ownername" value="{$item['ownername']}" placeholder="输入业主姓名" name="ownername" />
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">手机号码</label>
+		<div class="col-sm-4 col-lg-4 col-xs-12">
+			<input type="number" class="form-control" id="mobile" value="{$item['mobile']}" placeholder="输入手机号码" name="mobile">
+		</div>
+		<label class="col-xs-12 col-sm-1 col-md-1 control-label">备用号码</label>
+		<div class="col-sm-4 col-lg-4 col-xs-12">
+			<input type="number" class="form-control" id="mobile1" value="{$item['mobile1']}" placeholder="输入手机号码" name="mobile1">
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">交费截止日期</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_date('paydate',$item['paydate']);}
+			<span class="help-block">系统账单上线时，储物间缴费截止日期</span>
+		</div>	
+	</div>
+	<div class="form-group" style="display:none;">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">账单截止日期</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_date('billdate',$item['billdate']);}
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">收费状态</label>
+		<div class="col-sm-7 col-lg-8 col-xs-12">
+			<label class="radio-inline">
+				<input type="radio" name="isfree" id="isfree1" value="0" {if empty($item['isfree']) || $item['isfree']==0 } checked{/if} />收费</label>
+			<label  class="radio-inline">
+				<input type="radio" name="isfree" id="isfree2" value="1" {if $item['isfree']==1 } checked{/if} /> 免费</label>
+			<label  class="radio-inline">
+				<input type="radio" name="isfree" id="isfree3" value="2" {if $item['isfree']==2 } checked{/if} /> 闲置</label>
+					
+		</div>
+	</div>
+	<div id="freedate" style="display:none;">
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">免费开始日期</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				{php echo tpl_form_field_date('freestart',$item['freestart']);}
+			</div>	
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">免费终止日期</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				{php echo tpl_form_field_date('freeend',$item['freeend']);}
+			</div>	
+		</div>
+	</div>
+	<div class="form-group" style="display:none;">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">享受折扣</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="isdiscount" value="{$item['isdiscount']}" placeholder="输入折扣" name="isdiscount">
+			<span class="help-block">请输入折扣1~10这间的数值，为空为不折扣</span>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">电表编号</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="electmeter" value="{$item['electmeter']}" placeholder="输入电表编号" name="electmeter">
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">备注</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<textarea style="height: 60px;" class="form-control" name="remark">{$item['remark']}</textarea>
+		</div>	
+	</div>
+</form>	
+<script type="text/javascript">
+var isfree = "{$item['isfree']}";
+if(isfree=='1'){
+	 $("#freedate").show();
+}
+
+ $("input[name=isfree]").click(function(){
+	  switch($("input[name=isfree]:checked").attr("id")){
+	  case "isfree1":			   
+		   $("#freedate").hide();
+		   break;
+	  case "isfree2":			
+		   $("#freedate").show();
+		   break;
+	  default:
+		   $("#freedate").hide();	
+		   break;
+		}
+ });	 
+</script>

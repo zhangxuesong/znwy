@@ -1,0 +1,200 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<style>
+	.nav-tabs li a { padding: 3px 10px;}
+	.account-stat-num > div{width:25%; float:left; font-size:16px; text-align:center;}
+	.account-stat-num > div span{display:block; font-size:30px; font-weight:bold;}
+</style>
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body">  
+	<ul class="nav nav-tabs" role="tablist" id="mytabs">		 		  
+		<li role="presentation" {if $_GPC['page']}class="active"{/if}><a href="#feebill" role="tab" data-toggle="tab">内部工单记录</a></li>		
+	   <li role="presentation" {if $_GPC['page']}{else}class="active"{/if}><a href="#feetotal" role="tab" data-toggle="tab">内部工单分析</a></li>		   
+	</ul>
+	<div class="panel-body">
+			<div class="account-stat-num row">
+				<div>待处理<span class="text-danger">{php echo !empty($bindroom['today'])?$bindroom['today']:0;}</span></div>
+				<div>处理中<span class="text-warning">{php echo !empty($bindroom['yesterday'])?$bindroom['yesterday']:0;}</span></div>				
+				<div>已处理<span class="text-success">{php echo !empty($bindroom['month'])?$bindroom['month']:0;}</span></div>
+				<div>已回复<span class="text-info">{php echo !empty($bindroom['total'])?$bindroom['total']:0;}</span></div>
+			</div>
+	</div>
+    
+	<div class="panel panel-default">
+	    <div class="panel-heading" style="height:60px;">
+			<form action="./index.php" method="get" class="form-inline" role="form" id="form-search">
+				<input type="hidden" name="c" value="site" />
+				<input type="hidden" name="a" value="entry" />
+				<input type="hidden" name="m" value="rhinfo_zyxq" />
+				<input type="hidden" name="do" value="report" />
+				<input type="hidden" name="op" value="repairlist" />	
+				<input type="hidden" name="direct" value="1" />
+				
+					<div class="form-group">				
+						<select class="form-control" id="rid" name="rid" onchange="mybuildingselect(this)" style="width:200px;">
+							{loop $myregions $region}
+								<option value="{$region['id']}" {if $_GPC['rid']==$region['id']}selected{/if}>{$region['title']}</option>	
+							{/loop}
+						</select>
+					</div>
+								
+					<div class="form-group">				
+						{php echo tpl_form_field_daterange('billdate', array('starttime' => date('Y-m-d',$starttime),'endtime' => date('Y-m-d',$endtime1)));}
+					</div>
+				
+					<div class="form-group">				
+						<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>						
+					</div>
+				
+				<span class="pull-right" style="line-height:38px;">总共数据：<strong>{$total}</strong> 条</span> 
+			</form>
+	    </div>
+		
+		<div class="tab-content">
+			 <div role="tabpanel" class="tab-pane {if $_GPC['page']}active{/if}" id="feebill">			 
+				<div class="panel-body table-responsive">
+					<table class="table table-hover">
+						<thead class="navbar-inner">
+						<tr>					
+							<th width="40">ID</th>
+							<th width="120">工单时间</th>
+							<th width="80">工单类别</th>			
+							<th width="120">所属主体</th>
+							<th width="180">房产</th>
+							<th width="100">昵称</th>
+							<th width="60">状态</th>									
+							
+						</tr>
+					</thead>
+					{loop $data $k $v}
+						<tr>
+							<td>{$v['id']}</td>					
+							<td>{$v['ctime']}</td>
+							<td>{$v['catename']}</td>
+							<td>{$v['regionname']}</td>
+							<td>{$v['address']}</td>
+							<td>{if !empty($v['headimgurl'])}<img src="{$v['headimgurl']}" width="20" />&nbsp;{/if}{$v['nickname']}</td>
+							<td class="td-status">
+							<a href="javascript:;" {if $rights['add']=='1'}onclick="myrepair(this,'{$v['id']}')"{/if}>
+							<span class="label {if $v['status']=='2'}label-warning{elseif $v['status']=='8'}label-default{elseif $v['status']=='3'}label-success{else}label-danger{/if} radius">
+							{if $v['status']=='0' || $v['status']=='1'}待处理{/if}
+							{if $v['status']=='2'}处理中{/if}
+							{if $v['status']=='3' }已处理{/if}
+							{if $v['status']=='8' }已结案{/if}
+							{if $v['status']=='5' }已回复{/if}
+							</span>
+							</a>
+							</td>								
+						</tr>
+					{/loop}				
+				</table>
+				{$pager}
+			  </div> 
+			</div>
+			 <div role="tabpanel" class="tab-pane {if $_GPC['page']}{else}active{/if}" id="feetotal" style="height:450px;">
+			   <div class="col-sm-6 col-xs-12">
+					<div id="echarts-pie-chart" style="width:400px;height:400px;margin-top:25px;"></div>
+			   </div>
+			   <div class="col-sm-6 col-xs-12">
+					<div id="echarts-pie-chart1" style="width:400px;height:400px;margin-top:25px;"></div>
+			   </div>
+			 </div>
+	</div>	
+  </div>
+  </div>
+ </div>
+
+{template 'web/_iframe_footer'}
+
+<script type="text/javascript">
+
+window._region = {php echo json_encode($myregions);};	
+window._building = {php echo json_encode($mybuildings);};
+function mybuildingselect(obj){
+	var index = obj.options[obj.selectedIndex].value;
+	require(['jquery', 'util'], function($, u){
+		var html = '<option value="">不限</option>';
+		for(var i=0; i< window['_building'][index].length; i++){			
+			html += '<option value="'+window['_building'][index][i]['id']+'">'+window['_building'][index][i]['title']+'</option>';
+		}    						
+		$("#bid").html(html);
+	});	
+	
+}
+
+require(['../addons/rhinfo_zyxq/static/lib/echarts/echarts-all.js'], function(c){
+   var url = location.href + $("#form-search").serialize();	
+   var pieChart = echarts.init(document.getElementById("echarts-pie-chart"));
+   var pieChart1 = echarts.init(document.getElementById("echarts-pie-chart1"));
+   $.ajax({
+		type: "GET",
+		url: url,
+		dataType: "json",
+		success: function (json) {	                			
+			var	option = {
+					title: {
+						text: '工单处理状态分布',
+						subtext: '',
+						x: 'center'
+					},
+					tooltip: {
+						trigger: 'item',
+						formatter: "{a} <br/>{b} : {c} ({d}%)"
+					},
+					legend: {
+						orient: 'vertical',
+						x: 'right',
+						data: ['待处理', '处理中','已处理','已回复','已结案']
+					},
+					calculable: true,
+					series: [
+						{	name: '处理状态分布',
+							type: 'pie',
+							radius: '55%',
+							center: ['50%', '60%'],
+							data: [
+								{value: json.ajaxrepair[1], name: '待处理'},
+								{value: json.ajaxrepair[2], name: '处理中'},
+								{value: json.ajaxrepair[3], name: '已处理'},								
+								{value: json.ajaxrepair[0], name: '已回复'},
+								{value: json.ajaxrepair[4], name: '已结案'}
+							]
+						}
+					]				
+			};			
+			pieChart.setOption(option);
+			
+			var option1 = {
+					title: {
+						text: '工单分类分布',
+						subtext: '',
+						x: 'center'
+					},
+					tooltip: {
+						trigger: 'item',
+						formatter: "{a} <br/>{b} : {c} ({d}%)"
+					},
+					legend: {
+						orient: 'vertical',
+						x: 'right',
+						data: json.ajaxcategory.name
+					},
+					calculable: true,
+					series: [
+						{
+							name: '工单类别分布',
+							type: 'pie',
+							radius: '55%',
+							center: ['40%', '60%'],
+							data: json.ajaxcategory.data
+						}
+					]
+				};
+			pieChart1.setOption(option1);
+		}
+	});
+});	
+</script>
+</body>
+</html>

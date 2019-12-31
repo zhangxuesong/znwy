@@ -1,0 +1,236 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+ <link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/fonts/iconfont.css?v=20170703">
+
+<style type="text/css">
+.nav-tabs li a { padding: 3px 10px;}
+</style>
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body"> 
+	<ul class="nav nav-tabs">		 		  
+		  <li><a href="{php echo $this->createWeburl('category',array('op'=>'list','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >分类设置</a></li>		
+		   <li><a href="{php echo $this->createWeburl('sms',array('op'=>'base','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >基本设置</a></li>
+		   <li><a href="{php echo $this->createWeburl('sms',array('op'=>'fee','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >账单设置</a></li>
+		  {if !empty($_W['uid'])}<li><a href="{php echo $this->createWeburl('sms',array('op'=>'market','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >策略设置</a></li>{/if}
+		   <li><a href="{php echo $this->createWeburl('printer',array('op'=>'list','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >云打印机</a></li>
+		   <li><a href="{php echo $this->createWeburl('sms',array('op'=>'index','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >短信设置</a></li>
+		 {if !empty($_W['uid'])}<li><a href="{php echo $this->createWeburl('sms',array('op'=>'intelligence','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >智慧设置</a></li>{/if}
+		   <li class="active"><a href="{php echo $this->createWeburl('sms',array('op'=>'door','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >其他设置</a></li>
+	</ul>
+	<br>
+	<div class="tab-content">			
+		<div class="panel panel-default">	
+			<div class="panel-body ">
+				<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >		
+					<input type="hidden" name="token" value="{$_W['token']}" />			
+					<input type="hidden" name="pid" value="{$pid}" />		
+					<input type="hidden" name="rid" value="{$rid}" />	
+				 <div class="form-group">
+				   <label class="col-xs-12 col-sm-2 col-md-2 control-label">欠费限制功能</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+						<div class="col-sm-3 col-lg-3 col-xs-12">
+						<div class="input-group">
+						<span class="input-group-addon">公告</span><input type="checkbox" value="1" {if $item['arrearagelimit1']==1}checked="checked"{/if} name="arrearagelimit1"/></div></div>
+						<div class="col-sm-3 col-lg-3 col-xs-12">
+						<div class="input-group">
+						<span class="input-group-addon">报修</span><input type="checkbox" value="1" {if $item['arrearagelimit2']==1}checked="checked"{/if} name="arrearagelimit2"/></div></div>
+						<div class="col-sm-3 col-lg-3 col-xs-12">
+						<div class="input-group">
+						<span class="input-group-addon">建议</span><input type="checkbox" value="1" {if $item['arrearagelimit3']==1}checked="checked"{/if} name="arrearagelimit3"/></div></div>
+					</div>
+				</div>
+				 <div class="form-group">
+				   <label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+						<div class="col-sm-3 col-lg-3 col-xs-12">
+						<div class="input-group">
+						<span class="input-group-addon">门禁</span><input type="checkbox" value="1" {if $item['arrearagelimit4']==1}checked="checked"{/if} name="arrearagelimit4"/></div></div>
+						<div class="col-sm-3 col-lg-3 col-xs-12">
+						<div class="input-group">
+						<span class="input-group-addon">社区</span><input type="checkbox" value="1" {if $item['arrearagelimit5']==1}checked="checked"{/if} name="arrearagelimit5"/></div></div>
+						<div class="col-sm-3 col-lg-3 col-xs-12">
+						<div class="input-group">
+						<span class="input-group-addon">动态</span><input type="checkbox" value="1" {if $item['arrearagelimit6']==1}checked="checked"{/if} name="arrearagelimit6"/></div></div>
+					</div>
+				</div>
+				
+				 <div class="form-group">
+				   <label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+						<div class="col-sm-3 col-lg-3 col-xs-12">
+						<div class="input-group">
+						<span class="input-group-addon">服务</span><input type="checkbox" value="1" {if $item['arrearagelimit7']==1}checked="checked"{/if} name="arrearagelimit7"/></div>
+						 <span class="help-block">欠费禁止使用相关功能</span>
+						</div>
+						<div class="col-sm-3 col-lg-3 col-xs-12">
+						<div class="input-group">
+						<span class="input-group-addon">商家</span><input type="checkbox" value="1" {if $item['arrearagelimit8']==1}checked="checked"{/if} name="arrearagelimit8"/></div></div>
+						<div class="col-sm-3 col-lg-3 col-xs-12">
+						<div class="input-group">
+						<span class="input-group-addon">智能</span><input type="checkbox" value="1" {if $item['arrearagelimit9']==1}checked="checked"{/if} name="arrearagelimit9"/></div></div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">欠费累计月数</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<div class="input-group">
+								<input type="number" class="form-control" id="arrearagemonths" value="{$item['arrearagemonths']}" placeholder="输入月数" name="arrearagemonths">
+							   <span class="input-group-addon">个月</span>
+						   </div>
+							<span class="help-block">累计欠费月数用来控制欠费后禁止使用相关功能，为空则欠费即生效</span>
+					</div>	
+				</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">客服链接</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<input type="text" class="form-control" id="service" value="{$item['service']}" placeholder="输入客服链接地址" name="service">
+						</div>	
+					</div>
+					 <div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">客服图标</label>	
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<div class="input-group">
+								<input type="text" id="serviceicon" value="{if empty($item['serviceicon'])}icon-chat{else}{$item['serviceicon']}{/if}" name="serviceicon" class="form-control" autocomplete="off">
+								<span class="input-group-addon"><i class="icon {if empty($item['serviceicon'])}icon-chat{else}{$item['serviceicon']}{/if}"></i></span>
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="button" onclick="showIconDialog(this);">选择图标</button>
+								</span>
+							</div>
+							 <span class="help-block">无图片时，则显示图标</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">客服图片</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							{php echo tpl_form_field_image('servicethumb',$item['servicethumb']);}
+							<span class="help-block">建议尺寸60*60</span>
+						</div>	
+					</div>	
+					 <div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">客服位置</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">    
+						<div class="col-sm-4 col-lg-4 col-xs-12">
+						<div class="input-group">
+						<span class="input-group-addon">距离右边</span>
+						<input type="number" class="form-control"  value="{$item['serviceright']}" name="serviceright">
+						<span class="input-group-addon">rem</span></div>
+						<span class="help-block">客服图标页面离右边和底部距离</span>
+						</div>
+						<div class="col-sm-4 col-lg-4 col-xs-12">
+						<div class="input-group">
+						<span class="input-group-addon">距离底部</span>
+						<input type="number" class="form-control"  value="{$item['servicebottom']}" name="servicebottom">
+						<span class="input-group-addon">rem</span></div></div>						
+					</div>	
+				</div>				
+				 <div class="form-group">
+				   <label class="col-xs-12 col-sm-2 col-md-2 control-label">客服显示页面</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+						<div class="col-sm-3 col-lg-3 col-xs-12">
+						<div class="input-group">
+						<span class="input-group-addon">首页</span><input type="checkbox" value="1" {if $item['servicepagehome']==1}checked="checked"{/if} name="servicepagehome"/></div>
+						<span class="help-block">控制客服图标是否显示</span>
+						</div>
+						<div class="col-sm-3 col-lg-3 col-xs-12">
+						<div class="input-group">
+						<span class="input-group-addon">服务</span><input type="checkbox" value="1" {if $item['servicepageser']==1}checked="checked"{/if} name="servicepageser"/></div></div>
+						<div class="col-sm-3 col-lg-3 col-xs-12">
+						<div class="input-group">
+						<span class="input-group-addon">管家</span><input type="checkbox" value="1" {if $item['servicepageste']==1}checked="checked"{/if} name="servicepageste"/></div></div>						
+					</div>					
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">租户门禁有效期</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<div class="input-group">
+								<input type="number" class="form-control" id="" value="{$item['doordays']}" placeholder="输入月数" name="doordays">
+							   <span class="input-group-addon">天</span>
+						   </div>
+							<span class="help-block">为0则不限制，设定天数后自动根据绑定日期推算，超过有效期需重新授权有效期方可使用门禁</span>
+					</div>	
+				</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">门禁大门图标</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							{php echo tpl_form_field_image('doorimage',$item['doorimage']);}
+							<span class="help-block">建议尺寸60*60，可为空取默认图标</span>
+						</div>	
+					</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">门禁区域图标</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							{php echo tpl_form_field_image('locationimage',$item['locationimage']);}
+							<span class="help-block">建议尺寸60*60,可为空取默认图标</span>
+						</div>	
+					</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">门禁单元图标</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							{php echo tpl_form_field_image('unitimage',$item['unitimage']);}
+							<span class="help-block">建议尺寸60*60,可为空取默认图标</span>
+						</div>	
+					</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">门禁车库图标</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							{php echo tpl_form_field_image('buildingimage',$item['buildingimage']);}
+							<span class="help-block">建议尺寸60*60,可为空取默认图标</span>
+						</div>	
+					</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">门禁访客图标</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							{php echo tpl_form_field_image('visitimage',$item['visitimage']);}
+							<span class="help-block">建议尺寸60*60,可为空取默认图标</span>
+						</div>	
+					</div>	
+					<div class="col-lg-9 col-xs-12 col-sm-offset-2" style="margin-top:8px;">   
+						<button  class="btn btn-primary" ><i class="fa fa-save"></i> 保存</button>
+						<a href="javascript:;" class="btn btn-default"  onclick="myreturn()"><i class="fa fa-reply"></i> 返回<a/>
+					</div>
+				</form>
+					<script type="text/javascript">
+						require(['jquery.ui', 'bootstrap.switch'], function(){		
+							$(":checkbox").bootstrapSwitch();		
+						});						
+					</script>
+			</div> 
+	</div>  
+	</div>
+	</div>	
+  </div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+var pid = {$pid};
+var rid = {$rid};
+
+function myreturn(){
+	var url = "{php echo $this->createWeburl('region',array('op'=>$rlist,'category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid;	
+	window.location.href = url;
+}
+function showIconDialog(elm) {
+	require(["util","jquery"], function(u, $){
+		var btn = $(elm);
+		var spview = btn.parent().prev();
+		var ipt = spview.prev();
+		if(!ipt.val()){
+			spview.css("display","none");
+		}
+		
+		var myicon = ipt.attr('id');
+		
+		var footer = '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>';
+		var modalobj = util.dialog('请选择图标',["{php echo $this->createWeburl('query',array('op'=>'icon')).$mywe['direct'];}&myicon=" + myicon],footer,{containerName:'icon-container'});
+		modalobj.modal({'keyboard': false});
+		modalobj.find('.modal-dialog').css({'width':'70%'});
+		modalobj.find('.modal-body').css({'height':'70%','overflow-y':'scroll'});
+		modalobj.modal('show');
+	});
+}
+</script>
+</body>
+</html>

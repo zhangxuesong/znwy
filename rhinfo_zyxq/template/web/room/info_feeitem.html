@@ -1,0 +1,70 @@
+﻿<div class="panel panel-default" >
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>					
+					<th width="60">ID</th>
+					<th width="80">收费项目ID</th>
+					<th width="100">收费项目名称</th>
+					<th width="150">最后账单开始日期</th>
+					<th width="150">最后账单结束日期</th>					
+					<th width="80">操作</th>
+
+				</tr>
+			</thead>
+			<tbody>
+			{loop $feebillitems $feeitemv}
+				<tr>					
+					<td>{$feeitemv['id']}</td>	
+					<td>{$feeitemv['itemid']}</td>	
+					<td>{$feeitemv['title']}</td>					
+					<td><span>{php echo date('Y-m-d',$feeitemv['paydate']);}</span><a href="javascript:;" onclick="mypostdate(this,'{$feeitemv['id']}','{php echo date('Y-m-d',$feeitemv['paydate']);}',1)">&nbsp;<i class="fa fa-edit text-warning"></i></a></td>
+					<td><span>{php echo date('Y-m-d',$feeitemv['billdate']);}</span><a href="javascript:;" onclick="mypostdate(this,'{$feeitemv['id']}','{php echo date('Y-m-d',$feeitemv['billdate']);}',2)">&nbsp;<i class="fa fa-edit text-danger"></i></a></td>					
+					<td>
+					{if $rights['delete'] == 1}
+					<a href="javascript:;" onclick="mydelfeeitem(this,{$feeitemv['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="删除收费项目"><i class="fa fa-trash"></i> 删除</a>{/if}			
+					
+					</td>												
+				</tr>
+			{/loop}	
+			</tbody>
+		</table> 
+	</div>	
+</div>
+<script type="text/javascript">
+function mypostdate(obj,id,billdate,cate){
+	layer.prompt({title: '修改账单日期',value:billdate,area: ['300px', '40px'], formType: 2}, function(enterdate, index){
+	layer.close(index);	   
+	var loadindex = layer.load(2);
+	$.post("{php echo $this->createWebUrl('room',array('op'=>'billdate')).$mywe['direct'];}",
+		{cate:cate,id:id,enterdate:enterdate},
+		function(data,status){
+		 layer.close(loadindex);
+		 if (data=='ok'){								
+			layer.msg('修改成功!',{icon:1});
+			$(obj).parent('td').find('span').html(enterdate);
+		 }
+		 else{
+			layer.msg(data,{icon:0});
+		 }
+	});	
+  });
+}
+function mydelfeeitem(obj,id){
+	layer.confirm('确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl('room').$mywe['direct'];}",
+			{op:"delfeeitem",id:id},
+			function(data,status){
+			 if (data=='ok'){
+				$(obj).parents("tr").remove();
+				layer.msg('删除成功!',{icon:1});
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+			 }
+		});		
+		layer.close(index);
+    });
+}
+</script>

@@ -1,0 +1,340 @@
+{template $this->mytpl('_header')}
+	<style type="text/css">
+	*{padding:0;margin: 0}
+	.shake_box {
+		background: url(../addons/rhinfo_zyxq/static/mobile/images/lock.png) no-repeat #1e2020 center center;
+		position: fixed;
+		top : 0;
+		left: 0;
+		width  : 100%;
+		height : 100%;
+		z-index:999;
+	}
+	.shakTop,.shakBottom {
+		background: #282c2d;
+		position : fixed;
+		left  : 0;
+		width : 100%;
+		height: 50%;
+	}
+	.shakTop    {top    : 0;}
+	.shakBottom {bottom : 0;}
+
+	.shakTop span,.shakBottom span{
+		background: url(../addons/rhinfo_zyxq/static/mobile/images/shakBox.png) no-repeat;
+		position : absolute;
+		left: 50%;
+		width : 450px;
+		height: 254px;
+		margin: 0 0 0 -275px;
+	}
+	.shakTop    span{bottom : 0;}
+	.shakBottom span{
+		background-position: 0 -254px;
+		top : 0;
+	}
+
+	.shake_box_focus .shakTop{
+		animation        : shakTop 1s 1 linear;
+		-moz-animation   : shakTop 1s 1 linear;
+		-webkit-animation: shakTop 1s 1 linear;
+		-ms-animation    : shakTop 1s 1 linear;
+		-o-animation     : shakTop 1s 1 linear;
+	}
+	.shake_box_focus .shakBottom{
+		animation        : shakBottom 1s 1 linear;
+		-moz-animation   : shakBottom 1s 1 linear;
+		-webkit-animation: shakBottom 1s 1 linear;
+		-ms-animation    : shakBottom 1s 1 linear;
+		-o-animation     : shakBottom 1s 1 linear;
+	}
+
+	/* 向上拉动画效果 */
+	@-webkit-keyframes shakTop   {
+		0%   {top: 0;}
+		50%  {top: -200px;}
+		100% {top: 0;}
+	}
+	@-moz-keyframes shakTop      {
+		0%   {top: 0;}
+		50%  {top: -200px;}
+		100% {top: 0;}
+	}
+	@-ms-keyframes shakTop       {
+		0%   {top: 0;}
+		50%  {top: -200px;}
+		100% {top: 0;}
+	}
+	@-o-keyframes shakTop        { 
+		0%   {top: 0;}
+		50%  {top: -200px;}
+		100% {top: 0;}
+	}
+	
+	/* 向下拉动画效果 */
+	@-webkit-keyframes shakBottom   {
+		0%   {bottom: 0;}
+		50%  {bottom: -200px;}
+		100% {bottom: 0;}
+	}
+	@-moz-keyframes shakBottom      {
+		0%   {bottom: 0;}
+		50%  {bottom: -200px;}
+		100% {bottom: 0;}
+	}
+	@-ms-keyframes shakBottom       {
+		0%   {bottom: 0;}
+		50%  {bottom: -200px;}
+		100% {bottom: 0;}
+	}
+	@-o-keyframes shakBottom        { 
+		0%   {bottom: 0;}
+		50%  {bottom: -200px;}
+		100% {bottom: 0;}
+	}
+	.imggray { 
+		-webkit-filter: grayscale(100%);
+		-moz-filter: grayscale(100%);
+		-ms-filter: grayscale(100%);
+		-o-filter: grayscale(100%);
+		
+		filter: grayscale(100%);
+		
+		filter: gray;
+	}
+</style>
+
+<input type="hidden" id="latelydoor" name="latelydoor" value="0"/>
+<input type="hidden" id="mylat" name="mylat" value="0"/>
+<input type="hidden" id="mylng" name="mylng" value="0"/>
+
+<script type="application/javascript">
+    wx.ready(function () {
+        asd();        
+    });
+    function asd() {
+        wx.getLocation({
+            type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+            success: function (res) {
+                var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                var speed = res.speed; // 速度，以米/每秒计
+                var accuracy = res.accuracy; // 位置精度
+                $("#mylat").val(latitude); //OK
+				$("#mylng").val(longitude); //OK	
+				core.json('opendoor/index',{lat:latitude,lng:longitude,range:500,latedoor:1}, function(ret){
+					$("#latelydoor").val(ret.status);			
+				},false,true);	
+            }
+        });
+    }
+</script>
+
+<div class="fui-page fui-page-current page-commission-index">
+	<div class="fui-header">
+		<div class="fui-header-left"><a class="back"　href="{php echo $this->createMobileurl('home');}"></a>			
+		</div>
+		<div class="title">智能门禁</div>
+		<div class="fui-header-right">
+			{if $visit>0}
+			<a href="{php echo $this->createMobileurl('opendoor',array('op'=>'myvisit','pid'=>$item['pid'],'rid'=>$item['id']));}">我是访客</a>
+			{else}
+				<a href="javascript:;" onclick="mynavwxapp('{$item['doorwxappid']}','{$item['doorwxapppage']}','{php echo $this->syscfg['wxminibgimage'];}')" style="display:none;color:blue"  id="myblue" >蓝牙</a>
+			{/if}			
+		</div>
+	</div>
+	
+	<div class='fui-content navbar'>
+		
+		{if !empty($banners)}
+			<div class='fui-swipe'>
+				<div class='fui-swipe-wrapper'>
+					{loop $banners $item}
+						<a class='fui-swipe-item' href="javascript:;" {if !empty($item['link'])}onclick="countHit(this,'{$item['pid']}','{$item['rid']}','{$item['id']}','{$item['link']}','{$item['wxappid']}','{$item['wxapppage']}','{php echo !empty($item['bgimage'])?tomedia($item['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if}><img src="{php echo tomedia($item['thumb'])}" /></a>
+					{/loop}
+				</div>
+				<div class='fui-swipe-page'></div>
+			</div>
+		{/if}	
+		 <div class='fui-content-inner'>			
+			<div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+         </div>
+		<script language='javascript'>		
+		    var url = "{php echo $this->createMobileurl($mydo,array('op'=>'doors'));}"; 
+			$.get(url, {latedoor:0}, function(data){
+				$('.fui-content-inner').html(data);	
+				require(['opendoor/index'], function (modal) {
+					modal.init();
+				});	
+			});		
+		</script>		
+	 </div>
+ </div> 
+
+ <div class="shake_box" style="display:none;">
+	<div class="shakTop"><span></span></div>
+	<div class="shakBottom"><span></span></div>
+</div>
+
+<script type="text/javascript">
+	function countHit(obj,pid,rid,bannerid,link,wxappid,wxapppage,bgimage){	
+	 core.json('service/bannerhit', {
+			pid:pid,rid:rid,bannerid:bannerid
+		}, function(ret) {
+			if (ret.status == 1) {
+				wx.miniProgram.getEnv(function(res){
+					if(res.miniprogram){
+						if(wxappid !==''){
+							var path = '/pages/index/navto?wxappid=' + wxappid +'&wxapppage=' + wxapppage +'&bgimage=' + bgimage;
+							wx.miniProgram.navigateTo({
+								url: path
+							}); 							
+						}
+						else{
+							 location.href = link;
+						}
+						return
+					}
+					else{
+					    location.href = link;
+						return
+					}
+				});			   
+			}				
+		},false, true)
+	}
+	
+	function mynavwxapp(wxappid,wxapppage,bgimage){	
+		wx.miniProgram.getEnv(function(res) {
+			if(res.miniprogram){
+				if(wxappid !==''){
+					var path = '/pages/index/navto?wxappid=' + wxappid +'&wxapppage=' + wxapppage+'&bgimage='+bgimage;
+					wx.miniProgram.navigateTo({
+						url: path
+					}); 							
+				}
+				else{
+					var path = '/pages/onedoor/onedoor';
+					wx.miniProgram.navigateTo({
+						url: path
+					}); 	
+				}
+			}
+			else{
+				RhUI.toast.show('请在小程序中打开');
+			}
+		});
+	}
+	//先判断设备是否支持HTML5摇一摇功能	
+	if (window.DeviceMotionEvent) {
+		//获取移动速度，得到device移动时相对之前某个时间的差值比
+		window.addEventListener('devicemotion', deviceMotionHandler, false);
+	}else{
+		RhUI.alert('您好，你目前所用的设置好像不支持重力感应哦！');
+	}
+
+	//设置临界值,这个值可根据自己的需求进行设定，默认就3000也差不多了
+	var shakeThreshold = 3000;
+	//设置最后更新时间，用于对比
+	var lastUpdate = 0;
+	var myTime = 0;
+	//设置位置速率
+	var curShakeX=curShakeY=curShakeZ=lastShakeX=lastShakeY=lastShakeZ=0;
+
+	function deviceMotionHandler(event){
+		    
+		//获得重力加速
+		var acceleration =event.accelerationIncludingGravity;
+
+		//获得当前时间戳
+		var curTime = new Date().getTime();
+		
+		if ((curTime - lastUpdate)> 100) {
+
+			//时间差
+			var diffTime = curTime -lastUpdate;
+			lastUpdate = curTime;
+
+			//x轴加速度
+			curShakeX = acceleration.x;
+			//y轴加速度
+			curShakeY = acceleration.y;
+			//z轴加速度
+			curShakeZ = acceleration.z;
+
+			var speed = Math.abs(curShakeX + curShakeY + curShakeZ - lastShakeX - lastShakeY - lastShakeZ) / diffTime * 10000;
+
+			if (speed > shakeThreshold) {
+				//TODO 相关方法，比如：
+				$(".shake_box").show();
+				//播放音效
+				shakeAudio.play();
+				//播放动画
+				$('.shake_box').addClass('shake_box_focus');
+				clearTimeout(shakeTimeout);
+												
+				var shakeTimeout = setTimeout(function(){
+					$('.shake_box').removeClass('shake_box_focus');
+					$(".shake_box").hide();
+				},1000);				
+												
+			   
+			   //----					
+				if ((curTime - myTime)< 3000) {
+					RhUI.toast.show('请不要频繁摇呢');
+				    return
+				}
+				
+				myTime = curTime ;
+								
+                var latelydoor = $("#latelydoor").val();
+				if(latelydoor==0 || latelydoor == "" || latelydoor == undefined || latelydoor == null){
+				   RhUI.toast.show('定位不成功');
+				   return
+				}
+						
+				var mylat = $("#mylat").val();
+				var mylng = $("#mylng").val();
+				var lockid = $("#latelydoor").val();
+				
+				$("#"+lockid).find('.icon').html('<i class="icon icon-yaochi"></i>'); 
+				
+				core.json('steward/opendoor', {
+					id: lockid,mylat:mylat,mylng:mylng
+				}, function(ret) {
+					if (ret.status != 1) {
+						$("#"+lockid).find('.icon').html('<i class="icon icon-unlock"></i>'); 
+						RhUI.toast.show('开门成功');
+						setTimeout(function(){$("#"+lockid).find('.icon').html('<i class="icon icon-lock"></i>'); },2000);
+					}
+					if (ret.status == 1) {
+						$("#"+lockid).find('.icon').html('<i class="icon icon-warn"></i>');
+						RhUI.toast.show(ret.result.message);
+						setTimeout(function(){$("#"+lockid).find('.icon').html('<i class="icon icon-lock"></i>'); },2000);
+					}
+				}, false, true);
+				//----
+			}
+
+			lastShakeX = curShakeX;
+			lastShakeY = curShakeY;
+			lastShakeZ = curShakeZ;
+		}
+	}
+
+
+	//预加摇一摇声音
+	var shakeAudio = new Audio();
+		shakeAudio.src = '../addons/rhinfo_zyxq/static/mobile/sound/shake_sound.mp3';
+	var shake_options = {
+		preload  : 'auto'
+	}
+	for(var key in shake_options){
+		if(shake_options.hasOwnProperty(key) && (key in shakeAudio)){
+			shakeAudio[key] = shake_options[key];
+		}
+	}
+</script>
+ 
+{template $this->mytpl('_menu')}
+{template $this->mytpl('_footer')}

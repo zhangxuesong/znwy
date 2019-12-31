@@ -1,0 +1,264 @@
+﻿{template 'web/_iframe_header'}
+<style>
+	.account-stat-num > div{width:19%; float:left; font-size:16px; text-align:center;}
+	.account-stat-num > div span{display:block; font-size:30px; font-weight:bold;}
+	::-webkit-scrollbar{
+		width: 0px;
+		height: 0px;
+	}
+	::-webkit-scrollbar-thumb{
+		background-color: #ccc;
+		-webkit-border-radius: 0px;
+		border-radius: 0px;
+	}
+	::-webkit-scrollbar-thumb:vertical:hover{
+		background-color: #999;
+	}
+	::-webkit-scrollbar-thumb:vertical:active{
+		background-color: #999;
+	}
+	::-webkit-scrollbar-button{
+		display: none;
+	}
+	::-webkit-scrollbar-track{
+		background-color: #f1f1f1;
+	}
+</style>
+<div class="panel panel-default">
+	<div class="panel-body ">
+		{if !empty($_GPC['rid'])}
+		<p class="h4">{$myproperty['title']}<span class="pull-right"><a href="javascript:;" onclick="myhelp()" class="btn btn-default" title="帮助" style="display:none;"><i class="fa fa-question-circle"></i> </a> <a class="btn btn-success" href="javascript:location.replace(location.href);" title="刷新"><i class="fa fa-refresh"></i></a></span></p>
+		{else}
+		<p class="h4">欢迎使用{if $company['title']}{$company['title']}{else}智慧物业管理系统{/if}<span class="pull-right"><a href="javascript:;" onclick="myhelp()" class="btn btn-default" title="帮助" style="display:none;"><i class="fa fa-question-circle"></i> </a> <a class="btn btn-success" href="javascript:location.replace(location.href);" title="刷新"><i class="fa fa-refresh"></i></a></span></p>
+		<p class="h5">
+		{if $_W['uid']}物业公司：<a  href="javascript:;" onclick="myopen(this)" data-title="物业公司" data-href="{php echo $this->createWebUrl('property',array('op'=>'list')).$mywe['direct'];}"><font class="text-danger h3">{$propertys}</font></a> 个&nbsp;&nbsp;
+		{/if}
+		{if $regions>0}
+		小区数量：<a href="javascript:;" onclick="myopen(this)" data-title="小区管理" data-href="{php echo $this->createWebUrl('region',array('op'=>'list','category'=>1)).$mywe['direct'];}"><font class="text-danger h3">{$regions}</font></a> 个&nbsp;&nbsp;{/if}
+		{if $businesss>0}
+		商圈数量：<a href="javascript:;" onclick="myopen(this)" data-title="商圈管理" data-href="{php echo $this->createWebUrl('region',array('op'=>'blist','category'=>2)).$mywe['direct'];}"><font class="text-danger h3">{$businesss}</font></a> 个&nbsp;&nbsp;{/if}
+		{if $gardens>0}
+		园区数量：<a href="javascript:;" onclick="myopen(this)" data-title="园区管理" data-href="{php echo $this->createWebUrl('region',array('op'=>'glist','category'=>3)).$mywe['direct'];}"><font class="text-danger h3">{$gardens}</font></a> 个&nbsp;&nbsp;{/if}
+		{if $markets>0}
+		市场数量：<a href="javascript:;" onclick="myopen(this)" data-title="市场管理" data-href="{php echo $this->createWebUrl('region',array('op'=>'mlist','category'=>4)).$mywe['direct'];}"><font class="text-danger h3">{$markets}</font></a> 个&nbsp;&nbsp;{/if}
+		{if $apartments>0}
+		公寓数量：<a href="javascript:;" onclick="myopen(this)" data-title="公寓管理" data-href="{php echo $this->createWebUrl('region',array('op'=>'alist','category'=>5)).$mywe['direct'];}"><font class="text-danger h3">{$apartments}</font></a> 个{/if}		
+		
+		{if $total>0}&nbsp;&nbsp;<a class="btn btn-info" href="javascript:;" onclick="myregion()" ><i class="fa fa-cubes"></i> 快速选择主体</a> &nbsp;&nbsp;
+		<a class="btn btn-success" href="javascript:;" onclick="myroominfo({$defaultpid},{$defaultrid})" ><i class="fa fa-search"></i> 房产快捷查询</a>&nbsp;&nbsp;
+		<a class="btn btn-warning" data-href="{php echo $this->createWebUrl($mydo,array('op'=>'billlist','rid'=>$defaultrid)).$mywe['direct'];}" onclick="parent.Hui_admin_tab(this)" data-title="快捷收银台" href="javascript:void(0)" ><i class="fa fa-money"></i> 进入快捷收银</a>&nbsp;&nbsp;
+		<a class="btn btn-primary" href="{php  echo $this->syscfg['siteurl'].'app/index.php?i='.$mywe['weid'].'&a=webapp&c=entry&do=home&rid='.$defaultrid.'&m=rhinfo_zyxq';}" target="_blank" ><i class="fa fa-bar-chart-o"></i> 主体管理看板</a>
+		{/if}
+		</p>		
+		{/if}
+		{loop $data $k $v}			
+		<div class="clearfix" style="color:#333;margin-top:-30px;">
+		<h4 class="page-header"><i class="fa fa-sitemap"></i> {$v['title']}&nbsp;
+		<a class="btn btn-danger" data-href="{php echo mywurl('guide/index',array('rid'=>$v['id'])).$mywe['direct'];}" onclick="parent.Hui_admin_tab(this)" data-title="{$v['title']}初始操作向导" href="javascript:void(0)"><i class="fa fa-question-circle"></i> 初始操作向导</a>
+		{if !empty($_GPC['rid'])}&nbsp;&nbsp;
+		<a class="btn btn-success" href="javascript:;" onclick="myroominfo({$v['pid']},{$v['id']})" ><i class="fa fa-search"></i> 房产快捷查询</a>&nbsp;&nbsp;
+		<a class="btn btn-warning" data-href="{php echo $this->createWebUrl($mydo,array('op'=>'billlist','rid'=>$v['id'])).$mywe['direct'];}" onclick="parent.Hui_admin_tab(this)" data-title="快捷收银台" href="javascript:void(0)" ><i class="fa fa-money"></i> 进入快捷收银</a>&nbsp;&nbsp;
+		<a class="btn btn-primary" href="{php echo $this->syscfg['siteurl'].'app/index.php?i='.$mywe['weid'].'&a=webapp&c=entry&do=home&rid='.$v['id'].'&m=rhinfo_zyxq';}" target="_blank" ><i class="fa fa-bar-chart-o"></i> 主体管理看板</a>
+		{/if}		
+		</h4>		
+		<ul class="desktop" style="margin-left:5px;" >
+			<li class="bg-warning" >
+				<a href="javascript:;" data-href="{php echo $this->createWeburl('fee',array('op'=>'list','pid'=>$v['pid'],'rid'=>$v['id'])).$mywe['direct'];}" data-title="收银台" onclick="myopen(this)">
+				<div class="myicon bg-info"><i class="fa fa-building"></i></div>
+				<p class="desc" style="margin-top:5px;">楼宇<span class="pull-right hidden-xs">欠费</span></p>
+				<p class="title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><font class="text-warning h4">{$v['buildings']}</font>&nbsp;栋<span class="pull-right hidden-xs"><font class="text-danger h4">{$v['tpaybill']['buildings']}</font> 栋</span></p></a>
+			</li>
+			<li class="bg-warning">
+				<a href="javascript:;" data-href="{php echo $this->createWeburl('fee',array('op'=>'list','pid'=>$v['pid'],'rid'=>$v['id'])).$mywe['direct'];}" data-title="收银台" onclick="myopen(this)">
+				<div class="myicon bg-success" ><i class="fa fa-home"></i></div>
+				<p class="desc" style="margin-top:5px;">房屋<span class="pull-right hidden-xs">欠费</span></p>
+				<p class="title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><font class="text-warning h4">{$v['rooms']}</font>&nbsp;间<span class="pull-right hidden-xs"><font class="text-danger h4">{$v['tpaybill']['rooms']}</font> 间</span></p></a>
+			</li>
+			<li class="bg-warning">
+				<a href="javascript:;" data-href="{php echo $this->createWeburl('fee',array('op'=>'list','pid'=>$v['pid'],'rid'=>$v['id'])).$mywe['direct'];}" data-title="收银台" onclick="myopen(this)">
+				<div class="myicon" style="background:#fff0ac;" ><i class="fa fa-shopping-cart"></i></div>
+				<p class="desc" style="margin-top:5px;">商铺<span class="pull-right hidden-xs">欠费</span></p>
+				<p class="title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><font class="text-warning h4">{$v['shops']}</font>&nbsp间<span class="pull-right hidden-xs"><font class="text-danger h4">{$v['tpaybill']['shops']}</font> 间</span></p></a>
+			</li>
+			<li class="bg-warning">
+				<a href="javascript:;" data-href="{php echo $this->createWeburl('car',array('op'=>'list','pid'=>$v['pid'],'rid'=>$v['id'])).$mywe['direct'];}" data-title="车位管理" onclick="myopen(this)">
+				<div class="myicon bg-danger"><i class="fa fa-car"></i></div>
+				<p class="desc" style="margin-top:5px;">车位<span class="pull-right hidden-xs">欠费</span></p>
+				<p class="title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><font class="text-warning h4">{$v['parkings']}</font>&nbsp;个<span class="pull-right hidden-xs"><font class="text-danger h4">{$v['tpaybill']['garages']}</font> 个</span></p></a>
+			</li>
+			<li class="bg-warning">
+				<a href="javascript:;" data-href="{php echo $this->createWeburl('door',array('op'=>'list')).$mywe['direct'];}" data-title="智能门禁" onclick="myopen(this)">
+				<div class="myicon" style="background:#ffdac8;" ><i class="fa fa-columns"></i></div>
+				<p class="desc" style="margin-top:5px;">门禁<span class="pull-right hidden-xs">离线</span></p></a>
+				<p class="title"><font class="text-warning h4">{$v['doors']}</font>&nbsp;个{if $_W['role'] == 'founder'}<a class="hidden-xs" href="javascript:;" onclick="doortest(this,{$v['pid']},{$v['id']})" title="开门测试">&nbsp;<i class="fa fa-columns" style="color:green;"></i></a>{/if}<span class="pull-right hidden-xs">{if $_W['role'] == 'founder'}<a href="javascript:;" onclick="doorcheck(this,{$v['pid']},{$v['id']})" title="检查门禁" ><i class="fa fa-refresh" style="color:green;"></i></a>{/if}				
+				<a href="javascript:;" data-href="{php echo $this->createWeburl('door',array('op'=>'list','rid'=>$v['id'],'offline'=>1)).$mywe['direct'];}" data-title="智能门禁" onclick="myopen(this)">
+				<font class="text-danger h4" id="offlines"> {$v['offline']}</font></a> 个</span></p>
+			</li>
+		</ul>	
+	</div>
+	<div style="width:100%;height:500px;overflow-y:scroll;" id="regionbody">
+	<table class="table">
+		<tbody>
+			<tr><td>
+				<div class="account-stat-num row">
+					<div>今日缴费金额<span class="text-warning">{php echo !empty($v['tpaybill']['today'])?$v['tpaybill']['today']:0;}</span></div>
+					<div>昨日缴费金额<span class="text-info">{php echo !empty($v['tpaybill']['yesterday'])?$v['tpaybill']['yesterday']:0;}</span></div>				
+					<div>本月缴费总额<span class="text-success">{php echo !empty($v['tpaybill']['lmonth'])?$v['tpaybill']['lmonth']:0;}</span></div>
+					<div>最近30天缴费总额<span class="text-success">{php echo !empty($v['tpaybill']['month'])?$v['tpaybill']['month']:0;}</span></div>
+					{if ($_W['role'] == 'founder' || $_W['role']=='owner' || $_W['role']=='manager') || $mywe['ispmanager']==1}
+					<div>待缴费总额<span class="text-danger">{php echo !empty($v['tpaybill']['nopay'])?$v['tpaybill']['nopay']:0;}</span></div>
+					{else}
+					<div>本年度缴费总额<span class="text-primary">{php echo !empty($v['tpaybill']['year'])?$v['tpaybill']['year']:0;}</span></div>
+					{/if}
+				</div>
+				<hr>
+				<div class="account-stat-num row">
+					<div>今日收支金额<span style="font-size:25px;"><font class="text-success">+{php echo !empty($v['tcostbill']['today1'])?$v['tcostbill']['today1']:0;}</font></span><span style="font-size:25px;"><font class="text-danger">-{php echo !empty($v['tcostbill']['today2'])?$v['tcostbill']['today2']:0;}</font></span></div>
+					<div>昨日收支金额<span style="font-size:25px;"><font class="text-success">+{php echo !empty($v['tcostbill']['yesterday1'])?$v['tcostbill']['yesterday1']:0;}</font></span><span style="font-size:25px;"><font class="text-danger">-{php echo !empty($v['tcostbill']['yesterday2'])?$v['tcostbill']['yesterday2']:0;}</font></span></div>	
+					<div>本月收支金额<span style="font-size:25px;"><font class="text-success">+{php echo !empty($v['tcostbill']['lmonth1'])?$v['tcostbill']['lmonth1']:0;}</font></span><span style="font-size:25px;"><font class="text-danger">-{php echo !empty($v['tcostbill']['lmonth2'])?$v['tcostbill']['lmonth2']:0;}</font></span></div>
+					<div>最近30天收支金额<span style="font-size:25px;"><font class="text-success">+{php echo !empty($v['tcostbill']['month1'])?$v['tcostbill']['month1']:0;}</font></span><span style="font-size:25px;"><font class="text-danger">-{php echo !empty($v['tcostbill']['month2'])?$v['tcostbill']['month2']:0;}</font></span></div>
+					<div>本年度收支金额<span style="font-size:25px;"><font class="text-success">+{php echo !empty($v['tcostbill']['year1'])?$v['tcostbill']['year1']:0;}</font></span><span style="font-size:25px;"><font class="text-danger">-{php echo !empty($v['tcostbill']['year2'])?$v['tcostbill']['year2']:0;}</font></span></div>
+				</div>
+				<br>
+			</td></tr><tr><td>
+				<ul class="desktop_building">			
+					{loop $v['building_list'] $building}				
+						<li class="{if $building['fees']>0}bg-danger{else}bg-warning{/if}" >
+						<span class="pull-left" style="position:relative;">				      
+							<a href="javascript:;" data-href="{php echo $this->createWeburl('feeb',array('op'=>'frombuilding','pid'=>$building['pid'],'rid'=>$building['rid'],'bid'=>$building['id'])).$mywe['direct'];}" data-title="{php echo $v['title'].$building['title'];}房产&账单"  onclick="myopen(this)" >
+							<div style="color:#cc9900;margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" ><i class="fa fa-building"></i> {$building['title']}</div>
+							<p >房屋数量：<font style="color:#ff9900;">{$building['houses']}</font></p>
+							<p >绑定人次：<font style="color:#ff6600;">{$building['members']}</font></p>
+							{if floatval($building['fees'])>0}
+							<p style="color:#ff3300;">欠费：{php echo empty($building['fees'])?0:$building['fees'];}</p>											
+							{else}
+							<p style="color:#999;">暂无欠费</p>	
+							{/if}
+							</a>																			
+						</span>	
+						</li>
+					{/loop}	
+				</ul>
+			</td></tr>
+			{if $v['location_list'] || $v['carlocation_list']}
+			<tr><td>				
+				<ul class="desktop_university">			
+					{loop $v['location_list'] $location}				
+						<li class="{if $location['fees']>0}bg-danger{else}bg-info{/if}" >
+						<span class="pull-left" style="position:relative;">				      
+							<a href="javascript:;" data-href="{php echo $this->createWeburl('feeb',array('op'=>'fromlocation','pid'=>$location['pid'],'rid'=>$location['rid'],'lid'=>$location['id'])).$mywe['direct'];}" data-title="{php echo $v['title'].$location['title'];}商铺&账单"  onclick="myopen(this)" >
+							<div style="color:#00A8D2;margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" ><i class="fa fa-university"></i> {$location['title']}</div>
+							<p >商铺数量：<font style="color:#ff9900;">{$location['houses']}</font></p>
+							<p >绑定人次：<font style="color:#ff6600;">{$location['members']}</font></p>
+							{if floatval($location['fees'])>0}
+							<p style="color:#ff3300;">欠费：{php echo empty($location['fees'])?0:$location['fees'];}</p>											
+							{else}
+							<p style="color:#999;">暂无欠费</p>	
+							{/if}
+							</a>																			
+						</span>	
+						</li>
+					{/loop}	
+					{loop $v['carlocation_list'] $carlocation}				
+						<li class="{if $carlocation['fees']>0 || $carlocation['pcount']>0}bg-danger{else}bg-info{/if}" >
+						<span class="pull-left" style="position:relative;">				      
+							<a href="javascript:;" data-href="{php echo $this->createWeburl('feeb',array('op'=>'fromparking','pid'=>$carlocation['pid'],'rid'=>$carlocation['rid'],'lid'=>$carlocation['id'])).$mywe['direct'];}" data-title="{$carlocation['title']}车位&账单"  onclick="myopen(this)" >
+							<div style="color:#FF66CC;margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" ><i class="fa fa-car"></i> {$carlocation['title']}</div>							
+							<p >车位数量：<font style="color:#ff9900;">{$carlocation['houses']}</font></p>
+							<p >已租数量：<font style="color:#ff6600;">{$carlocation['members']}</font></p>
+							{if floatval($carlocation['pcount'])>0}
+								<p style="color:#ff3300;">30天将到期：{php echo empty($carlocation['pcount'])?0:$carlocation['pcount'];}</p>											
+							{else}
+								{if floatval($carlocation['fees'])>0}
+								<p style="color:#ff3300;">欠费：{php echo empty($carlocation['fees'])?0:$carlocation['fees'];}</p>	
+								{else}
+								<p style="color:#999;">30天暂无到期</p>	
+								{/if}
+							{/if}
+							</a>																			
+						</span>	
+						</li>
+					{/loop}	
+				</ul>
+			</td></tr>
+		{/if}
+		</tbody>
+	</table>
+	</div>
+	{/loop}
+	</div>
+</div>
+{template 'web/_iframe_footer'}
+{if !empty($pager)}
+	{template 'web/_bottom1'}
+{/if}
+<script type="text/javascript">
+
+function myopen(obj){	
+	parent.Hui_admin_tab(obj);	
+}
+
+function doorcheck(obj,pid,rid){
+	layer.confirm('确定要检查门禁状态吗？',{icon: 3, title:'提示'},
+		function(index){
+			layer.close(index);
+			var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/>';
+			$(obj).html(html);  
+			$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+				{ op:"doorcheck",pid:pid,rid:rid},
+				function(data,status){
+				 $("#offlines").html(data);	
+				 $(obj).html('<i class="fa fa-refresh" style="color:green;"></i>');
+			});	
+		});
+}
+
+function doortest(obj,pid,rid){
+	layer.confirm('确定要测试开门吗？',{icon: 3, title:'提示'},
+		function(index){
+			layer.close(index);
+			var html = '&nbsp;<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/>';
+			$(obj).html(html);  
+			$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+				{ op:"doortest",pid:pid,rid:rid},
+				function(data,status){
+				 layer.msg('成功打开'+ data + '个门',{icon:0});
+				 $(obj).html('&nbsp;<i class="fa fa-columns" style="color:green;"></i>');
+			});	
+	});
+}
+
+function myregion(){  
+	var url = "{php echo $this->createWeburl('desktop',array('op'=>'region')).$mywe['direct'];}";	
+	var title = "<i class='fa fa-hand-o-right'></i> 请选择所属主体";
+	var index = layer.open({
+   	    type: 2,
+		title:title,
+		content: url,
+		area: ['600px','600px'],
+		maxmin: true
+	});
+	layer.full(index);
+}
+
+function myroominfo(pid,rid){  
+	var url = "{php echo $this->createWeburl('room',array('op'=>'info','from'=>'desktop')).$mywe['direct'];}" + "&pid=" + pid +  "&rid=" + rid;	
+	var title = "<i class='fa fa-hand-o-right'></i> 房屋相关信息";
+	var index = layer.open({
+   	    type: 2,
+		title:title,
+		content: url,
+		area: ['600px','600px'],
+		maxmin: true
+	});
+	layer.full(index);
+}
+
+{if !empty($pager)}
+	$("#regionbody").height($(window).height()- 290);
+{else}
+	$("#regionbody").height($(window).height()- 260);
+{/if}
+</script>
+</body>
+</html>

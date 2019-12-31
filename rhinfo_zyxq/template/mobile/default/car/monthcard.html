@@ -1,0 +1,143 @@
+{template $this->mytpl('_bheader')}
+{if !empty($this->syscfg['btncolor'])}
+    <style>
+		#btnSubmit {
+			background-color:{php echo $this->syscfg['btncolor'];};
+			border: 1px solid {php echo $this->syscfg['btncolor'];};
+		}
+		#btnSubmit:active,
+		#btnSubmit.disabled {
+			background: {php echo $this->syscfg['btncolor'];};			
+			border: 1px solid {php echo $this->syscfg['btncolor'];};
+			opacity:0.5;
+		}
+    </style>
+{/if}
+<style>
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+.fui-list-group:not(.fui-list-group-o):before {border-top:0px;}
+.fui-list-group:not(.fui-list-group-o):after {border-top:0px;}
+</style>
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back" ></a>
+		</div>
+		<div class="title">办理月卡</div>
+		<div class="fui-header-right">&nbsp;</div>
+	</div>
+	
+	<div class='fui-content'>
+		<div class="fui-list-group">
+			<a class='fui-list' id="parkid" href="{php echo $this->createMobileUrl($mydo,array('op'=>'parklist','cfrom'=>2));}" data-parkid="{$park['id']}" data-nocache="true">
+				<div class='fui-list-inner'>
+					<div class="title">{$park['title']}</div>
+					<div class="subtitle">{$park['address']}</div>
+				</div>
+				<div class="fui-list-angle">
+					<div class='angle'></div>
+				</div>
+			</a>			
+		</div>		
+		<div class="fui-title" {if $park['parktype']==2}style="display:none;"{/if}><i class="icon icon-taxi"> 车牌号码</i></div>
+		<div class="fui-cell-group" {if $park['parktype']==2}style="display:none;"{/if}>
+			<div class="fui-cell">
+				<div class="car_input" data-pai="{$carno}">
+					<ul class="clearfix ul_input"><li class="input_pro"><span>{$cararr[0]}</span></li><li class="input_pp input_zim"><span>{$cararr[1]}</span></li><li class="input_pp"><span>{$cararr[2]}</span></li><li class="input_pp"><span>{$cararr[3]}</span></li><li class="input_pp"><span>{$cararr[4]}</span></li><li class="input_pp"><span>{$cararr[5]}</span></li><li class="input_pp"><span>{$cararr[6]}</span></li><li class="input_pp"><span style="background:#04ab02;color:#fff;">{$cararr[7]}</span></li></ul>
+				</div>					 
+			</div>
+			<div class="fui-cell-tip" >	绿色栏位为新能源牌照填写</div>
+			<div id="jp_pro"></div>				
+		</div>
+		
+		<div class="fui-cell-group">
+			<div class="fui-cell must">
+				<div class="fui-cell-label">手机号</div>
+				<div class="fui-cell-info"><input type="tel" class='fui-input' id='mobile' name='mobile' placeholder="请输入您的手机号"  value="{$user['mobile']}"  maxlength="11" /></div>				
+			</div>
+			<div class="fui-cell must">
+                <div class="fui-cell-label">真实姓名</div>
+                <div class="fui-cell-info">
+                    <input type="text" placeholder="请输入真实姓名" class="fui-input" value="{$user['realname']}" name='realname' id="realname" />
+                </div>
+            </div>	
+			{if $park['authentication']>0}
+			<div class="fui-cell must">
+                <div class="fui-cell-label">身份证号</div>
+                <div class="fui-cell-info">
+                    <input type="text" placeholder="请输入身份证号" class="fui-input" value="{$user['idcard']}" name='idcard' id="idcard" />
+                </div>
+            </div>	
+			<div class="fui-cell must">
+				<div class="fui-cell-label">验证码</div>
+				<div class="fui-cell-info"><input type="tel" class='fui-input' id='verifycode' name='verifycode' placeholder="5位验证码"  value="" maxlength="5" /></div>
+				<div class="fui-cell-remark noremark"><a class="btn btn-default btn-default-o btn-sm" id="btnCode">获取验证码</a></div>
+			</div>
+			{/if}
+			<div class="fui-cell" >
+				<div class="fui-cell-label">开始日期</div>
+				<div class="fui-cell-info"><input type="text"  class='fui-input'  id='startdate' name='startdate' placeholder="请选择日期"  value="{$startdate}" readonly /></div>
+			</div>	
+			<div class="fui-cell" >
+				<div class="fui-cell-label">结束日期</div>
+				<div class="fui-cell-info"><input type="text"  class='fui-input'  id='enddate' name='enddate' placeholder="请选择日期"  value="{$enddate}" readonly /></div>
+			</div>	
+			<div class="fui-cell">
+				<div class="fui-cell-label">月数</div>
+				<div class="fui-cell-info"></div>
+				<div class="fui-cell-mask noremark">
+					 <div class="fui-number">
+						<div class="minus">-</div>
+						<input class="num" type="tel" name="qty" id="qty" value="1" readonly />
+						<div class="plus ">+</div>
+					</div>
+				</div>
+			</div>
+			
+			{if $park['rechargmonths']>0 && $park['givemonths']>0}
+			<div class="fui-cell-tip" >	{$park['monthcardprice']}元/月，办理{$park['rechargmonths']}个月，赠送{$park['givemonths']}个月</div>
+			{else}
+			<div class="fui-cell-tip" >	{$park['monthcardprice']}元/月</div>
+			{/if}
+		</div>
+		<a id='weixin-btn' class='btn btn-success block btn-pay' >立即支付</a>
+		
+		<!--<a href='#' id='btnSubmit' class='btn btn-success block'>下一步</a>-->
+		<!--<div id="mypay-btn" style="display:none;">
+			{if $setting['payment']['wechat']['switch']==1 || !empty($this->syscfg['iswxpay'])}	
+				<div class='fui-list-group margin' id='weixin-btn'>      
+					 <div class='fui-list btn-pay'>
+						<div class='fui-list-media'>
+							 <img src="../addons/rhinfo_zyxq/static/mobile/images/wxpay.png" width="40" />
+						</div>
+						<div class='fui-list-inner'>
+							<div class="title">微信支付</div>
+							<div class="subtitle">微信安全支付</div>					
+						</div>
+						<div class='fui-list-angle'><span class="angle"></span></div>
+					</div>
+				</div>
+			{/if}	
+			{if $this->syscfg['isalipay']==2 && $_GPC['iswxapp']!=1 && $region['isalipay']==1}
+				<div class='fui-list btn-pay' id='alipay-btn'>
+					 <div class='fui-list-media'>
+					  <img src="../addons/rhinfo_zyxq/static/mobile/images/alipay.png" width="30" />
+					</div>
+					<div class='fui-list-inner'>
+						<div class="title">支付宝支付</div>
+						<div class="subtitle">支付宝安全支付</div>				
+					</div>
+					<div class='fui-list-angle'><span class="angle"></span></div>
+				</div>
+			{/if}
+		</div>-->		
+	</div>
+	<script language='javascript'>
+		require(['service/car'], function (modal) {
+		  	modal.initMonth({parkid:"{$park['id']}",parktype:"{$park['parktype']}",price:"{$park['monthcardprice']}",monthmethod:"{$park['monthmethod']}",authentication:"{$park['authentication']}",payfrom:"{php echo $this->rhinfo_isalipay==true?2:1;}"});
+		});	
+	</script>
+</div>
+{template $this->mytpl('_footer')}
+

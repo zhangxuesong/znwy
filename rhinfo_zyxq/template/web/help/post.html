@@ -1,0 +1,61 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:30px;">
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/form'}	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	var sid = $("#sid").find("option:selected").val();
+	var pid = $("#pid").find("option:selected").val(); 	
+    var title = $.trim($("#title").val());
+	
+    if (sid=='0') {
+	   layer.msg("帮助栏目不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (pid=='0') {
+	   layer.msg("帮助类别不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (title=='') {
+	   layer.msg("帮助主题不能为空！",{icon:0});
+	   return;
+	}
+	
+	{if $operation=='add'}
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'check')).$mywe['direct'];}",
+		{sid:sid,pid:pid},
+		function(data,status){
+			 if (data=='ok'){
+				myprocess(obj);
+				$("#myform").submit();	
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+				$(obj).html("提交");  
+				$(obj).attr("disabled", ""); 
+			 }
+		});	
+	{else}
+		myprocess(obj);
+		$("#myform").submit();	
+	{/if}
+}
+
+function myreturn(){
+	window.history.back();
+}
+</script> 
+
+</body>
+</html>

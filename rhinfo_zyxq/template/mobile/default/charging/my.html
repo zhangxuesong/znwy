@@ -1,0 +1,50 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-list-angle {
+   width:2rem;
+}
+</style>
+<div class="fui-page fui-page-current">
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">我的充电</div>
+        <div class="fui-header-right">
+		<a href="{php echo $this->CreateMobileUrl($mydo,array('op'=>'list'));}">充电</a>
+		</div>
+    </div>
+
+    <div class="fui-content">
+		<div class='fui-content-inner'>
+			<div class='content-empty' style='display:none;'>
+				<div class="empty-bg"><i class='icon icon-lights'></i></div>
+				<p>您还没有没有充过电</p>	               
+            </div>			
+			<div class='container'></div>	
+			<div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+        </div> 		
+    </div>
+	<script language='javascript'>
+		require(['charging/charging'], function (modal) {
+			modal.initMy();
+		});		
+	</script>
+</div>
+<script type="text/html" id="tpl_mycharging_list">
+	<%each list as row%>
+	  <div class="fui-list">
+		<div class="fui-list-inner">
+			<div class="subtitle"><%row.title%></div>						
+			<div class="text">充电小时：<%row.hour%>&nbsp;&nbsp;充电端口：<%row.port%></div>				
+			<div class="text">充电时间：<%row.ctime%></div>	
+		</div>	
+		<div class="fui-list-angle">
+		<div style="font-size:0.75rem;<%row.css%>"><%if row.restart==1%><a data-logid="<%row.id%>" class="btn-restart"><span class="text-warning"><%row.statustxt%></span></a><%else%><%row.statustxt%><%/if%></div>
+		</div>
+	</div>
+	<%/each%>
+	
+</script>
+
+{template $this->mytpl('_footer')}

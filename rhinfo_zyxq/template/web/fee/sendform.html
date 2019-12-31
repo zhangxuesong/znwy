@@ -1,0 +1,177 @@
+﻿
+<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+    <input type="hidden" name="sendtype" id="sendtype" value="{$_GPC['sendtype']}" />	
+	{if $_W['uid']} 
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"> <span class="text-danger">*</span>所属物业</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+				<option value="0">请选择所属物业</option>
+				{loop $myproperty $k $v}
+					<option value="{$v['id']}" >{$v['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>
+	{else}
+		<input type="hidden" class="form-control" id="pid" value="{$mywe['pid']}" name="pid" />
+	{/if}
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>所属主体</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="rid" name="rid" onchange="renderCategory(this,'building','bid')">
+				<option value="0">请选择所属主体</option>	
+				{if $_W['uid']} 
+				{else}					
+					{loop $regions $r}
+						<option value="{$r['id']}" >{$r['title']}</option>
+					{/loop}
+					
+				{/if}
+			</select>
+		</div>
+	</div>		
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">楼宇</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="bid" name="bid" onchange="renderCategory(this,'unit','tid')">
+				<option value="0">请选择楼宇</option>					
+			</select>
+			<span class="help-block">楼宇可为空，则为整个小区</span>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">单元</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="tid" name="tid" onchange="renderCategory(this,'room','roomid')">
+				<option value="0">请选择单元</option>							
+			</select>
+			<span class="help-block">单元可为空，则为整个楼宇</span>
+		</div>
+	</div>	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">选择房屋</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+			<!--效果html开始-->
+			<div class="selectbox">
+			<div class="select-bar">
+				<span class="text-warning">请选择房屋</span>
+				<select multiple="multiple" id="select1" class="form-control">				
+				</select>				
+			</div>
+
+			<div class="btn-bar">
+				<p><span id="add"><input type="button" class="btn" value=">" title="移动选择项到右侧"/></span></p>
+				<p><span id="add_all"><input type="button" class="btn" value=">>" title="全部移到右侧"/></span></p>
+				<p><span id="remove"><input type="button" class="btn" value="<" title="移动选择项到左侧"/></span></p>
+				<p><span id="remove_all"><input type="button" class="btn" value="<<" title="全部移到左侧"/></span></p>
+			</div>
+			<div class="select-bar">
+				<span class="text-success">已选择房屋</span>
+				<select multiple="multiple" id="select2" class="form-control">					
+				</select>				
+			</div>	
+			</div>
+			<!--效果html结束-->
+			<span class="help-block">房屋可为空，则为整个单元</span>
+			</div>				
+		</div>
+			
+		<input type="hidden" name="roomsid" id="roomsid" value="" />	
+			
+</form>	
+
+<script type="text/javascript">
+	window._region = {php echo json_encode($myregion);};				
+	window._building = {php echo json_encode($mybuilding);};
+	window._unit = {php echo json_encode($myunit);};
+	window._room = {php echo json_encode($myroom);};
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择</option>';			
+			if (id=='rid'){
+				$("#bid").html(html);
+				$("#tid").html(html);
+				$("#select1").html('');
+				$("#select2").html('');
+			}
+			else if (id=='bid'){
+				$("#tid").html(html);
+				$("#select1").html('');
+				$("#select2").html('');
+			}
+			else if(id=='tid'){
+				$("#select1").html('');
+				$("#select2").html('');
+			}
+			else if(id=='roomid'){
+				html ='';
+				$selectChild = $("#select1");
+			}
+
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}	
+
+			$selectChild.html(html);
+		});
+	}
+
+	$(function(){	
+	//移到右边
+	$('#add').click(function(){
+		//先判断是否有选中
+		if(!$("#select1 option").is(":selected")){			
+			layer.msg("请选择需要移动的选项",{icon:0})
+		}
+		//获取选中的选项，删除并追加给对方
+		else{
+			$('#select1 option:selected').appendTo('#select2');
+		}	
+	});
+	
+	//移到左边
+	$('#remove').click(function(){
+		//先判断是否有选中
+		if(!$("#select2 option").is(":selected")){			
+			layer.msg("请选择需要移动的选项",{icon:0})
+		}
+		else{
+			$('#select2 option:selected').appendTo('#select1');
+		}
+	});
+	
+	//全部移到右边
+	$('#add_all').click(function(){
+		//获取全部的选项,删除并追加给对方
+		$('#select1 option').appendTo('#select2');
+	});
+	
+	//全部移到左边
+	$('#remove_all').click(function(){
+		$('#select2 option').appendTo('#select1');
+	});
+	
+	//双击选项
+	$('#select1').dblclick(function(){ //绑定双击事件
+		//获取全部的选项,删除并追加给对方
+		$("option:selected",this).appendTo('#select2'); //追加给对方
+	});
+	
+	//双击选项
+	$('#select2').dblclick(function(){
+		$("option:selected",this).appendTo('#select1');
+	});
+	
+});
+</script>

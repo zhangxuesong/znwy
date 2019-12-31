@@ -1,0 +1,140 @@
+﻿{loop $mymenus $i $m}
+<div class="panel panel-default" style="margin-top:-15px">
+	<div class="panel-heading">
+		<label class="checkbox-inline">
+			<input type="checkbox" name="menus" class='perm-all' value="{$m['id']}" data-group="{$m['id']}" {if $m['sys']==1} checked {/if}><b>{$m['title']}</b>
+		</label>
+	</div>
+    <table class="table">
+	{loop $m['submenus'] $k $v}
+		 <tr>
+			<td>	 			
+				<label class="checkbox-inline">
+				&nbsp;&nbsp;<input type="checkbox" class="perm-sub" name="prgs" value="{$v['sid']}.{$v['id']}" data-group="{$v['sid']}" data-child="{$v['id']}" {if $v['prg']==1} checked {/if}><b>{$v['title']}</b></label>									
+				{if $v['add']==1}
+				<label class='checkbox-inline'>
+					<input type="checkbox" class="perm-item" name="perms" value="{$v['id']}.add" data-group="{$v['sid']}" data-child="{$v['id']}" {if $v['rights']['add']==1} checked {/if} >新增</label>
+				{/if}
+				{if $v['edit']==1}
+				<label class='checkbox-inline'>
+					<input type="checkbox" class="perm-item" name="perms" value="{$v['id']}.edit" data-group="{$v['sid']}" data-child="{$v['id']}" {if $v['rights']['edit']==1} checked {/if}>编辑</label>
+				{/if}
+				{if $v['delete']==1}
+				<label class='checkbox-inline'>
+					<input type="checkbox" class="perm-item" name="perms" value="{$v['id']}.delete" data-group="{$v['sid']}" data-child="{$v['id']}" {if $v['rights']['delete']==1} checked {/if}>删除</label>
+				{/if}
+				{if $v['export']==1}
+				<label class='checkbox-inline'>
+					<input type="checkbox" class="perm-item" name="perms" value="{$v['id']}.export" data-group="{$v['sid']}" data-child="{$v['id']}" {if $v['rights']['export']==1} checked {/if}>导出</label>
+				{/if}
+				{if $v['query']==1}
+				<label class='checkbox-inline'>
+					<input type="checkbox" class="perm-item" name="perms" value="{$v['id']}.query" data-group="{$v['sid']}" data-child="{$v['id']}" {if $v['rights']['query']==1} checked {/if}>查询</label>
+				{/if}
+				{if $v['view']==1}
+				<label class='checkbox-inline'>
+					<input type="checkbox" class="perm-item" name="perms" value="{$v['id']}.view" data-group="{$v['sid']}" data-child="{$v['id']}" {if $v['rights']['view']==1} checked {/if}>浏览</label>
+				{/if}
+				{if $v['print']==1}
+				<label class='checkbox-inline'>
+					<input type="checkbox" class="perm-item" name="perms" value="{$v['id']}.print" data-group="{$v['sid']}" data-child="{$v['id']}" {if $v['rights']['print']==1} checked {/if}>打印</label>
+				{/if}
+				{if $v['enabled']==1}
+				<label class='checkbox-inline'>
+					<input type="checkbox" class="perm-item" name="perms" value="{$v['id']}.enabled" data-group="{$v['sid']}" data-child="{$v['id']}" {if $v['rights']['enabled']==1} checked {/if}>禁用</label>
+				{/if}
+				{if $v['audit']==1}
+				<label class='checkbox-inline'>
+					<input type="checkbox" class="perm-item" name="perms" value="{$v['id']}.audit" data-group="{$v['sid']}" data-child="{$v['id']}" {if $v['rights']['audit']==1} checked {/if}>审核</label>
+				{/if}
+				{if $v['other1']==1}
+					{if $v['name1']=='广告' && empty($_W['uid'])}
+					{else}
+					<label class='checkbox-inline'>
+						<input type="checkbox" class="perm-item" name="perms" value="{$v['id']}.other1" data-group="{$v['sid']}" data-child="{$v['id']}" {if $v['rights']['other1']==1} checked {/if} >{$v['name1']}</label>
+					{/if}
+				{/if}
+				{if $v['other2']==1}
+					<label class='checkbox-inline'>
+					<input type="checkbox" class="perm-item" name="perms" value="{$v['id']}.other2" data-group="{$v['sid']}" data-child="{$v['id']}" {if $v['rights']['other2']==1} checked {/if} >{$v['name2']}</label>
+				{/if}
+				{if $v['other3']==1}
+				<label class='checkbox-inline'>
+					<input type="checkbox" class="perm-item" name="perms" value="{$v['id']}.other3" data-group="{$v['sid']}" data-child="{$v['id']}" {if $v['rights']['other3']==1} checked {/if} >{$v['name3']}</label>
+				{/if}
+				{if $v['other4']==1}
+					{if $v['name4']=='支付导航广告' && empty($_W['uid'])}
+					{else}
+					<label class='checkbox-inline'>
+						<input type="checkbox" class="perm-item" name="perms" value="{$v['id']}.other4" data-group="{$v['sid']}" data-child="{$v['id']}" {if $v['rights']['other4']==1} checked {/if} >{$v['name4']}</label>
+					{/if}
+				{/if}
+				{if $v['other5']==1}
+				<label class='checkbox-inline'>
+					<input type="checkbox" class="perm-item" name="perms" value="{$v['id']}.other5" data-group="{$v['sid']}" data-child="{$v['id']}" {if $v['rights']['other5']==1} checked {/if} >{$v['name5']}</label>
+				{/if}
+			</td>
+		</tr>
+		{/loop}
+	</table>
+</div>
+{/loop}
+
+<script type="text/javascript">
+
+ $(function(){
+	$('.perm-all').click(function(){
+		var checked = $(this).get(0).checked;			
+		var group = $(this).data('group');
+		$(".perm-item[data-group='" + group + "']").each(function(){
+			$(this).get(0).checked = checked;
+		})
+		$(".perm-sub[data-group=" + group + "]").each(function(){
+			$(this).get(0).checked = checked;
+		})
+	})
+	
+	$('.perm-sub').click(function(){
+		var checked = $(this).get(0).checked;
+		var group = $(this).data('group');			
+		var child = $(this).data('child');
+		var check = false;
+		$(".perm-item[data-child='" + child + "']").each(function(){
+			$(this).get(0).checked = checked;
+		})
+		
+		$(".perm-sub[data-group='" +group + "']").each(function(){
+			if($(this).get(0).checked){
+				 check = true;
+				 return false;
+			}
+		})			
+		$(".perm-all[data-group=" + group + "]").get(0).checked = check;
+	})
+	
+	$('.perm-item').click(function(){
+		var checked = $(this).get(0).checked;
+		var group = $(this).data('group'); 
+		var child = $(this).data('child');			
+		var check = false;
+
+		$(".perm-item[data-child='" + child + "']").each(function(){
+		  if($(this).get(0).checked){
+			   check = true;
+			   return false;
+			}
+		});
+	   $(".perm-sub[data-child=" + child + "]").get(0).checked = check;
+	   
+	   $(".perm-sub[data-group='" + group + "']").each(function(){
+		  if($(this).get(0).checked){
+			   check = true;
+			   return false;
+			}
+		});
+	   $(".perm-all[data-group=" + group + "]").get(0).checked = check;
+		
+	});
+ });
+	
+</script> 

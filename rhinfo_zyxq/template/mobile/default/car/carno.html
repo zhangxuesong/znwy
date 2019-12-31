@@ -1,0 +1,65 @@
+{template $this->mytpl('_bheader')}
+{if !empty($this->syscfg['btncolor'])}
+    <style>
+		#btnSubmit {
+			background-color:{php echo $this->syscfg['btncolor'];};
+			border: 1px solid {php echo $this->syscfg['btncolor'];};
+		}
+		#btnSubmit:active,
+		#btnSubmit.disabled {
+			background: {php echo $this->syscfg['btncolor'];};			
+			border: 1px solid {php echo $this->syscfg['btncolor'];};
+			opacity:0.5;
+		}
+    </style>
+{/if}
+<style>
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+.fui-list-group:not(.fui-list-group-o):before {border-top:0px;}
+.fui-list-group:not(.fui-list-group-o):after {border-top:0px;}
+</style>
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back" ></a>
+		</div>
+		<div class="title">停车缴费</div>
+		<div class="fui-header-right">
+		&nbsp;
+		</div>
+	</div>
+	
+	<div class='fui-content'>
+		<div class="fui-list-group">
+			<a class='fui-list' id="parkid" href="{php echo $this->createMobileUrl($mydo,array('op'=>'parklist'));}" data-parkid="{$park['id']}" data-nocache="true">
+				<div class='fui-list-inner'>
+					<div class="title">{$park['title']}</div>
+					<div class="subtitle">{$park['address']}</div>
+				</div>
+				<div class="fui-list-angle">
+					<div class='angle'></div>
+				</div>
+			</a>			
+		</div>
+		<div class="fui-title"><i class="icon icon-taxi"> 车牌号码</i></div>
+		<div class="fui-cell-group">
+			<div class="fui-cell">
+				<div class="car_input">
+					<ul class="clearfix ul_input"><li class="input_pro"><span></span></li><li class="input_pp input_zim"><span></span></li><li class="input_pp"><span></span></li><li class="input_pp"><span></span></li><li class="input_pp"><span></span></li><li class="input_pp"><span></span></li><li class="input_pp"><span></span></li><li class="input_pp"><span style="background:#04ab02;color:#fff;"></span></li></ul>
+				</div>					 
+			</div>
+			<div class="fui-cell-tip" >	绿色栏位为新能源牌照填写</div>
+			<div id="jp_pro"></div>				
+		</div>
+		<a href='#' id='btnSubmit' class='btn btn-success block'>下一步</a>
+		<a href="{php echo $this->createMobileUrl($mydo,array('op'=>'parkio','lotid'=>$park['id']));}" class='btn btn-warning-o block'>无牌车</a>
+	</div>
+	<script language='javascript'>
+		require(['service/car'], function (modal) {
+		  	modal.initCarno();
+		});	
+	</script>
+</div>
+{template $this->mytpl('_footer')}
+

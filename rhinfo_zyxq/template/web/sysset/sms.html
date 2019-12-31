@@ -1,0 +1,180 @@
+﻿<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定验证</label>
+	<div class="col-sm-7 col-lg-8 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="bindverify" value="1" {if empty($item['bindverify']) || $item['bindverify']==1 } checked{/if} /> 验证</label>
+		<label  class="radio-inline">
+			<input type="radio" name="bindverify" value="2" {if $item['bindverify']==2 } checked{/if} /> 不验证</label>
+		<span class="help-block">验证为手机短信验证，请设置短信验证码模板.此处为总开关，小区还需单独开启.</span>			
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">邀请验证</label>
+	<div class="col-sm-7 col-lg-8 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="shareverify" value="1" {if empty($item['shareverify']) || $item['shareverify']==1 } checked{/if} /> 验证</label>
+		<label  class="radio-inline">
+			<input type="radio" name="shareverify" value="2" {if $item['shareverify']==2 } checked{/if} /> 不验证</label>
+		<span class="help-block">验证为手机短信验证，请设置短信验证码模板.此处为总开关，小区还需单独开启.</span>			
+	</div>
+</div>
+ <div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">短信价格</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<div class="input-group">
+			   <input type="number" name="smsprice" class="form-control" value="{php echo empty($item['smsprice'])?0:$item['smsprice'];}" />
+			   <span class="input-group-addon">元/条</span>
+			</div>
+			<span class="help-block">短信充值单价，用于物业使用短信充值服务</span>
+	   </div>
+	</div>	
+<div class="form-group">
+	<label class="col-sm-2 col-md-2 col-xs-12 control-label">短信服务商</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="smstype" value="1" id="sms1" {if empty($item['smstype']) || $item['smstype']==1 } checked{/if} />聚合数据</label>
+		<label  class="radio-inline" style="display:none;">
+			<input type="radio" name="smstype" value="2" id="sms2" {if $item['smstype']==2 } checked{/if} /> 阿里大于</label>	
+		<label  class="radio-inline">
+			<input type="radio" name="smstype" value="3" id="sms3" {if $item['smstype']==3 } checked{/if} /> 阿里云短信</label>	
+        <label  class="radio-inline">
+			<input type="radio" name="smstype" value="4" id="sms4" {if $item['smstype']==4 } checked{/if} /> 阿里云通信</label>				
+	</div>
+</div>			
+
+<div id="juhe">
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">AppKey</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="appkey" value="{$item['appkey']}" placeholder="输入App Key" name="appkey">
+			<span class="help-block">请填写聚合数据AppKey<a href="https://www.juhe.cn/" target="_blank">&nbsp;&nbsp;申请</a></span>
+		</div>	
+	</div>
+</div>
+<div id="alidayu">
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">App Key</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="app_key" value="{$item['app_key']}" placeholder="输入App Key" name="app_key">
+			<span class="help-block">请填写阿里大于App Key&nbsp;&nbsp;已暂停申请，老用户可用</span>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">App serve</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="app_serve" value="{$item['app_serve']}" placeholder="输入App Serve" name="app_serve">
+			<span class="help-block">请填写阿里大于App Serve&nbsp;&nbsp;已暂停申请，老用户可用</span>
+	</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">签名</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="signname" value="{$item['signname']}" placeholder="输入阿里大于中的签名" name="signname">
+			<span class="help-block">必须与阿里大地申请的签名保持一致</span>
+		</div>	
+	</div>
+</div>
+
+<div id="alisms">
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">App code</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="app_code" value="{$item['app_code']}" placeholder="输入App Code" name="app_code">
+			<span class="help-block">请填写阿里云短信App code<a href="https://market.aliyun.com/products/57002003/cmapi011900.html" target="_blank">&nbsp;&nbsp;申请</a></span>
+		</div>	
+	</div>	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">签名</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="alisignname" value="{$item['alisignname']}" placeholder="输入阿里云短信中的签名" name="alisignname">
+			<span class="help-block">必须与阿里云短信申请的签名保持一致</span>
+		</div>	
+	</div>
+</div>
+
+<div id="alicom">
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">Access Key ID</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="access_key_id" value="{$item['access_key_id']}" placeholder="输入access key" name="access_key_id">
+			<span class="help-block">请填写阿里云通信Access Key ID<a href="https://ak-console.aliyun.com" target="_blank">&nbsp;&nbsp;申请</a></span>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">Access Key Secret</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="access_key_secret" value="{$item['access_key_secret']}" placeholder="输入access key secret" name="access_key_secret">
+			<span class="help-block">请填写阿里云通信Access Key Secret<a href="https://ak-console.aliyun.com" target="_blank">&nbsp;&nbsp;申请</a></span>
+		</div>	
+	</div>		
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">签名</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="aliaccsignname" value="{$item['aliaccsignname']}" placeholder="输入阿里云通信中的签名" name="aliaccsignname">
+			<span class="help-block">必须与阿里云通信申请的签名保持一致</span>
+		</div>	
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">验证码模板</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="verifyid" value="{$item['verifyid']}" placeholder="输入验证码模板ID" name="verifyid">
+		<span class="help-block" id="verifyidtxt">验证码模板ID参考格式:【签名】您的验证码是#code#,如非本人操作,请忽略本短信.</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">缴费模板</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="feeid" value="{$item['feeid']}" placeholder="输入物业缴费模板ID" name="feeid">
+		<span class="help-block" id="feeidtxt" >物业缴费模板ID参考格式:【签名】尊敬的#name#业主及住户,您最新物业账单已出.待交费周期:#daterange#,累计物业费金额#money#.请尽快缴纳,如有疑问,请咨询#phone#.</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">通知模板</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="noticeid" value="{$item['noticeid']}" placeholder="输入报修模板ID" name="noticeid">
+		<span class="help-block" id="noticeidtxt">通知模板ID参考格式:【签名】物业通知:#title#,尊敬的#name#业主及住户,#content#,联系电话:#phone#.</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">挪车模板</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="movecarid" value="{$item['movecarid']}" placeholder="输入挪车模板ID" name="movecarid">
+		<span class="help-block" id="movecaridtxt">挪车模板ID参考格式:【签名】尊敬的#name#业主及住户,您的爱车#content#需要挪一下,谢谢,联系电话:#phone#.</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">报修模板</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="repairid" value="{$item['repairid']}" placeholder="输入报修模板ID" name="repairid">
+		<span class="help-block" id="repairidtxt">报修模板ID参考格式:【签名】新报修信息:#content#,联系电话:#phone#.</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">投诉模板</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="suggestid" value="{$item['suggestid']}" placeholder="输入投诉建议模板ID" name="suggestid">
+		<span class="help-block" id="suggestidtxt">投诉建议模板ID参考格式:【签名】新投诉建议信息:#content#,联系电话:#phone#.</span>
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">快递取件</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="expressid" value="{$item['expressid']}" placeholder="输入快递取件ID" name="expressid">
+		<span class="help-block" id="expressidtxt">快递取件ID参考格式:【签名】您的快件已经到达#store#，提取码为#ordersn#.</span>
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">快递寄件</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="expresssendid" value="{$item['expresssendid']}" placeholder="输入快递寄件ID" name="expresssendid">
+		<span class="help-block" id="expresssendidtxt">快递寄件ID参考格式:【签名】新的寄件已经到达#store#，寄件信息:#content#.</span>
+	</div>	
+</div>

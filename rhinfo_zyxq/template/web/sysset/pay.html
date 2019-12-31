@@ -1,0 +1,395 @@
+﻿   <div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">支付设置说明</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			 <div class="alert alert-info" role="alert"> 
+			 <span class="text-danger">请在公众平台->微信支付->公众号支付 追加支付授权目录: {php echo $_W['siteroot'].'app/';}</span>
+			 <br>注: 微信支付相关证书用于企业付款和现金红包发放，如不需要使用证书则不必上传。如需对接支付宝生活缴费，请上传RSA2私钥证书。</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">系统支付</label>
+		<div class="col-sm-7 col-lg-8 col-xs-12">
+			<label class="radio-inline">
+				<input type="radio" name="iswepay" value="0" {if empty($item['iswepay']) || $item['iswepay']==0 } checked{/if} /> 不启用</label>
+			<label  class="radio-inline">
+				<input type="radio" name="iswepay" value="1" {if $item['iswepay']==1 } checked{/if} /> 启用</label>
+			<span class="help-block">启用后，物业模块相关支付将失效，统一使用系统支付.</span>			
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">微信支付</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+				<label class="radio-inline">
+				<input type="radio" name="iswxpay" value="1" id="wxapppay" {if $item['iswxpay']==1 } checked{/if} />公众号支付</label>
+				<label  class="radio-inline">
+				<input type="radio" name="iswxpay" value="2" id="wxserviceapppay" {if $item['iswxpay']==2 } checked{/if} />服务商支付</label>
+				<label  class="radio-inline">
+				<input type="radio" name="iswxpay" value="3" id="ymfpay" {if $item['iswxpay']==3 } checked{/if} /> 一码支付</label>
+				<label  class="radio-inline">
+				<input type="radio" name="iswxpay" value="4" id="rsdpay" {if $item['iswxpay']==4 } checked{/if} />银行通道R</label>
+				<label  class="radio-inline">
+				<input type="radio" name="iswxpay" value="5" id="starpay" {if $item['iswxpay']==5 } checked{/if} />银行通道S</label>
+		</div>
+	</div>
+	<div id="wxpay1">
+		<div class="form-group" >
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">公众号APPID</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<input type="text" class="form-control" id="appid" value="{$item['appid']}" placeholder="输入公众号APPID" name="appid">
+				<span class="help-block">请开通公众号支付</span>
+			</div>		
+		</div>
+		 <div class="form-group">
+			<label class="col-xs-12 col-sm-3 col-md-2 control-label">公众号AppSecret</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" name="secret" id="secret" class="form-control" placeholder="输入公众号AppSecret" value="{$item['secret']}" />
+			</div>
+		</div>
+		<div class="form-group" >
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">商户号</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<input type="text" class="form-control" id="merchid" value="{$item['merchid']}" placeholder="输入商户号" name="merchid">
+			</div>		
+		</div>
+		 <div class="form-group">
+			<label class="col-xs-12 col-sm-3 col-md-2 control-label">商户密钥</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<div class="input-group">
+					<input type="text" name="merchsecret" id="merchsecret" class="form-control" maxlength="32" value="{$item['merchsecret']}" autocomplete="off"/>
+					<span onclick="tokenGen('merchsecret');" style="cursor:pointer" class="input-group-addon">生成新的</span>
+				</div>
+				<span class="help-block">此商户秘钥为商户对应的支付秘钥。</span>
+			</div>
+		</div>
+	</div>
+	<div id="wxpay2">
+		<div class="form-group" >
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">服务商公众号APPID</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<input type="text" class="form-control" id="serviceappid" value="{$item['serviceappid']}" placeholder="输入服务商公众号APPID" name="serviceappid">
+				<span class="help-block">请开通服务商支付</span>
+			</div>		
+		</div>
+		 <div class="form-group">
+			<label class="col-xs-12 col-sm-3 col-md-2 control-label">服务商公众号AppSecret</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" name="serviceappsecret" id="serviceappsecret" class="form-control" placeholder="输入服务商公众号AppSecret" value="{$item['serviceappsecret']}" />
+			</div>
+		</div>
+		<div class="form-group" >
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">服务商户号</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<input type="text" class="form-control" id="servicemerchid" value="{$item['servicemerchid']}" placeholder="输入服务商户号" name="servicemerchid">
+			</div>		
+		</div>
+		 <div class="form-group">
+			<label class="col-xs-12 col-sm-3 col-md-2 control-label">服务商户密钥</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<div class="input-group">
+					<input type="text" name="servicemerchsecret" id="servicemerchsecret" class="form-control" maxlength="32" value="{$item['servicemerchsecret']}" autocomplete="off"/>
+					<span onclick="tokenGen('servicemerchsecret');" style="cursor:pointer" class="input-group-addon">生成新的</span>
+				</div>
+				<span class="help-block">此商户秘钥为服务商户对应的支付秘钥。</span>
+			</div>
+		</div>
+		<div class="form-group" >
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">特约商户号</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<input type="text" class="form-control" id="submerchid" value="{$item['submerchid']}" placeholder="输入特约商户号" name="submerchid">
+			<span class="help-block">服务商下申请的子商户号</span>
+			</div>	
+		</div>
+	</div>
+	<div id="wxpay4">		
+		<div class="form-group" >
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">商户号</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<input type="text" class="form-control" name="rsdmerchid" id="rsdmerchid" value="{$item['rsdmerchid']}" placeholder="输入商户号" >
+			</div>		
+		</div>
+		 <div class="form-group">
+			<label class="col-xs-12 col-sm-3 col-md-2 control-label">商户密钥</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<input type="text" class="form-control" name="rsdmerchsecret" id="rsdmerchsecret" value="{$item['rsdmerchsecret']}" placeholder="输入商户密钥"/>					
+				<span class="help-block">此商户秘钥为商户对应的支付秘钥。</span>
+			</div>
+		</div>
+	</div>
+	<div id="wxpay3">
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">商户号</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<input type="text" class="form-control" id="ymfmerchid" value="{$item['ymfmerchid']}" placeholder="输入商户号" name="ymfmerchid">
+				<span class="help-block">支付平台商户号.</span>
+			</div>		
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">接口地址</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<input type="text" class="form-control" id="ymfurl" value="{$item['ymfurl']}" placeholder="输入接口地址" name="ymfurl">
+				<span class="help-block">支付平台接口地址.</span>
+			</div>		
+		</div>
+		<div class="form-group" style="display:none">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">访问密钥</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<input type="text" class="form-control" id="ymfmerchsecret" value="{$item['ymfmerchsecret']}" placeholder="输入密钥" name="ymfmerchsecret">
+				<span class="help-block">支付平台访问密钥，不需要密钥则为空.</span>
+			</div>		
+		</div>
+	</div>
+	<div  id="wxpay5">
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">商户号</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<input type="text" class="form-control" id="starmerchid" value="{$item['starmerchid']}" placeholder="输入商户号" name="starmerchid">
+				<span class="help-block">支付平台商户号.</span>
+			</div>		
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">访问密钥</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<input type="text" class="form-control" id="starkey" value="{$item['starkey']}" placeholder="输入密钥" name="starkey">
+				<span class="help-block">支付平台访问密钥.</span>
+			</div>		
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">组织机构</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<input type="text" class="form-control" id="starorg" value="{$item['starorg']}" placeholder="输入组织机构" name="starorg">					</div>		
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">设备终端</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<input type="text" class="form-control" id="startrm" value="{$item['startrm']}" placeholder="输入设备终端" name="startrm">
+			</div>		
+		</div>
+	</div>
+		
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">apiclient_cert.pem 证书</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="file" id="apiclient_cert" class="form-control" title="请选择证书文件" name="apiclient_cert">
+			<span class="help-block">{if !empty($item['apiclient_cert'])}<mark>已上传此证书，可重新上传</mark>{else}从商户平台上下载支付证书, 解压并取得其中的
+              <mark>apiclient_cert.pem</mark>上传此文件{/if}</span>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">apiclient_key.pem 证书</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="file" id="apiclient_key" class="form-control" title="请选择证书文件" name="apiclient_key">
+			<span class="help-block">{if !empty($item['apiclient_key'])}<mark>已上传此证书，可重新上传</mark>{else}从商户平台上下载支付证书, 解压并取得其中的
+              <mark>apiclient_key.pem</mark>上传此文件{/if}</span>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">apiclient_cert.p12 证书</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="file" id="rootca" class="form-control" title="请选择证书文件" name="rootca">
+			<span class="help-block">{if !empty($item['rootca'])}<mark>已上传此证书，可重新上传</mark>{else}从商户平台上下载支付证书, 解压并取得其中的
+              <mark>apiclient_cert.p12</mark>上传此文件{/if}</span>
+		</div>	
+	</div>
+	
+	{if $this->syscfg['version']>'2.0'}
+			<div class="form-group" style="display:none;">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">支付宝支付</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<label class="radio-inline">
+					<input type="radio" name="isalipay" value="1" {if $item['isalipay']==1 } checked{/if} />微信禁用</label>
+					<label class="radio-inline">
+					<input type="radio" name="isalipay" value="2" {if $item['isalipay']==2 } checked{/if} />微信启用</label>
+					<label  class="radio-inline">
+					<input type="radio" name="isalipay" value="0" {if empty($item['isalipay']) || $item['isalipay']==0 } checked{/if} /> 不启用</label>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">支付宝类型</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+						<label class="radio-inline">
+						<input type="radio" name="alipay_type" value="0" {if empty($item['alipay_type'])} checked{/if} />依支付宝账号</label>
+						<label  class="radio-inline">
+						<input type="radio" name="alipay_type" value="1" {if $item['alipay_type']==1 } checked{/if} />依蚂蚁金服应用</label>
+						<label  class="radio-inline">
+						<input type="radio" name="alipay_type" value="2" {if $item['alipay_type']==2 } checked{/if} />依银行通道S</label>
+				</div>
+			</div>
+			
+			<div id="alipay" {if !empty($item['alipay_type'])}style="display:none;"{/if}> 
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label">支付宝账号</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="aliaccount" value="{$item['aliaccount']}" placeholder="输入企业支付宝账号" name="aliaccount">
+						<span class="help-block">如您没有支付宝帐号，<a href="https://memberprod.alipay.com/account/reg/enterpriseIndex.htm" target="_blank">请点击这里注册</a></span>
+					</div>	
+				</div>	
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label">合作者身份</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="alipartner" value="{$item['alipartner']}" placeholder="输入合作者身份" name="alipartner">
+						<span class="help-block">支付宝签约用户请在此处填写支付宝分配给您的合作者身份，签约用户的手续费按照您与支付宝官方的签约协议为准。<br>如果您还未签约，<a href="https://memberprod.alipay.com/account/reg/enterpriseIndex.htm" target="_blank">请点击这里签约</a>；如果已签约,<a href="https://b.alipay.com/order/pidKey.htm?pid=2088501719138773&amp;product=fastpay" target="_blank">请点击这里获取PID、Key</a>;如果在签约时出现合同模板冲突，请咨询0571-88158090</span>
+					</div>	
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label">校验密钥</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="alisecret" value="{$item['alisecret']}" placeholder="输入交易安全校验码" name="alisecret">
+						<span class="help-block">支付宝签约用户可以在此处填写支付宝分配给您的交易安全校验码，此校验码您到支付宝官方的商家服务功能处查看</span>
+					</div>
+				
+				</div>
+			</div>
+			<div id="aliapp" {if $item['alipay_type']==1}{else}style="display:none;"{/if}>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">支付宝应用appid</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="alipay_appid" value="{$item['alipay_appid']}" placeholder="输入支付宝应用appid" name="alipay_appid">
+						<span class="help-block">蚂蚁金服开放平台创建应用，<a href="https://open.alipay.com" target="_blank"><span class="text-danger">我要申请</span></a>.</span>
+					</div>		
+				</div>	
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">支付宝seller_id</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="alipay_seller_id" value="{$item['alipay_seller_id']}" placeholder="输入seller_id" name="alipay_seller_id">
+						<span class="help-block">如果该值为空，则默认为商户签约账号对应的支付宝用户ID 例如 : 2088102146225135 非支付宝账号.</span>
+					</div>		
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">支付宝授权token</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="alipay_app_auth_token" value="{$item['alipay_app_auth_token']}" placeholder="输入支付宝授权token" name="alipay_app_auth_token">
+						<span class="help-block">支付宝授权token,如果授权给其他用户,填写这项.</span>
+					</div>		
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">支付宝公钥PUBLIC_KEY</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<textarea class="form-control" name="alipay_rsa2" rows="6" id="alipay_rsa2" autocomplete="off">{$item['alipay_rsa2']}</textarea>	
+						<span class="help-block">蚂蚁服务开平台获取</span>
+					</div>	
+				</div>	
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">应用私钥PRIVATE_KEY</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<textarea class="form-control" name="alipay_private" rows="6" id="alipay_private" autocomplete="off">{$item['alipay_private']}</textarea>	
+						<span class="help-block">蚂蚁服务开平台获取</span>
+					</div>	
+				</div>	
+			</div>
+	{/if}
+<script type="text/javascript">
+	var iswxpay = "{$item['iswxpay']}";	 
+	if (iswxpay == '1'){	   
+	   $("#wxpay1").show();
+	   $("#wxpay2").hide();
+	   $("#wxpay3").hide();
+	   $("#wxpay4").hide();
+	   $("#wxpay5").hide();
+	}
+	else if(iswxpay == '2'){
+	   $("#wxpay1").hide();
+	   $("#wxpay2").show();
+	   $("#wxpay3").hide();
+	   $("#wxpay4").hide();
+	   $("#wxpay5").hide();
+	}
+	else if(iswxpay == '3'){
+	   $("#wxpay1").hide();
+	   $("#wxpay2").hide();
+	   $("#wxpay3").show();
+	   $("#wxpay4").hide();
+	   $("#wxpay5").hide();
+	}
+	else if(iswxpay == '4'){
+	   $("#wxpay1").hide();
+	   $("#wxpay2").hide();
+	   $("#wxpay3").hide();
+	   $("#wxpay4").show();
+	   $("#wxpay5").hide();
+	}
+	else if(iswxpay == '5'){
+	   $("#wxpay1").hide();
+	   $("#wxpay2").hide();
+	   $("#wxpay3").hide();
+	   $("#wxpay4").hide();
+	   $("#wxpay5").show();
+	}
+	else {
+	   $("#wxpay1").hide();
+	   $("#wxpay2").hide();
+	   $("#wxpay3").hide();
+	   $("#wxpay5").hide();
+	}
+	 
+	 $("input[name=iswxpay]").click(function(){	
+		  switch($("input[name=iswxpay]:checked").attr("id")){
+		  case "wxapppay":	
+			  $("#wxpay1").show();
+			  $("#wxpay2").hide();
+			  $("#wxpay3").hide();
+			  $("#wxpay4").hide();
+			  $("#wxpay5").hide();
+			   break;
+		  case "wxserviceapppay":			
+			   $("#wxpay1").hide();
+			  $("#wxpay2").show();
+			  $("#wxpay3").hide();
+			  $("#wxpay4").hide();
+			   $("#wxpay5").hide();
+			   break;	
+		   case "ymfpay":			
+			   $("#wxpay1").hide();
+			  $("#wxpay2").hide();
+			  $("#wxpay3").show();
+			  $("#wxpay4").hide();
+			   $("#wxpay5").hide();
+			   break;
+		  case "rsdpay":			
+			   $("#wxpay1").hide();
+			  $("#wxpay2").hide();
+			  $("#wxpay3").hide();
+			  $("#wxpay4").show();
+			   $("#wxpay5").hide();
+			   break;
+		   case "starpay":			
+			   $("#wxpay1").hide();
+			   $("#wxpay2").hide();
+			   $("#wxpay3").hide();
+			   $("#wxpay4").hide();
+			   $("#wxpay5").show();
+			   break;
+		  default:
+		   break;
+		}		
+	 });
+	
+	
+	$("input[name=alipay_type]").click(function(){	
+		 switch($("input[name=alipay_type]:checked").val()){
+		 case "0":	
+			$("#alipay").show();			
+			$("#aliapp").hide();
+			break;
+		 case "1":	
+			$("#alipay").hide();			
+			$("#aliapp").show();
+			break;
+		  default:
+			$("#alipay").hide();			
+			$("#aliapp").hide();
+			break;
+		}		
+	});
+	
+	function tokenGen(id) {
+		var letters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+		var token = '';
+		for(var i = 0; i < 32; i++) {
+			var j = parseInt(Math.random() * (31 + 1));
+			token += letters[j];
+		}
+		$('#'+id).val(token);
+	}
+	
+</script>

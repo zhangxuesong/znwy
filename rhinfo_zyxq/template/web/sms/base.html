@@ -1,0 +1,296 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<style type="text/css">
+.nav-tabs li a { padding: 3px 10px;}
+</style>
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body"> 
+	<ul class="nav nav-tabs">		 		  
+		  <li><a href="{php echo $this->createWeburl('category',array('op'=>'list','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >分类设置</a></li>		
+		   <li class="active"><a href="{php echo $this->createWeburl('sms',array('op'=>'base','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >基本设置</a></li>
+		   <li><a href="{php echo $this->createWeburl('sms',array('op'=>'fee','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >账单设置</a></li>
+		  {if !empty($_W['uid'])}<li><a href="{php echo $this->createWeburl('sms',array('op'=>'market','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >策略设置</a></li>{/if}
+		   <li><a href="{php echo $this->createWeburl('printer',array('op'=>'list','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >云打印机</a></li>
+		   <li><a href="{php echo $this->createWeburl('sms',array('op'=>'index','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >短信设置</a></li>
+		  {if !empty($_W['uid'])}<li><a href="{php echo $this->createWeburl('sms',array('op'=>'intelligence','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >智慧设置</a></li>{/if}
+		   <li><a href="{php echo $this->createWeburl('sms',array('op'=>'door','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >其他设置</a></li>
+	</ul>
+	<br>
+	<div class="tab-content">			
+		<div class="panel panel-default">	
+			<div class="panel-body ">
+				<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >		
+					<input type="hidden" name="token" value="{$_W['token']}" />			
+					<input type="hidden" name="pid" value="{$pid}" />		
+					<input type="hidden" name="rid" value="{$rid}" />
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">小区看板密码</label>
+						<div class="col-sm-8 col-lg-9 col-xs-12">
+							<input type="text" class="form-control" name="board_password" value="{$item['board_password']}" placeholder="输入看板密码" />					
+						</div>	
+					</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">是否强制绑定</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="forcebind" value="0" {if empty($item['forcebind']) || $item['forcebind']==0 } checked{/if} />不强制</label>
+							<label  class="radio-inline">
+								<input type="radio" name="forcebind" value="1" {if $item['forcebind']==1 } checked{/if} />强制</label>	
+							<span class="help-block">进入小区首页是否强制绑定房产</span>			
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定房产要求</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="register" id="resister0" value="0" {if empty($item['register']) || $item['register']==0 } checked{/if} />严格流程</label>
+							<label  class="radio-inline">
+								<input type="radio" name="register" id="resister1" value="1" {if $item['register']==1 } checked{/if} />宽松流程</label>
+							<label  class="radio-inline">
+								<input type="radio" name="register" id="resister2" value="2" {if $item['register']==2 } checked{/if} />自助注册</label>	
+							<span class="help-block">严格流程须物业登记房产及业主信息;宽松流程选择房产登记注册;自助注册为用户自由注册</span>			
+						</div>
+					</div>
+					 <div class="form-group" id="bindaudit" style="display:none;">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定微信</label>
+						<div class="col-sm-8 col-lg-9 col-xs-12">
+							<div class="input-group ">
+								<input type="hidden" class="form-control" id="uid" value="{$item['uid']}" readonly name="uid">
+								<input type="hidden" class="form-control" id="openid" value="{$item['openid']}" readonly name="openid">
+								<input type="text" class="form-control"  id="nickname" value="{$item['nickname']}" readonly name="nickname">
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="button" onclick="showFansDialog(this);">选择微信</button>
+								</span>
+							</div>
+							 <span class="help-block">宽松流程，接收新的绑定模板信息，并审核。</span>
+						</div>
+						<script type="text/javascript">
+							var registertype = "{$item['register']}";	
+							if (registertype=='0' || registertype == '' || registertype=='2'){
+							   $("#bindaudit").hide();
+							}
+
+							if (registertype=='1'){
+							   $("#bindaudit").show();
+							}
+								
+							 $("input[name=register]").click(function(){
+								  switch($("input[name=register]:checked").attr("id")){	
+								  case "resister1":												 
+									   $("#bindaudit").show();
+									   break;								
+								  default:
+										$("#bindaudit").hide();
+									   break;
+									}
+							 });
+							function showFansDialog(elm) {
+								require(['util', 'jquery'], function(u, $){
+									var footer = '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>';
+									var modalobj = u.dialog('粉丝选择', ["{php echo $this->createWeburl('query',array('op'=>'mfans')).$mywe['direct'];}"], footer, {containerName:'link-container'});
+									modalobj.find('.modal-body').css({'overflow-y':'auto' });
+									modalobj.modal('show');
+									});
+							}
+						</script>
+					</div>				
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定注册图片</label>
+						<div class="col-sm-8 col-lg-9 col-xs-12">
+							{php echo tpl_form_field_image('regbanner',$item['regbanner']);}
+							<span class="help-block">绑定注册头部图片，建议尺寸640*320，为空则取物业设置的绑定注册图片</span>
+						</div>	
+					</div>
+					
+					<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定图片链接</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+					{if !empty($_W['uid'])}
+						<div class="input-group ">
+							<input type="text" class="form-control" id="regbannerurl" value="{$item['regbannerurl']}" placeholder="输入链接地址" name="regbannerurl">
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="button" onclick="showLinkDialog(this);">系统链接</button>
+							</span>
+						</div>
+					{else}
+						<input type="text" class="form-control" id="regbannerurl" value="{$item['regbannerurl']}" placeholder="输入链接地址" name="regbannerurl">
+					{/if}
+						<span class="help-block">外部链接请包含http://</span>
+					</div>	
+				</div>	
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定第三方验证</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="thirdauth"  value="0" {if empty($item['thirdauth']) || $item['thirdauth']==0 } checked{/if} />无</label>
+							<label  class="radio-inline">
+								<input type="radio" name="thirdauth"  value="1" {if $item['thirdauth']==1 } checked{/if} />江苏银行</label>
+							<span class="help-block">绑定房产第三方验证客制化，无需开启</span>			
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">第三方引导链接</label>
+						<div class="col-sm-8 col-lg-9 col-xs-12">
+						{if !empty($_W['uid'])}
+							<div class="input-group ">
+								<input type="text" class="form-control" id="thirdurl" value="{$item['thirdurl']}" placeholder="输入链接地址" name="thirdurl">
+								<span class="input-group-btn">
+									<button class="btn btn-default" type="button" onclick="showLinkDialog(this);">系统链接</button>
+								</span>
+							</div>
+						{else}
+							<input type="text" class="form-control" id="thirdurl" value="{$item['thirdurl']}" placeholder="输入链接地址" name="thirdurl">
+						{/if}
+							<span class="help-block">外部链接请包含http://</span>
+						</div>	
+					</div>	
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">是否限制物业功能</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="nobindlimit"  value="0" {if empty($item['nobindlimit']) || $item['nobindlimit']==0 } checked{/if} />限制</label>
+							<label  class="radio-inline">
+								<input type="radio" name="nobindlimit"  value="1" {if $item['nobindlimit']==1 } checked{/if} />不限制</label>
+							<span class="help-block">没有绑定房产，限制物业相关功能，不限制则可享有物业相关功能（须通过会员分组确定所属主体身份）</span>			
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">图文回复图片</label>
+						<div class="col-sm-8 col-lg-9 col-xs-12">
+							{php echo tpl_form_field_image('replyimage',$item['replyimage']);}
+							<span class="help-block">图文回复图片，建议尺寸640*320，用于关键词图文回复</span>
+						</div>	
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">图文回复描述</label>
+						<div class="col-sm-8 col-lg-9 col-xs-12">
+							<textarea style="height: 60px;" class="form-control" name="replydesc" placeholder="输入图文回复描述" >{$item['replydesc']}</textarea>							
+						</div>	
+					</div>	
+										
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">报修处理模式</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="repairnotice" value="1" {if $item['repairnotice']==1 } checked{/if} />抢单模式</label>
+							<label  class="radio-inline">
+								<input type="radio" name="repairnotice" value="2" {if empty($item['repairnotice']) || $item['repairnotice']==2 } checked{/if} /> 派单模式</label>
+							<span class="help-block">抢单模式指模板消息群发相关服务人员，派单模式指模板消息发送绑定人员，无论哪种模式服务人员都可以进入处理</span>			
+						</div>
+					</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">报修显示</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="isrepairdisp" value="1" {if $item['isrepairdisp']==1 || empty($item['isrepairdisp']) } checked{/if} />全部显示</label>
+							<label  class="radio-inline">
+								<input type="radio" name="isrepairdisp" value="2" {if $item['isrepairdisp']==2 } checked{/if} /> 仅显示自己报修</label>
+							<span class="help-block">全部显示将显示整个小区的报修工单</span>			
+						</div>
+					</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">投诉建议模式</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="suggestnotice" value="1" {if $item['suggestnotice']==1 } checked{/if} />抢单模式</label>
+							<label  class="radio-inline">
+								<input type="radio" name="suggestnotice" value="2" {if empty($item['suggestnotice']) || $item['suggestnotice']==2 } checked{/if} /> 派单模式</label>
+							<span class="help-block">抢单模式指模板消息群发相关服务人员，派单模式指模板消息发送绑定人员，无论哪种模式服务人员都可以进入处理</span>			
+						</div>
+					</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">投诉建议显示</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="issuggestdisp" value="1" {if $item['issuggestdisp']==1 || empty($item['issuggestdisp']) } checked{/if} />全部显示</label>
+							<label  class="radio-inline">
+								<input type="radio" name="issuggestdisp" value="2" {if $item['issuggestdisp']==2 } checked{/if} /> 仅显示自己的投诉建议</label>
+							<span class="help-block">全部显示将显示整个小区的投诉建议</span>			
+						</div>
+					</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">内部工单处理模式</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="repairpnotice" value="1" {if $item['repairpnotice']==1 } checked{/if} />抢单模式</label>
+							<label  class="radio-inline">
+								<input type="radio" name="repairpnotice" value="2" {if empty($item['repairpnotice']) || $item['repairpnotice']==2 } checked{/if} /> 派单模式(单人)</label>
+							<label  class="radio-inline">
+								<input type="radio" name="repairpnotice" value="3" {if $item['repairpnotice']==3 } checked{/if} /> 派单模式(多人)</label>
+							<span class="help-block">抢单模式指模板消息群发相关服务人员，派单模式指模板消息发送绑定人员，无论哪种模式服务人员都可以进入处理</span>			
+						</div>
+					</div>	
+					<div class="form-group" >
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">自动结案天数</label>
+						<div class="col-sm-8 col-lg-9 col-xs-12">
+							<div class="input-group">
+							   <input type="number" name="finishdays" class="form-control" value="{$item['finishdays']}" />
+							   <span class="input-group-addon">天</span>
+						   </div>							
+						   <span class="help-block">报修工单和投诉建议已处理后，住户未结案，依天数自动结案，为0则不自动结案</span>
+						</div>
+					</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">报修投诉排序</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="repairsort" value="1" {if $item['repairsort']==1 } checked{/if} /> 按ID排序</label>
+							<label  class="radio-inline">
+								<input type="radio" name="repairsort" value="2" {if empty($item['repairsort']) || $item['repairsort']==0} checked{/if} /> 按处理状态排序</label>
+							<span class="help-block">业主报修、投诉建议、内部工单后台排序方式</span>			
+						</div>
+					</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">房屋名称后缀</label>
+						<div class="col-sm-8 col-lg-9 col-xs-12">
+							<input type="text" class="form-control" id="roomfix" value="{$item['roomfix']}" placeholder="如：室" name="roomfix">
+							<span class="help-block">建立房屋信息，房屋名称输入数字即可，中文利用后缀，房屋将数字排序</span>
+						</div>		
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">模板first内容</label>
+							<div class="col-sm-8 col-lg-9 col-xs-12">
+								<input type="text" class="form-control" id="tplnoticefirst" value="{$item['tplnoticefirst']}" placeholder="输入模板消息first内容" name="tplnoticefirst">
+								<span class="help-block">系统多处重复使用物业管理通知模板，如：管理通知、绑定信息、绑定审核等，first内容为标题下面内容，为空则取主体名称</span>
+							</div>	
+					</div>	
+
+					<div class="col-lg-9 col-xs-12 col-sm-offset-2" style="margin-top:8px;">   
+						<button  class="btn btn-primary" ><i class="fa fa-save"></i> 保存</button>
+						<a href="javascript:;" class="btn btn-default"  onclick="myreturn()"><i class="fa fa-reply"></i> 返回<a/>
+					</div>
+				</form>
+				
+			</div> 
+	</div>  
+	</div>
+	</div>	
+  </div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+var pid = {$pid};
+var rid = {$rid};
+
+function showLinkDialog(elm) {
+	var ipt = $(elm).parent().prev();
+	util.linkBrowser(function(href){		
+		ipt.val(href);			
+	});
+}
+
+function myreturn(){
+	var url = "{php echo $this->createWeburl('region',array('op'=>$rlist,'category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid;	
+	window.location.href = url;
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+	
+	{if $_W['uid']} 
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"> <span class="text-danger">*</span>所属物业</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+				<option value="0">请选择</option>
+				{loop $myproperty $k $v}
+					<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>
+	{else}
+		<input type="hidden" class="form-control" id="pid" value="{php echo empty($item['pid'])?$mywe['pid']:$item['pid'];}" name="pid" />
+	{/if}
+		
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>所属主体</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="rid" name="rid" onchange="renderCategory(this,'devitem','devitemid')">
+				<option value="0">请选择</option>	
+				{loop $eregions $i $r}
+					<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+				{/loop}
+				{if $_W['uid']} 
+				{else}
+					{if $operation=='add'}
+						{loop $regions $i $r}
+							<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+						{/loop}
+					{/if}
+				{/if}
+			</select>
+		</div>
+	</div>	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>巡检计划名称</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入巡检计划名称" name="title" />
+		</div>	
+	</div>
+	<input type="hidden" class="form-control" id="devitems" value="" name="devitems"  />
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"></label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+		<!--效果html开始-->
+		<div class="selectbox">
+			<div class="select-bar">
+				<span class="text-warning">请选择巡检项目</span>
+				<select multiple="multiple" id="select1" class="form-control">			
+					{loop $edevitems $devitem}
+					<option value="{$devitem['id']}">{$devitem['title']}</option>				
+					{/loop}
+				</select>				
+			</div>
+
+			<div class="btn-bar">
+				<p><span id="add"><input type="button" class="btn" value=">" title="移动选择项到右侧"/></span></p>
+				<p><span id="add_all"><input type="button" class="btn" value=">>" title="全部移到右侧"/></span></p>
+				<p><span id="remove"><input type="button" class="btn" value="<" title="移动选择项到左侧"/></span></p>
+				<p><span id="remove_all"><input type="button" class="btn" value="<<" title="全部移到左侧"/></span></p>
+			</div>
+			<div class="select-bar">
+				<span class="text-success">已选择巡检项目</span>
+				<select multiple="multiple" id="select2" class="form-control">
+					{loop $itemstrarr $kk $vitem}
+					<option value="{$vitem}">{$itemname[$kk]}</option>				
+					{/loop}
+				</select>				
+			</div>	
+			</div>
+			<!--效果html结束-->
+			<span class="help-block">不可以为空</span>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-3 col-md-2 control-label">巡检周期</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="input-group">
+				<span class="input-group-addon">方式</span>
+				<select class="form-control" id="cycle" name="cycle" onchange="selectChange()" style="min-width:100px;">
+					<option value="1" {if $item['cycle']==1}selected{/if}>按天</option>
+					<option value="2" {if $item['cycle']==2}selected{/if}>按星期</option>
+					<option value="3" {if $item['cycle']==3}selected{/if}>按月</option>
+					<option value="4" {if $item['cycle']==4}selected{/if}>按年</option>
+				</select>
+				<span class="input-group-addon"  style="display:none;" id="monthtxt">日期</span>
+				<select class="form-control" id="month" name="month" style="min-width:100px;display:none;">
+					<option value="1" {if $item['month']==1}selected{/if}>1</option>
+					<option value="2" {if $item['month']==2}selected{/if}>2</option>
+					<option value="3" {if $item['month']==3}selected{/if}>3</option>
+					<option value="4" {if $item['month']==4}selected{/if}>4</option>
+					<option value="5" {if $item['month']==5}selected{/if}>5</option>
+					<option value="6" {if $item['month']==6}selected{/if}>6</option>
+					<option value="7" {if $item['month']==7}selected{/if}>7</option>
+					<option value="8" {if $item['month']==8}selected{/if}>8</option>
+					<option value="9" {if $item['month']==9}selected{/if}>9</option>
+					<option value="10" {if $item['month']==10}selected{/if}>10</option>
+					<option value="11" {if $item['month']==11}selected{/if}>11</option>
+					<option value="12" {if $item['month']==12}selected{/if}>12</option>
+				</select>
+				<span class="input-group-addon" style="display:none;" id="datetxt">日期</span>				
+				<input type="number" class="form-control" style="display:none;" id="day" value="{php echo empty($item['day'])?1:$item['day'];}" name="day" />
+				<span class="input-group-addon" style="display:none;" id="daytxt">日</span>
+				<span class="input-group-addon"  style="display:none;" id="weektxt">星期</span>
+				<select class="form-control" id="week" name="week" style="min-width:100px;display:none;">
+					<option value="1" {if $item['week']==1}selected{/if}>一</option>
+					<option value="2" {if $item['week']==2}selected{/if}>二</option>
+					<option value="3" {if $item['week']==3}selected{/if}>三</option>
+					<option value="4" {if $item['week']==4}selected{/if}>四</option>
+					<option value="5" {if $item['week']==5}selected{/if}>五</option>
+					<option value="6" {if $item['week']==6}selected{/if}>六</option>
+					<option value="7" {if $item['week']==7}selected{/if}>日</option>
+				</select>
+				<span class="input-group-addon">开始时间</span>
+				<input type="text" class="form-control starttime" name="starttime" id="starttime" value="{$item['starttime']}" readonly />
+				<span class="input-group-addon">结束时间 </span>
+				<input type="text" class="form-control endtime" name="endtime" id="endtime" value="{$item['endtime']}" readonly />		
+			</div>
+			<span class="help-block">按月和按年指定日期，会依日期前后7天均可巡检，开始和结束时间为空则任何时间点都可以巡检</span>
+		</div>		
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">开始日期</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_date('startdate',$item['startdate']);}
+			<span class="help-block">巡检计划开始日期</span>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">备注</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="remark" value="{$item['remark']}" placeholder="输入备注" name="remark" />
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">状态</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<label class='radio-inline'>
+			<input type='radio' name='status' value='1'  {if $item['status']==1 } checked{/if}/> 启用
+			</label>
+			<label class='radio-inline'>
+				<input type='radio' name='status' value='0' {if empty($item['status']) || $item['status']==0 } checked{/if} /> 禁用
+			</label>
+		</div>
+	</div>
+	</br>
+</form>	
+
+<script type="text/javascript">
+	window._region = {php echo json_encode($myregion);};				
+	window._devitem = {php echo json_encode($mydevitem);};
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择</option>';
+			if (id=='rid'){
+				$("#devitems").html(html);				
+			}	
+
+			if(id=='devitemid'){				
+				html='';
+				$selectChild = $("#select1");
+				$("#select2").html('');
+			}		
+
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		});
+	}
+	
+	require(['angular.sanitize','clockpicker'], function(angular, $, _){
+		$('.starttime').clockpicker({autoclose: true});
+		$('.endtime').clockpicker({autoclose: true});
+	});
+	
+   var cycle = "{$item['cycle']}";
+   if(cycle==1){
+		$("#monthtxt").hide();
+		$("#month").hide();
+		$("#datetxt").hide();
+		$("#day").hide();
+		$("#daytxt").hide();	
+		$("#weektxt").hide();
+		$("#week").hide();
+   }
+   else if(cycle==2){
+		$("#monthtxt").hide();
+		$("#month").hide();
+		$("#datetxt").hide();
+		$("#day").hide();
+		$("#daytxt").hide();	
+		$("#weektxt").show();
+		$("#week").show();
+   }
+   else if(cycle==3){
+		$("#monthtxt").show();
+		$("#month").show();
+		$("#datetxt").show();
+		$("#day").show();
+		$("#daytxt").show();	
+		$("#weektxt").hide(); 
+		$("#week").hide();
+		$("#monthtxt").html('每');
+		$("#datetxt").html('个月');
+   }
+   else if(cycle==4){
+		$("#monthtxt").show();
+		$("#month").show();
+		$("#datetxt").show();
+		$("#day").show();
+		$("#daytxt").show();	
+		$("#weektxt").hide();
+		$("#week").hide();
+		$("#monthtxt").html('日期');
+		$("#datetxt").html('月');
+   }
+	
+	function selectChange(){
+        var objS = document.getElementById("cycle");
+        var value = objS.options[objS.selectedIndex].value;
+       if(value==1){
+			$("#monthtxt").hide();
+			$("#month").hide();
+			$("#datetxt").hide();
+			$("#day").hide();
+			$("#daytxt").hide();	
+			$("#weektxt").hide();
+			$("#week").hide();
+	   }
+	   if(value==2){
+			$("#monthtxt").hide();
+			$("#month").hide();
+			$("#datetxt").hide();
+			$("#day").hide();
+			$("#daytxt").hide();	
+			$("#weektxt").show();
+			$("#week").show();
+	   }
+	   if(value==3){
+			$("#monthtxt").show();
+			$("#month").show();
+			$("#datetxt").show();
+			$("#day").show();
+			$("#daytxt").show();	
+			$("#weektxt").hide(); 
+			$("#week").hide();
+			$("#monthtxt").html('每');
+			$("#datetxt").html('个月');
+	   }
+	   if(value==4){
+			$("#monthtxt").show();
+			$("#month").show();
+			$("#datetxt").show();
+			$("#day").show();
+			$("#daytxt").show();	
+			$("#weektxt").hide();
+			$("#week").hide();
+			$("#monthtxt").html('日期');
+			$("#datetxt").html('月');
+	   }
+    }
+
+	$(function(){	
+	//移到右边
+		$('#add').click(function(){
+			//先判断是否有选中
+			if(!$("#select1 option").is(":selected")){			
+				layer.msg("请选择需要移动的选项",{icon:0})
+			}
+			//获取选中的选项，删除并追加给对方
+			else{
+				$('#select1 option:selected').appendTo('#select2');
+			}	
+		});
+		
+		//移到左边
+		$('#remove').click(function(){
+			//先判断是否有选中
+			if(!$("#select2 option").is(":selected")){			
+				layer.msg("请选择需要移动的选项",{icon:0})
+			}
+			else{
+				$('#select2 option:selected').appendTo('#select1');
+			}
+		});
+		
+		//全部移到右边
+		$('#add_all').click(function(){
+			//获取全部的选项,删除并追加给对方
+			$('#select1 option').appendTo('#select2');
+		});
+		
+		//全部移到左边
+		$('#remove_all').click(function(){
+			$('#select2 option').appendTo('#select1');
+		});
+		
+		//双击选项
+		$('#select1').dblclick(function(){ //绑定双击事件
+			//获取全部的选项,删除并追加给对方
+			$("option:selected",this).appendTo('#select2'); //追加给对方
+		});
+		
+		//双击选项
+		$('#select2').dblclick(function(){
+			$("option:selected",this).appendTo('#select1');
+		});
+		
+	});	
+
+	
+</script>

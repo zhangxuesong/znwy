@@ -1,0 +1,212 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle'}
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	    
+	{if $_W['uid']} 
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"> <span class="text-danger">*</span>所属物业</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+				<option value="0">请选择所属物业</option>
+				{loop $myproperty $k $v}
+					<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>
+	{else}
+		<input type="hidden" class="form-control" id="pid" value="{$mywe['pid']}" name="pid" />
+	{/if}
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>所属主体</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="rid" name="rid" onchange="renderCategory(this,'location','lid')">
+				<option value="0">请选择所属主体</option>	
+				{loop $eregions $i $r}
+					<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+				{/loop}
+				{if $_W['uid']} 
+				{else}
+					{if $operation=='addbill'}
+						{loop $regions $i $r}
+							<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+						{/loop}
+					{/if}
+				{/if}
+			</select>
+		</div>
+	</div>	
+
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">区域</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="lid" name="lid" onchange="renderCategory(this,'parking','bid')">
+				<option value="0">请选择区域</option>	
+				{loop $elocations $location}
+					<option value="{$location['id']}" {if $item['lid'] == $location['id']} selected {/if} >{$location['title']}</option>
+				{/loop}			
+			</select>
+		</div>
+	</div>	
+	<input type="hidden" name="parkings" id="parkings" value="" />	
+		<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">车位</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+			<!--效果html开始-->
+			<div class="selectbox">
+			<div class="select-bar">
+				<span class="text-warning">请选择车位</span>
+				<select multiple="multiple" id="select1" class="form-control">
+				</select>				
+			</div>
+
+			<div class="btn-bar">
+				<p><span id="add"><input type="button" class="btn" value=">" title="移动选择项到右侧"/></span></p>
+				<p><span id="add_all"><input type="button" class="btn" value=">>" title="全部移到右侧"/></span></p>
+				<p><span id="remove"><input type="button" class="btn" value="<" title="移动选择项到左侧"/></span></p>
+				<p><span id="remove_all"><input type="button" class="btn" value="<<" title="全部移到左侧"/></span></p>
+			</div>
+			<div class="select-bar">
+				<span class="text-success">已选择车位</span>
+				<select multiple="multiple" id="select2" class="form-control">					
+				</select>				
+			</div>	
+			</div>
+			<!--效果html结束-->
+			<span class="help-block">生成下一个缴费周期账单，未到期将不生成</span>
+		</div>	
+	</div>
+	
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">备注</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="remark" value="{$item['remark']}" placeholder="输入备注" name="remark" />
+		</div>	
+	</div>	
+</form>	
+
+<script type="text/javascript">
+	window._region = {php echo json_encode($myregion);};	
+	window._location = {php echo json_encode($mylocation);};	
+	window._parking = {php echo json_encode($myparking);};	
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择</option>';
+			if (id=='rid'){
+				$("#lid").html(html);
+				$("#select1").html('');
+				$("#select2").html('');
+			}
+			if(id=='bid'){				
+				html='';
+				$selectChild = $("#select1");
+				$("#select2").html('');
+			}
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);			
+		});
+	}
+</script>
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){		
+	var pid = $("#pid").find("option:selected").val();
+	var rid = $("#rid").find("option:selected").val(); 
+	var parkingstr='';
+	
+	if (pid=='0') {
+	   layer.msg("所属物业不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (rid=='0') {
+	   layer.msg("所属主体不能为空！",{icon:0});
+	   return;
+	}
+	$('#select2 option').each(function () {
+		var $option = $(this);
+		parkingstr += $option.val() + ',';		
+	});
+	    
+	parkingstr = parkingstr.substring(0,parkingstr.length - 1);
+
+	$("#parkings").val(parkingstr);
+
+	myprocess(obj);
+	$("#myform").submit();
+}
+
+function myreturn(){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'carbill')).$mywe['direct'];}";	
+	location.href = url;
+}
+
+ $(function(){	
+	//移到右边
+	$('#add').click(function(){
+		//先判断是否有选中
+		if(!$("#select1 option").is(":selected")){			
+			layer.msg("请选择需要移动的选项",{icon:0})
+		}
+		//获取选中的选项，删除并追加给对方
+		else{
+			$('#select1 option:selected').appendTo('#select2');
+		}	
+	});
+	
+	//移到左边
+	$('#remove').click(function(){
+		//先判断是否有选中
+		if(!$("#select2 option").is(":selected")){			
+			layer.msg("请选择需要移动的选项",{icon:0})
+		}
+		else{
+			$('#select2 option:selected').appendTo('#select1');
+		}
+	});
+	
+	//全部移到右边
+	$('#add_all').click(function(){
+		//获取全部的选项,删除并追加给对方
+		$('#select1 option').appendTo('#select2');
+	});
+	
+	//全部移到左边
+	$('#remove_all').click(function(){
+		$('#select2 option').appendTo('#select1');
+	});
+	
+	//双击选项
+	$('#select1').dblclick(function(){ //绑定双击事件
+		//获取全部的选项,删除并追加给对方
+		$("option:selected",this).appendTo('#select2'); //追加给对方
+	});
+	
+	//双击选项
+	$('#select2').dblclick(function(){
+		$("option:selected",this).appendTo('#select1');
+	});
+	
+});
+</script> 
+</body>
+</html>

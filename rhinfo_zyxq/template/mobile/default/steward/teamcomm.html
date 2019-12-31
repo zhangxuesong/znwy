@@ -1,0 +1,45 @@
+{template $this->mytpl('_header')}
+
+<div class='fui-page  fui-page-current order-comment-page'>
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back" href="{php echo $this->createMobileurl($mydo);}"></a>
+	</div>
+	<div class="title">{$title}</div> 
+	<div class="fui-header-right">&nbsp;</div>
+    </div>
+  <div class='fui-content team-page margin navbar'>
+    
+	  <div class="fui-list-group">  
+		  <div class="fui-list-group-title"><i class="icon icon-home1"></i> {$user['rtitle']}</div>		  
+	  </div>
+	<div class="userinfo">						
+		<div class="face"><img src="{php echo tomedia($item['avatar'])}"/></div>
+		<div class="name">{$item['nickname']}</div>
+		<div class="level">{$msg}</div>				
+				
+	</div>		
+	 <div class="fui-cell-group">		  
+		 <div class='fui-cell must'>
+			 <div class='fui-cell-label '>内容</div>
+			 <div class='fui-cell-info'><textarea rows="8" placeholder="内容 10-1000个字" id='comment'></textarea></div>
+		 </div>
+
+	</div>
+  </div>  
+     <div class='fui-footer'>
+		<a class='btn btn-warning btn-submit block'>提交</a>
+	  </div>
+	  
+    <script language='javascript'>require(['steward/team'], function (modal) {
+		modal.init({
+			pid: "{$user['pid']}",
+			rid: "{$user['rid']}",
+			type:"{$type}",
+			teamid:"{$id}"
+		}); 
+	});</script>
+	
+</div> 
+
+{template $this->mytpl('_footer')}

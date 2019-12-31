@@ -1,0 +1,239 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="icon" href="favicon.ico" />
+<title>{if empty($sysset['ptitle'])}智慧物业管理系统{else}{$sysset['ptitle']}{/if}</title>
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/web/ui/css/ui.reset.css" />
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/web/ui/css/ui.min.css" />
+<link href="./resource/css/bootstrap.min.css?v=20170915" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/web/ui.admin/css/ui.login.css?v=20180612" />
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/web/ui/iconfont/iconfont.min.css" />
+<script type="text/javascript" src="../addons/rhinfo_zyxq/static/lib/jquery/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../addons/rhinfo_zyxq/static/lib/layer3.03/layer.js"></script> 
+{if !empty($sysset['pbackground'])}
+<style>
+.loginWraper{background:url("{php echo tomedia($sysset['pbackground']);}") no-repeat center;}
+.header,.footer{background-color:{$sysset['pbgcolor']};}
+</style>
+{/if}
+</head>
+<body>
+<div class="header">{if !empty($logo)}<img src="{$logo}" height="60px"/>{elseif !empty($sysset['ptitle'])}<p style="color:#fff;font-size:25px;font-weight:bold;line-height:50px;">{$sysset['ptitle']}</p>{else}<img src="../addons/rhinfo_zyxq/static/web/ui.admin/images/logo.png" height="60px">{/if}</div>
+<div class="loginWraper">
+  <div id="loginform" class="regBox">
+	   <form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >		
+		   <div class="row cl">
+			<label class="form-label col-xs-2" style="text-align:right;"><i class="Hui-iconfont">&#xe643;</i></label>
+			<div class="formControls col-xs-8">
+			  <input id="title" name="title" type="text" placeholder="物业公司名称" class="input-text size-L" />
+			</div>
+		  </div>
+		  
+		  <div class="row cl">
+			<label class="form-label col-xs-2" style="text-align:right;"><i class="Hui-iconfont">&#xe60d;</i></label>
+			<div class="formControls col-xs-8">
+			  <input id="userno" name="userno" type="text" placeholder="用户账号" class="input-text size-L" />
+			</div>
+		  </div>
+		  <div class="row cl">
+			<label class="form-label col-xs-2" style="text-align:right;"><i class="Hui-iconfont">&#xe60e;</i></label>
+			<div class="formControls col-xs-8">
+			  <input id="password1" name="password1" type="password" placeholder="登录密码" class="input-text size-L" />
+			</div>
+		  </div>
+		   <div class="row cl">
+			<label class="form-label col-xs-2" style="text-align:right;"><i class="Hui-iconfont">&#xe60e;</i></label>
+			<div class="formControls col-xs-8">
+			  <input id="password2" name="password2" type="password" placeholder="确认密码" class="input-text size-L" />
+			</div>
+		  </div>
+		   <div class="row cl">
+			<label class="form-label col-xs-2" style="text-align:right;"><i class="Hui-iconfont">&#xe708;</i></label>
+			<div class="formControls col-xs-8">
+				<input class="form-control input-text size-L" type="text" name="mobile" placeholder="手机号码" id="mobile" />
+			</div>
+		  </div>
+		  
+		  <div class="row cl">
+			<div class="col-xs-8 col-xs-offset-2">
+			  <div class="input-group">
+				<input class="form-control input-text size-L" type="text" name="verify" placeholder="请输入左侧图中字符" />
+			 	<span class="input-group-btn">
+				 <a href="javascript:;" id="toggle" style="text-decoration: none"><img id="imgverify" src="{php echo url('utility/code')}"  title="点击图片更换验证码"/></a>
+				</span>
+			  </div>
+			</div>
+		  </div>
+		    <div class="row cl">
+			<div class="col-xs-8 col-xs-offset-2">
+			  <div class="input-group">
+				<input class="form-control input-text size-L" type="text" name="verifycode" placeholder="请输入短信验证码" id="verifycode" />
+			 	<span class="input-group-btn"><a href="javascript:;" class="btn btn-default radius size-L" onclick="getverifycode(this)">获取验证码</a></span>
+			  </div>
+			</div>
+		  </div>
+		  <div class="row cl">
+			<div class="formControls col-xs-8 col-xs-offset-2">
+			   <a href="javascript:;" class="btn btn-primary radius size-L"  onclick="mysubmit(this)">&nbsp;注&nbsp;&nbsp;&nbsp;&nbsp;册&nbsp;</a>
+			   <a href="javascript:;" class="btn btn-success radius size-L"  onclick="mylogin(this)">&nbsp;登&nbsp;&nbsp;&nbsp;&nbsp;录&nbsp;</a>
+			    <div class="check-box"><input type="checkbox" id="checkbox"> <label for="checkbox"><a href="javascript:;" onclick="myread(this)" style="color:#fff;">我已同意入驻协议</a></label></div>
+			</div>
+		  </div>
+		  </div>
+		</form>
+	</div>
+</div>
+<div class="footer">{if empty($copyright)}Copyright 版权所有.{else}{$copyright}{/if}</div>
+
+<script type="text/javascript" >
+var url = "{php echo mywurl('auth/login',array('direct'=>1),$sysset['isproperty']);}";
+function mysubmit(obj){
+    var title = $.trim($("#title").val());
+	var userno = $.trim($("#userno").val());
+	var password1 = $.trim($("#password1").val());
+	var password2 = $.trim($("#password2").val());
+	var mobile = $.trim($("#mobile").val());
+	var verifycode = $.trim($("#verifycode").val());
+	
+	if (title=='') {
+	   layer.msg("物业公司名称不能为空！",{icon:0});
+	   return;
+	}
+    if (userno=='') {
+	   layer.msg("用户代号不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (password1=='') {
+	   layer.msg("登录密码不能为空！",{icon:0});
+	   return;
+	}
+	
+	if(password2==''){
+	   layer.msg("确认密码不能为空！",{icon:0});
+	   return;
+	}
+	else{
+	   if(password1 !== password2){
+		   layer.msg("两次密码不一致！",{icon:0});
+		   return;
+	   }
+	}
+	if (mobile=='') {
+	   layer.msg("手机号码不能为空！",{icon:0});
+	   return;
+	}	
+	if(!(/^1[3|4|5|6|7|8][0-9]\d{8}$/.test(mobile))){
+		layer.msg("手机号码不正确！",{icon:0});
+		return
+	} 
+	if (verifycode=='') {
+	   layer.msg("短信验证码不能为空！",{icon:0});
+	   return;
+	}		
+	var verify = $(':text[name="verify"]').val();
+	if (verify == '') {
+		layer.msg('请填写图片验证码',{icon:0});
+		return false;
+	}
+	
+	var checkbox = $("#checkbox").is(':checked');
+	if (checkbox == false) {
+		layer.msg('如需注册，请同意入驻协议',{icon:0});
+		return false;
+	}
+	
+	myprocess(obj);
+    $.post("{php echo $this->createWebUrl($mydo,array('op'=>'reg','direct'=>1,'weid'=>$uniacid));}",
+	{title:title,userno:userno,password:password1,mobile:mobile,verify:verify,verifycode:verifycode},
+	function(data,status){
+	 if (data=='ok'){
+        layer.msg('注册成功',{icon:1});	 
+		setTimeout(function(){
+		  location.href=url;
+		},1000);
+	 }
+	 else{
+	    myreset(obj);
+		layer.msg(data,{icon:0});
+		return ;
+	 }
+	});	
+}
+function mylogin(obj){
+	var url = "{php echo mywurl('auth/login',array('direct'=>1),$sysset['isproperty']);}";	
+	location.href=url;
+}
+function myprocess(obj){
+	var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif"/> 注册中...';
+	$(obj).html(html);  
+	$(obj).attr("disabled", "disabled"); 
+}
+function myreset(obj){
+	var html = '&nbsp;注&nbsp;&nbsp;&nbsp;&nbsp;册&nbsp;';
+	$(obj).html(html);  
+	$(obj).removeAttr("disabled"); 
+}
+function getverifycode(obj){
+	var seconds = 60 ;
+	var mobile = $.trim($("#mobile").val());
+	if (mobile=='') {
+	   layer.msg("手机号码不能为空！",{icon:0});
+	   return;
+	}	
+	if(!(/^1[3|4|5|6|7|8][0-9]\d{8}$/.test(mobile))){
+		layer.msg("手机号码不正确！",{icon:0});
+		return
+	} 
+	var verify = $(':text[name="verify"]').val();
+	if (verify == '') {
+		layer.msg('请填写图片验证码',{icon:0});
+		return false;
+	}
+	$.post("{php echo $this->createWebUrl($mydo,array('op'=>'verifycode','direct'=>1,'weid'=>$uniacid));}",
+		{mobile:mobile},
+		function(data,status){
+		 if (data=='ok'){
+			verifycode(obj,seconds);
+		 }
+		 else{
+			layer.msg(data,{icon:0});
+			return ;
+		 }
+	});	
+};
+function verifycode(obj,seconds){
+	seconds--;
+	if (seconds > 0) {
+		$(obj).html(seconds + '秒后重发').addClass('disabled').attr('disabled', 'disabled');
+		setTimeout(function() {
+			verifycode(obj,seconds);
+		}, 1000)
+	} else {
+		$(obj).html('获取验证码').removeClass('disabled').removeAttr('disabled')
+	}
+}
+function myread(obj){
+	layer.open({
+	  type: 1,
+	  title:"入驻协议",
+	  skin: 'layui-layer-rim', //加上边框
+	  area: ['600px', '500px'], //宽高
+	  content:'{$agreement["content2"]}'
+	});
+	
+}
+$('#toggle').click(function() {
+	$('#imgverify').prop('src', '{php echo url('utility/code')}r='+Math.round(new Date().getTime()));
+	return false;
+});
+
+</script>
+<script type="text/javascript" src="../addons/rhinfo_zyxq/static/web/ui/js/ui.min.js"></script> 
+</body>
+</html>

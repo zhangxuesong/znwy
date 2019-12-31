@@ -1,0 +1,55 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-list-inner .title {
+	position: relative;
+	font-size: 1rem;
+	color: #333;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	height:1.8rem;
+	line-height:1.8rem;
+}
+</style>
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">我的卡片</div>
+		<div class="fui-header-right">
+			<a href="{php echo $this->CreateMobileUrl('charging',array('op'=>'addcard'));}"><i class="icon icon-add"></i></a>
+		</div>
+	</div>
+	<div class='fui-content'> 	
+		<div class='content-empty' {if !empty($list)}style='display:none;'{/if}>
+			 <div class="empty-bg"><i class='icon icon-vipcard'></i></div>
+			<p>您还没有卡片信息</p>
+		</div>
+		{if !empty($list)}
+		<div class="fui-list-group" style="margin-top:0;" >
+			{loop $list $item}		
+				<div  class="fui-list card-item" data-cardid="{$item['id']}" >
+					<div class="fui-list-inner">
+						<div class="title"><i class="icon icon-vipcard" style="font-size:1rem;"></i> {$item['cardno']}</div>
+						<div class="subtitle">
+						绑定日期：{php echo date('Y-m-d H:i:s',$item['ctime']);}
+						<span class='pull-right'>				
+							<a data-toggle='delete'><i class='icon icon-delete'></i> 删除</a>
+						</span>
+						</div>				
+					</div>
+				</div>
+			{/loop}
+		</div> 
+		{/if}
+    </div>
+ </div>
+ 
+<script language='javascript'>		
+	require(['charging/charging'], function (modal) {
+		modal.initMycard();
+	}); 	
+</script>
+
+{template $this->mytpl('_footer')}

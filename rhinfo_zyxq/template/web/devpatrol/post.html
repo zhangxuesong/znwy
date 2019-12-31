@@ -1,0 +1,61 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:30px;" >
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/form'}	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	var id = $.trim($("#id").val());
+	var title = $.trim($("#title").val());
+	var pid = $("#pid").find("option:selected").val();
+	var rid = $("#rid").find("option:selected").val(); 
+	var bidstr = "";	
+	
+	if (pid=='0') {
+	   layer.msg("所属物业不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (rid=='0') {
+	   layer.msg("所属主体不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (title=='') {
+	   layer.msg("巡检计划名称不能为空！",{icon:0});
+	   return;
+	}
+	
+	var itemstr = [];
+	$('#select2 option').each(function () {
+		var $option = $(this);
+			itemstr.push($option.val());		
+	});
+	
+
+	if (itemstr.toString()=='') {
+	   layer.msg("已选择巡检项目不能为空！",{icon:0});
+	   return;
+	}
+	$('#devitems').val(itemstr.toString());	
+	myprocess(obj);
+	$("#myform").submit();		
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'list')).$mywe['direct'];}";
+	 location.href = url;
+}
+
+</script> 
+
+</body>
+</html>

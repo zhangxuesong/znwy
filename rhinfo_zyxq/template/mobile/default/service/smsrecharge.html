@@ -1,0 +1,94 @@
+{template $this->mytpl('_header')}
+{if !empty($this->syscfg['btncolor'])}
+    <style>
+		#btnSubmit {
+			background-color:{php echo $this->syscfg['btncolor']};
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+		}
+		#btnSubmit:active,
+		#btnSubmit.disabled {
+			background: {php echo $this->syscfg['btncolor']};			
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+			opacity:0.5;
+		}
+    </style>
+{/if}
+<style>
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:after{border-bottom:0px;}
+.fui-list-group:not(.fui-list-group-o):before {
+	border-top: 0px;	
+}
+.fui-list-group:not(.fui-list-group-o):after {	
+	border-top: 0px;	
+}
+.fui-list:before{
+	border-top: 0px;
+}
+</style>
+<div class='fui-page fui-page-current'>
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">短信充值</div> 
+		<div class="fui-header-right">&nbsp;</div>
+    </div>
+    <div class='fui-content navbar' >	
+		<div class="fui-title"><i class="icon icon-city"> {$region['title']}</i></div>
+		<div class='fui-cell-group'>								
+			<div class='fui-cell'>
+				<div class='fui-cell-label'>可用条数</div>
+				<div class='fui-cell-info'>{$region['smsqty']}条</div>
+			</div>
+			<div class='fui-cell'>
+				<div class='fui-cell-label'>充值条数</div>
+				<div class='fui-cell-info'><input type='number' class='fui-input' id='smsqty' value="{$_GPC['smsqty']}"></div>
+			</div>
+			<div class='fui-cell-tip'>{php echo $this->syscfg['smsprice'];}元/条，最低充值100条</div>
+		</div>
+		{if $this->syscfg['iswepay']==1}
+			<a id='weixin-btn' class='btn btn-success block btn-pay' >立即支付</a>
+		{else}
+			<a id='btn-next' class='btn btn-success block disabled' >下一步</a>
+			{if $this->rhinfo_isalipay}
+				{if !empty($this->syscfg['alipay_type'])}	
+					<div class='fui-list-group margin' id='alipay-btn' style="display:none;">      
+						 <div class='fui-list btn-pay'>
+							<div class='fui-list-media'>
+								 <img src="../addons/rhinfo_zyxq/static/mobile/images/alipay.png" width="30" />
+							</div>
+							<div class='fui-list-inner'>
+								<div class="title">支付宝支付</div>
+								<div class="subtitle">支付宝安全支付</div>					
+							</div>
+							<div class='fui-list-angle'><span class="angle"></span></div>
+						</div>
+					</div>
+				{/if}	
+			{else}
+				{if $setting['payment']['wechat']['switch']==1 || !empty($this->syscfg['iswxpay'])}	
+					<div class='fui-list-group margin' id='weixin-btn' style="display:none;">      
+						 <div class='fui-list btn-pay'>
+							<div class='fui-list-media'>
+								 <img src="../addons/rhinfo_zyxq/static/mobile/images/wxpay.png" width="40" />
+							</div>
+							<div class='fui-list-inner'>
+								<div class="title">微信支付</div>
+								<div class="subtitle">微信安全支付</div>					
+							</div>
+							<div class='fui-list-angle'><span class="angle"></span></div>
+						</div>
+					</div>
+				{/if}
+			{/if}
+		{/if}
+    </div>
+	
+	<script language='javascript'>
+		require(['service/recharge'], function (modal) {
+			modal.initSms({minimumcharge:100,rid:"{$_GPC['rid']}",payfrom:"{php echo $this->rhinfo_isalipay==true?2:1;}"});
+	});
+</script>
+</div> 
+{template $this->mytpl('_footer')}

@@ -1,0 +1,155 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />		   
+			{if $_W['uid']} 
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label"> <span class="text-danger">*</span>所属物业</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+					{if $operation=='leveladd'}	<option value="0">请选择所属物业</option>{/if}
+						{loop $myproperty $k $v}
+							<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+						{/loop}
+					</select>				
+				</div>
+			</div>
+			{else}
+				<input type="hidden" class="form-control" id="pid" value="{$mywe['pid']}" name="pid" />
+			{/if}
+			
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>所属主体</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<select class="form-control" id="rid" name="rid">
+					{if $operation=='leveladd'}	<option value="0">请选择所属主体</option>{/if}
+						{loop $eregions $i $r}
+							<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+						{/loop}
+						{if $_W['uid']} 
+						{else}
+							{if $operation=='leveladd'}
+								{loop $regions $i $r}
+									<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+								{/loop}
+							{/if}
+						{/if}
+					</select>
+				</div>
+			</div>	
+			
+			<div class="form-group"><input type="hidden" name="catid[]" value="" >
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+				<div class="col-sm-2 col-lg-3 col-xs-12"><div class="input-group"><span class="input-group-addon">名称</span>
+				<input type="text" class="form-control"  value="" placeholder="输入等级名称" name="title[]"></div></div>
+				<div class="col-sm-2 col-lg-3 col-xs-12"><div class="input-group"><span class="input-group-addon">排序</span>
+				<input type="number" class="form-control" value="" placeholder="数字越大，排名越靠前" name="displayorder[]"></div></div>
+				<div class="col-sm-2 col-lg-3 col-xs-12">
+				<input type="hidden"  name="status[]" value="1" > &nbsp;&nbsp;&nbsp;
+				<button class="btn btn-danger" type="button" onclick="mydelete(this)" ><i class="fa fa-trash-o"></i> 删除</button>
+				</div>
+			</div>
+		
+		    <div id="cateitems"></div>	
+			
+		</form>	
+		  <div class="col-lg-9 col-xs-12 col-sm-offset-2" style="margin-top:8px;">  
+			<a href="javascript:;" class="btn btn-primary"  onclick="myadd()"><i class="fa fa-plus"></i> 添加</a>
+		   <a href="javascript:;" class="btn btn-success"  onclick="mysave(this)"><i class="fa fa-save"></i> 保存</a>
+		   <a href="javascript:;" class="btn btn-default"  onclick="myreturn()"><i class="fa fa-reply"></i> 返回</a>
+		</div>
+		<script type="text/javascript">
+			window._region = {php echo json_encode($myregion);};				
+			function renderCategory(obj, name,id){
+				var index = obj.options[obj.selectedIndex].value;
+				require(['jquery', 'util'], function($, u){
+					$selectChild = $("#"+ id);
+					var html = '<option value="0">请选择所属主体</option>';			
+
+					if (!window['_'+name] || !window['_'+name][index]) {
+						$selectChild.html(html);
+						return false;
+					}
+					for(var i=0; i< window['_'+name][index].length; i++){
+						html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+					}
+					$selectChild.html(html);
+				});
+			}
+		</script>
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+
+
+<script type="text/javascript">
+
+function mysave(obj){	
+	var pid = $("#pid").find("option:selected").val();
+	var rid = $("#rid").find("option:selected").val(); 
+		
+	if (pid=='0') {
+	   layer.msg("所属物业不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (rid=='0') {
+	   layer.msg("所属主体不能为空！",{icon:0});
+	   return;
+	}
+	var title='';
+    var i=0, j=0;
+    $('input[name="title[]"]').each(function(){  
+	    title=$(this).val();
+		j++;
+		if (title=='') {
+			layer.msg("第"+j+"行类别名称不能为空！",{icon:0});
+			i++
+			return false;
+		}		
+    });
+	if(i==0 && j>0){
+		myprocess(obj);
+		$("#myform").submit();
+	}
+	else{
+		layer.msg("没有添加内容呢！",{icon:0});
+	    return;
+	}
+}
+
+function myadd(){	
+	var html ='<div class="form-group"><input type="hidden" name="catid[]" value="" >\
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>\
+		<div class="col-sm-2 col-lg-3 col-xs-12"><div class="input-group"><span class="input-group-addon">名称</span>\
+		<input type="text" class="form-control"  value="" placeholder="输入分类名称" name="title[]"></div></div>\
+		<div class="col-sm-2 col-lg-3 col-xs-12"><div class="input-group"><span class="input-group-addon">排序</span>\
+		<input type="number" class="form-control" value="" placeholder="数字越大，排名越靠前" name="displayorder[]"></div></div>\
+		<div class="col-sm-2 col-lg-3 col-xs-12">\
+		<input type="hidden"  name="status[]" value="1" > &nbsp;&nbsp;&nbsp;\
+		<button class="btn btn-danger" type="button" onclick="mydelete(this)" ><i class="fa fa-trash-o"></i> 删除</button>\
+		</div></div>'
+	 $('#cateitems').append(html);
+}
+
+function mydelete(obj){
+	 $(obj).parents(".form-group").remove();
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'compcatelist')).$mywe['direct'];}";
+	 location.href = url;
+}
+function myprocess(obj){
+	var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/> 处理中...';
+	$(obj).html(html);  
+	$(obj).attr("disabled", "disabled"); 
+}
+</script> 
+
+</body>
+</html>

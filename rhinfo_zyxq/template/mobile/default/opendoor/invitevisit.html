@@ -1,0 +1,72 @@
+{template $this->mytpl('_bheader')}
+<style>
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+</style>
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">邀请访客</div>
+		<div class="fui-header-right">&nbsp;</div>
+	</div>
+
+	<div class='fui-content' style='margin-top:5px;'>
+		<form action="{php echo $this->createMobileUrl('opendoor',array('op'=>'sharevisit','id'=>$_GPC['id']));}" method="post" id="myform">
+		<input type="hidden" id='doorid' name='doorid' value="{$_GPC['id']}" />
+		<div class="fui-cell-group">
+			<div class="fui-cell must">
+				<div class="fui-cell-label">有效时间</div>
+				<div class="fui-cell-info">
+					<input type="number" class='fui-input' id='effedate' name='effedate' placeholder="请输入分钟" />
+				</div>				
+			</div>
+						
+			<div class="fui-cell must">
+				<div class="fui-cell-label">开门次数</div>
+				<div class="fui-cell-info">
+				<input type="tel" class='fui-input' id='opentimes' name='opentimes' placeholder="输入开门次数"  value="1" maxlength="2" />
+				</div>
+			</div>	
+			<div class="fui-cell noactive">
+                <div class="fui-cell-label ">登记车牌</div>
+                <div class="fui-cell-info">
+                    <input type="checkbox" class="fui-switch fui-switch-small fui-switch-success pull-right" name="iscar" id="iscar"/>
+                </div>
+            </div>
+			<div id="plate" style="display:none;">
+				<div class="fui-cell-group">
+					<div class="fui-cell">
+						<div class="car_input">
+							<ul class="clearfix ul_input"><li class="input_pro"><span></span></li><li class="input_pp input_zim"><span></span></li><li class="input_pp"><span></span></li><li class="input_pp"><span></span></li><li class="input_pp"><span></span></li><li class="input_pp"><span></span></li><li class="input_pp"><span></span></li><li class="input_pp"><span style="background:#04ab02;color:#fff;"></span></li></ul>
+						</div>					 
+					</div>
+					<div class="fui-cell-tip" >	绿色栏位为新能源牌照填写</div>
+					<div id="jp_pro"></div>				
+				</div>
+			</div>	
+			<input type="hidden" class='fui-input' id='carno' name='carno' value="" />
+		</div>
+		<form>
+		<a href='#' id='btnSubmit' class='btn btn-success block'>下一步</a>
+	</div>
+	<script language='javascript'>
+		require(['opendoor/index'], function (modal) {
+		  	modal.initVisit();
+		});
+		$("#iscar").on('click',function () {
+			var ischecked=$('#iscar').is(':checked');
+			if(ischecked){
+				$('#plate').show();		
+			}
+			else{
+				$('#plate').hide();
+				layer.closeAll();
+				$('#banner').show();
+			}
+		});
+	</script>
+
+</div>
+{template $this->mytpl('_footer')}

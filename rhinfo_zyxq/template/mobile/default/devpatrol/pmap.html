@@ -1,0 +1,105 @@
+{template $this->mytpl('_header')}
+<style>
+.store-map-page .fui-list-inner {
+    border-right: 0px;
+}
+</style>
+<div class='fui-page  fui-page-current store-map-page' >
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">分布地图</div>
+        <div class="fui-header-right">&nbsp;</div>
+    </div>
+    <div class='fui-content' >
+		 <div id='js-map' class='map-container'>
+			
+		</div>
+		<div class="fui-footer">
+			<div class="fui-list">
+				<div class="fui-list-media">
+				{if !empty($region['thumb'])}
+					<img src="{php echo tomedia($region['thumb'])}" />
+				{/if}
+				</div>
+				<div class='fui-list-inner'>
+					<div class='title'>{$region['title']}</div>
+					<div class='subtitle'>充电站：{php echo count($data);}个</div>
+					<div class='text' id="mylocation">定位中...</div>					
+				</div>
+			</div>
+		</div>
+    </div>
+</div>
+<script type="application/javascript">
+var isimage = "{$item['isimage']}";
+var latitude;
+var longitude;
+var gps = false;
+var getaddr;
+wx.ready(function () {
+	wx.getLocation({
+		type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+		success: function (res) {
+			latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+			longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+			getaddr();  		
+		}
+	});  
+	getaddr = function(){
+		$.ajax({
+			url: 'https://apis.map.qq.com/ws/geocoder/v1/?location='+latitude+','+longitude+'&key={$sysconifg["qq_lbskey"]}&get_poi=0&output=jsonp',
+			cache: false,
+			dataType: 'jsonp',
+			jsonp: 'callback',
+			success: function(json){
+				gps = true;				
+				$("#mylocation").html(json.result.formatted_addresses.recommend?json.result.formatted_addresses.recommend:json.result.address);                    		
+			},
+			error: function(){
+				$("#mylocation").html('定位失败,<a href="javascript:history.go(0);">重新定位</a>');
+			}
+		});
+	};
+});
+
+</script>
+<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key={$sysconifg['qq_lbskey']}"></script>
+<script language='javascript'>
+$('#js-map').height($(document.body).height() - $('.fui-header').height() - $('.fui-footer .fui-list:first-child').height() - 20 + 'px');
+var position = {php echo json_encode($data);};
+init();
+function init(){
+    var center = new qq.maps.LatLng({$item['lat']},{$item['lng']});
+    var map = new qq.maps.Map(document.getElementById("js-map"), {
+        center: center,
+        zoom: 16
+    });
+    var infoWin = new qq.maps.InfoWindow({
+        map: map
+    });
+	var latlngs = new Array();	
+	
+	for(var k=0; k< position.length; k++){
+		latlngs[k] = new qq.maps.LatLng(position[k].lat,position[k].lng);		
+	}	
+    for(var i = 0;i < latlngs.length; i++) {		
+        (function(n){
+            var marker = new qq.maps.Marker({
+                position: latlngs[n],
+                map: map
+            });	
+            qq.maps.event.addListener(marker, 'click', function() {
+                infoWin.open();
+                infoWin.setContent('<div style="text-align:center;white-space:'+
+                'nowrap;margin:10px;">' +
+                position[n].title + '</div>');
+                infoWin.setPosition(latlngs[n]);
+            });			
+        })(i);
+    }
+}
+
+</script>
+{template $this->mytpl('_footer')}

@@ -1,0 +1,38 @@
+{template $this->mytpl('_header')}
+<div class="fui-page fui-current-page">
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">快速寄件</div>
+       <div class="fui-header-right"></div>
+    </div>
+    <div class="fui-content navbar">
+		<a class='fui-list' href="{php echo $this->createMobileUrl($mydo,array('op'=>'address','io'=>1));}" data-nocache="true">
+			<div class='fui-list-media'>
+				<img src="{$s['logo']}" class='round' />
+			</div>
+			<div class='fui-list-inner'>
+				<div class='subtitle'>aaa</div>
+				<div class='text'></div>
+			</div>
+			<div class="fui-list-angle">
+				<div class='angle'></div>
+			</div>
+		</a>
+		<a class='fui-list' href="{php echo $this->createMobileUrl($mydo,array('op'=>'address','io'=>2));}" data-nocache="true">
+			<div class='fui-list-media'>
+				<img src="{$s['logo']}" class='round' />
+			</div>
+			<div class='fui-list-inner'>
+				<div class='subtitle'>vvv</div>
+				<div class='text'></div>
+			</div>
+			<div class="fui-list-angle">
+				<div class='angle'></div>
+			</div>
+		</a>
+    </div>  
+</div>
+
+{template $this->mytpl('_footer')}

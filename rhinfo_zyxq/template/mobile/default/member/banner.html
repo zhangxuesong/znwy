@@ -1,0 +1,9 @@
+<div id="banner">
+{if !empty($region['regbanner'])}
+	<a {if !empty($region['regbannerurl'])}href="{$region['regbannerurl']}"{/if}><img style="width:100%;" src="{php echo tomedia($region['regbanner'])}" /></a>	
+{else}
+	{if !empty($region['image'])}
+	<a {if !empty($region['regbannerurl'])}href="{$region['regbannerurl']}"{/if}><img style="width:100%;" src="{php echo tomedia($region['image'])}" /></a>	
+	{/if}
+{/if}
+</div>

@@ -1,0 +1,129 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />
+	<input type="hidden" name="pid" value="{$pid}" />
+	<input type="hidden" name="rid" value="{$rid}" />	
+	<input type="hidden" name="boardcate" value="{$_GPC['boardcate']}" />
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">排序</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" placeholder="数字越大，排名越靠前" name="displayorder" value="{$item['displayorder']}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>广告标题</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入广告标题" name="title" />
+		</div>	
+	</div>
+	{if $_GPC['boardcate']}
+	<input type="hidden" name="btype" value="9" />	
+	{else}
+	<div class="form-group">
+	   <label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>页面类别</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">                   	
+			<select class="form-control"  name="btype" id="btype" >
+				<option value="1" {if empty($item['btype']) || $item['btype']==1}selected{/if}>首页头部幻灯</option>
+				<option value="2" {if  $item['btype']==2}selected{/if}>首页广告轮播</option>
+				<option value="3" {if  $item['btype']==3}selected{/if}>首页图片魔方</option>
+				<option value="4" {if  $item['btype']==4}selected{/if}>服务菜单幻灯</option>
+				<option value="5" {if  $item['btype']==5}selected{/if}>智能门禁幻灯</option>
+				<option value="6" {if  $item['btype']==6}selected{/if}>缴费中心幻灯</option>
+				<option value="7" {if  $item['btype']==7}selected{/if}>最新动态幻灯</option>
+				<option value="8" {if  $item['btype']==8}selected{/if}>周边商家幻灯</option>
+				<option value="9" {if  $item['btype']==9}selected{/if}>社区论坛幻灯</option>
+				<option value="10" {if  $item['btype']==10}selected{/if}>常见问题幻灯</option>
+				<option value="11" {if  $item['btype']==11}selected{/if}>便民电话幻灯</option>
+				<option value="12" {if  $item['btype']==12}selected{/if}>快递驿站幻灯</option>
+			</select>						
+			<span class="help-block">魔方显示最多四张图片，超过四张则按两列显示，服务菜单可到系统管理->系统配置->风格样式中开启</span>
+		</div>
+	</div>		
+	{/if}
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">开始日期</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_date('startdate',$item['startdate']);}
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">结束日期</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_date('enddate',$item['enddate']);}
+		</div>	
+	</div>
+
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">图片</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_image('thumb',$item['thumb']);}
+			<span class="help-block">建议尺寸640*320，注意图片魔方数量及各图片的尺寸比例</span>
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">链接地址</label>		
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="input-group ">
+				<input type="text" class="form-control"  value="{$item['link']}" placeholder="输入链接地址" name="link" id="link"/>
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" onclick="myshowLinkDialog(this);">内部链接</button>
+					<button class="btn btn-default" type="button" onclick="showLinkDialog(this);">系统链接</button>
+				</span>
+			</div>
+			<span class="help-block">请输入链接地址 ,外部链接请包含http://</span>
+		</div>	
+	</div>		
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">小程序链接</label>		
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="input-group ">
+				<span class="input-group-addon">小程序APPID</span>
+				<input type="text" class="form-control"  value="{$item['wxappid']}" placeholder="输入小程序APPID" name="wxappid" />
+				<span class="input-group-addon">小程序页面</span>
+				<input type="text" class="form-control"  value="{$item['wxapppage']}" placeholder="输入小程序页面" name="wxapppage" id="wxapppage" />				
+			</div>
+			<span class="help-block">第三方小程序APPID必须输入，页面可以为空，默认小程序首页</span>
+		</div>	
+	</div>	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">小程序跳转背景</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_image('bgimage',$item['bgimage']);}
+			<span class="help-block">注意图片图片的尺寸比例，打包小程序使用，原生小程序不需要使用</span>
+		</div>	
+	</div>
+	<div class="form-group">
+	   <label class="col-xs-12 col-sm-2 col-md-2 control-label">状态</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">                   	
+			<label class='radio-inline'>
+				<input type='radio' name='enabled' value=1' {if $item['enabled']==1}checked{/if} /> 显示
+			</label>
+			<label class='radio-inline'>
+				<input type='radio' name='enabled' value=0' {if empty($item['enabled']) || $item['enabled']==0 }checked{/if} /> 隐藏
+			</label>
+		</div>
+	</div>
+</form>
+
+<script>
+	function showLinkDialog(elm) {
+		var ipt = $(elm).parent().prev();
+		util.linkBrowser(function(href){		
+			ipt.val(href);			
+		});
+	}
+	function myshowLinkDialog(elm) {
+		var ipt = $(elm).parent().prev();
+		require(["util","jquery"], function(u, $){
+			var myurl = ipt.attr('id');			
+			var footer = '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>';
+			var modalobj = util.dialog('请选择链接',["{php echo $this->createWeburl('query',array('op'=>'url')).$mywe['direct'];}&myurl=" + myurl],footer,{containerName:'icon-container'});
+			modalobj.modal({'keyboard': false});
+			modalobj.find('.modal-dialog').css({'width':'70%'});
+			modalobj.find('.modal-body').css({'height':'70%','overflow-y':'scroll'});
+			modalobj.modal('show');
+		});	
+	}
+</script>

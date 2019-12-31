@@ -1,0 +1,88 @@
+{template $this->mytpl('_header')}
+{if !empty($this->syscfg['btncolor'])}
+    <style>
+		#btnSubmit {
+			background-color:{php echo $this->syscfg['btncolor']};
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+		}
+		#btnSubmit:active,
+		#btnSubmit.disabled {
+			background: {php echo $this->syscfg['btncolor']};			
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+			opacity:0.5;
+		}
+    </style>
+{/if}
+<style>
+	.elevator-list span{
+		display: inline-block;
+		float: left;
+		width: 3.4rem;
+		margin-left: 0.28rem;
+		margin-bottom: 0.4rem;
+	}
+	.elevator-list{
+		overflow: hidden;
+	}
+	.elevator-list a{
+			display:inline-block;
+			height: 1.6rem;
+			border:1px solid #cacaca;
+			border-radius: 0.2rem;
+			text-align: center;
+			color: #666;
+			line-height: 1.6rem;
+			width: 3.4rem;
+	}
+	.elevator-item.active a{
+			color: #FFFFFF;
+			background: #ff6600;
+	}
+	#elevator{
+		padding-top: 20px;
+		padding-bottom: 10px;
+	}
+	@media screen and (max-width: 320px) {
+		.elevator-list span{
+			margin-left: 0.44rem;
+		}
+	}
+</style>
+<div class="fui-page fui-page-current">
+	<div class="fui-header">
+		<div class="fui-header-left">	
+			<a class="back"></a>		
+		</div>
+		<div class="title">{$user['address']}</div>
+		<div class="fui-header-right">	
+		    <a href=""></a>
+		</div>
+	</div>
+	
+	<div class="fui-content margin">
+		<div class="fui-title">
+			<i class="icon icon-lights"></i> 请选择楼层
+		</div>
+		<div class="fui-cell-group" id="elevator">
+			<div class="elevator-list">
+				<input type="hidden" id="floor" name="floor" value="{$room['floor']}">
+				{loop  $floors $floor}
+				<span class="elevator-item {if $room['floor']==$floor}active{/if}" data-floor="{$floor}">
+					<a href="javascript:void(0)" >{$floor}楼</a>
+				</span>
+				{/loop}
+			</div>
+			<div class="fui-cell-tip">
+				温馨提示：请勿随意操作，否则您的权限将受限
+			</div>
+		</div>
+		<a id="btnSubmit" class="btn btn-success btn-submit block">确定</a>
+	</div>
+ </div> 
+<script language='javascript'>
+	require(['elevator/index'], function (modal) {
+		modal.init({devsn:"{$elevator['locksn']}"});
+	});		
+</script>
+
+{template $this->mytpl('_footer')}

@@ -1,0 +1,57 @@
+{template $this->mytpl('_header')}
+
+<div class='fui-page  fui-page-current member-cart-page'>
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back"></a>
+	</div>
+	<div class="title">我的账单</div> 
+	<div class="fui-header-right">{if $list}<a href="{php echo $this->CreateMobileUrl('service',array('op'=>'hiscarbill','pid'=>$_GPC['pid'],'rid'=>$_GPC['rid'],'lid'=>$_GPC['lid'],'cid'=>$_GPC['cid']));}">历史</a>{/if}</div>
+    </div>
+
+    <div class='fui-content navbar' >
+    {if empty($list)}
+		<div class='content-empty'>
+			 <i class='icon icon-money'></i><br/>您还没有任何待缴账单<br/>	
+			<a href="{php echo $this->CreateMobileUrl('service',array('op'=>'hiscarbill','pid'=>$_GPC['pid'],'rid'=>$_GPC['rid'],'lid'=>$_GPC['lid'],'cid'=>$_GPC['cid']));}" class='btn btn-default-o external'>看看历史账单吧</a>			 
+		</div>
+	{else}
+	<div class="fui-cell-group" style="margin-top:0;">		
+		{loop $list $i $item}
+			{if $i==0}
+				<div class="fui-cell">			
+					<div class="fui-cell-info"><i class="icon icon-taxi"> {$user['rtitle']}-{$item['title']}</i></div>					
+				</div>	
+				<div class="fui-cell-tip" >如需选择缴费，请从下往上选择取消</div>		
+			{/if}
+			<div class="fui-cell">			
+				<div class="fui-cell-label">费用</div>
+				<div class="fui-cell-info">{$item['fee']}</div>	
+				<div class="fui-cell-remark noremark feebill-item" style="padding-right:20px;" data-billid="{$item['id']}" data-fee="{$item['fee']}" >单价：{$item['price']} 
+				&nbsp;&nbsp;<input type="checkbox" name="checkbox" id="fee{$i}" {if $i + 1 < count($list)}disabled{/if} class="fui-radio fui-radio-danger check-item" checked/></div>					
+			</div>				
+			<div class="fui-cell-tip" >	交费周期：{$item['daterange']}</div>				
+		{/loop}
+		
+		<div class="fui-cell" style="display:none;">
+			<div class="fui-cell-title">
+			总计：<span class="text-danger" id="totalfee1">￥{$totalfee}</span>
+			</div>			
+		</div>		
+	</div>
+	 {/if}
+    </div>
+	 {if !empty($list)}
+		 <div class='fui-navbar'>
+			<a class='nav-item'>总计：<span class="text-danger" id="totalfee">￥{$totalfee}</span></a>
+			<a id="billpay" class='nav-item btn btn-danger external' data-nocache="true"><i class="icon icon-money"></i> 结算</a>
+		</div>
+		 <script language='javascript'>
+		 require(['service/fee'], function (modal) {
+				modal.init({totalfee:"{$totalfee}",billids:"{$billid}",count:"{php echo count($list);}",creditfee:0,iswap:"{php echo $this->rhinfo_wap?1:0;}"});
+				sessionStorage.setItem("need-refresh", true);
+		});</script>	
+	{/if}
+</div>
+
+{template $this->mytpl('_footer')}

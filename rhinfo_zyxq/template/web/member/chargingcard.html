@@ -1,0 +1,61 @@
+﻿{template 'web/_iframe_header'}
+<style>
+html { overflow-x:hidden; }
+</style>
+<div class="panel panel-default" style="width:580px;">
+    <div class="panel-body">    
+		<form action="" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" class="form-control" value="{$_GPC['uid']}" name="uid">
+			<div id="chargingcard">
+				{loop $chargingcards $card}
+					<input type="hidden" class="form-control" value="{$card['id']}" name="cardid[]">
+					<div class="form-group">					
+						<div class="input-group">
+							<span class="input-group-addon">卡号</span>		
+							<input type="text" class="form-control" value="{$card['cardno']}" name="cardno[]" style="min-width:300px">	
+							<span class="input-group-addon">状态</span>		
+							<select name="status[]" class="form-control" style="min-width:100px">
+								<option value="1" {if $card['status']==1}selected{/if}>启用</option>
+								<option value="0" {if $card['status']==0}selected{/if}>禁用</option>
+							</select>					
+							<span class="input-group-btn"><button class="btn btn-warning" type="button" onclick="deleteitem(this,'{$card['id']}')" ><i class="fa fa-close"></i></button></span>
+						</div>
+					</div>
+				{/loop}
+			</div>
+			<div class="form-group">				
+				<a href="javascript:;" class="btn btn-info"  onclick="additem()" ><i class="fa fa-plus"></i> 添加卡号</a>
+				<a href="javascript:;" class="btn btn-success"  onclick="mysave()" ><i class="fa fa-save"></i> 绑定卡号</a>
+			</div>
+		</form>		
+    </div>
+</div>
+{template 'web/_iframe_footer'}
+<script type="text/javascript">
+	function additem() {
+	   var html = '<input type="hidden" class="form-control" value="0" name="cardid[]"><div class="form-group"><div class="input-group"><span class="input-group-addon">卡号</span><input type="number" class="form-control" value="" name="cardno[]" style="min-width:300px"><span class="input-group-addon">状态</span><select name="status[]" class="form-control"><option value="1">启用</option><option value="0">禁用</option></select><span class="input-group-btn"><button class="btn btn-warning" type="button" onclick="removeitem(this)" ><i class="fa fa-close"></i></button></span></div>';
+	   $("#chargingcard").append(html); 
+	}
+	function removeitem(obj) {
+		$(obj).parents(".form-group").remove();
+	}
+	function deleteitem(obj,id) {
+		$.post("{php echo mywurl('member/delchargcard').$mywe['direct'];}",
+			{id:id},
+			function(data,status){
+			 if (data=='ok'){
+				$(obj).parents(".form-group").remove();
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+			 }
+		});		
+	}
+	function mysave() {
+		$("#myform").submit();
+		var index = parent.layer.getFrameIndex(window.name); 
+		parent.layer.close(index);	
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+{template $this->mytpl('_header')}
+<style>
+	.paging{
+		display: flex;
+		justify-content: center;
+	}
+	.question-group{
+		display: none;
+	}
+	.question-group.now{
+		display: inherit;
+	}
+	#btnHome{
+		display: none;
+	}
+	.fui-cell-group {
+		margin-top: 0;
+	}
+	.paging button{
+		height: 1.5rem;
+		line-height: 1.5rem;
+		font-size: 12px;
+	} 
+	.fui-label {
+		background: #fff;
+	}
+</style>
+
+<div class="fui-page fui-page-current" >
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">设备巡检</div>
+        <div class="fui-header-right"></div>
+    </div>
+    <div class="fui-content">        
+         <div class="fui-title">
+			 <i class="icon icon-operation"></i>
+			 {$device['title']}
+		 </div>
+		 <div class="fui-cell-group"> 
+			 <div class="fui-cell">
+				<div class="fui-cell-label">规格型号</div>
+				<div class="fui-cell-info">{$device['spec']}</div>
+			 </div>
+			 <div class="fui-cell">
+				<div class="fui-cell-label">厂商品牌</div>
+				<div class="fui-cell-info">{$device['brand']}</div>
+			 </div>
+			 {if !empty($supplier)}
+			 <div class="fui-cell">
+				<div class="fui-cell-label">维保厂商</div>
+				<div class="fui-cell-info">{$supplier['title']}</div>
+			 </div>
+			 {/if}			 
+			  {if !empty($device['remark'])}
+			 <div class="fui-cell">
+				<div class="fui-cell-label">备注</div>
+				<div class="fui-cell-info">{$device['remark']}</div>
+			 </div>
+			 {/if}
+		 </div>	
+		 <div class="fui-cell-group" >	
+			<form id="myform">
+				<input type="hidden" name="rid" value="{$myrid}" />
+				<input type="hidden" name="devid" value="{$_GPC['devid']}" />
+				<input type="hidden" name="taskid" value="{$_GPC['taskid']}" />
+				{loop $cateitems $i $item}
+				<div class="question-group {if $i==0}now{/if}">
+					{if $item['itemtype']=='text'}
+						<div class="fui-title">
+							 <i class="icon icon-operation"></i>
+							巡检标准
+						 </div>
+						<div class="fui-cell">				
+							<div class="fui-cell-info">
+								{$item['desc']}
+							</div>
+						</div>
+						{if !empty($item['value'])}
+						<div class="fui-cell">
+							<div class='fui-cell-info'>			 
+								 <div class="fui-images fui-images-md">
+									 <img src="{php echo tomedia($item['value']);}" align='top' onload="if (this.height> 100) {this.style.marginTop = (100 - this.height)/2 + 'px';}" />
+								 </div>			
+							 </div>
+						</div>
+						{/if}			
+						<div class="fui-cell">
+							<div class="fui-cell-label">{$item['title']}</div>
+							<div class="fui-cell-info">
+								<input type="text" name="item_{$item['id']}" class="fui-input" placeholder="请输入{$item['title']}">
+							</div>
+						</div>
+					{/if}
+					{if $item['itemtype']=='number'}
+						<div class="fui-title">
+							 <i class="icon icon-operation"></i>
+							巡检标准
+						 </div>
+						<div class="fui-cell">				
+							<div class="fui-cell-info">
+								{$item['desc']}
+							</div>
+						</div>
+						{if !empty($item['value'])}
+						<div class="fui-cell">
+							<div class='fui-cell-info'>			 
+								 <div class="fui-images fui-images-md">
+									 <img src="{php echo tomedia($item['value']);}" align='top' onload="if (this.height> 100) {this.style.marginTop = (100 - this.height)/2 + 'px';}" />
+								 </div>			
+							 </div>
+						</div>
+						{/if}					
+						<div class="fui-cell">
+							<div class="fui-cell-label">{$item['title']}</div>
+							<div class="fui-cell-info">
+								<input type="number" name="item_{$item['id']}" class="fui-input" placeholder="请输入{$item['title']}">
+							</div>
+						</div>
+					{/if}
+					{if $item['itemtype']=='radio'}
+						<div class="fui-title">
+							 <i class="icon icon-operation"></i>
+							巡检标准
+						 </div>
+						<div class="fui-cell">				
+							<div class="fui-cell-info">
+								{$item['desc']}
+							</div>
+						</div>
+						<div class="fui-cell">
+							<div class="fui-cell-label">{$item['title']}</div>
+							<div class="fui-cell-info">
+								{loop $item['itemvalue'] $v}
+								 <input type="radio" name="item_{$item['id']}" value="{$v}"  class="fui-radio fui-radio-success"/><label class="fui-label">{$v}</label>
+								 {/loop}	
+							</div>
+						</div>
+						{/if}
+						{if $item['itemtype']=='checkbox'}
+						<div class="fui-title">
+							 <i class="icon icon-operation"></i>
+							巡检标准
+						 </div>
+						<div class="fui-cell">				
+							<div class="fui-cell-info">
+								{$item['desc']}
+							</div>
+						</div>
+						<div class="fui-cell">
+							<div class="fui-cell-label">{$item['title']}</div>
+							<div class="fui-cell-info">
+							{loop $item['itemvalue'] $v}
+								<input type="checkbox" name="item_{$item['id']}" value="{$v}"  class="fui-checkbox fui-checkbox-success"/><label class="fui-label">{$v}</label>
+							{/loop}	
+							</div>
+						</div>
+						{/if}
+					{if $item['itemtype']=='select'}
+						<div class="fui-title">
+							 <i class="icon icon-operation"></i>
+							巡检标准
+						 </div>
+						<div class="fui-cell">				
+							<div class="fui-cell-info">
+								{$item['desc']}
+							</div>
+						</div>
+						<div class="fui-cell">
+							<div class="fui-cell-label">{$item['title']}</div>
+							<div class="fui-cell-info">
+								<select name="item_{$item['id']}">
+									<option value ="">请选择</option>
+									{loop $item['itemvalue'] $v}
+										<option value ="{$v}">{$v}</option>
+									{/loop}
+								</select>
+							</div>
+						</div>
+						{/if}
+						{if $item['itemtype']=='textarea'}
+						<div class="fui-title">
+							 <i class="icon icon-operation"></i>
+							巡检标准
+						 </div>
+						<div class="fui-cell">				
+							<div class="fui-cell-info">
+								{$item['desc']}
+							</div>
+						</div>
+						{if !empty($item['value'])}
+						<div class="fui-cell">
+							<div class='fui-cell-info'>			 
+								 <div class="fui-images fui-images-md">
+									 <img src="{php echo tomedia($item['value']);}" align='top' onload="if (this.height> 100) {this.style.marginTop = (100 - this.height)/2 + 'px';}" />
+								 </div>			
+							 </div>
+						</div>
+						{/if}			
+						<div class="fui-cell">
+							<div class="fui-cell-label">{$item['title']}</div>
+							<div class="fui-cell-info">
+								 <textarea rows="5" cols="" name="item_{$item['id']}" placeholder="内容 10-100个字"></textarea>
+							</div>
+						</div>
+						{/if}
+					{if $item['itemtype']=='image'}
+						<div class="fui-title">
+							 <i class="icon icon-operation"></i>
+							巡检标准
+						 </div>
+						<div class="fui-cell">				
+							<div class="fui-cell-info">
+								{$item['desc']}
+							</div>
+						</div>
+						<div class="fui-cell">
+							<input type="hidden" class="fui-input" name="item_{$item['id']}" value="">
+							<div class="fui-cell-label">{$item['title']}</div>
+							<div class="fui-cell-info">
+									<ul class="fui-images fui-images-md" data-image="item_{$item['id']}"></ul>
+									<div class="fui-uploader fui-uploader-md" data-max="1" data-count="0"> 								 
+										  <input type="file" name="imgFile{$item['id']}" id="imgFile{$item['id']}" multiple="" accept="image/*" >							
+									</div>
+							</div>
+						</div>
+					{/if}
+				</div>
+				{/loop}
+			</form>
+		</div>
+		<div class="paging">
+			<button class="btn btn-default" id="btnPre">上一项</button>
+			<button class="btn btn-default" id="btnNext">下一项</button>
+			<button class="btn btn-default" id="btnHome">回首项</button>
+		</div>
+		<a class="btn btn-success btn-submit block" style="display: none;" id="btnSubmit" >提交</a>
+    </div>	
+ </div>
+ <script language='javascript'>
+	require(['manager/devpatrol'], function (modal) {
+		modal.initItem({rid:"{$myrid}"}); 
+	});
+</script>	
+{template $this->mytpl('_footer')}

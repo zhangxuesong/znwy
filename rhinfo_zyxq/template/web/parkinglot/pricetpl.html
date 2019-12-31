@@ -1,0 +1,19 @@
+﻿<div class="form-group">
+	<input type="hidden" class="form-control" value="0"  name="ruleid[]">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">计费区间</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<div class="input-group">
+			<span class="input-group-addon">从</span>		
+			<input type="number" class="form-control starttime" placeholder="时间" name="starttime[]">
+			<span class="input-group-addon">到</span> 
+			<input type="number" class="form-control endtime" placeholder="时间" name="endtime[]">
+
+			<span class="input-group-addon">点或小时，单价或金额</span>		
+			<input type="number" class="form-control"   name="price[]">
+			<span class="input-group-addon">元</span>
+			<span class="input-group-btn">
+				<button class="btn btn-warning" type="button" onclick="removepricerule(this)" ><i class="fa fa-close"></i></button>
+			</span>
+		</div>		
+	</div>
+</div>

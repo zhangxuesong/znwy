@@ -1,0 +1,47 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:30px;">
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/billformpay'}	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	var payfee = $.trim($("#payfee").val());
+	var paytype = $("#paytype").find("option:selected").val();
+
+	if (payfee=='' || payfee==0) {
+	   layer.msg("缴费金额不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (paytype=='' || paytype==0) {
+		   layer.msg("支付方式不能为空！",{icon:0});
+		   return;
+		}
+
+	var status = $.trim($("#status").val());
+	if(status==2){
+		layer.msg("已经缴过费了！",{icon:0});
+		return;
+	}
+
+	myprocess(obj);
+	$("#myform").submit();
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'list')).$mywe['direct'];}";
+	 location.href = url;
+}
+
+</script> 
+
+</body>
+</html>

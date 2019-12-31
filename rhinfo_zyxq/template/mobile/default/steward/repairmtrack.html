@@ -1,0 +1,50 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-cell-group .fui-cell .fui-cell-icon {
+	width:2rem;
+}
+</style>
+<div class='fui-page  fui-page-current' >
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back"></a>
+	</div>
+	<div class="title">报修回复</div> 
+	<div class="fui-header-right">&nbsp;</div>
+    </div>
+  <div class='fui-content margin navbar'>    
+	  <div class="fui-title"><i class="icon icon-city"></i> {$housename}</div>
+	  <div class="fui-title"></div>  
+	 <div class="fui-cell-group">
+		<input type="hidden" id="repair_id" name="repair_id" value="{$repair['id']}">		 	 
+		 <div class='fui-cell must'>
+			 <div class='fui-cell-label '>内容</div>
+			 <div class='fui-cell-info'><textarea rows="6" placeholder="内容 10-100个字" id='content' name='content'></textarea></div>
+			{if $this->rhinfo_isweixin}<div class='fui-cell-icon'><i class="icon icon-record text-success" style="font-size:1.5rem;"></i></div>{/if}
+		 </div>	
+	 
+	 <div class='fui-cell'>
+		 <div class='fui-cell-label'>晒图</div>
+		 <div class='fui-cell-info'>			 
+			 <ul class="fui-images fui-images-md" id="images" ></ul>
+			 <div class="fui-uploader fui-uploader-md"
+				 data-max="3" 
+				 data-count="0">
+			 </div>
+		 </div>
+	 </div>
+	</div>
+  </div>  
+     <div class='fui-footer'>
+		<a class='btn btn-warning btn-submit block'>提交</a>
+	  </div>
+	 <script language='javascript'>
+		require(['repair/repair'], function (modal) {
+			modal.initMtrack({
+			rid: "{$user['rid']}"
+			}); 
+		});
+	</script>
+</div> 
+
+{template $this->mytpl('_footer')}

@@ -1,0 +1,138 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<style type="text/css">
+.nav-tabs li a { padding: 3px 10px;}
+</style>
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body"> 
+	<ul class="nav nav-tabs">		 		  
+		  <li><a href="{php echo $this->createWeburl('category',array('op'=>'list','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >分类设置</a></li>		
+		  <li><a href="{php echo $this->createWeburl('sms',array('op'=>'base','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >基本设置</a></li>
+		  <li><a href="{php echo $this->createWeburl('sms',array('op'=>'fee','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >账单设置</a></li>
+		 {if !empty($_W['uid'])} <li><a href="{php echo $this->createWeburl('sms',array('op'=>'market','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >策略设置</a></li>{/if}
+		  <li><a href="{php echo $this->createWeburl('printer',array('op'=>'list','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >云打印机</a></li>
+		 <li class="active"><a href="{php echo $this->createWeburl('sms',array('op'=>'index','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >短信设置</a></li>
+		{if !empty($_W['uid'])}<li><a href="{php echo $this->createWeburl('sms',array('op'=>'intelligence','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >智慧设置</a></li>{/if}
+		 <li><a href="{php echo $this->createWeburl('sms',array('op'=>'door','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >其他设置</a></li>
+	</ul>
+	<br>
+	<div class="tab-content">			
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<a href="javascript:;" onclick="myadd()" class="btn btn-info" {if $this->syscfg['smsprice']>0}{else}disabled{/if}>
+				<i class="fa fa-money"></i> 充值</a>							
+				<span class="pull-right" style="line-height:38px;"><a href="javascript:;" onclick="myrecharge()">剩余短信：<strong id="count" class="text-danger">{$item['smsqty']}</strong> 条</a></span> 
+			</div>  
+			<div class="panel-body ">
+				<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >		
+					<input type="hidden" name="token" value="{$_W['token']}" />			
+					<input type="hidden" name="pid" value="{$pid}" />		
+					<input type="hidden" name="rid" value="{$rid}" />	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定验证</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="bindverify" value="1" {if $item['bindverify']==1 } checked{/if} />验证</label>
+							<label  class="radio-inline">
+								<input type="radio" name="bindverify" value="2" {if empty($item['bindverify']) || $item['bindverify']==2 } checked{/if} /> 不验证</label>
+							<span class="help-block">手机短信验证</span>			
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">邀请验证</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="shareverify" value="1" {if $item['shareverify']==1 } checked{/if} />验证</label>
+							<label  class="radio-inline">
+								<input type="radio" name="shareverify" value="2" {if empty($item['shareverify']) || $item['shareverify']==2 } checked{/if} /> 不验证</label>
+							<span class="help-block">手机短信验证</span>			
+						</div>
+					</div>		
+
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">报修提醒</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="repairverify" value="1" {if $item['repairverify']==1 } checked{/if} />提醒</label>
+							<label  class="radio-inline">
+								<input type="radio" name="repairverify" value="2" {if empty($item['repairverify']) || $item['repairverify']==2 } checked{/if} /> 不提醒</label>
+							<span class="help-block">后台发送模板消息同时发送手机短信提醒</span>			
+						</div>
+					</div>		
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">建议提醒</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="suggestverify" value="1" {if $item['suggestverify']==1 } checked{/if} />提醒</label>
+							<label  class="radio-inline">
+								<input type="radio" name="suggestverify" value="2" {if empty($item['suggestverify']) || $item['suggestverify']==2 } checked{/if} /> 不提醒</label>
+							<span class="help-block">后台发送模板消息同时发送手机短信提醒</span>			
+						</div>
+					</div>		
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">缴费提醒</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="payfeeverify" value="1" {if $item['payfeeverify']==1 } checked{/if} />提醒</label>
+							<label  class="radio-inline">
+								<input type="radio" name="payfeeverify" value="2" {if empty($item['payfeeverify']) || $item['payfeeverify']==2 } checked{/if} /> 不提醒</label>
+							<span class="help-block">后台发送模板消息同时发送手机短信提醒</span>			
+						</div>
+					</div>		
+					<div class="col-lg-9 col-xs-12 col-sm-offset-2" style="margin-top:8px;">   
+						<button  class="btn btn-primary" ><i class="fa fa-save"></i> 保存</button>
+						<a href="javascript:;" class="btn btn-default"  onclick="myreturn()"><i class="fa fa-reply"></i> 返回<a/>
+					</div>
+				</form>
+				
+			</div> 
+	</div>  
+	</div>
+	</div>	
+  </div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+var pid = {$pid};
+var rid = {$rid};
+
+function myadd(){	
+	layer.open({
+	  type: 1,
+	  title:'微信扫一扫充值，完成请刷新',
+	  skin: 'layui-layer-molv', //样式类名
+	  offset: '100px',
+	  closeBtn: 0, //不显示关闭按钮
+	  anim: 2,
+	  shadeClose: true, //开启遮罩关闭
+	  content: '<img src="{$smsrecharge_qrcode}" width="300" style="text-align:center;"/>'
+	});
+}
+
+function myrecharge(){
+	var url = "{php echo $this->createWeburl('sms',array('op'=>'recharge')).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid;	
+	var title = "<i class='fa fa-hand-o-right'></i> {$item['title']} > 短信充值记录";
+	var index = layer.open({
+   	    type: 2,
+		title:title,
+		content: url,
+		area: ['600px','500px'],
+		maxmin: true
+	});
+	layer.full(index);
+}
+
+function myreturn(){
+	var url = "{php echo $this->createWeburl('region',array('op'=>$rlist,'category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid;	
+	window.location.href = url;
+}
+
+</script>
+</body>
+</html>

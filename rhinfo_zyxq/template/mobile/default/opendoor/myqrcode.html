@@ -1,0 +1,33 @@
+{template $this->mytpl('_header')}
+
+	<div class="fui-page fui-page-current page-commission-index ">
+	<div class="fui-header">
+		<div class="fui-header-left">			
+		</div>
+		<div class="title">开门二维码</div>
+		<div class="fui-header-right">			
+		</div>
+	</div>
+	
+	<div class='fui-content navbar' >			
+		<div class="fui-list-group address-item" style='margin-top:5px;'>
+			<div  class="fui-list" >
+				<div class="fui-list-inner">
+					<div class="title"><span class='realname'>{$item['title']}</span> </div>
+					
+				</div>				
+			</div>	
+			<div  class="fui-list" >
+				<div class="fui-list-inner">
+					<div class="title text-center"><i class="icon icon-yaoshi"></i>请放置读头扫一扫</div>		
+					<div id="barcode" style="margin:1.5em 0 1.5em auto;clear:both;text-align:center;" >
+						<img src="{$fileurl}" width="250"/>
+					</div> 				
+				</div>
+			</div>
+		</div> 
+		 </div>
+
+	 </div> 
+
+{template $this->mytpl('_footer')}

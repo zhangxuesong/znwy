@@ -1,0 +1,125 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170712">
+ <style>
+	.fui-cell-group{margin-top:0.5rem;}
+	.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+	.fui-cell-group:after {border-bottom:0px;}
+</style>
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">我的工作</div>
+		<div class="fui-header-right"></div>
+	</div>
+	<div class='fui-content navbar'>
+        <div class="headinfo">
+            <div class="userinfo">
+                <a class="fui-list external" href="#">
+                    <div class="fui-list-media">
+                        <img src="{php echo tomedia($team['avatar']);}">
+                    </div>
+                    <div class="fui-list-info">
+                        <div class="title">{$region['title']}</div>
+                        <div class="subtitle">{$team['realname']}-{$team['title']}</div>
+						<div class="text">{$team['content']}</div>
+                    </div>
+                </a>
+				<a class="setbtn" href="{php echo $this->createMobileurl('manage',array('op'=>'myset'));}">
+					<i class="icon icon-settings"></i>
+				</a>               
+            </div>
+			<div class="water">
+				<div class="water-1"></div>
+				<div class="water-2"></div>
+            </div>  
+        </div>
+		{if $team['right5']==1 || $team['right6']==1}
+		<div class="fui-cell-group fui-cell-click">
+			{if $team['right5']==1}
+			<a class="fui-cell" href="{php echo $this->createMobileurl('manage',array('op'=>'mymember'));}">
+				<div class="fui-cell-icon"><i class="icon icon-friends"></i></div>
+				<div class="fui-cell-text"><p>住户审核</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+			{/if}	
+			{if $team['right6']==1}
+			<a class="fui-cell" href="{php echo $this->createMobileurl('manage',array('op'=>'mynotice'));}">
+				<div class="fui-cell-icon"><i class="icon icon-notice"></i></div>
+				<div class="fui-cell-text"><p>通知审核</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+			{/if}	
+		</div>
+		{/if}
+		{if $team['right1']==1 || $team['right2']==1}
+		<div class="fui-cell-group fui-cell-click">
+			{if $team['right1']==1}		
+			<a class="fui-cell" href="{php echo $this->createMobileurl('manage',array('op'=>'myrepair'));}">
+				<div class="fui-cell-icon"><i class="icon icon-repair"></i></div>
+				<div class="fui-cell-text"><p>业主报修</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>			
+			<a class="fui-cell" href="{php echo $this->createMobileurl('manager',array('op'=>'myrepairp'));}">
+				<div class="fui-cell-icon"><i class="icon icon-repairfill"></i></div>
+				<div class="fui-cell-text"><p>内部工单</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+			{/if}	
+			{if $team['right2']==1}		
+			<a class="fui-cell" href="{php echo $this->createMobileurl('manage',array('op'=>'mysuggest'));}">
+				<div class="fui-cell-icon"><i class="icon icon-write"></i></div>
+				<div class="fui-cell-text"><p>投诉建议</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>		
+			{/if}
+		</div>
+		{/if}
+		
+		{if $team['right8']==1 || $team['right9']==1 || $team['right7']==1}
+		<div class="fui-cell-group fui-cell-click">
+			{if $team['right8']==1}
+			<a class="fui-cell" href="{php echo $this->createMobileurl('manage',array('op'=>'mysec'));}">
+				<div class="fui-cell-icon"><i class="icon icon-security"></i></div>
+				<div class="fui-cell-text"><p>安防巡更</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+			{/if}	
+			{if $team['right9']==1}
+			<a class="fui-cell" href="{php echo $this->createMobileurl('manage',array('op'=>'myenv'));}">
+				<div class="fui-cell-icon"><i class="icon icon-evaluate"></i></div>
+				<div class="fui-cell-text"><p>环境维护</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>		
+			{/if}
+			{if $team['right7']==1}
+				<a class="fui-cell" href="{php echo $this->createMobileurl('manage',array('op'=>'myreadmeter'));}">
+					<div class="fui-cell-icon"><i class="icon icon-roundadd"></i></div>
+					<div class="fui-cell-text"><p>抄表录入</p></div>
+					<div class="fui-cell-remark"></div>
+				</a>		
+			{/if}
+		</div>
+		{/if}
+
+		{if $team['right15']==1}
+		<div class="fui-cell-group fui-cell-click">
+			<a class="fui-cell" href="{php echo $this->createMobileurl('manage',array('op'=>'mypost'));}">
+				<div class="fui-cell-icon"><i class="icon icon-comment"></i></div>
+				<div class="fui-cell-text"><p>我的话题</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+			<a class="fui-cell" href="{php echo $this->createMobileurl('manage',array('op'=>'myreply'));}">
+				<div class="fui-cell-icon"><i class="icon icon-edit2"></i></div>
+				<div class="fui-cell-text"><p>我的回复</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+		</div>
+		{/if}
+    </div>
+ </div>
+
+{template $this->mytpl('_mmenu')}
+</body>
+</html>

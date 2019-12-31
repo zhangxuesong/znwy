@@ -1,0 +1,94 @@
+﻿
+
+<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+	
+	{if $_W['uid']} 
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"> <span class="text-danger">*</span>所属物业</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+				<option value="0">请选择所属物业</option>
+				{loop $myproperty $k $v}
+					<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+				{/loop}
+			</select>		
+		</div>
+	</div>
+	{else}
+		<input type="hidden" class="form-control" id="pid" value="{$mywe['pid']}" name="pid" />
+	{/if}
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>小区或商圈</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="rid" name="rid" >
+				<option value="0">请选择小区或商圈</option>	
+				{loop $eregions $i $r}
+					<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+				{/loop}
+				{if $_W['uid']} 
+				{else}
+					{if $operation=='itemadd'}
+						{loop $regions $i $r}
+							<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+						{/loop}
+					{/if}
+				{/if}
+			</select>			
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>项目名称</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入项目名称" name="title" />
+		</div>	
+	</div>
+	{if empty($_GPC['parentid'])}
+	<div class="form-group" >
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>项目类别</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<label class='radio-inline'><input type="radio" name="io" value="1" {if $item['io'] == 1 || empty($item['io'])} checked {/if} >收入项目</label>
+			<label class='radio-inline'><input type="radio" name="io" value="2" {if $item['io'] == 2} checked {/if} >支出项目</label>
+			<div class="help-block">收入项目对应收入，支出项目对应支出，请谨慎选择，建立后不可更改</div>
+		</div>
+	</div>
+	{/if}
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">备注</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="remark" value="{$item['remark']}" placeholder="输入备注" name="remark" />
+		</div>	
+	</div>
+
+	<div class="form-group" >
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>状态</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<label class='radio-inline'><input type="radio" name="status" value="1" {if $item['status'] == 1 || empty($item['status'])} checked="true" {/if} >启用</label>
+			<label class='radio-inline'><input type="radio" name="status" value="2" {if $item['status'] == 2} checked="true" {/if} >禁用</label>										
+		</div>
+	</div>
+	<br>
+</form>	
+
+<script type="text/javascript">
+	window._region = {php echo json_encode($myregion);};
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择小区</option>';
+			
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		});
+	}
+</script>

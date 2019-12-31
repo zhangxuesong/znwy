@@ -1,0 +1,22 @@
+﻿{template 'web/_layer_header'}
+<div class="panel panel-default" >
+    <div class="panel-body">    
+		{if empty($help)}
+		 <div class="alert alert-warning" role="alert" style="text-align:center;"> 
+		    <br>
+			<p><i class="fa fa-question-circle" style="font-size:80px"></i></p>
+			<p>平台还未创建帮助文档{if !empty($_W['uid'])}，帮助菜单：系统管理->系统帮助{/if}</p><br>
+			{if !empty($_W['uid'])}
+			<p><a href="javascript:;" onclick="parent.parent.Hui_admin_tab(this)" data-href="{php echo $this->createWebUrl('help',array('op'=>'list'));}" data-title="系统帮助" class="btn btn-success" >
+			<i class="fa fa-plus"></i> 创建帮助文档 </a></p>
+			<br>
+			{/if}
+		</div>
+		{else}
+		<p>{$help['content']}</p>
+		{/if}
+    </div>
+</div>
+{template 'web/_layer_footer'}
+</body>
+</html>

@@ -1,0 +1,85 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:30px;">
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/form'}	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+var url = "{php echo $this->createWeburl($mydo,array('op'=>'list')).$mywe['direct'];}";
+function mysubmit(obj){
+	var id = $.trim($("#id").val());
+	var title = $.trim($("#title").val());
+	var locksn = $.trim($("#locksn").val());
+	var pid = $("#pid").find("option:selected").val();
+	var rid = $("#rid").find("option:selected").val(); 
+	var bid = $("#bid").find("option:selected").val(); 
+	var tid = $("#tid").find("option:selected").val(); 
+    var doortype = $("#doortype").find("option:selected").val(); 
+	
+	if (pid=='0') {
+	   layer.msg("所属物业不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (rid=='0') {
+	   layer.msg("所属主体不能为空！",{icon:0});
+	   return;
+	}
+	if (bid=='0' && tid=='0') {
+		if (title=='') {
+		   layer.msg("门禁名称不能为空！",{icon:0});
+		   return;
+		}
+	}
+		
+	if (locksn=='') {
+	   layer.msg("锁序列号不能为空！",{icon:0});
+	   return;
+	}
+	if (doortype=='0') {
+	   layer.msg("门禁型号不能为空！",{icon:0});
+	   return;
+	}
+	
+ $.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+	{ post:"$_GPC['op']",op:"check",locksn:locksn,id:id},
+	function(data,status){
+	 if (data=='ok'){		
+		myprocess(obj);		
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>$_GPC['op'])).$mywe['direct'];}",
+		$("#myform").serializeObject(),
+		function(data,status){
+			 if (data=='ok'){
+				layer.msg('操作成功！',{icon:1});				
+				setTimeout(function(){
+					location.href = url;
+				},1000);
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+				$(obj).html('<i class="fa fa-check"></i> 提交'); 
+				$(obj).removeAttr("disabled"); 
+			 }
+		});      
+	 }
+	 else{
+		layer.msg(data,{icon:0});
+		return ;
+	 }
+	});	
+}
+
+function myreturn(){
+	 window.history.back();
+}
+
+</script> 
+
+</body>
+</html>

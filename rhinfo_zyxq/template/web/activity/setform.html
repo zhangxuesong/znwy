@@ -1,0 +1,448 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+	<input type="hidden" name="category" id="category" value="{$item['category']}" />		
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">活动类别</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" disabled>							
+				<option value="1" {if $item['category'] == 1} selected {/if} >投票活动</option>	
+				<option value="2" {if $item['category'] == 2} selected {/if} >报名活动</option>	
+				<option value="3" {if $item['category'] == 3} selected {/if} >问券调查</option>	
+			</select>
+		</div>
+	</div>		
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">活动名称</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" name="title" disabled />
+		</div>	
+	</div>
+	{if $item['category']==1}
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">投票类别</label>
+			<div class="col-sm-7 col-lg-8 col-xs-12">
+				<label class="radio-inline">
+					<input type="radio" name="votetype"  value="0" {if empty($item['votetype']) || $item['votetype']==0 } checked{/if} />文字投票</label>
+				<label  class="radio-inline">
+					<input type="radio" name="votetype"  value="1" {if $item['votetype']==1 } checked{/if} />单图片投票</label>
+				<label  class="radio-inline">
+					<input type="radio" name="votetype"  value="2" {if $item['votetype']==2 } checked{/if} />多图片投票(单选)</label>
+				<label  class="radio-inline">
+					<input type="radio" name="votetype"  value="3" {if $item['votetype']==3 } checked{/if} />多图片投票(多选)</label>
+				<span class="help-block">选择适合的投票类别</span>			
+			</div>
+		</div>
+		<div id="vote_method" {if $item['votetype']==1}{else}style="display:none"{/if}>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">投票图片</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					{php echo tpl_form_field_image('singleimage',$item['singleimage']);}
+					<span class="help-block">建议尺寸640*320</span>
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">投票描述</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<textarea style="height: 60px;" class="form-control" name="singledesc" placeholder="输入简单描述" >{$item['singledesc']}</textarea>							
+					<span class="help-block">简单描述投票内容</span>
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">投票方式</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<label class="radio-inline">
+						<input type="radio" name="votemethod"  value="0" {if empty($item['votemethod']) || $item['votemethod']==0 } checked{/if} />赞&不赞</label>
+					<label  class="radio-inline">
+						<input type="radio" name="votemethod"  value="1" {if $item['votemethod']==1 } checked{/if} />对&错</label>
+					<label  class="radio-inline">
+						<input type="radio" name="votemethod"  value="2" {if $item['votemethod']==2 } checked{/if} />评星级</label>
+					<span class="help-block">选择适合的投票方式</span>			
+				</div>
+			</div>	
+		</div>
+		<div id="signform" {if $item['votetype']==0}{else}style="display:none" {/if}>
+			{if empty($votetext)}
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">投票选项</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+						<div class="input-group">
+							<span class="input-group-addon">选项</span>								
+							<input type="text" class="form-control"  value="" name="itemvalue[]">	
+							<span class="input-group-addon">说明</span>
+							<input type="text" class="form-control"  value="" name="itemdesc[]">
+							<span class="input-group-btn"><button class="btn btn-default" type="button"><i class="fa fa-close"></i></button></span>
+						</div>			
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+						<div class="input-group">
+							<span class="input-group-addon">选项</span>								
+							<input type="text" class="form-control"  value="" name="itemvalue[]">	
+							<span class="input-group-addon">说明</span>
+							<input type="text" class="form-control"  value="" name="itemdesc[]">
+							<span class="input-group-btn"><button class="btn btn-default" type="button"><i class="fa fa-close"></i></button></span>
+						</div>			
+					</div>
+				</div>
+			{else}
+				{loop $votetext $k $vote}
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">{if $k==0}投票选项{/if}</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+						<div class="input-group">
+							<span class="input-group-addon">选项</span>								
+							<input type="text" class="form-control"  value="{$vote['itemvalue']}" name="itemvalue[]">	
+							<span class="input-group-addon">说明</span>
+							<input type="text" class="form-control"  value="{$vote['itemdesc']}" name="itemdesc[]">
+							<span class="input-group-btn"><button class="btn {if $k>1}btn-warning{else}btn-default{/if}" type="button" {if $k>1}onclick="removeitem(this)"{/if} ><i class="fa fa-close"></i></button></span>
+						</div>	
+					</div>
+				</div>
+				{/loop}
+			{/if}
+		</div>
+		<div class="form-group" id="addoption" {if $item['votetype']==0}{else}style="display:none" {/if}>
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<a href="javascript:;" class="btn btn-success"  onclick="additem()"><i class="fa fa-plus"></i> 增加选项</a>
+			</div>	
+		</div>
+		<div id="multimages" {if $item['votetype']==2 || $item['votetype']==3}{else}style="display:none" {/if}>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">开启报名</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<label class='radio-inline'>
+					<input type='radio' name='isvotesign' value='1'  {if $item['isvotesign']==1 } checked{/if}/> 开启
+					</label>
+					<label class='radio-inline'>
+						<input type='radio' name='isvotesign' value='0' {if empty($item['isvotesign']) || $item['isvotesign']==0 } checked{/if} /> 不开启
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">报名开始</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					{php echo tpl_form_field_date('signstart',$item['signstart']);}
+					<span class="help-block">开启报名需要填写，不开启不用填写</span>
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">报名结束</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					{php echo tpl_form_field_date('signstart',$item['signend']);}
+					<span class="help-block">开启报名需要填写，不开启不用填写</span>
+				</div>	
+			</div>	
+			
+			<style>
+				.multi-img-details .multi-item{height: 160px;text-align: CENTER;background: #efefef;padding:5px 0;margin-bottom: 16px;border-radius: 5px;}
+			</style>
+
+			<script type="text/javascript">
+				function uploadMultiImage(elm) {
+					var name = $(elm).next().val();
+					util.image( "", function(urls){
+						$.each(urls, function(idx, url){var a =(typeof(url.name)=="undefined")? url.filename : url.name;var b=a.split('.');var c=b[0];$(".multi-img-details").append('<div class="multi-item" ><img onerror="this.src=\'./resource/images/nopic.jpg\'; this.title=\'图片未找到.\'" src="'+url.url+'" class="img-responsive img-thumbnail"><input type="text" class="form-control" name="imgname[]" value="'+c+'"><input type="hidden" name="imgurl[]" value="'+url.attachment+'"><em class="close" title="删除这张图片" onclick="deleteMultiImage(this)">×</em></div>');});$(".submit_box").show();
+					}, {"multiple":true,"direct":false,"fileSizeLimit":8388608});
+				}
+				function deleteMultiImage(elm){
+					$(elm).parent().remove();
+				}
+			</script>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">投票图片</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<div class="input-group">
+						<input type="text" class="form-control" readonly="readonly" value="" placeholder="批量上传图片" autocomplete="off">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" onclick="uploadMultiImage(this);">选择图片</button>
+							<input type="hidden" value="{$name}" />
+						</span>
+					</div>	
+					<span class="help-block">图片可以中文命名，名称直接加描述</span>
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<div class="input-group multi-img-details">
+						{if !empty($multimages)}
+							{loop $multimages $image}
+							<div class="multi-item" >
+								<img onerror="this.src='./resource/images/nopic.jpg'; this.title='图片未找到.'" src="{php echo tomedia($image['imgurl']);}" class="img-responsive img-thumbnail">
+								<input type="text" class="form-control" name="imgname[]" value="{$image['imgname']}">
+								<input type="hidden" name="imgurl[]" value="{$image['imgurl']}"><em class="close" title="删除这张图片" onclick="deleteMultiImage(this)">×</em></div>
+							{/loop}
+						{/if}
+					</div>
+				</div>
+			</div>
+		</div>
+	{else if $item['category']==2}
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">报名开始</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				{php echo tpl_form_field_date('signstart',$item['signstart']);}
+			</div>	
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">报名结束</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				{php echo tpl_form_field_date('signstart',$item['signend']);}
+			</div>	
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">活动费用</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				 <div class="input-group">
+					 <input type="number" class="form-control" name="signmoney" value="{$item['signmoney']}" >
+					 <div class="input-group-addon">元</div>
+					 <div class="input-group-btn">
+						<select class="form-control" name="signmeas" style="width:95px;">
+							<option value="0" {if $item['signmeas']==0}selected{/if} >每人</option>		
+							<option value="1" {if $item['signmeas']==1}selected{/if} >每户</option>							
+						</select>
+					 </div>
+				</div>
+			</div>	
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">活动人数</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				 <div class="input-group">
+					 <input type="number" class="form-control" name="signnum" value="{$item['signnum']}" >
+					 <div class="input-group-addon">人</div>					
+				</div>
+			</div>	
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">报名信息</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				 <div class="input-group">
+					  <input type="text" class="form-control" disabled value="真实姓名" >
+					  <span class="input-group-addon"></span>
+					  <select class="form-control" disabled>
+						<option value="realname">真实姓名</option>
+					  </select>
+						 <div class="input-group-btn">
+							<select class="form-control" disabled style="width:95px">
+								<option value="1" selected="selected">必填</option>		
+							</select>
+						 </div>
+				</div>
+			</div>	
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				 <div class="input-group">
+					  <input type="text" class="form-control" disabled value="手机号码" >
+					  <span class="input-group-addon"></span>
+					  <select class="form-control" disabled>
+						<option value="mobile">手机号码</option>
+					  </select>
+						 <div class="input-group-btn">
+							<select class="form-control" disabled style="width:95px">
+								<option value="1" selected>必填</option>		
+							</select>
+						 </div>
+				</div>
+			</div>	
+		</div>
+		<div id="signform">
+			{loop $signextend $extend}
+				<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<div class="input-group">
+						<span class="input-group-addon">名称</span>								
+						<input type="text" class="form-control"  value="{$extend['itemtitle']}" name="itemtitle[]">						
+						<span class="input-group-addon">表单</span>		
+						<select name="itemtype[]" class="form-control" style="width:150px">
+							<option value="text" {if $extend['itemtype']=='text'}selected{/if}>字符串(text)</option>
+							<option value="number" {if $extend['itemtype']=='number'}selected{/if}>数字(number)</option>
+							<option value="textarea" {if $extend['itemtype']=='textarea'}selected{/if}>文本(textarea)</option>
+							<option value="radio" {if $extend['itemtype']=='radio'}selected{/if}>单选(radio)</option>
+							<option value="checkbox" {if $extend['itemtype']=='checkbox'}selected{/if}>多选(checkbox)</option>
+							<option value="select" {if $extend['itemtype']=='select'}selected{/if}>下拉框(select)</option>								
+							<option value="image" {if $extend['itemtype']=='image'}selected{/if}>上传图片(image)</option>
+						</select>	
+						<span class="input-group-addon">内容</span>
+						<input type="text" class="form-control"  value="{php echo $extend['itemtype']=='radio' || $extend['itemtype']=='checkbox' || $extend['itemtype']=='selected' ?implode('|',$extend['itemvalue']):$extend['itemvalue'];}" name="itemvalue[]" style="min-width:280px;">
+						 <div class="input-group-btn">
+							<select class="form-control" name="ischecked[]" style="width:95px">
+								<option value="1" {if $extend['ischecked']=='1'}selected{/if}>必填</option>	
+								<option value="0" {if $extend['ischecked']=='0'}selected{/if}>选填</option>
+							</select>
+						 </div>
+						<span class="input-group-btn"><button class="btn btn-warning" type="button" onclick="removeitem(this)" ><i class="fa fa-close"></i></button></span>
+					</div>	
+					<span class="help-block">单选、多选、下拉框请输入内容，多值请用“ | ”隔开，如：上 | 中 | 下，其它则为空</span>
+				</div>
+			</div>
+			{/loop}
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<a href="javascript:;" class="btn btn-success"  onclick="additem()"><i class="fa fa-plus"></i> 自定义报名信息</a>
+			</div>	
+		</div>
+	{else if $item['category']==3}
+		<div id="signform" {if $item['votetype']==0}{else}style="display:none" {/if}>
+			{if empty($questiontext)}
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">问题内容</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+						<div class="input-group">
+							<span class="input-group-addon">问题</span>								
+							<input type="text" class="form-control"  value="" name="itemtitle[]">	
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon">答案</span>
+							<input type="text" class="form-control"  value="" name="itemvalue[]">
+							<span class="input-group-btn"><button class="btn btn-default" type="button"><i class="fa fa-close"></i></button></span>
+						</div>	
+						<span class="help-block">答案请用“ | ”隔开，如：上 | 中 | 下</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+						<div class="input-group">
+							<span class="input-group-addon">问题</span>								
+							<input type="text" class="form-control"  value="" name="itemtitle[]">	
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon">答案</span>
+							<input type="text" class="form-control"  value="" name="itemvalue[]">
+							<span class="input-group-btn"><button class="btn btn-default" type="button"><i class="fa fa-close"></i></button></span>
+						</div>	
+						<span class="help-block">答案请用“ | ”隔开，如：上 | 中 | 下</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+						<div class="input-group">
+							<span class="input-group-addon">问题</span>								
+							<input type="text" class="form-control"  value="" name="itemtitle[]">	
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon">答案</span>
+							<input type="text" class="form-control"  value="" name="itemvalue[]">
+							<span class="input-group-btn"><button class="btn btn-default" type="button"><i class="fa fa-close"></i></button></span>
+						</div>
+						<span class="help-block">答案请用“ | ”隔开，如：上 | 中 | 下</span>
+					</div>
+				</div>
+			{else}
+				{loop $questiontext $k $question}
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">{if $k==0}问题内容{/if}</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+						<div class="input-group">
+							<span class="input-group-addon">问题</span>								
+							<input type="text" class="form-control"  value="{$question['itemtitle']}" name="itemtitle[]">
+						</div>	
+						<div class="input-group">
+							<span class="input-group-addon">答案</span>
+							<input type="text" class="form-control"  value="{php echo implode('|',$question['itemvalue']);}" name="itemvalue[]" style="min-width:580px;">
+							<span class="input-group-btn"><button class="btn {if $k>2}btn-warning{else}btn-default{/if}" type="button" {if $k>1}onclick="removeitem(this)"{/if} ><i class="fa fa-close"></i></button></span>
+						</div>	
+						<span class="help-block">答案请用“ | ”隔开，如：上 | 中 | 下</span>
+					</div>
+				</div>
+				{/loop}
+			{/if}
+		</div>
+		<div class="form-group" id="addoption">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<a href="javascript:;" class="btn btn-success"  onclick="additem()"><i class="fa fa-plus"></i> 增加问题</a>
+			</div>	
+		</div>
+	{/if}
+	</br>
+</form>	
+
+<script type="text/javascript">
+	var votetype = "{$item['votetype']}";	 
+	if(votetype=='0'){
+		$("#signform").show();
+		$("#addoption").show();
+		$("#vote_method").hide();
+		$("#multimages").hide();
+	}
+	else if(votetype=='1'){
+		$("#vote_method").show();
+		$("#signform").hide();
+		$("#addoption").hide();
+		$("#multimages").hide();
+	}  
+	else{
+		$("#vote_method").hide();
+		$("#signform").hide();
+		$("#addoption").hide();
+		$("#multimages").show();
+	}  	
+	$("input[name=votetype]").click(function(){	
+		 switch($("input[name=votetype]:checked").val()){
+		 case "0":	
+			$("#signform").show();
+			$("#addoption").show();
+			$("#vote_method").hide();
+			$("#multimages").hide();
+			break;
+		 case "1":	
+			$("#vote_method").show();
+			$("#signform").hide();
+			$("#addoption").hide();
+			$("#multimages").hide();
+			break;
+		  default:
+			$("#vote_method").hide();
+			$("#signform").hide();
+			$("#addoption").hide();
+			$("#multimages").show();
+			break;
+		}		
+	});
+	
+	function additem() {
+	   var category = $("#category").val();
+	   var i = 1;
+	   if(category==1){
+		   $("#signform .form-group").each(function(){
+				i++;
+		   });
+		   if(i>8){
+				layer.msg('选项最多8个',{icon:0});
+				return
+		   }
+	   }
+	   else if(category==2){
+		   $("#signform .form-group").each(function(){
+				i++;
+		   });
+		   if(i>8){
+				layer.msg('自定义报名信息最多8个',{icon:0});
+				return
+		   }
+	   }
+	   		
+		$.ajax({
+			url: "{php echo $this->createWeburl($mydo,array('op'=>'itemtpl','category'=>$item['category'])).$mywe['direct'];}",
+			cache: false
+		}).done(function (html) {
+			$("#signform").append(html); 
+		});
+	}
+
+	function removeitem(obj) {
+		$(obj).parents(".form-group").remove();
+	}
+</script>

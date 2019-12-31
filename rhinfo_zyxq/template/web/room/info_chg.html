@@ -1,0 +1,28 @@
+﻿<div class="panel panel-default" >
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>					
+					<th width="80">ID</th>
+					<th>原业主</th>	
+					<th>原手机</th>	
+					<th>新业主</th>		
+					<th>新手机</th>	
+					<th>变更时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				{loop $chglog $cv}
+				<tr>					
+					<td>{$cv['id']}</td>
+					<td>{$cv['ownername']}</td>
+					<td>{$cv['mobile']}</td>
+					<td>{$cv['newownername']}</td>
+					<td>{$cv['newmobile']}</td>
+					<td>{php echo date('Y-m-d', $cv['ctime'])}</td>	
+				</tr>
+			{/loop}	
+			</tbody>
+		</table>    	  
+	</div>	
+</div>

@@ -1,0 +1,44 @@
+{template $this->mytpl('_header')}
+
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">我的车辆</div>
+		<div class="fui-header-right">
+			<a href="{php echo $this->CreateMobileUrl('service',array('op'=>'addcar'));}"><i class="icon icon-add"></i></a>
+		</div>
+	</div>
+	<div class='fui-content'> 	
+		<div class='content-empty' {if !empty($list)}style='display:none;'{/if}>
+			 <div class="empty-bg"><i class='icon icon-taxi'></i></div>
+			<p>您还没有任何车辆信息</p>
+		</div>
+		{if !empty($list)}
+		<div class="fui-list-group" style="margin-top:0;" >
+			{loop $list $item}		
+				<div  class="fui-list car-item" data-carid="{$item['id']}" >
+					<div class="fui-list-inner">
+						<div class="title"><a href="{php echo $this->CreateMobileUrl('service',array('op'=>'editcar','id'=>$item['id']));}"><i class="icon icon-taxi"></i> {$item['carno']}</a></div>
+						<div class="subtitle">
+						<a href="{php echo $this->CreateMobileUrl('service',array('op'=>'editcar','id'=>$item['id']));}">{if !empty($item['checkdate'])} 年审时间: {$item['checkdate']}{else}未登记年审时间{/if}</a>
+						<span class='pull-right'>				
+							<a data-toggle='delete'><i class='icon icon-delete'></i> 删除</a>
+						</span>
+						</div>				
+					</div>
+				</div>
+			{/loop}
+		</div> 
+		{/if}
+    </div>
+ </div>
+ 
+<script language='javascript'>		
+	require(['service/car'], function (modal) {
+		modal.initList();
+	}); 	
+</script>
+
+{template $this->mytpl('_footer')}

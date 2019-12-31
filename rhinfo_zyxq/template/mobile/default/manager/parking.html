@@ -1,0 +1,78 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170802">
+<style>
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-menu-group:before,.fui-menu-group:after{border-top:0px;}
+</style>
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back" ></a>
+		</div>
+		<div class="title">车场管理</div>
+		<div class="fui-header-right"></div>
+	</div>
+
+	<div class='fui-content navbar'>
+		<div class="fui-menu-group">
+            <a class="fui-menu-item noactive">
+                <p id="parking0">--</p>
+                <small>待租车位</small>
+            </a>
+            <a class="fui-menu-item noactive">
+                <p id="parking1">--</p>
+                <small>已租车位</small>
+            </a>
+            <a class="fui-menu-item noactive ">
+                <p id="parking2">--</p>
+                <small>过期车位</small>
+            </a>
+        </div>
+		<div id="tab" class="fui-tab fui-tab-success" style="margin-top:0.5rem;">
+		   <a data-tab="tab0" class="external {if $status=='0'}active{/if}"  data-status='0'>待租</a>
+		   <a data-tab="tab1" class="external {if $status=='1'}active{/if}"  data-status='1'>已租</a>
+		   <a data-tab="tab2" class="external {if $status=='2'}active{/if}"  data-status='2'>过期</a>
+		   <a data-tab="tab3" class="external {if $status=='3'}active{/if}"  data-status='3'>到期</a>
+		</div>
+		<form action="{php echo $this->createMobileUrl('manager',array('op'=>'parking'));}" method="post">
+			<div class="fui-searchbar bar">
+				<div class="searchbar center">
+					<input type="hidden" name="status" id="status" value="{$status}" />
+					<input type="submit" class="searchbar-cancel searchbtn" value="搜索">
+					<div class="search-input">
+						<i class="icon icon-search"></i>
+						<input type="text" placeholder="请输入车位编号或手机号" class="search" value="{$_GPC['keyword']}" name="keyword" id="keyword" />		
+					</div>
+				</div>
+			</div>
+		</form>
+		<div class="container"></div>
+		<div class="content-empty" style="display:none;">
+		<i class="icon icon-taxi"></i> <br/>暂时没有任何内容</div>
+        <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+	</div>  
+	<script type="text/html" id="tpl_parking_list">
+		<%each list as item%>
+			<div class="fui-list">
+				<div class="fui-list-inner">
+					<div class="title"><%item.title%></div>
+					<div class="subtitle"><%item.ownername%>&nbsp;<%item.mobile%></div>
+					<div class="text"><%if item.status >0%><%item.startdate%>~<%item.enddate%><%/if%></div>					
+				</div>
+			</div>			 
+		<%/each%>
+	</script>
+	<script language='javascript'>	
+		require(['manager/parklot'], function (modal) {
+			modal.init({
+			rid:"{$myrid}",	
+			keyword:"{$_GPC['keyword']}",
+			status:"{$status}"
+			});
+		});
+	</script>
+ </div>
+
+{template $this->mytpl('_mmenu')}
+</body>
+</html>

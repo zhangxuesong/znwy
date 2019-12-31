@@ -1,0 +1,312 @@
+{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+<style>
+	.account-stat{overflow:hidden; color:#666;}
+	.account-stat .account-stat-btn{width:100%; overflow:hidden;}
+	.account-stat .account-stat-btn > div{text-align:center; margin-bottom:5px;margin-right:2%; float:left;width:31%; height:80px; padding-top:10px;font-size:16px; border-left:1px #DDD solid;}
+	.account-stat .account-stat-btn > div:first-child{border-left:0;}
+	.account-stat .account-stat-btn > div span{display:block; font-size:30px; font-weight:bold}
+	.nav-tabs li a { padding: 3px 10px;}
+</style>
+<div class="panel panel-default" style="padding-top:50px;">
+ <div class="panel-body"> 
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			积分账户&nbsp;&nbsp;&nbsp;&nbsp;		
+			{if $rights['other1']}<button class="btn btn-success" data-toggle="modal" data-target="#myModal">发行积分</button>{/if}
+			
+		</div>
+		<div class="account-stat">
+			<div class="account-stat-btn">
+				<div>积分余额<span class="text-danger">{$credit['onhand']}</span></div>
+				<div>年度发行<span class="text-warning">{php echo empty($year_total['inqty'])?0:$year_total['inqty'];}</span></div>			
+				<div>累积发行<span class="text-success">{$credit['inqty']}</span></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			积分支出&nbsp;&nbsp;&nbsp;&nbsp;
+			{if $rights['other2']}<button class="btn btn-warning" data-toggle="modal" data-target="#mysaleModal">支出积分</button>{/if}
+		</div>
+		<div class="account-stat">
+			<div class="account-stat-btn">
+				<div>30天支出<span class="text-danger">{php echo empty($month_outqty)?0:$month_outqty;}</span></div>
+				<div>年度支出<span class="text-warning">{php echo empty($year_total['outqty'])?0:$year_total['outqty'];}</span></div>			
+				<div>累积支出<span class="text-success">{$credit['outqty']}</span></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			积分兑现
+		</div>
+		<div class="account-stat">
+			<div class="account-stat-btn">
+				<div>待兑现<span class="text-danger">{php echo empty($nocash_total)?0:$nocash_total;}</span></div>
+				<div>年度兑现<span class="text-warning">{php echo empty($year_total['cash'])?0:$year_total['cash'];}</span></div>			
+				<div>累积兑现<span class="text-success">{$credit['cash']}</span></div>
+			</div>
+		</div>
+	</div>
+
+	<ul class="nav nav-tabs">
+		<li {if $operation == 'list'}class="active"{/if}>
+		<a href="{php echo $this->createWebUrl('platform', array('op' => 'list'))}">发行记录</a>
+		</li>
+		<li {if $operation == 'salelist'}class="active"{/if}>
+		<a href="{php echo $this->createWebUrl('platform', array('op' => 'salelist'))}">支出记录</a>
+		</li>
+		<li {if $operation == 'cashlist'} class="active"{/if}>
+		<a href="{php echo $this->createWebUrl('platform', array('op' => 'cashlist'))}">兑现记录</a>
+		</li>
+		<li {if $operation == 'retlist'} class="active"{/if}>
+		<a href="{php echo $this->createWebUrl('platform', array('op' => 'retlist'))}">返还记录</a>
+		</li>
+	</ul>
+	<div class="main">	
+		<div class="panel panel-warning">
+			<div class="panel-heading">筛选</div>
+			<div class="panel-body">
+				<form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">
+					<input type="hidden" name="c" value="site" />
+					<input type="hidden" name="a" value="entry" />
+					<input type="hidden" name="m" value="rhinfo_zyxq" />
+					<input type="hidden" name="do" value="platform" />
+					<input type="hidden" name="op" value="{$operation}" />
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">发行时间</label>
+						<div class="col-sm-4 col-xs-12">
+							{php echo tpl_form_field_daterange('ctime', array('starttime'=>date('Y-m-d', $starttime),'endtime'=>date('Y-m-d', $endtime)));}
+						</div>
+						<div class="col-sm-4 col-xs-12">
+							<input type="hidden" name="token" value="{$_W['token']}"/>
+						{if $rights['query']}	<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>{/if}						
+							<button type="button" class="btn btn-default">总记录数：{$total}</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+			
+		<div class="panel panel-default">
+			<div class="panel-body table-responsive">
+				<table class="table table-hover">
+					<thead class="navbar-inner">
+					<tr>
+						<th style="width:50px;">ID</th>
+						<th style="width:120px;">积分数量</th>
+						<th style="width:200px;">{if $operation == 'list'}发行时间{elseif $operation == 'salelist'}销售时间{else}兑现时间{/if}</th>
+						<th style="width:120px;">备注</th>
+						<th style="width:100px;">操作人员</th>
+					</tr>
+					</thead>
+					<tbody>
+					{loop $list $item}
+					<tr>
+						<td>{$item['id']}</td>
+						<td><span {if $operation == 'list'}class="text-success"{elseif $operation == 'salelist'}class="text-warning"{else}class="text-danger"{/if}>{$item['credit']}</span></td>
+						<td>{php echo date('Y-m-d H:i',$item['ctime']);}</td>
+						<td>{$item['title']}</td>
+						<td>{if !empty($item['avatar']) || !empty($item['nickname'])}
+							{if !empty($item['avatar'])}<ims src="{$item['avatar']}" width="30"/>{/if}{$item['nickname']}
+							{else}{$item['username']}{/if}</td>
+					</tr>
+					{/loop}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		{$pager}	
+	</div>
+
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel">平台发行积分</h4>
+		  </div>
+		  <div class="modal-body">
+			 <form action="" method="post" id="myform">
+				<input type="hidden" name="from" value="add" />
+				<input type="hidden" name="token" value="{$_W['token']}"/>
+				  <div class="form-group">
+					<label for="credit" class="control-label"><span class="text-danger">*</span>积分数量</label>
+					<input type="number" class="form-control" id="credit" name="credit" />
+				  </div>
+				  <div class="form-group">
+					<label for="title" class="control-label">备注</label>
+					<textarea class="form-control" name="title"></textarea>
+				  </div>
+			</form>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			<button type="button" class="btn btn-primary" onclick="mysubmit()">提交</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
+	<div class="modal fade" id="mysaleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel">销售积分</h4>
+		  </div>
+		  <div class="modal-body">
+			 <form action="" method="post" id="mysaleform">
+				<input type="hidden" name="from" value="sale" />
+				<input type="hidden" name="token" value="{$_W['token']}"/>
+				<div class="form-group">
+					<label for="payto"><span class="text-danger">*</span>销售对象</label><br>
+					<label  class="radio-inline">
+						<input type="radio" name="payto" value="1" id="payto1"  checked /> 周边商家</label>	
+					<label class="radio-inline">
+						<input type="radio" name="payto" value="2" id="payto2"  /> 所属主体</label>					
+				</div>
+				<div id ="nearbusiness">
+					<div class="form-group">
+						<label for="category"><span class="text-danger">*</span>商家大类</label>
+						<select class="form-control" id="pcategory" name="pcategory" onchange="renderCategory(this,'category','category')">
+							<option value="0">请选择</option>
+							{loop $pcategory $pca}
+								<option value="{$pca['id']}" >{$pca['title']}</option>
+							{/loop}
+						</select>								
+					</div>
+					<div class="form-group">
+						<label for="category"><span class="text-danger">*</span>商家分类</label>
+						<select class="form-control" id="category" name="category" onchange="renderCategory(this,'business','business')">
+							<option value="0">请选择</option>
+						</select>								
+					</div>
+					<div class="form-group">
+						<label for="business"><span class="text-danger">*</span>商家</label>
+						<select class="form-control" id="business" name="business">
+							<option value="0">请选择</option>				
+						</select>				
+					</div>
+				</div>
+				<div id="property" style="display:none;">
+					<div class="form-group">
+						<label for="category"><span class="text-danger">*</span>所属主体</label>
+						<select class="form-control" id="region" name="region">
+							<option value="0">请选择</option>
+							{loop $regions $region}
+								<option value="{$region['id']}" >{$region['title']}</option>
+							{/loop}
+						</select>								
+					</div>
+				
+				</div>
+				  <div class="form-group">
+					<label for="credit" class="control-label"><span class="text-danger">*</span>积分数量</label>
+					<input type="number" class="form-control" id="salecredit" name="credit" />
+				  </div>
+				  <div class="form-group">
+					<label for="title" class="control-label">备注</label>
+					<textarea class="form-control"  name="title"></textarea>
+				  </div>
+			</form>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			<button type="button" class="btn btn-primary" onclick="mysubmit1()">提交</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+</div>
+</div>
+{template 'web/_iframe_footer'}
+<script type="text/javascript">
+		 
+	function mysubmit(){			
+		var credit = $("#credit").val();		
+		
+		if(credit > 0 ){
+			$("#myform").submit();
+		}
+		else{
+			util.message('积分数量必须大于0');
+			return false;
+		}
+	}
+	
+	 $("input[name=payto]").click(function(){	
+		  switch($("input[name=payto]:checked").attr("id")){
+		  case "payto1":	
+			   $("#nearbusiness").show();
+			   $("#property").hide(); 
+			   break;
+		  case "payto2":			
+			   $("#nearbusiness").hide();
+			   $("#property").show(); 
+			   break;		
+		  default:
+		   break;
+		}		
+	 });
+ 
+	function mysubmit1(){
+		var payto = $("input[name=payto]:checked").val();
+		var category = $("#categroy").find("option:selected").val();
+		var business = $("#business").find("option:selected").val(); 	
+		var region = $("#region").find("option:selected").val();		
+		var credit = $("#salecredit").val();
+		
+		if(payto=='1'){
+			if (category=='0') {
+			   util.message("商家分类不能为空！");
+			   return false;
+			}
+			
+			if (business=='0') {
+			   util.message("商家不能为空！");
+			   return false;
+			}
+		}
+		else{
+			if (region=='0') {
+			   util.message("所属主体不能为空！");
+			   return false;
+			}
+		
+		}
+		
+		if(credit > 0 ){
+			$("#mysaleform").submit();
+		}
+		else{
+			util.message('积分数量必须大于0');
+			return false;
+		}
+	}
+	window._category = {php echo json_encode($category);};				
+	window._business = {php echo json_encode($business);};
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择</option>';	
+			if (id=='category'){
+				$("#business").html(html);				
+			}	
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		});
+	}
+</script>
+</body>
+</html>

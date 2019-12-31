@@ -1,0 +1,455 @@
+{template $this->mytpl('_header')}
+
+{if !empty($this->syscfg['bgcolor'])}
+    <style>
+        .member-page .headinfo
+        {background: {php echo $this->syscfg['bgcolor'];};
+		 border-color:{php echo $this->syscfg['bgcolor'];};}
+
+    </style>
+{/if}
+ <style>
+	.member-page .headinfo {
+		padding-top: 0.5rem;
+	 }
+	.member-page .headinfo .child {
+		padding-bottom: 0.5rem;
+	}
+	.fui-cell-group{margin-top:0.5rem;}
+	.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+	.fui-cell-group:after {border-bottom:0px;}
+	.fui-cell-group .fui-cell .fui-cell-text {
+		color: #333;
+		font-size: 0.7rem;
+		line-height:0.7rem;}
+	.fui-cell-group .fui-cell .fui-cell-icon {
+		color: {if $this->syscfg['memberliststyle']==2}{if !empty($this->syscfg['bgcolor'])}{php echo $this->syscfg['bgcolor']}{else}#ff6600{/if}{else}#555{/if};
+		text-align: center;		
+	}
+	.fui-cell-group .fui-cell .fui-cell-icon i {
+		font-size:0.8rem;
+		line-height:0.8rem;
+	}
+	.fui-cell-group .fui-cell .fui-cell-remark {
+		font-size:0.6rem;
+	}
+	.fui-icon-group  .fui-icon-col:before {border-left: 0px;}
+	.fui-icon-group  .fui-icon-col .icon {height:1.5rem;margin: auto;  text-align: center; line-height:1.5rem;}
+	.fui-icon-group  .fui-icon-col .icon img {height:1.5rem;width:1.5rem;}
+	.fui-icon-group.listicon .fui-icon-col .icon i { color:#aaa; font-size:1.2rem; margin-top:.5rem;}	
+</style>
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header"> 
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">{if empty($this->syscfg['membertext'])}业主中心{else}{php echo $this->syscfg['membertext'];}{/if}</div>
+        <div class="fui-header-right">
+		{if !empty($team)}
+			<a href="{php echo $this->createMobileUrl('manage');}"><i class="icon icon-shengfen1" ></i></a>
+		{/if}
+		</div>
+	</div>		
+		
+	<div class='fui-content member-page navbar'>
+		{if $this->syscfg['memberheaderstyle']==2}
+		<div class="member-block">			
+			<img class="bgImg" src="../addons/rhinfo_zyxq/static/mobile/images/bg-member.png">	
+			<div class="wrap" >
+				<div class="box">
+					<div class="face"><img src="{$user['avatar']}" /></div>
+					 <div class="verticalv-box">					
+						<div class="name">{if $user['status']==1}{$user['nickname']}(待审核){elseif $user['status']==2}{$user['nickname']}(审核不通过){else}{php echo $user['realname']?$user['realname']:$user['nickname'];}{/if}</div>
+						<div class="level" >{$user['address']}</div>												
+						<a href="{php echo $this->createMobileUrl('service',array('op'=>'credit1'));}">
+							<span class="title">{$creditnames[$behavior['activity']]['title']}</span>
+							<span class="num">{php echo empty($credits[$behavior['activity']])?0:$credits[$behavior['activity']];}</span>				
+						</a>
+						{if $this->syscfg['isdiscredit']==1}
+						<a href="{php echo $this->createMobileUrl('service',array('op'=>'credit2'));}">
+							<span class="title">{$creditnames[$behavior['currency']]['title']}</span>
+							<span class="num">{php echo empty($credits[$behavior['currency']])?0:$credits[$behavior['currency']];}</span>
+						</a>
+						<a href="{php echo $this->createMobileUrl('service',array('op'=>'recharge'));}"><i class="icon icon-recharge title"></i></a>
+						{/if}
+					</div>
+				</div>
+			</div>
+			<a class="setbtn" href="{php echo $this->createMobileurl('service',array('op'=>'myset'));}" data-nocache='true'><i class="icon icon-settings"></i></a>
+		</div>
+		{else}
+		<div class="headinfo" >
+		<a class="setbtn" href="{php echo $this->createMobileurl('service',array('op'=>'myset'));}" data-nocache='true'><i class="icon icon-settings"></i></a>
+			<div class="child">
+				{if $this->syscfg['isdiscredit']==1}
+				<a href="{php echo $this->createMobileUrl('service',array('op'=>'credit2'));}">
+					<div class="title">{$creditnames[$behavior['currency']]['title']}</div>
+					<div class="num">{php echo empty($credits[$behavior['currency']])?0:$credits[$behavior['currency']];}</div>
+				</a>
+				{/if}
+			</div>
+			<div class="child userinfo">
+				<div class="face"><img src="{php echo empty($user['avatar'])?$fans['avatar']:$user['avatar'];}" /></div>
+				<div class="name">{if $user['status']==1}{$user['nickname']}(待审核){elseif $user['status']==2}{$user['nickname']}(审核不通过){else}{php echo $user['realname']?$user['realname']:$user['nickname'];}{/if}</div>
+				<div class="level" >{$user['address']}</div>
+			</div>
+			<div class="child">
+				<a href="{php echo $this->createMobileUrl('service',array('op'=>'credit1'));}">
+					<div class="title">{$creditnames[$behavior['activity']]['title']}</div>
+					<div class="num">{php echo empty($credits[$behavior['activity']])?0:$credits[$behavior['activity']];}</div>				
+				</a>
+			</div>
+			<div class="water">
+				<div class="water-1"></div>
+				<div class="water-2"></div>
+            </div>  
+		</div>
+	    {/if}
+		{if empty($user['mobile'])}
+			<div class="fui-cell-group fui-cell-click external">
+				<a class="fui-cell"  href="{php echo $this->createMobileUrl('auth',array('op'=>'bind'));}">
+					<div class="fui-cell-icon"><i class="icon icon-mobile" style="color:{if !empty($this->syscfg['bgcolor'])}{php echo $this->syscfg['bgcolor']}{else}#ff6600{/if};"></i></div>
+					<div class="fui-cell-text"><p class="text text-danger">绑定手机号</p></div>
+					<div class="fui-cell-remark"></div>
+				</a>
+				<div class="fui-cell-tip">请绑定您的手机号码，以便我们更好地为您提供服务.</div>
+			</div>
+		{/if}
+	{template $this->mytpl('member/catefee')}	
+	{if $this->syscfg['isdidplayscan']==1 && $this->rhinfo_isweixin}
+		<div class="fui-cell-group fui-cell-click">
+			<a class="fui-cell external">
+				<div class="fui-cell-icon"><i class="icon icon-scan" style="color:{if !empty($this->syscfg['bgcolor'])}{php echo $this->syscfg['bgcolor']}{else}#ff6600{/if};"></i></div>
+				<div class="fui-cell-text">智能设备扫码</div>
+				<div class="fui-cell-remark noremark">扫一扫二维码或条形码</div>
+			</a>			
+			<div class="fui-icon-group col-3">
+				<a class="fui-icon-col external myscan" data-devtype="1">
+					<div class="icon radius"><i class="icon icon-lock"></i></div>
+					<div class="text">智能门禁</div>
+				</a>
+				<a class="fui-icon-col external myscan" data-devtype="2">
+					<div class="icon radius"><i class="icon icon-electrical"></i></div>
+					<div class="text">智能充电</div>
+				</a>
+				<a class="fui-icon-col external myscan" data-devtype="3">
+					<div class="icon radius"><i class="icon icon-operation"></i></div>
+					<div class="text">自助设备</div>
+				</a>								
+			</div>
+		</div>
+	{/if}
+	{if $this->syscfg['memberliststyle']==2}
+		<div class="fui-cell-group fui-cell-click">
+			<a class="fui-cell external" href="{php echo $this->createMobileurl($mydo,array('op'=>'myhouse'));}">
+				<div class="fui-cell-icon"><i class="icon icon-windows8"></i></div>
+				<div class="fui-cell-text">我的管理菜单</div>
+				<div class="fui-cell-remark">全部房产</div>
+			</a>			
+			
+			<div class="fui-icon-group listicon">
+				{if $this->syscfg['isshowhouse']}
+				<a class="fui-icon-col external" href="{php echo $this->createMobileurl($mydo,array('op'=>'myhouse','category'=>1));}">
+					<div class="icon radius"><i class="icon icon-city"></i></div>
+					<div class="text">我的房屋</div>
+				</a>
+				<a class="fui-icon-col external" href="{php echo $this->createMobileurl($mydo,array('op'=>'myparking'));}">
+					<div class="icon radius"><i class="icon icon-vipcard"></i></div>
+					<div class="text">我的车位</div>
+				</a>
+				<a class="fui-icon-col external" href="{php echo $this->createMobileurl('service',array('op'=>'mycar'));}">
+					<div class="icon radius"><i class="icon icon-taxi"></i></div>
+					<div class="text">我的车辆</div>
+				</a>
+				{if $this->syscfg['isshowdevice']}
+				<a class="fui-icon-col external" href="{php echo $this->createMobileurl('car',array('op'=>'mylock'));}">
+					<div class="icon radius"><i class="icon icon-lock"></i></div>
+					<div class="text">我的车锁</div>
+				</a>
+				{/if}
+				{/if}
+				{if $this->syscfg['isshowrepair']}
+				<a class="fui-icon-col external" href="{php echo $this->createMobileurl('service',array('op'=>'myrepair'));}">
+					<div class="icon radius"><i class="icon icon-repair"></i></div>
+					<div class="text">我的报修</div>
+				</a>
+				<a class="fui-icon-col external" href="{php echo $this->createMobileurl('service',array('op'=>'mysuggest'));}">
+					<div class="icon radius"><i class="icon icon-write"></i></div>
+					<div class="text">投诉建议</div>
+				</a>
+				{/if}
+				{if $this->syscfg['isshowdevice']}
+				<a class="fui-icon-col external" href="{php echo $this->createMobileurl('charging',array('op'=>'my'));}">
+					<div class="icon radius"><i class="icon icon-electrical"></i></div>
+					<div class="text">我的充电</div>
+				</a>
+				<a class="fui-icon-col external" href="{php echo $this->createMobileurl('selfdevice',array('op'=>'my'));}">
+					<div class="icon radius"><i class="icon icon-operation"></i></div>
+					<div class="text">自助设备</div>
+				</a>
+				{/if}
+				{if $this->syscfg['isshowtask']}
+				<a class="fui-icon-col external" href="{php echo $this->createMobileurl('task',array('op'=>'mytask'));}">
+					<div class="icon radius"><i class="icon icon-present"></i></div>
+					<div class="text">我的任务</div>
+				</a>
+				{/if}
+				{if $this->syscfg['isshowvisit']}
+				<a class="fui-icon-col external" href="{php echo $this->createMobileurl('visit',array('op'=>'visitor'));}">
+					<div class="icon radius"><i class="icon icon-friend"></i></div>
+					<div class="text">我的访客</div>
+				</a>	
+				{/if}
+				{if $this->syscfg['isshowlike']}
+				<a class="fui-icon-col external" href="{php echo $this->createMobileurl($mydo,array('op'=>'myfav'));}">
+					<div class="icon radius"><i class="icon icon-friendfavor"></i></div>
+					<div class="text">我的关注</div>
+				</a>
+				{/if}
+				{if $this->syscfg['isshowexpress']}
+				<a class="fui-icon-col external" href="{php echo $this->createMobileurl('expressp',array('op'=>'myexpress'));}">
+					<div class="icon radius"><i class="icon icon-similarproduct"></i></div>
+					<div class="text">我的快件</div>
+				</a>
+				{/if}
+				{if $this->syscfg['isshowforum']}
+				<a class="fui-icon-col external" href="{php echo $this->createMobileurl('forum',array('op'=>'mypost'));}">
+					<div class="icon radius"><i class="icon icon-comment"></i></div>
+					<div class="text">我的话题</div>
+				</a>
+				<a class="fui-icon-col external" href="{php echo $this->createMobileurl('forum',array('op'=>'myreply'));}">
+					<div class="icon radius"><i class="icon icon-edit2"></i></div>
+					<div class="text">我的回复</div>
+				</a>
+				{/if}
+			</div>
+		</div>		
+	{else}
+		{if $this->syscfg['isshowhouse']}
+		<div class="fui-cell-group fui-cell-click">
+			<a class="fui-cell" href="{php echo $this->createMobileurl($mydo,array('op'=>'myhouse','category'=>1));}">
+				<div class="fui-cell-icon"><i class="icon icon-city"></i></div>
+				<div class="fui-cell-text"><p>我的房产</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+			<a class="fui-cell" href="{php echo $this->createMobileurl($mydo,array('op'=>'myparking'));}">
+				<div class="fui-cell-icon"><i class="icon icon-vipcard"></i></div>
+				<div class="fui-cell-text"><p>我的车位</p></div>
+				<div class="fui-cell-remark">{if !empty($carfeenum)}<span class="badge badge-danger">{$carfeenum}</span>{/if}</div>
+			</a>
+			<a class="fui-cell" href="{php echo $this->createMobileurl('service',array('op'=>'mycar'));}">
+				<div class="fui-cell-icon"><i class="icon icon-taxi"></i></div>
+				<div class="fui-cell-text"><p>我的车辆</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+			{if $this->syscfg['isshowdevice']}
+			<a class="fui-cell" href="{php echo $this->createMobileurl('car',array('op'=>'mylock'));}">
+				<div class="fui-cell-icon"><i class="icon icon-lock"></i></div>
+				<div class="fui-cell-text"><p>我的车锁</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+			{/if}
+		</div>
+		{/if}
+		{if $this->syscfg['isshowrepair'] || $this->syscfg['isshowdevice']}
+		<div class="fui-cell-group fui-cell-click">
+			{if $this->syscfg['isshowrepair']}
+			<a class="fui-cell" href="{php echo $this->createMobileurl('service',array('op'=>'myrepair'));}">
+				<div class="fui-cell-icon"><i class="icon icon-repair"></i></div>
+				<div class="fui-cell-text"><p>我的报修</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+			<a class="fui-cell" href="{php echo $this->createMobileurl('service',array('op'=>'mysuggest'));}">
+				<div class="fui-cell-icon"><i class="icon icon-write"></i></div>
+				<div class="fui-cell-text"><p>我的建议</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+			{/if}
+			{if $this->syscfg['isshowdevice']}
+			<a class="fui-cell" href="{php echo $this->createMobileurl('charging',array('op'=>'my'));}">
+				<div class="fui-cell-icon"><i class="icon icon-electrical"></i></div>
+				<div class="fui-cell-text"><p>我的充电</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+			<a class="fui-cell" href="{php echo $this->createMobileurl('selfdevice',array('op'=>'my'));}">
+				<div class="fui-cell-icon"><i class="icon icon-operation"></i></div>
+				<div class="fui-cell-text"><p>自助设备</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+			{/if}
+		</div>
+		{/if}
+		{if $this->syscfg['isshowtask'] || $this->syscfg['isshowvisit'] || $this->syscfg['isshowlike'] || $this->syscfg['isshowexpress']}
+		<div class="fui-cell-group fui-cell-click">
+			{if $this->syscfg['isshowtask']}
+			<a class="fui-cell"  href="{php echo $this->createMobileurl('task',array('op'=>'mytask'));}">
+				<div class="fui-cell-icon"><i class="icon icon-present"></i></div>
+				<div class="fui-cell-text"><p>我的任务</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+			{/if}
+			{if $this->syscfg['isshowvisit']}
+			<a class="fui-cell"  href="{php echo $this->createMobileurl('visit',array('op'=>'visitor'));}">
+				<div class="fui-cell-icon"><i class="icon icon-friend"></i></div>
+				<div class="fui-cell-text"><p>我的访客</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+			{/if}
+			{if $this->syscfg['isshowlike']}
+			<a class="fui-cell"  href="{php echo $this->createMobileurl($mydo,array('op'=>'myfav'));}">
+				<div class="fui-cell-icon"><i class="icon icon-friendfavor"></i></div>
+				<div class="fui-cell-text"><p>我的关注</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+			{/if}
+			{if $this->syscfg['isshowexpress']}
+			<a class="fui-cell"  href="{php echo $this->createMobileurl('expressp',array('op'=>'myexpress'));}">
+				<div class="fui-cell-icon"><i class="icon icon-similarproduct"></i></div>
+				<div class="fui-cell-text"><p>我的快件</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+			{/if}
+		</div>
+		{/if}
+		
+		{if $this->syscfg['isshowforum']}
+		<div class="fui-cell-group fui-cell-click">
+			<a class="fui-cell" href="{php echo $this->createMobileurl('forum',array('op'=>'mypost'));}">
+				<div class="fui-cell-icon"><i class="icon icon-comment"></i></div>
+				<div class="fui-cell-text"><p>我的话题</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+			<a class="fui-cell" href="{php echo $this->createMobileurl('forum',array('op'=>'myreply'));}">
+				<div class="fui-cell-icon"><i class="icon icon-edit2"></i></div>
+				<div class="fui-cell-text"><p>我的回复</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+		</div>
+		{/if}				
+    {/if}
+	{if $this->syscfg['isshowqa']}
+		<div class="fui-cell-group fui-cell-click">			
+			<a class="fui-cell"  href="{php echo $this->createMobileurl('question',array('op'=>'index'));}">
+				<div class="fui-cell-icon"><i class="icon icon-question"></i></div>
+				<div class="fui-cell-text"><p>常见问题</p></div>
+				<div class="fui-cell-remark"></div>
+			</a>
+		</div>
+	{/if}
+	{if $this->rhinfo_wap && !$this->rhinfo_isalipay}
+		<div class="fui-cell-group fui-cell-click">
+			<a class="fui-cell external" href="{php echo $this->createMobileUrl('auth',array('op'=>'modify'));}">
+				<div class="fui-cell-text" style="text-align: center;color:red;"><p>修改密码</p></div>
+			</a>
+			<a class="fui-cell external btn-logout">
+				<div class="fui-cell-text" style="text-align: center;color:red;"><p>退出登录</p></div>
+			</a>
+		</div>
+	{/if}
+	
+	{template $this->mytpl('_copyright')}
+	
+	<script language='javascript'>
+		$(".myscan").on('click',function(){
+			var devtype = $(this).attr("data-devtype");
+			var iswxapp = 0;
+			wx.miniProgram.getEnv(function(res) {
+				if(res.miniprogram === false){		
+					iswxapp = 1;
+				}		
+			});
+			wx.scanQRCode({
+				needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+				scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+				success: function (res) {
+					var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果	
+					var Expression=/http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+					var objExp=new RegExp(Expression);
+					if(objExp.test(result)==true){
+						location.href = result;
+						return
+					}
+					if(result.substring(0,4)=='CODE'){
+						var arr = result.split(",");
+						var devicesn = arr[1];
+					}
+					else{
+						var devicesn = result;
+					}					
+					core.json('util/scan', {
+						'devtype':devtype,
+						'devsn':devicesn
+					}, function(rjson) {
+						if (rjson.status != 1) {
+							RhUI.toast.show(rjson.result.message);
+							return
+						}	
+						var wechat = rjson.result.wechat;
+						if(modal.iswxapp==1){
+							var path = '/pages/mypay/pay?params='+wechat;
+							wx.miniProgram.navigateTo({
+								url: path
+							});
+							return
+						}	
+						if(wechat.iswap==1){
+							location.href = wechat.mweb_url;
+							return
+						}
+						if(wechat.isymf==1){
+							location.href = wechat.ymfurl;
+							return
+						}		
+						if(wechat.iswepay==1){
+							location.href = core.getUrl('wepay')+'&params=' + wechat.params;
+							return
+						}
+
+						function onBridgeReady() {
+							WeixinJSBridge.invoke('getBrandWCPayRequest', {
+								'appId':  wechat.appId,
+								'timeStamp': wechat.timeStamp,
+								'nonceStr': wechat.nonceStr,
+								'package': wechat.package,
+								'signType': wechat.signType,
+								'paySign': wechat.paySign
+							}, function(res) {
+								if (res.err_msg == 'get_brand_wcpay_request:ok') {
+									RhUI.toast.show('可以开始了');
+									location.href = wechat.returl;
+									return
+								} 
+								else if (res.err_msg == 'get_brand_wcpay_request:cancel') {
+									$(that).html('提交').removeAttr('stop');	
+									RhUI.toast.show('取消支付')
+								} 
+							})
+						}
+						if  (typeof WeixinJSBridge  ==  "undefined") {
+							if ( document.addEventListener ) {
+								document.addEventListener('WeixinJSBridgeReady',  onBridgeReady,  false)
+							} 
+							else if (document.attachEvent) {
+								document.attachEvent('WeixinJSBridgeReady',  onBridgeReady);
+								document.attachEvent('onWeixinJSBridgeReady',  onBridgeReady)
+							}
+						}
+						else {
+							onBridgeReady()
+						}				
+					}, false, true)
+				}
+			})
+		})
+		$(".btn-logout").unbind('click').click(function() {
+			RhUI.confirm('当前已登录，确定要退出？', function() {
+				location.href = core.getUrl('myauth/logout');
+			})
+		})
+	</script>
+	
+	</div>		
+</div>
+
+{template $this->mytpl('_menu')}
+{template $this->mytpl('_footer')}

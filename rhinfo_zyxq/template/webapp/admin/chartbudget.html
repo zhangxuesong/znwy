@@ -1,0 +1,87 @@
+<span class="echart-title">收支记录</span>
+<span class="echart-count">单位：元</span>
+<div id="chartBudget"></div>
+<script type="text/javascript">
+	var chartBudget = echarts.init(document.getElementById('chartBudget'),'shine');
+	option_budget = {
+		legend: {
+			data:['收入','支出'],
+			textStyle: {
+				color: "rgb(249, 249, 249)"
+			},
+			y: 'top'
+		},
+		grid:{
+			y:25,
+			y2:20,
+			x2:40,
+			left:'1%',
+			right:'5%',
+			top:'5%',
+			containLabel:true
+		},
+		calculable : true,
+		xAxis : [
+			{
+				type : 'category',
+				boundaryGap : false,
+				data : function (){
+					var list = [];
+					for (var i = 6; i >=0; i--) {
+						list.push(getDay(-i));
+					}
+					return list;
+				}(),
+				axisLabel:{
+					textStyle:{
+						color: "#ffffff"
+					}
+				},
+				axisLine:{
+					lineStyle:{
+						color: "#ffffff"
+					}
+				},
+			}
+		],
+		yAxis : [
+			{
+				type : 'value',
+				textStyle:{
+					color: "#fffff"
+				},
+				axisLabel:{
+					textStyle:{
+						color: "#ffffff"
+					}
+				},
+				axisLine:{
+					lineStyle:{
+						color: "#ffffff"
+					}
+				},
+			}
+		],
+		series : [
+			{
+				name:'收入',
+				type:'line',
+				smooth:true,
+				itemStyle: {normal: {areaStyle: {type: 'default'}}},
+				data:[{$indata}]
+			},
+			{
+				name:'支出',
+				type:'line',
+				smooth:true,
+				itemStyle: {normal: {areaStyle: {type: 'default'}}},
+				data:[{$outdata}]
+			}
+		]
+	};
+	chartBudget.setOption(option_budget);
+	autoPlay(chartBudget,option_budget);
+	window.onresize = function() {
+		chartBudget.resize();
+	};
+</script>

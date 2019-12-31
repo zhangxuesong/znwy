@@ -1,0 +1,96 @@
+{template $this->mytpl('_pheader')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170802">
+<style>
+.onekey{ 
+	position: fixed;
+    bottom:3rem;
+    right:1rem;
+    width:2rem;
+    height:2rem;
+    -webkit-border-radius:2rem;
+    -moz-border-radius:2rem;
+    border-radius:2rem;
+    line-height:2rem;
+	background-color:#ff6600;
+	border:#ff6600;
+	opacity:0.8;
+	text-align:center;
+}
+.onekey .icon {
+    font-size:1.2rem;
+    font-weight:bold;
+	color:#fff;
+}
+.fui-card .fui-card-info img {
+	width: 0.8rem;
+	height: 0.8rem;
+}
+</style>
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back" ></a>
+		</div>
+		<div class="title">待通知</div>
+		<div class="fui-header-right">
+		<a href="{php echo $this->createMobileUrl($mydo,array('op'=>$_GPC['op']=='express'?'batchadd':'batchadde','sid'=>$sid,'compid'=>$compid));}" style="color:#666;">补手机</a>
+		</div>
+	</div>
+
+	<div class='fui-content'>
+		<form action="{php echo $this->createMobileUrl($mydo,array('op'=>$_GPC['op'],'sid'=>$sid,'cate'=>3));}" method="post">
+			<div class="fui-searchbar bar">
+				<div class="searchbar center">
+					<input type="hidden" value="{$_GPC['compid']}" name="compid" id="compid" />
+					<input type="submit" class="searchbar-cancel searchbtn" value="搜索">
+					<div class="search-input">
+						<!--<i class="icon icon-search"></i>-->
+						<input type="text" placeholder="请输入单号、手机或取件码" class="search" value="{$_GPC['keyword']}" name="keyword" id="keyword" />	
+						<i class="icon icon-scan"></i>
+					</div>
+				</div>
+			</div>
+		</form>
+		<div class="container"></div>
+		<div class="content-empty" style="display:none;">
+		<i class="icon icon-box"></i> <br/>暂时没有待通知</div>
+        <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+	</div>
+    <a class="onekey" style="display:none;">
+		<i class="icon icon-mail"></i>
+	</a>
+	<script type="text/html" id="tpl_express_list">
+   <%each list as row%>
+    <div class="fui-card fui-card-list " style="overflow:hidden;" data-id="<%row.id%>">
+        <a class='fui-card-info'>
+			<div class="text">                        
+				<div class="title" style="font-size:1rem;"><%row.expresssn%><span class="pull-right"><%if row.thumb!=""%><img src="<%row.thumb%>"/><%/if%> <%row.comptitle%></span></div>
+				<div class="subtitle">入库时间：<%row.ctime%></div>
+				<%if row.realname !="" %><div class="subtitle">业主：<%row.realname%> <%row.address%></div><%/if%>
+				<%if row.local !="" || row.label !="" %><div class="subtitle">存放位置：<%row.local%> <%row.label%></div><%/if%>
+				<%if row.remark !="" %><div class="subtitle">备注：<%row.remark%></div><%/if%>
+			</div>	
+        </a>
+        <div class='fui-card-btns'>
+            <a data-id="<%row.id%>" data-toggle='take' data-sn="<%row.orderno%>"><i class="icon icon-post"></i> 核销</a>          
+            <a data-id="<%row.id%>" data-toggle='msg' data-notice="1"><i class="icon icon-message"></i> 通知</a>
+        </div>
+    </div>
+    <%/each%>
+	</script>
+	<script language='javascript'>
+		require(['express/express'], function (modal) {
+			modal.init({
+			   sid:"{$sid}",
+			   cate:"{$_GPC['cate']}",
+			   ctime:"{$_GPC['ctime']}",
+			   keyword:"{$_GPC['keyword']}",
+			   compid:"{$_GPC['compid']}",
+			   today:"{$_GPC['today']}",
+			   cfrom:"{$res['from']}"
+			});
+		});
+	</script>
+ </div>
+
+{template $this->mytpl('_footer')}

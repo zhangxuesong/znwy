@@ -1,0 +1,143 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">  
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" name="myform" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />	
+			<div class="form-group">				
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">导入方法</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					 <div class="alert alert-danger" role="alert"> 
+						请先导出模板格式，并对应栏位填充内容后再导入，导出模板中ID请勿改动，日期栏位务必使用文本格式。
+					</div>
+				</div>
+			</div>
+			{if $_W['uid']} 
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"> <span class="text-danger">*</span>所属物业</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+						<option value="0">请选择所属物业</option>
+						{loop $myproperty $k $v}
+							<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+						{/loop}
+					</select>				
+				</div>
+			</div>
+			{else}
+				<input type="hidden" class="form-control" id="pid" value="{$mywe['pid']}" name="pid" />
+			{/if}
+			
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>所属主体</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<select class="form-control" id="rid" name="rid">
+						<option value="0">请选择所属主体</option>	
+						{if $_W['uid']} 
+						{else}
+							{loop $regions $i $r}
+								<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+							{/loop}						
+						{/if}
+					</select>
+				</div>
+			</div>	
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">导入类型</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<label  class="radio-inline">
+						<input type="radio" name="exporttype"  value="1" id="feeitem" checked /> 物业收费项目</label>
+					<label class="radio-inline" >
+							<input type="radio" name="exporttype" value="2" id="threeitem"  /> 抄表收费项目</label>					
+				</div>
+			</div>	
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">导入模板数据</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="file" id="upfile" class="form-control" title="请选择文件" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.csv" name="upfile">
+				</div>	
+			</div>	
+			<br>
+		</form>
+		<br>
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+window._region = {php echo json_encode($myregion);};					
+function renderCategory(obj, name,id){
+	var index = obj.options[obj.selectedIndex].value;
+	require(['jquery', 'util'], function($, u){
+		var $selectChild = $("#"+ id);
+		var html = '<option value="0">请选择</option>';
+		if (!window['_'+name] || !window['_'+name][index]) {
+			$selectChild.html(html);
+			return false;
+		}
+		for(var i=0; i< window['_'+name][index].length; i++){
+			html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+		}
+		$selectChild.html(html);
+	});
+}
+	
+
+function mysubmit(obj){
+	var url = "{php echo $this->createWebUrl('lease',array('op'=>'bill')).$mywe['direct'];}";
+	var pid = $("#pid").find("option:selected").val();
+	var rid = $("#rid").find("option:selected").val(); 
+	
+	if (pid=='0') {
+	   layer.msg("所属物业不能为空！",{icon:0});
+	   return
+	}	
+	if (rid=='0') {
+	   layer.msg("所属主体名称不能为空！",{icon:0});
+	   return
+	}
+	
+	var filename = document.myform.upfile.value;	
+    if (filename=='') {
+	   layer.msg("没有选择任何文件！",{icon:0});
+	   return
+	}
+	var formData = new FormData();
+	formData.append('pid',pid);
+	formData.append('rid',rid);
+	formData.append('upfile', $('#upfile')[0].files[0]);
+	myprocess(obj);
+	$.ajax({
+		url: "{php echo $this->createWebUrl($mydo,array('op'=>'importbill')).$mywe['direct'];}",
+		type: 'POST',
+		cache: false,
+		data: formData,
+		processData: false,
+		contentType: false,
+		success:function(data){ 			
+			 if (data=='ok'){		
+				layer.msg('导入成功!',{icon:1});
+				location.href = url;		
+			 }
+			 else{
+				var html = '<i class="fa fa-check"></i> 提交';
+				$(obj).html(html);  
+				$(obj).attr("disabled", false); 
+				layer.msg(data,{icon:0});
+			 }
+		} 
+	});	 
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl('lease',array('op'=>'bill')).$mywe['direct'];}";
+	 location.href = url;
+}
+
+</script> 
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<span class="echart-title">用户分析</span>
+<span class="echart-count">总共有：<strong>{$total}</strong>&nbsp;人</span>
+<div id="chartOwner"></div>
+<script type="text/javascript">
+	var chartOwner = echarts.init(document.getElementById('chartOwner'),'shine');
+	option_owner = {
+		legend: {
+			orient: 'vertical',
+			x: 'left',
+			data:['用户','住户','商户','其他'],
+			textStyle:{
+				color: "#ffffff"
+			}
+		},		
+		series: [
+			{
+				name:'访问来源',
+				type:'pie',
+				selectedMode: 'single',
+				radius: [0, '30%'],
+				center:['60%','60%'],
+				label: {
+					normal: {
+						position: 'inner',
+						formatter: '{b}\n{c}人',
+						textStyle: {
+							fontSize: '10',
+							fontWeight: 'bold',
+							color:'#fff'
+						},
+					}
+				},
+				labelLine: {
+					normal: {
+						show: false
+					}
+				},
+				data:[
+					{value:{$member_array[0]}, name:'用户'},
+				]
+			},
+			{
+				name:'访问来源',
+				type:'pie',
+				radius: ['50%', '65%'],
+				center:['60%','60%'],
+				label: {
+					normal: {
+						formatter: '{b}\n{d}%  ',
+						rich: {
+							a: {
+								color: '#999',
+								lineHeight: 22,
+								align: 'center'
+							},
+							hr: {
+								borderColor: '#aaa',
+								width: '100%',
+								borderWidth: 0.5,
+								height: 0
+							},
+							b: {
+								fontSize: 16,
+								lineHeight: 33
+							},
+							per: {
+								color: '#eee',
+								backgroundColor: '#334455',
+								padding: [2, 4],
+								borderRadius: 2
+							}
+						},
+						textStyle: {
+							fontSize: '10',
+							fontWeight: 'bold',
+							color:'#fff'
+						},
+					}
+				},
+				data:[					
+					{value:{$member_array[1]}, name:'住户'},
+					{value:{$member_array[2]}, name:'商户'},
+					{value:{$member_array[3]}, name:'其他'},
+				]
+			}
+		]
+	};
+	chartOwner.setOption(option_owner);
+	autoPlay(chartOwner,option_owner);
+	window.onresize = function() {
+		chartOwner.resize();
+	};	
+</script>

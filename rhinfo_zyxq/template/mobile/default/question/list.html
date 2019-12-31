@@ -1,0 +1,72 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-according-group:after,.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+.fui-according-group:not(.fui-according-group-o):before,.fui-cell-group:not(.fui-cell-group-o):before,.fui-list-group:not(.fui-list-group-o):before,.fui-list-group:not(.fui-list-group-o):after{border-top:0px;}
+.fui-according-content .content-block {	font-size:0.75rem;}
+</style>
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">{$secprg['title']}</div>
+        <div class="fui-header-right">
+            <a class="icon icon-home external" href="{php echo $this->createMobileUrl('home');}"></a>
+        </div>
+    </div>
+    <div class='fui-content'>
+        <div class="fui-cell-group qa-title question-title" style="display: none">
+            <div class="fui-cell">
+                <div class="fui-cell-text">{if !empty($category['title'])}{$category['title']}{else}全部问题{/if}</div>
+            </div>
+        </div>
+        <div class="fui-message empty" style="display:none;">
+            <div class="icon ">
+                <i class="icon icon-information"></i>
+            </div>
+            <div class="content">内容为空!</div>
+            <div class="button">
+                <a href="javascript:history.back(-1);" class="btn btn-default  external block">返回</a>
+            </div>
+        </div>
+		{if !empty($this->syscfg['qashowtype'])}
+        <div class="fui-according-group" id="container"></div>
+        {else}
+        <div class="fui-list-group" id="container"></div>
+        {/if}
+    </div>
+    {if !empty($this->syscfg['qashowtype'])}
+    <script type="text/html" id="tpl_list">
+        <%each list as item%>
+        <div class="fui-according">
+            <div class="fui-according-header">
+                <span class="text"><%item.title%></span>
+                <span class="remark"></span>
+            </div>
+            <div class="fui-according-content">
+                <div class="content-block"><%=item.content%></div>
+            </div>
+        </div>
+        <%/each%>
+    </script>
+    {else}
+    <script type="text/html" id="tpl_list">
+        <%each list as item%>
+        <a class="fui-list" href="{php echo $this->createMobileUrl($mydo,array('op'=>'detail'));}&id=<%item.id%>" data-nocache="true">
+            <div class="fui-list-inner">
+                <div class="subtitle"><%item.title%></div>
+            </div>
+            <div class="fui-list-angle">
+                <div class="angle"></div>
+            </div>
+        </a>
+        <%/each%>
+    </script>
+    {/if}
+    <script language="javascript">
+         require(['question/index'],function(modal){
+            modal.init({cate: '{$cate}', keyword: '', isrecommand: 1});
+        });
+    </script>
+</div>
+{template $this->mytpl('_footer')}

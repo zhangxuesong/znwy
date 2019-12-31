@@ -1,0 +1,101 @@
+﻿ <div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">业主中心标题</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">    
+		<input type="text" class="form-control"  value="{if empty($item['membertext'])}业主中心{else}{$item['membertext']}{/if}" name="membertext">
+	</div>	
+</div>
+
+<div class="form-group">
+   <label class="col-xs-12 col-sm-2 col-md-2 control-label">业主中心头部样式</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">                   	
+		<label class='radio-inline'>
+			<input type='radio' name='memberheaderstyle' value='1' {if empty($item['memberheaderstyle']) || $item['memberheaderstyle']==1}checked{/if} /> 头像居中
+		</label>
+		<label class='radio-inline'>
+			<input type='radio' name='memberheaderstyle' value='2' {if $item['memberheaderstyle']==2 }checked{/if} /> 头像靠左
+		</label>
+		 <span class="help-block">业主中心头部样式设定</span>
+	</div>
+</div>
+
+<div class="form-group">
+   <label class="col-xs-12 col-sm-2 col-md-2 control-label">是否显示余额</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">                   	
+		<label class='radio-inline'>
+			<input type='radio' name='isdiscredit' value='0' {if empty($item['isdiscredit']) || $item['isdiscredit']==0}checked{/if} /> 不显示
+		</label>
+		<label class='radio-inline'>
+			<input type='radio' name='isdiscredit' value='1' {if $item['isdiscredit']==1 }checked{/if} /> 显示
+		</label>
+		<span class="help-block">是否显示余额及充值按钮</span>
+	</div>
+</div>
+
+<div class="form-group">
+   <label class="col-xs-12 col-sm-2 col-md-2 control-label">业主中心菜单样式</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">                   	
+		<label class='radio-inline'>
+			<input type='radio' name='memberliststyle' value='1' {if empty($item['memberliststyle']) || $item['memberliststyle']==1}checked{/if} /> 列表展示
+		</label>
+		<label class='radio-inline'>
+			<input type='radio' name='memberliststyle' value='2' {if $item['memberliststyle']==2 }checked{/if} /> 图标展示
+		</label>
+		<span class="help-block">管理菜单链接自定义请至页面管理-><a href="javascript:;" data-href="{php echo $this->createWebUrl('pagediy',array('op'=>'list'));}" data-title="业主中心" onclick="parent.Hui_admin_tab(this)"><font class="text-primary">业主中心</font></a>.</span>
+	</div>
+</div>
+
+ <div class="form-group">
+   <label class="col-xs-12 col-sm-2 col-md-2 control-label">菜单显示控制</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<div class="col-sm-3 col-lg-3 col-xs-12">
+		<div class="input-group">
+		<span class="input-group-addon">我的账单</span><input type="checkbox" value="1" {if $item['isshowfeebill']==1}checked="checked"{/if} name="isshowfeebill"/></div></div>
+		<div class="col-sm-3 col-lg-3 col-xs-12">
+		<div class="input-group">
+		<span class="input-group-addon">报修建议</span><input type="checkbox" value="1" {if $item['isshowrepair']==1}checked="checked"{/if} name="isshowrepair"/></div></div>
+		<div class="col-sm-3 col-lg-3 col-xs-12">
+		<div class="input-group">
+		<span class="input-group-addon">我的资产</span><input type="checkbox" value="1" {if $item['isshowhouse']==1}checked="checked"{/if} name="isshowhouse"/></div></div>
+	</div>
+</div>
+ <div class="form-group">
+   <label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<div class="col-sm-3 col-lg-3 col-xs-12">
+		<div class="input-group">
+		<span class="input-group-addon">设备扫码</span><input type="checkbox" value="1" {if $item['isdidplayscan']==1}checked="checked"{/if} name="isdidplayscan"/></div></div>
+		<div class="col-sm-3 col-lg-3 col-xs-12">
+		<div class="input-group">
+		<span class="input-group-addon">智能设备</span><input type="checkbox" value="1" {if $item['isshowdevice']==1}checked="checked"{/if} name="isshowdevice"/></div></div>
+		<div class="col-sm-3 col-lg-3 col-xs-12">
+		<div class="input-group">
+		<span class="input-group-addon">社区话题</span><input type="checkbox" value="1" {if $item['isshowforum']==1}checked="checked"{/if} name="isshowforum"/></div></div>
+	</div>
+</div>
+
+ <div class="form-group">
+   <label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<div class="col-sm-3 col-lg-3 col-xs-12">
+		<div class="input-group">
+		<span class="input-group-addon">我的访客</span><input type="checkbox" value="1" {if $item['isshowvisit']==1}checked="checked"{/if} name="isshowvisit"/></div>
+		</div>
+		<div class="col-sm-3 col-lg-3 col-xs-12">
+		<div class="input-group">
+		<span class="input-group-addon">我的关注</span><input type="checkbox" value="1" {if $item['isshowlike']==1}checked="checked"{/if} name="isshowlike"/></div></div>
+		<div class="col-sm-3 col-lg-3 col-xs-12">
+		<div class="input-group">
+		<span class="input-group-addon">我的任务</span><input type="checkbox" value="1" {if $item['isshowtask']==1}checked="checked"{/if} name="isshowtask"/></div></div>
+	</div>
+</div>
+ <div class="form-group">
+   <label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<div class="col-sm-3 col-lg-3 col-xs-12">
+		<div class="input-group">
+		<span class="input-group-addon">我的快件</span><input type="checkbox" value="1" {if $item['isshowexpress']==1}checked="checked"{/if} name="isshowexpress"/></div></div>
+		<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">常见问题</span><input type="checkbox" value="1" {if $item['isshowqa']==1}checked="checked"{/if} name="isshowqa"/></div></div>
+	</div>
+</div>

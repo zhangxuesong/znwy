@@ -1,0 +1,282 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/rhui/css/mui.min.css?v=3.3">
+<style>
+	.mui-preview-image.mui-fullscreen {
+		position: fixed;
+		z-index: 20;
+		background-color: #000;
+	}
+	.mui-preview-header,
+	.mui-preview-footer {
+		position: absolute;
+		width: 100%;
+		left: 0;
+		z-index: 10;
+	}
+	.mui-preview-header {
+		height: 44px;
+		top: 0;
+	}
+	.mui-preview-footer {
+		height: 50px;
+		bottom: 0px;
+	}
+	.mui-preview-header .mui-preview-indicator {
+		display: block;
+		line-height: 25px;
+		color: #fff;
+		text-align: center;
+		margin: 15px auto 4;
+		width: 70px;
+		background-color: rgba(0, 0, 0, 0.4);
+		border-radius: 12px;
+		font-size: 16px;
+	}
+	.mui-preview-image {
+		display: none;
+		-webkit-animation-duration: 0.5s;
+		animation-duration: 0.5s;
+		-webkit-animation-fill-mode: both;
+		animation-fill-mode: both;
+	}
+	.mui-preview-image.mui-preview-in {
+		-webkit-animation-name: fadeIn;
+		animation-name: fadeIn;
+	}
+	.mui-preview-image.mui-preview-out {
+		background: none;
+		-webkit-animation-name: fadeOut;
+		animation-name: fadeOut;
+	}
+	.mui-preview-image.mui-preview-out .mui-preview-header,
+	.mui-preview-image.mui-preview-out .mui-preview-footer {
+		display: none;
+	}
+	.mui-zoom-scroller {
+		position: absolute;
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: flex;
+		-webkit-box-align: center;
+		-webkit-align-items: center;
+		align-items: center;
+		-webkit-box-pack: center;
+		-webkit-justify-content: center;
+		justify-content: center;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		-webkit-backface-visibility: hidden;
+	}
+	.mui-zoom {
+		-webkit-transform-style: preserve-3d;
+		transform-style: preserve-3d;
+	}
+	.mui-slider .mui-slider-group .mui-slider-item img {
+		width: auto;
+		height: auto;
+		max-width: 100%;
+		max-height: 100%;
+	}
+	.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+		width: 100%;
+	}
+	.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
+		display: inline-table;
+	}
+	.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+		display: table-cell;
+		vertical-align: middle;
+	}
+	.mui-preview-loading {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		display: none;
+	}
+	.mui-preview-loading.mui-active {
+		display: block;
+	}
+	.mui-preview-loading .mui-spinner-white {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin-left: -25px;
+		margin-top: -25px;
+		height: 50px;
+		width: 50px;
+	}
+	.mui-preview-image img.mui-transitioning {
+		-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+		transition: transform 0.5s ease, opacity 0.5s ease;
+	}
+	@-webkit-keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+	@keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+	@-webkit-keyframes fadeOut {
+		0% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
+	@keyframes fadeOut {
+		0% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
+	.fui-images img {
+		max-width: 100%;
+		height: auto;
+	}
+</style>
+<div class='fui-page  fui-page-current order-comment-page'>
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back" ></a>
+	</div>
+	<div class="title">投诉建议</div> 
+	<div class="fui-header-right">
+	{if $region['suggestnotice']==1 && $suggest['status']<2 && $team['right2']==1}
+		{if $suggest['getuid']>0}
+			已抢
+		{else}
+			<span id="btnSend" class="btn btn-danger btn-sm"> 抢单</span>	
+		{/if}
+	{/if}
+	</div>
+    </div>
+  <div class='fui-content margin navbar'>
+    <div class="fui-title"><i class="icon icon-city"></i> {$housename}</div>
+	 <div class="fui-cell-group">
+		<div class="goods-label-list">
+			<div class="goods-label-style3">
+				{loop $cate $item}
+					{if $item['id']==$suggest['cid']}
+						<span class="cl-3 cl-4 cl-2" ><strong>{$item['title']}</strong></span>
+					{/if}
+				{/loop}			
+			</div>
+			<div class="pull-right">
+				<span><strong class="{$repair['css']}">{$suggest['statustext']}</strong></span>			
+			</div>
+			<div style="clear:both;"></div>
+		</div>	    
+		
+		 <div class='fui-cell'>			
+			 <div class='fui-cell-text'>{$suggest['content']}</div>
+		 </div> 
+         		 
+	     {if !empty($images)}
+		 <div class='fui-cell'>
+			 <div class='fui-cell-info mysuggestimg'>			 
+				 <div class="fui-images fui-images-md image repair-images" >
+				 {loop $images $image}				    
+					<img src="{php echo tomedia($image);}" align="top" onload="if (this.height> 100) {this.style.marginTop = (100 - this.height)/2 + 'px';}" data-preview-src="" data-preview-group="{$item['id']}"/>					
+				  {/loop}
+				 </div>			
+			 </div>
+		 </div>
+		 {/if}
+	</div>
+  {if !empty($suggest_records)}
+	<div class="fui-title">回复内容</div>
+	{loop $suggest_records $suggest_record}
+	 <div class="fui-cell-group">
+		 <div class='fui-cell'>
+			 <div class='fui-cell-label'>
+			 <img class="round" data-lazy="{$suggest_record['headimgurl']}" style="width:35px;"/>
+			 <br>
+			  <span style="color: #999;font-size: 0.5rem;">{$suggest_record['ctime']}</span>
+			 </div>
+			 <div class='fui-cell-text'>{$suggest_record['content']}</div>
+		 </div>  
+          {if !empty($suggest_record['images'])}  		 
+		 <div class='fui-cell'>
+			 <div class='fui-cell-info myreplyimg'>			 
+				 <div class="fui-images fui-images-md image repair-images" >
+				 {loop $suggest_record['images'] $reply_image}				    
+					<img src="{php echo tomedia($reply_image);}" align='top' onload="if (this.height> 100) {this.style.marginTop = (100 - this.height)/2 + 'px';}" data-preview-src="" data-preview-group="{$suggest_record['id']}"/>					
+				  {/loop}
+				 </div>			
+			 </div>
+		 </div>	
+		{/if}
+	</div>
+	 {/loop}
+	 {/if}
+	 {if $suggest['status'] !=='4'}
+	 <div class="fui-cell-group">
+		<input type="hidden" id="suggest_id" name="suggest_id" value="{$suggest['id']}">	
+		<input type="hidden" id="category_type" name="category_type" value="">			
+		<div class="category-type">
+			<p>请您选择处理状态：</p>
+			 <span class="fui-lg-1 fui-md-2 fui-sm-3 fui-xs-4"><a href="javascript:void(0);" data-type="1">待处理</a></span>
+			 <span class="fui-lg-1 fui-md-2 fui-sm-3 fui-xs-4"><a href="javascript:void(0);" data-type="2">处理中</a></span>
+			 <span class="fui-lg-1 fui-md-2 fui-sm-3 fui-xs-4"><a href="javascript:void(0);" data-type="3">已处理</a></span>
+			 <span class="fui-lg-1 fui-md-2 fui-sm-3 fui-xs-4"><a href="javascript:void(0);" data-type="8">已回复</a></span>
+			 <span class="fui-lg-1 fui-md-2 fui-sm-3 fui-xs-4"><a href="javascript:void(0);" data-type="9">不显示</a></span>
+			<div style="clear:both;"></div>
+		</div>
+	 
+	 
+		 <div class='fui-cell must'>
+			 <div class='fui-cell-label '>内容</div>
+			 <div class='fui-cell-info'><textarea rows="6" placeholder="内容 10-100个字" id='content' name='content'></textarea></div>
+		 </div>
+	
+	 
+	 <div class='fui-cell'>
+		 <div class='fui-cell-label'>晒图</div>
+		 <div class='fui-cell-info'>			 
+			 <ul class="fui-images fui-images-md" id="images"></ul>
+			 <div class="fui-uploader fui-uploader-md"
+				 data-max="3" 
+				 data-count="0"> 
+				<input type="file" name='imgFile0' id='imgFile0' multiple="" accept="image/*" >
+			 </div>
+		 </div>
+	 </div>
+	</div>
+	{/if}
+  </div> 
+	{if $suggest['status'] !=='4'}
+     <div class='fui-footer'>
+		<a class='btn btn-warning btn-submit block'>提交</a>
+	  </div>
+	<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.min.js"></script>		
+	<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.zoom.js"></script>		
+	<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.previewimage.js"></script>	  
+    <script language='javascript'>
+	require(['suggest/suggest'], function (modal) {
+		modal.initReply({id:"{$suggest['id']}"}); 
+	});
+	mui.previewImage();
+	</script>
+	{/if}
+</div> 
+
+{template $this->mytpl('_footer')}

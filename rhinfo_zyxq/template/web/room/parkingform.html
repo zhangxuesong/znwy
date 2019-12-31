@@ -1,0 +1,51 @@
+﻿<form action="" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id"  value="{$room_parking['id']}" />	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>车位区域</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="lid" name="lid" onchange="renderCategory(this,'parking','parkingid')">
+				<option value="0">请选择</option>	
+				{loop $locations $vl}
+					<option value="{$vl['id']}" {if $parking['lid'] == $vl['id']} selected {/if} >{$vl['title']}</option>
+				{/loop}				
+			</select>
+		</div>
+	</div>	
+
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">车位</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="parkingid" name="parkingid">
+				<option value="0">请选择</option>	
+				{loop $eparkings $vp}
+					<option value="{$vp['id']}" {if $room_parking['parkingid'] == $vp['id']} selected {/if} >{$vp['title']}{$vp['ownername']}</option>
+				{/loop}			
+			</select>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label">备注</label>		
+			<input type="text" class="form-control"  value="{$room_parking['remark']}" placeholder="输入备注" name="remark" />
+		
+	</div>
+	<br>
+</form>	
+<script type="text/javascript">
+	window._parking = {php echo json_encode($parkings);};	
+	function renderCategory(obj,name,id){
+		var index = obj.options[obj.selectedIndex].value;		
+		$selectChild = $("#"+ id);
+		var html = '<option value="0">请选择</option>';
+		
+		if (!window['_'+name] || !window['_'+name][index]) {
+			$selectChild.html(html);
+			return false;
+		}
+		for(var i=0; i< window['_'+name][index].length; i++){
+			html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+		}
+		$selectChild.html(html);
+	}
+</script>

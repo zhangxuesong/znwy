@@ -1,0 +1,269 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />	
+			<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+			<div class="form-group">		
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">支付参数说明</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">			
+					 <div class="alert alert-info" role="alert"> 
+					如需使用微信独立支付，请务必到微擎功能选项中开启微信支付，并且在系统配中填写服务商账户和密钥.<br>
+					<span class="text-danger">请在公众平台->微信支付->公众号支付 追加支付授权目录: {php echo $_W['siteroot'].'app/';}</span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">支付类型</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<label  class="radio-inline">
+						<input type="radio" name="paytype" value="2" id="wx" {if empty($item['paytype']) || $item['paytype']==2 } checked{/if} /> 微信支付</label>
+					<label class="radio-inline" style="display:none;">
+						<input type="radio" name="paytype" value="1" disabled id="ali" {if $item['paytype']==1 } checked{/if} /> 支付宝</label>
+					<label class="radio-inline">
+						<input type="radio" name="paytype" value="3" id="bank" {if $item['paytype']==3 } checked{/if} /> 崛企银行一码付</label>					
+					<label class="radio-inline">
+						<input type="radio" name="paytype" value="4" id="rsd" {if $item['paytype']==4 } checked{/if} /> 银行通道</label>
+					<span class="help-block">开启后物业费直接付到该独立账户. </span>	
+				</div>
+			</div>
+			<div id="alipay"> 
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>支付宝账号</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" id="aliaccount" value="{$item['aliaccount']}" placeholder="输入企业支付宝账号" name="aliaccount">
+					<span class="help-block">如您没有支付宝帐号，<a href="https://memberprod.alipay.com/account/reg/enterpriseIndex.htm" target="_blank">请点击这里注册</a></span>
+				</div>	
+			</div>	
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>合作者身份</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" id="alipartner" value="{$item['alipartner']}" placeholder="输入合作者身份" name="alipartner">
+					<span class="help-block">支付宝签约用户请在此处填写支付宝分配给您的合作者身份，签约用户的手续费按照您与支付宝官方的签约协议为准。<br>如果您还未签约，<a href="https://memberprod.alipay.com/account/reg/enterpriseIndex.htm" target="_blank">请点击这里签约</a>；如果已签约,<a href="https://b.alipay.com/order/pidKey.htm?pid=2088501719138773&amp;product=fastpay" target="_blank">请点击这里获取PID、Key</a>;如果在签约时出现合同模板冲突，请咨询0571-88158090</span>
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>校验密钥</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" id="alisecret" value="{$item['alisecret']}" placeholder="输入交易安全校验码" name="alisecret">
+					<span class="help-block">支付宝签约用户可以在此处填写支付宝分配给您的交易安全校验码，此校验码您到支付宝官方的商家服务功能处查看</span>
+				</div>
+			
+			</div>
+			</div>
+				
+			<div class="form-group" id="wxpay">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>子商户号</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" id="submerchid" value="{$item['submerchid']}" placeholder="输入子商户号" name="submerchid">
+					<span class="help-block">微信支付为公众号服务商户下子商户号,且须开启微擎功能选项-支付参数-<a href="{php echo url('profile/payment')}" target="_blank">微信支付</a>.</span>
+				</div>		
+			</div>
+			<div  id="payurl">
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>商户号</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="bankmerchid" value="{$item['bankmerchid']}" placeholder="输入商户号" name="bankmerchid">
+						<span class="help-block">支付平台商户号.</span>
+					</div>		
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>接口地址</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="ymfurl" value="{$item['ymfurl']}" placeholder="输入接口地址" name="ymfurl">
+						<span class="help-block">支付平台接口地址.</span>
+					</div>		
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>访问密钥</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="ymfkey" value="{$item['ymfkey']}" placeholder="输入密钥" name="ymfkey">
+						<span class="help-block">支付平台访问密钥，不需要密钥则为空.</span>
+					</div>		
+				</div>
+			</div>
+			<div  id="paykey">
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>商户号</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="rsdbankmerchid" value="{$item['rsdbankmerchid']}" placeholder="输入商户号" name="rsdbankmerchid">
+						<span class="help-block">支付平台商户号.</span>
+					</div>		
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>访问密钥</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="bankkey" value="{$item['bankkey']}" placeholder="输入密钥" name="bankkey">
+						<span class="help-block">支付平台访问密钥，不需要密钥则为空.</span>
+					</div>		
+				</div>
+			</div>	
+			
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>支付设置</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<label class='radio-inline'><input type="radio" name="ispay" value="0" {if $item['ispay'] == 0 || empty($item['ispay'])} checked="true" {/if} >禁用</label>
+					<label class='radio-inline'><input type="radio" name="ispay" value="1" {if $item['ispay'] == 1} checked="true" {/if} >启用</label>										
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">支付成功跳转</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" id="paysuccessurl" value="{$item['paysuccessurl']}" placeholder="输入跳转地址" name="paysuccessurl">
+					<span class="help-block">请输入网址 ,外部链接请包含http://</span>
+				</div>		
+			</div>			
+		
+		<div class="form-group" >
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">消费送积分</label>
+			<div class="col-sm-3 col-lg-3 col-xs-6">
+				<div class="input-group">
+				   <input type="text" name="cost" class="form-control" value="{$item['cost']}" />
+				   <span class="input-group-addon">元</span>
+			   </div>
+				<span class="help-block">消费多少元送多少积分</span>
+			</div>
+			<div class="col-sm-3 col-lg-3 col-xs-6">
+				<div class="input-group">
+				   <input type="text" name="credit" class="form-control" value="{$item['credit']}" />
+				   <span class="input-group-addon">积分</span>
+				</div>
+				<span class="help-block">消费金额低于设定则不送.</span>
+			</div>	
+		</div>
+		</form>	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+var paytype = "{$item['paytype']}";
+	 
+if (paytype == '1'){	   
+   $("#alipay").show();
+   $("#wxpay").hide();
+   $("#payurl").hide();
+   $("#paykey").hide();
+}
+else if(paytype == '3') {
+   $("#alipay").hide();
+   $("#wxpay").hide();
+   $("#payurl").show();
+   $("#paykey").hide();
+}
+else if(paytype == '4') {
+   $("#alipay").hide();
+   $("#wxpay").hide();
+   $("#payurl").hide();
+   $("#paykey").show();
+}
+else {
+   $("#alipay").hide();
+   $("#wxpay").show();
+   $("#payurl").hide();
+   $("#paykey").hide();
+}
+ 
+ $("input[name=paytype]").click(function(){	
+	  switch($("input[name=paytype]:checked").attr("id")){
+	  case "ali":	
+		   $("#alipay").show();
+		   $("#wxpay").hide(); 
+		   $("#payurl").hide();
+		   $("#paykey").hide();
+		   break;
+	  case "wx":			
+		   $("#alipay").hide();
+		   $("#wxpay").show();
+		   $("#payurl").hide();
+		   $("#paykey").hide();
+		   break;		
+	  case "bank":
+		   $("#alipay").hide();
+		   $("#wxpay").hide();
+		   $("#payurl").show();
+		   $("#paykey").hide();
+		   break;
+	  case "rsd":
+		   $("#alipay").hide();
+		   $("#wxpay").hide();
+		   $("#payurl").hide();	
+		   $("#paykey").show();	
+			break;
+	  default:
+	   break;
+	}		
+ });
+
+function mysubmit(obj){	
+	window.scrollTo(0,0);
+	var aliaccount = $.trim($("#aliaccount").val());
+	var alipartner =  $.trim($("#alipartner").val());
+	var alisecret= $.trim($("#alisecret").val());
+	var submerchid = $.trim($("#submerchid").val());	
+	var submerchsecret = $.trim($("#submerchsecret").val());
+	var bankmerchid = $.trim($("#bankmerchid").val());	
+	var rsdbankmerchid = $.trim($("#rsdbankmerchid").val());
+	var ymfurl = $.trim($("#ymfurl").val());
+	var bankkey = $.trim($("#bankkey").val());	
+	var paytype = $("input[name=paytype]:checked").val();
+	
+	if (paytype=='1'){
+		if (aliaccount=='') {
+		   layer.msg("支付账号不能为空！",{icon:0});
+		   return;
+		}	
+		
+		 if (alipartner=='') {
+		   layer.msg("合作身份不能为空！",{icon:0});
+		   return;
+		}	
+		
+		if (alisecret=='') {
+		   layer.msg("检验密钥不能为空！",{icon:0});
+		   return;
+		}
+	}
+	else if(paytype=='2'){
+		if (submerchid=='') {
+		   layer.msg("子商户号不能为空！",{icon:0});
+		   return;
+		}
+	}
+	else if(paytype=='3'){
+		if (bankmerchid=='') {
+		   layer.msg("商户号不能为空！",{icon:0});
+		   return;
+		}	
+		if (ymfurl=='') {
+		   layer.msg("接口地址不能为空！",{icon:0});
+		   return;
+		}			
+	}
+	else if(paytype=='4'){
+		if (rsdbankmerchid=='') {
+		   layer.msg("商户号不能为空！",{icon:0});
+		   return;
+		}			
+		if (bankkey=='') {
+		   layer.msg("访问密钥不能为空！",{icon:0});
+		   return;
+		}	
+	}
+	myprocess(obj);
+	$("#myform").submit();
+}
+
+function myreturn(){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'complist'));}";	
+	location.href = url;
+}
+</script> 
+
+</body>
+</html>

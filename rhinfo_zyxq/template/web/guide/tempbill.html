@@ -1,0 +1,286 @@
+﻿<div class="panel panel-default">
+	<div class="panel-heading">
+		<div class="panel-title">临时账单</div>
+	</div>
+	<div class="panel-body">
+		<div id="workarea">
+			{if $rights['query'] == 1}  
+			<div class="collapse" id="mycollapse">
+			<form action="" method="post" class="form-horizontal" role="form" enctype="multipart/form-data" id="myform">
+				<input type="hidden" name="mycon" id="mycon" value="1" />				
+				<div class="form-inline form-group" >
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">选择房产</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+							<select class="form-control" id="feebilltype" name="feebilltype" onchange="renderCategory(this,'building','bid')" style="width:30%">
+								<option value="">请选择</option>	
+								<option value="1" >房屋</option>
+								<option value="2" >商铺</option>
+								<option value="3" >储物间</option>
+								<option value="4" >车位</option>					
+							</select>
+							<select class="form-control" id="bid" name="bid" style="width:30%">
+								<option value="">请选择</option>				
+							</select>	
+					</div>
+				</div>
+				<div class="form-inline form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">选择日期</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">				
+						<input type="text" name="startdate"  value="{$_GPC['startdate']}" placeholder="开始日期" class="datetimepicker form-control" style="padding-left:12px;"/>
+						<input type="text" name="enddate"  value="{$_GPC['enddate']}" placeholder="结束日期" class="datetimepicker form-control" style="padding-left:12px;"/>
+						<script type="text/javascript">
+							require(["datetimepicker"], function(){
+									var option = {
+										lang : "zh",
+										step : 5,
+										timepicker : false,
+										closeOnDateSelect : true,
+										format : "Y-m-d"
+									};
+								$(".datetimepicker[name = 'startdate']").datetimepicker(option);
+								$(".datetimepicker[name = 'enddate']").datetimepicker(option);
+							});
+						</script>					
+					</div>
+				</div>
+			
+				<div class="form-inline form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">关键字</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+						<input class="form-control" name="keyword"   type="text" value="{$_GPC['keyword']}" placeholder="请输入收费项目或房产编号"/>
+						<a href="javascript:;" class="btn btn-default" onclick="mysearch(this)"><i class="fa fa-search"></i> 搜索</a>		
+					</div>
+				</div>
+			</form>
+			</div>
+			{/if}
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					{if $rights['add'] == 1}
+					<!--<a href="javascript:;" class="btn btn-info" onclick="myadd()"> <i class="fa fa-plus"></i> 生成账单 </a>-->
+					<div class="btn-group">
+					  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					  <i class="fa fa-plus"></i> 导入账单 <span class="caret"></span>
+					  </button>
+					  <ul class="dropdown-menu">
+						{if $rights['export'] == 1}
+							<li>
+							<a href="javascript:;" onclick="myexport('{$_GPC['rid']}')">导出模板</a>
+							</li>
+							<li role="separator" class="divider"></li>
+							<li>
+							{if $rights['other1'] == 1}
+							<a href="javascript:;" onclick="myimport('{$_GPC['rid']}')">导入数据</a>
+							{/if}	
+							</li>
+						{/if}		
+					  </ul>
+					</div>
+					{/if}					
+					{if $rights['query'] == 1}  			
+					<a class="btn btn-primary" onclick="mycondition(this)"  data-toggle="collapse" href="#mycollapse" aria-expanded="false" aria-controls="mycollapse">
+					<i class="fa fa-angle-double-down"></i> 筛选条件</a>
+					{/if}
+					<span class="pull-right" style="line-height:38px;">共有数据：<strong id="count">{$total}</strong> 条</span> 
+				</div>
+		  
+				<div class="panel-body table-responsive" style="min-height:500px;">
+					<table class="table table-bordered table-hover" id="mydatatable">
+						<thead class="navbar-inner">
+						<tr>							
+							<th>ID</th>
+							<th>收费项目</th>	
+							<th>楼宇或区域</th>
+							<th>单元</th>
+							<th>房产</th>
+							<th>账单日期</th>
+							<th>状态</th>
+							<th>费用</th>
+						</tr>
+					</thead>
+					{loop $data $k $v}
+						<tr>						
+							<td>{$v['id']}</td>
+							<td>{$v['title']}{if $v['feetype']==3}公摊{/if}</td>
+							<td>{$v['building']}</td>
+							<td>{php echo empty($v['unit'])?'无':$v['unit'];}</td>
+							<td>{$v['address']}</td>
+							<td>{$v['daterange']}</td>
+							<td class="td-status">
+							{if $v['status']=='1'}<span class="label label-danger radius">未支付</span>{elseif $v['status']=='2'}<span class="label label-success radius">已支付</span>{else}<span class="label label-warning radius">免单</span>{/if}
+							</td>
+							<td>{$v['fee']}</td>
+						</tr>
+					{/loop}				
+				</table>
+				{$pager}
+			  </div>   
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+window._building = {php echo json_encode($mybuilding);};
+window._shoplocation = {php echo json_encode($myshoplocation);};
+window._parklocation = {php echo json_encode($myparklocation);};
+function renderCategory(obj,name,id){
+	var index = obj.options[obj.selectedIndex].value;
+	var html = '';
+	if(index==1){
+		name = 'building';
+		html = '<option value="0">请选择楼宇</option>';
+	}
+	else if(index==2){
+		name = 'shoplocation';
+		html = '<option value="0">请选择区域</option>';
+	}
+	else if(index==3){
+		name = 'building';
+		html = '<option value="0">请选择楼宇</option>';
+	}
+	else if(index==4){
+		name = 'parklocation';
+		html = '<option value="0">请选择区域</option>';
+	}
+	else{
+		html = '<option value="0">请选择</option>';
+	}
+	require(['jquery', 'util'], function($, u){
+		$selectChild = $("#"+ id);
+		$("#bid").html(html);		
+		if (!window['_'+name]) {
+			$selectChild.html(html);
+			return false;
+		}
+		for(var i=0; i< window['_'+name].length; i++){
+			html += '<option value="'+window['_'+name][i]['id']+'">'+window['_'+name][i]['title']+'</option>';
+		}
+		$selectChild.html(html);
+	});
+}
+$(function(){		
+	$("#mydatatable").dataTable({
+		language:{
+			"sProcessing": "处理中...",
+			"sLengthMenu": "显示 _MENU_ 项结果",
+			"sZeroRecords": "没有匹配结果",
+			"sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+			"sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+			"sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+			"sInfoPostFix": "",
+			"sSearch": "搜索:",
+			"sUrl": "",
+			"sEmptyTable": "表中数据为空",
+			"sLoadingRecords": "载入中...",
+			"sInfoThousands": ",",
+			"oPaginate": {
+				"sFirst": "首页",
+				"sPrevious": "上页",
+				"sNext": "下页",
+				"sLast": "末页"
+			},
+			"oAria": {
+				"sSortAscending": ": 以升序排列此列",
+				"sSortDescending": ": 以降序排列此列"
+			}
+		},
+		renderer: "bootstrap",
+		pagingType: "simple_numbers",
+		paging: true, 
+		ordering: true 
+	});	
+	
+});
+
+function mysearch(obj){
+	var index = layer.msg('正在加载...', {icon: 16});
+	$.ajax({  
+         type : "get",  
+          url : "{php echo $this->createWebUrl($mydo,array('op'=>'tempbill','rid'=>$_GPC['rid'])).$mywe['direct'];}",  
+          data : $("#myform").serializeObject(),   
+          async : false,  
+          success : function(data){  
+			 layer.close(index);
+			 $("#guide-output").html(data);
+          }  
+     }); 
+}	
+function myadd(){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'addtempbill','pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}"; 
+	var title = "生成账单";
+	var index = layer.open({
+		type: 2,
+		title:title,
+		content: url,
+		area: ['600px','500px'],
+		fix: true, 
+		shade:0.4,
+		resize:false,
+		end: function() {
+			var index = layer.msg('正在加载...', {icon: 16});
+			var url = "{php echo mywurl($mydo,array('op'=>'tempbill','rid'=>$_GPC['rid'])).$mywe['direct'];}"; 
+			$.get(url,{}, function(data){
+				layer.close(index);
+				$("#guide-output").html(data);
+			});		
+		}
+	});
+}
+function myimport(rid){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'importtempbill','rid'=>$_GPC['rid'])).$mywe['direct'];}"; 
+	var title = "导入账单";
+	var index = layer.open({
+		type: 2,
+		title:title,
+		content: url,
+		area: ['600px','250px'],
+		fix: true, 
+		shade:0.4,
+		resize:false,
+		end: function() {
+			var index = layer.msg('正在加载...', {icon: 16});
+			var url = "{php echo mywurl($mydo,array('op'=>'tempbill')).$mywe['direct'];}"; 
+			$.get(url,{rid:rid}, function(data){
+				layer.close(index);
+				$("#guide-output").html(data);
+			});		
+		}
+	});
+}
+function myexport(rid){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'exporttempbill','rid'=>$_GPC['rid'])).$mywe['direct'];}";	
+	var title = "导出模板";
+	var index = layer.open({
+		type: 2,
+		title:title,
+		content: url,
+		area: ['600px','500px'],
+		fix: true, 
+		shade:0.4,
+		resize:false,
+		end: function() {
+		}
+	});		
+}
+function mycondition(obj){    
+    var mycon = $("#mycon").val();
+	var html = '';
+	if (mycon==1){
+		html = '<i class="fa fa-angle-double-up"></i> 隐藏筛选';
+		$("#mycon").val("2");
+		$("#mycollapse").show("slow");
+	}
+	else {
+		html = '<i class="fa fa-angle-double-down"></i> 筛选条件';
+		$("#mycon").val("1");
+		$("#mycollapse").hide("slow");
+	}
+	$(obj).html(html);
+}
+function mypage(url,page){
+	$.get(url,{page:page}, function(data){
+		$('#guide-output').html(data);
+	});	
+}
+	$("#workarea").height($(window).height()- 150);
+</script>

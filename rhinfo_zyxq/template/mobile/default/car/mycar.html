@@ -1,0 +1,39 @@
+{template $this->mytpl('_header')}
+
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">我的车辆</div>
+		<div class="fui-header-right">
+			&nbsp;
+		</div>
+	</div>
+	<div class='fui-content'> 	
+		{if !empty($list)}
+		<div class="fui-list-group" style="margin-top:0;" >
+			{loop $list $item}		
+				<div class="fui-list">
+					<a class="fui-list-inner" href="{php echo $this->CreateMobileUrl('car',array('op'=>'pay','carno'=>$item['carno'],'parkid'=>$_GPC['parkid']));}">
+						<div class="title"><i class="icon icon-taxi"></i> {$item['carno']}</div>
+						<div class="subtitle">
+						{if !empty($item['checkdate'])} 年审时间: {$item['checkdate']}{else}未登记年审时间{/if}
+						</div>				
+					</a>
+					<div class="angle"></div>
+				</div>
+			{/loop}
+		</div>		
+		{/if}		
+		<div class='content-empty'>
+			{if empty($list)}
+				<div class="empty-bg"><i class='icon icon-taxi'></i></div>
+				<p>您还没有任何车辆信息</p>
+			{/if}
+			<a href="{php echo $this->createMobileUrl($mydo,array('op'=>'carno','parkid'=>$_GPC['parkid']))}" class='btn btn-warning-o external'>临时车辆</a>
+		</div>
+    </div>
+ </div>
+ 
+{template $this->mytpl('_footer')}

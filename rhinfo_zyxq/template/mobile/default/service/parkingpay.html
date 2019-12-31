@@ -1,0 +1,195 @@
+{template $this->mytpl('_pheader')}
+<style>
+*{margin: 0; padding: 0;list-style:none;border:0; box-sizing:border-box;}
+.clearfix:after { content: "."; display: block; font-size: 0; height: 0; clear: both; visibility: hidden; }
+.clearfix { display: inline-table;}
+*html .clearfix { height: 1%; }
+.clearfix { display: block; }
+*+html .clearfix { min-height: 1%; }
+.che_tit{ text-align:center; padding:20px;}
+.ul_pro{ background-color:#CED3D9; text-align:center; padding:4px 2px; font-size:14px;}
+.ul_pro li{ float:left; width:11.11%; padding:2px;box-sizing: border-box;}
+.ul_pro .li_close{float:right; width:22.22%;}
+.ul_pro .li_close span{ background-color:#ACB3BB;}
+.ul_pro .li_clean{  float:right; width:22.22%;}
+.ul_pro li span{ display:block; background-color:#fff; border-radius:4px; box-shadow: 2px 2px 2px #888888; /* max-width:48px; margin:0 auto; */ line-height:32px; padding-top:2px;  }
+.ul_pro li span:active{ background-color:#4DA9F2; color:#fff;}
+.ul_input{padding:0.1rem;width:100%; margin:0 auto;}
+.ul_input li{float:left; width:12%; padding:0.1rem;text-align:center; }
+.ul_input li span{ display:block; background-color:#fff; border:1px solid #ccc; border-radius:0.2rem; width:2rem; margin:0 auto; height:2rem; line-height:2rem; }
+.ul_keybord{ background-color:#CED3D9; text-align:center; padding:4px 2px; font-size:14px;}
+.ul_keybord li{ float:left; width:10%; padding:2px;box-sizing: border-box;}
+.ul_keybord .ikey29 {vertical-align:middle;}
+.ul_keybord .ikey29 img{height:14px;}
+.ul_keybord .ikey38 {float:right; width:20%;}
+.ul_keybord .ikey38 span{background-color:#ACB3BB;}
+.ul_keybord .ikey39{ margin-left:5%;}
+.ul_keybord .li_w{ width:11.11%;display:none;}
+.ul_keybord .li_close{  float:right; width:22.22%;}
+.ul_keybord .li_close span{ background-color:#ACB3BB;}
+.ul_keybord .li_clean{  float:right; width:22.22%;}
+.ul_keybord li span{ display:block; background-color:#fff; border-radius:4px; box-shadow: 2px 2px 2px #888888; /* max-width:48px; margin:0 auto; */ line-height:32px; padding-top:2px;  }
+.ul_keybord li span:active{ background-color:#04ab02; color:#fff;}
+			
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+.fui-list-group:not(.fui-list-group-o):before {border-top:0px;}
+.fui-list-group:not(.fui-list-group-o):after {border-top:0px;}
+.btn.btn-primary {
+	background: #f7f7f7;
+	color: #fff;
+	border: 1px solid #f7f7f7
+}
+
+.btn.btn-primary:active,
+.btn.btn-primary.disabled {
+	background: #f7f7f7;
+	color: #f7f7f7;
+	border: 1px solid #f7f7f7;
+}
+input[type=radio]:after {
+    content: "";
+    display:block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 14px;
+    font-size: 16px;
+    color: #fff;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    box-sizing:border-box;
+}
+input[type=radio]:checked:after {
+    content: "L";
+    transform:matrix(-0.766044,-0.642788,-0.642788,0.766044,0,0);
+    -webkit-transform:matrix(-0.766044,-0.642788,-0.642788,0.766044,0,0);
+    border-color: #ef4f4f;
+    background-color: #ef4f4f;
+}
+.option-picker{
+	position:fixed;
+	bottom:0;
+}
+.fui-list-media img.circle {
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 1.5rem;
+    display: block;
+}
+</style>
+<div class="fui-page fui-current-page">
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">停车缴费</div>
+       <div class="fui-header-right">&nbsp;</div>
+    </div>
+    <div class="fui-content navbar">
+		<div class="fui-list-group">
+			<div class='fui-list'>
+				<div class='fui-list-inner'>
+					<div class="title">{$item['title']}</div>
+					<div class="subtitle">{$item['address']}</div>
+				</div>
+				<div class="fui-list-angle"></div>
+			</div>			
+		</div>
+		<div class='fui-list-group'>
+			<div class='fui-list'>
+				<div class='fui-list-media'>
+					<i class='icon icon-clock text-orange' style='font-size:1rem;'> </i>
+				</div>
+				<div class='fui-list-inner'>
+					<div class='subtitle'>入场时间</div>
+					<div class='text'>{php echo date('Y-m-d H:i:s',$mytime['intime']);}</div>
+				</div>
+				<div class="fui-list-angle">
+				</div>
+			</div>
+			<div class='fui-list'>
+				<div class='fui-list-media'>
+					<i class="icon icon-clock text-success" style="font-size:1rem;"></i>
+				</div>
+				<div class='fui-list-inner'>
+					<div class='subtitle'>当前时间</div>
+					<div class='text'>{php echo date('Y-m-d H:i:s');}</div>
+				</div>
+				<div class="fui-list-angle">
+				</div>
+			</div>
+			<div class='fui-list'>
+				<div class='fui-list-media'>
+					<i class="icon icon-money text-danger" style="font-size:1rem;"></i>
+				</div>
+				<div class='fui-list-inner'>
+					<div class='subtitle'>停车时间和费用</div>
+					<div class='text'>{php echo !empty($mytime['days'])?$mytime['days'].'天':'';}{php echo !empty($mytime['hours'])?$mytime['hours'].'小时':'';}{php echo !empty($mytime['minutes'])?$mytime['minutes'].'分钟':'';} <span class="text-danger">{$stopfee}</span>元</div>
+				</div>
+				<div class="fui-list-angle">
+				</div>
+			</div>
+			<!--
+			{if $this->syscfg['isalipay']==2 && $_GPC['iswxapp']!=1 && $region['isalipay']==1}
+				{if $this->syscfg['iswepay']==1}
+					<a id='btn-pay' class='btn btn-success block' >立即支付</a>
+				{else}
+				{if $this->rhinfo_isalipay==false}
+				<div class='fui-list btn-pay' id='btn-pay'>
+					<div class='fui-list-media'>
+					   <img src="../addons/rhinfo_zyxq/static/mobile/images/wxpay.png" width="40" />
+					</div>
+					<div class='fui-list-inner'>
+						<div class="title">微信支付</div>
+						<div class="subtitle">微信安全支付</div>					
+					</div>
+					<div class='fui-list-angle'><span class="angle"></span></div>
+				</div>
+				{/if}
+				<div class='fui-list btn-pay' id='btn-alipay'>
+					 <div class='fui-list-media'>
+					  <img src="../addons/rhinfo_zyxq/static/mobile/images/alipay.png" width="30" />
+					</div>
+					<div class='fui-list-inner'>
+						<div class="title">支付宝支付</div>
+						<div class="subtitle">支付宝安全支付</div>				
+					</div>
+					<div class='fui-list-angle'><span class="angle"></span></div>
+				</div>
+				{/if}
+			{/if}-->
+		</div>			
+    </div> 
+	{if $stopfee>0}		
+		 <div class='fui-navbar'>		
+			<a id="btn-pay" class='nav-item btn btn-danger external'><i class="icon icon-money"></i> 临时缴费</a>
+			{if $item['parktype']==2}
+				<a class='nav-item btn btn-warning external' href="{php echo $this->createMobileUrl('car',array('op'=>'monthcard2','parkid'=>$item['id'],'carno'=>''));}"><i class="icon icon-money"></i> 办理月卡</a>	
+			{/if}
+		</div>
+	{else}
+		{if $item['parktype']==2}
+		 <div class='fui-navbar'>		
+			<a class='nav-item btn btn-warning external' href="{php echo $this->createMobileUrl('car',array('op'=>'monthcard2','parkid'=>$item['id'],'carno'=>''));}"><i class="icon icon-money"></i> 办理月卡</a>
+		</div>
+		{/if}
+	{/if}
+	<script language='javascript'>		
+		require(['service/car'], function (modal) {
+			modal.initPayio({
+				money:"{$stopfee}",
+				pid:"{$item['pid']}",
+				rid:"{$item['rid']}",
+				parkid:"{$item['id']}",
+				ioid:"{$inout['id']}",
+				recordid:"{$myin['id']}",
+				intime:"{$myin['ctime']}",
+				payfrom:"{php echo $this->rhinfo_isalipay==true?2:1;}"
+			});
+		});
+	</script>		
+</div>
+
+{template $this->mytpl('_footer')}

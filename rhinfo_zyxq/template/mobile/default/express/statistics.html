@@ -1,0 +1,53 @@
+{template $this->mytpl('_pheader')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170801">
+<style>
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-menu-group:before,.fui-menu-group:after{border-top:0px;}
+.fui-cell-group .fui-cell .fui-input {
+	width:40%;
+}
+</style>
+<div class='fui-page fui-page-current'>
+    <div class="fui-header fui-header-success">
+        <div class="fui-header-left"><a class="back" ></a></div>
+        <div class="title">快件统计</div>
+       <div class="fui-header-right"><a href="{php echo $this->createMobileUrl($mydo,array('op'=>'mindex','sid'=>$sid));}"><i class="icon icon-home1" style="font-size:0.9rem;" ></i></a></div>
+    </div>
+    <div class='fui-content'>  
+		<form action="{php echo $this->createMobileUrl($mydo,array('op'=>'statistics','sid'=>$sid));}" method="post">
+			<div class='fui-cell-group'>
+				<div class="fui-cell">
+					<div class="fui-cell-label">日期：</div>
+					<div class="fui-cell-info">
+						<input type="text" placeholder="开始日期" readonly class='fui-input' value="{$startdate}" name="startdate" id="startdate" />
+						<input type="text" placeholder="结束日期" readonly class='fui-input' value="{$enddate}" name="enddate" id="enddate" />
+						<input type="submit" class="searchbar-cancel searchbtn" value="搜索">
+					 </div>
+				 </div>
+			</div>
+		</form>
+		<div class="fui-block-group col-3">
+			{loop $list $k $v}
+			<a class="fui-block-child">
+				<div class="icon {if $k%3==0}text-orange{elseif $k%3==1}text-yellow{else}text-blue{/if}">
+					{if !empty($v['thumb'])}
+					<img src="{php echo tomedia($v['thumb']);}" style="width:1.8rem;height:1.8rem;"/>
+					{else}
+					<i class="icon icon-box"></i>
+					{/if}
+				</div>
+				<div class="title">{$v['title']}</div>
+				<div class="text"><span>取件<font class="text-danger" style="font-size:0.7rem;">{$v['takecount']}</font>&nbsp;寄件<font class="text-blue" font class="text-danger" style="font-size:0.7rem;">{$v['sendcount']}</font></span></div>
+			</a>  
+		   {/loop}
+		</div>
+    </div>
+	
+</div>
+<script language="javascript">
+	require(['express/express'],function(modal){
+		modal.initStat();
+	});
+</script>
+
+{template $this->mytpl('_footer')}

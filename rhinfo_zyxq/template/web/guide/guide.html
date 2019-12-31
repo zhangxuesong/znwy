@@ -1,0 +1,220 @@
+﻿<style>
+.cssNav {
+	margin:0 auto;
+	text-align:center;
+	width:800px;
+}
+.cssNav li{
+	padding:0 20px;
+	line-height: 40px;
+	background-color: #5bc0de;
+	display: inline-block;
+	color:#fff;
+	position: relative;
+	margin-right: 4px;
+	margin-bottom:5px;
+}
+.cssNav li:after{
+	content:"";
+	display: block;
+	border-top:20px solid transparent;
+	border-bottom:20px solid transparent;
+	border-left:20px solid #5bc0de;
+	position: absolute;
+	right:-20px;
+	top:0;
+	z-index: 10;
+}
+.cssNav li:before{
+	content:"";
+	display: block;
+	border-top:20px solid transparent;
+	border-bottom:20px solid transparent;
+	border-left:20px solid #fff;
+	position: absolute;
+	left:0px;
+	top:0;
+}
+.cssNav li:first-child{
+	border-radius: 4px 0 0 4px;
+	padding-left:25px;
+}
+.cssNav li:last-child,.cssNavEnd{
+	border-radius: 0 4px 4px 0;
+	padding-right: 25px;
+}
+.cssNav li:first-child:before{
+	display: none;
+}
+.cssNav li:last-child:after,.cssNavEnd:after{
+	display: none;
+}
+.cssNav li.active {  
+	background-color: #ef72b6;  
+}  
+.cssNav li.active:after {  
+	border-left-color: #ef72b6;  
+} 
+.cssNav li.end {  
+	background-color: #50abe4;  
+}
+.cssNav li a:hover,a:focus{color:#fff;}
+.chuguo-lc-wrap li a:hover,a:focus{color:#50abe4;}
+.chuguo-lc-wrap{ margin-top:20px; margin-left:15%;margin-right:15%;display:flex; }
+.chuguo-lc-wrap ul{width:45%;flex:1;}
+.chuguo-lc-wrap ul.lc-right{margin-top:-1px;}
+.chuguo-lc-wrap ul li{position:relative; height:95px;margin-bottom:18px;}
+.chuguo-lc-wrap ul li .lc-title{ color:#fff;  background-color:#35516c;width:83%;position:absolute;top:0;left:0;line-height:25px;text-align:center;z-index:9;border-bottom:1px solid rgba(0,0,0,0.2);box-shadow:0px 1px 2px rgba(0,0,0,0.5);font-size:15px;}
+.chuguo-lc-wrap ul.lc-right li .lc-title{top:0;right:0;left:auto;}
+.chuguo-lc-wrap ul.lc-left li .lc-title::before{content:'';width:0;heigth:0;border:5px solid #304859;border-bottom-color:transparent;border-left-color:transparent;position:absolute;bottom:-11px;left:0;}
+.chuguo-lc-wrap ul.lc-right li .lc-title::before{content:'';width:0;heigth:0;border:5px solid #304859;border-bottom-color:transparent;border-right-color:transparent;position:absolute;bottom:-11px;right:0;}
+.chuguo-lc-wrap ul.lc-left li .lc-title::after{content:'';width:26px;height:26px;position:absolute;border-radius:50%;top:0;right:-13px;background:#35516c;}
+.chuguo-lc-wrap ul.lc-right li .lc-title::after{content:'';width:26px;height:26px;position:absolute;border-radius:50%;top:0;left:-13px;background:#35516c;}
+.chuguo-lc-wrap ul li .lc-content{position:absolute;top:0;left:10px;padding-top:34px;width:80%;padding-bottom:12px;text-align:center;box-shadow:0px 2px 2px rgba(0,0,0,0.4);color:#333;background-color:#f1f2f3;padding-left:5px;padding-right:5px;}
+.chuguo-lc-wrap ul.lc-right li .lc-content{left:auto;right:10px;}
+.chuguo-lc-wrap ul.lc-left li:nth-child(2) .lc-title{background-color:#f6004b;}
+.chuguo-lc-wrap ul.lc-left li:nth-child(2) .lc-title::before{border:5px solid #ad003a;border-bottom-color:transparent;border-left-color:transparent;}
+.chuguo-lc-wrap ul.lc-left li:nth-child(2) .lc-title::after{background:#f6004b;}
+.chuguo-lc-wrap ul.lc-left li:nth-child(3) .lc-title{background-color:#00b1b1;}
+.chuguo-lc-wrap ul.lc-left li:nth-child(3) .lc-title::before{border:5px solid #008183;border-bottom-color:transparent;border-left-color:transparent;}
+.chuguo-lc-wrap ul.lc-left li:nth-child(3) .lc-title::after{background:#00b1b1;}
+.chuguo-lc-wrap ul.lc-left li:nth-child(4) .lc-title{background-color:#4a90e2;}
+.chuguo-lc-wrap ul.lc-left li:nth-child(4) .lc-title::before{border:5px solid #2a5f9c;border-bottom-color:transparent;border-left-color:transparent;}
+.chuguo-lc-wrap ul.lc-left li:nth-child(4) .lc-title::after{background:#4a90e2;}
+.chuguo-lc-wrap ul.lc-left li:nth-child(5) .lc-title{background-color:#417505;}
+.chuguo-lc-wrap ul.lc-left li:nth-child(5) .lc-title::before{border:5px solid #335906;border-bottom-color:transparent;border-left-color:transparent;}
+.chuguo-lc-wrap ul.lc-left li:nth-child(5) .lc-title::after{background:#417505;}
+.chuguo-lc-wrap ul.lc-right li:nth-child(1) .lc-title{background-color:#ffcc00;}
+.chuguo-lc-wrap ul.lc-right li:nth-child(1) .lc-title::before{border:5px solid #efa100;border-bottom-color:transparent;border-right-color:transparent;}
+.chuguo-lc-wrap ul.lc-right li:nth-child(1) .lc-title::after{background:#ffcc00;}
+.chuguo-lc-wrap ul.lc-right li:nth-child(2) .lc-title{background-color:#005d8e;}
+.chuguo-lc-wrap ul.lc-right li:nth-child(2) .lc-title::before{border:5px solid #034c7b;border-bottom-color:transparent;border-right-color:transparent;}
+.chuguo-lc-wrap ul.lc-right li:nth-child(2) .lc-title::after{background:#005d8e;}
+.chuguo-lc-wrap ul.lc-right li:nth-child(3) .lc-title{background-color:#d94135;}
+.chuguo-lc-wrap ul.lc-right li:nth-child(3) .lc-title::before{border:5px solid #a53626;border-bottom-color:transparent;border-right-color:transparent;}
+.chuguo-lc-wrap ul.lc-right li:nth-child(3) .lc-title::after{background:#d94135;}
+.chuguo-lc-wrap ul.lc-right li:nth-child(4) .lc-title{background-color:#6d219b;}
+.chuguo-lc-wrap ul.lc-right li:nth-child(4) .lc-title::before{border:5px solid #4e3675;border-bottom-color:transparent;border-right-color:transparent;}
+.chuguo-lc-wrap ul.lc-right li:nth-child(4) .lc-title::after{background:#6d219b;}
+.chuguo-lc-wrap ul.lc-right li:nth-child(5) .lc-title{background-color:#ab6b42;}
+.chuguo-lc-wrap ul.lc-right li:nth-child(5) .lc-title::before{border:5px solid #744224;border-bottom-color:transparent;border-right-color:transparent;}
+.chuguo-lc-wrap ul.lc-right li:nth-child(5) .lc-title::after{background:#ab6b42;}
+
+</style>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<div class="panel-title">主要功能说明</div>
+	</div>
+	<div class="panel-body">
+		<div id="workarea">			
+			<ul class="cssNav">
+				<li class="active"><a data-href="{php echo mywurl('region/list',array('category'=>$region['category'],'pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}" onclick="myopen(this,'region')" data-title="{$region['title']}" href="javascript:void(0)" ><i class="fa fa-sitemap"></i> {$region['title']}</a></li>
+				<li class=""><a data-href="{php echo mywurl('building/list',array('category'=>$region['category'],'pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}" onclick="myopen(this,'room')" data-title="{$region['title']}楼宇" href="javascript:void(0)" >&nbsp;&nbsp;<i class="fa fa-cubes"></i> 楼宇</a></li>
+				<li class=""><a data-href="{php echo mywurl('shop/list',array('category'=>$region['category'],'pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}" onclick="myopen(this,'shop')" data-title="{$region['title']}商铺" href="javascript:void(0)" >&nbsp;&nbsp;<i class="fa fa-university"></i> 商铺</a></li>
+				<li class=""><a data-href="{php echo mywurl('parking/list',array('category'=>$region['category'],'pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}" onclick="myopen(this,'parking')" data-title="{$region['title']}车位" href="javascript:void(0)" >&nbsp;&nbsp;<i class="fa fa-car"></i> 车位</a></li>
+				<li class=""><a data-href="{php echo mywurl('garage/list',array('category'=>$region['category'],'pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}" onclick="myopen(this,'building')" data-title="{$region['title']}储物间" href="javascript:void(0)" >&nbsp;&nbsp;<i class="fa fa-cube"></i> 储物间</a></li>
+				<li class="end"><a data-href="{php echo mywurl('category/list',array('category'=>$region['category'],'pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}" onclick="myopen(this,'category')" data-title="{$region['title']}设置" href="javascript:void(0)" >&nbsp;&nbsp;<i class="fa fa-cogs"></i> 设置</a></li>
+			</ul>
+			<ul class="cssNav">
+				<li class="active"><a data-href="{php echo mywurl('fee/item').$mywe['direct'];}" onclick="myopen(this,'feeitem')" data-title="收费项目" href="javascript:void(0)" >收费项目</a></li>
+				<li class=""><a data-href="{php echo mywurl('fee/bill').$mywe['direct'];}" onclick="myopen(this,'feebill')" data-title="物业账单" href="javascript:void(0)" >&nbsp;&nbsp;物业账单</a></li>
+				<li class=""><a data-href="{php echo mywurl('fee/three').$mywe['direct'];}" onclick="myopen(this,'feethree')" data-title="抄表账单" href="javascript:void(0)" >&nbsp;&nbsp;抄表账单</a></li>
+				<li class=""><a data-href="{php echo mywurl('feecal/list').$mywe['direct'];}" onclick="myopen(this,'feetask')" data-title="账单事务" href="javascript:void(0)" >&nbsp;&nbsp;账单事务</a></li>
+				<li class=""><a data-href="{php echo mywurl('fee/list').$mywe['direct'];}" onclick="myopen(this,'feepay')" data-title="收银台" href="javascript:void(0)" >&nbsp;&nbsp;收银台</a></li>
+				<li class="end"><a data-href="{php echo mywurl('feecalb/paybill').$mywe['direct'];}" onclick="myopen(this,'paybill')" data-title="对账单" href="javascript:void(0)" >&nbsp;&nbsp;对账单</a></li>
+			</ul>
+			<div class="chuguo-lc-wrap"> 
+			   <ul class="lc-left"> 
+				<li> 
+				 <div class="lc-title">
+				   &hearts; 房产信息 
+				 </div> 
+				 <div class="lc-content font-14">
+					<a data-href="{php echo mywurl('building/list',array('category'=>$region['category'],'pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}" onclick="myopen(this,'room')" data-title="{$region['title']}楼宇" href="javascript:void(0)" >楼宇及单元房屋信息</a>、
+					<a data-href="{php echo mywurl('shop/list',array('category'=>$region['category'],'pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}" onclick="myopen(this,'shop')" data-title="{$region['title']}商铺" href="javascript:void(0)" >商铺及区域信息</a>、
+					<a data-href="{php echo mywurl('parking/list',array('category'=>$region['category'],'pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}" onclick="myopen(this,'parking')" data-title="{$region['title']}车位" href="javascript:void(0)" >车位及区域信息</a>、
+					<a data-href="{php echo mywurl('garage/list',array('category'=>$region['category'],'pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}" onclick="myopen(this,'building')" data-title="{$region['title']}储物间" href="javascript:void(0)" >储物间信息</a>
+				 </div> </li> 
+				<li> 
+				 <div class="lc-title">
+				   &hearts; 物业管家 
+				 </div> 
+				 <div class="lc-content font-14">
+				   建立<a data-href="{php echo mywurl('team/list').$mywe['direct'];}" onclick="myopen(this,'team')" data-title="服务团队" href="javascript:void(0)">服务人员</a>、<a data-href="{php echo mywurl('notify/list').$mywe['direct'];}" onclick="myopen(this,'notify')" data-title="物业通知" href="javascript:void(0)">发布通知</a>、<a data-href="{php echo mywurl('repair/list').$mywe['direct'];}" onclick="myopen(this,'repair')" data-title="业主报修" href="javascript:void(0)">业主报修</a>、<a data-href="{php echo mywurl('suggest/list').$mywe['direct'];}" onclick="myopen(this,'suggest')" data-title="投诉建议" href="javascript:void(0)">投诉建议</a>、<a data-href="{php echo mywurl('repairp/list').$mywe['direct'];}" onclick="myopen(this,'repairp')" data-title="内部工单" href="javascript:void(0)">内部工单</a> 、<a data-href="{php echo mywurl('door/list').$mywe['direct'];}" onclick="myopen(this,'door')" data-title="智能门禁" href="javascript:void(0)">智能门禁</a>、<a data-href="{php echo mywurl('elevator/list').$mywe['direct'];}" onclick="myopen(this,'elevator')" data-title="智能梯控" href="javascript:void(0)">智能梯控</a>等	
+				</div> </li> 
+				<li> 
+				 <div class="lc-title">
+				   &hearts; 车位管理 
+				 </div> 
+				 <div class="lc-content font-14">
+				   <a data-href="{php echo mywurl('car/list').$mywe['direct'];}" onclick="myopen(this,'car')" data-title="车位信息" href="javascript:void(0)">车位租赁</a>、<a data-href="{php echo mywurl('car/carlist').$mywe['direct'];}" onclick="myopen(this,'carlist')" data-title="车辆登记" href="javascript:void(0)">车辆登记</a>、停车场同步车牌识别系统（<a data-href="{php echo mywurl('car/monthcarlog').$mywe['direct'];}" onclick="myopen(this,'monthcard')" data-title="月卡记录" href="javascript:void(0)">办理月卡</a>、<a data-href="{php echo mywurl('car/parkpaylog').$mywe['direct'];}" onclick="myopen(this,'parkpay')" data-title="停车缴费" href="javascript:void(0)">临时缴费</a>）
+				 </div> </li> 
+				<li> 
+				 <div class="lc-title">
+				   &hearts; 安防管理 
+				 </div> 
+				 <div class="lc-content font-14">
+				   保安巡更（<a data-href="{php echo mywurl('security/patrol').$mywe['direct'];}" onclick="myopen(this,'patrol')" data-title="巡更分布" href="javascript:void(0)">设置巡更点</a>，<a data-href="{php echo mywurl('security/list').$mywe['direct'];}" onclick="myopen(this,'secline')" data-title="巡更路线" href="javascript:void(0)">建立巡更路线</a>），设备巡检（<a data-href="{php echo mywurl('devpatrol/category').$mywe['direct'];}" onclick="myopen(this,'devcate')" data-title="巡检标准" href="javascript:void(0)">巡检标准</a>、<a data-href="{php echo mywurl('devpatrol/device').$mywe['direct'];}" onclick="myopen(this,'device')" data-title="维保厂商" href="javascript:void(0)">维保厂商</a>、<a data-href="{php echo mywurl('devpatrol/list').$mywe['direct'];}" onclick="myopen(this,'devtask')" data-title="巡检计划" href="javascript:void(0)">巡检计划</a>） 
+				 </div> </li> 
+				<li> 
+				 <div class="lc-title">
+				   &hearts; 动态管理 
+				 </div> 
+				 <div class="lc-content font-14">
+				   建立<a data-href="{php echo mywurl('article/category').$mywe['direct'];}" onclick="myopen(this,'articlecate')" data-title="资讯分类" href="javascript:void(0)">资讯类别</a>、发布<a data-href="{php echo mywurl('article/list').$mywe['direct'];}" onclick="myopen(this,'articlelist')" data-title="资讯列表" href="javascript:void(0)">最新资讯</a>、<a data-href="{php echo mywurl('activity/list').$mywe['direct'];}" onclick="myopen(this,'activity')" data-title="活动管理" href="javascript:void(0)">发布活动</a>（投票活动、报名活动、问卷调查）
+				 </div> </li> 
+			   </ul> 
+			   <ul class="lc-right"> 
+				<li> 
+				 <div class="lc-title">
+				   &hearts; 相关设置
+				 </div> 
+				 <div class="lc-content font-14">
+				  <a data-href="{php echo mywurl('category/list',array('category'=>$region['category'],'pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}" onclick="myopen(this,'category')" data-title="{$region['title']}设置" href="javascript:void(0)">基础设置</a>、 <a data-href="{php echo mywurl('sms/base',array('category'=>$region['category'],'pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}" onclick="myopen(this,'smsbase')" data-title="{$region['title']}基本设置" href="javascript:void(0)">基本设置</a>、 <a data-href="{php echo mywurl('sms/fee',array('category'=>$region['category'],'pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}" onclick="myopen(this,'smsfee')" data-title="{$region['title']}账单设置" href="javascript:void(0)">账单设置</a>{if !empty($_W['uid'])}、 <a data-href="{php echo mywurl('sms/market',array('category'=>$region['category'],'pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}" onclick="myopen(this,'smsmark')" data-title="{$region['title']}策略设置" href="javascript:void(0)">策略设置</a>{/if}、 <a data-href="{php echo mywurl('printer/list',array('category'=>$region['category'],'pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}" onclick="myopen(this,'printer')" data-title="{$region['title']}打印机设置" href="javascript:void(0)">打印机设置</a>、 <a data-href="{php echo mywurl('sms/index',array('category'=>$region['category'],'pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}" onclick="myopen(this,'smssms')" data-title="{$region['title']}短信设置" href="javascript:void(0)">短信设置</a>{if !empty($_W['uid'])}、 <a data-href="{php echo mywurl('sms/intelligence',array('category'=>$region['category'],'pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}" onclick="myopen(this,'smsdev')" data-title="{$region['title']}设备设置" href="javascript:void(0)">设备设置</a>{/if}等
+				 </div> </li> 
+				<li> 
+				 <div class="lc-title">
+				   &hearts; 住户管理 
+				 </div> 
+				 <div class="lc-content font-14">
+				   <a data-href="{php echo mywurl('member/list').$mywe['direct'];}" onclick="myopen(this,'memowner')" data-title="住户管理" href="javascript:void(0)">房产登记和房产变更</a>，<a data-href="{php echo mywurl('member/userlist').$mywe['direct'];}" onclick="myopen(this,'member')" data-title="成员管理" href="javascript:void(0)">业主、成员及租户管理</a>，<a data-href="{php echo mywurl('member/weixin').$mywe['direct'];}" onclick="myopen(this,'weixin')" data-title="房产绑定" href="javascript:void(0)">微信绑定</a>{if !empty($_W['uid'])}和<a data-href="{php echo mywurl('member/fans').$mywe['direct'];}" onclick="myopen(this,'fans')" data-title="会员管理" href="javascript:void(0)">会员管理</a>{/if}
+				 </div> </li> 
+				<li> 
+				 <div class="lc-title">
+				   &hearts; 费用管理 
+				 </div> 
+				 <div class="lc-content font-14">
+				  建立<a data-href="{php echo mywurl('fee/item').$mywe['direct'];}" onclick="myopen(this,'feeitem')" data-title="收费项目" href="javascript:void(0)">收费项目</a>、收费分组、<a data-href="{php echo mywurl('fee/bill').$mywe['direct'];}" onclick="myopen(this,'feebill')" data-title="物业账单" href="javascript:void(0)">生成账单</a>、导入<a data-href="{php echo mywurl('fee/three').$mywe['direct'];}" onclick="myopen(this,'feethree')" data-title="抄表账单" href="javascript:void(0)">抄表账单</a>、<a data-href="{php echo mywurl('fee/list').$mywe['direct'];}" onclick="myopen(this,'feepay')" data-title="收银台" href="javascript:void(0)">收银台</a>、<a data-href="{php echo mywurl('feecalb/paybill').$mywe['direct'];}" onclick="myopen(this,'paybill')" data-title="对账单" href="javascript:void(0)">对账单</a>等
+				 </div> </li> 
+				<li> 
+				 <div class="lc-title">
+				   &hearts; 统计分析
+				 </div> 
+				 <div class="lc-content font-14">
+				  <a data-href="{php echo mywurl('report/paylist').$mywe['direct'];}" onclick="myopen(this,'payreport')" data-title="缴费统计" href="javascript:void(0)">物业缴费</a>、<a data-href="{php echo mywurl('report/billlist').$mywe['direct'];}" onclick="myopen(this,'feereport')" data-title="未缴费统计" href="javascript:void(0)">未缴费</a>、<a data-href="{php echo mywurl('report/costlist').$mywe['direct'];}" onclick="myopen(this,'costreport')" data-title="收支统计" href="javascript:void(0)">物业收支</a>、<a data-href="{php echo mywurl('report/bindlist').$mywe['direct'];}" onclick="myopen(this,'bindreport')" data-title="用户绑定统计" href="javascript:void(0)">微信绑定</a>、<a data-href="{php echo mywurl('report/repairlist').$mywe['direct'];}" onclick="myopen(this,'repairreport')" data-title="报修统计" href="javascript:void(0)">业主报修</a>、<a data-href="{php echo mywurl('report/suggestlist').$mywe['direct'];}" onclick="myopen(this,'suggestreport')" data-title="投诉统计" href="javascript:void(0)">投诉建议</a>、<a data-href="{php echo mywurl('report/repairplist').$mywe['direct'];}" onclick="myopen(this,'repairpreport')" data-title="工单统计" href="javascript:void(0)">内部工单</a>等统计分析 
+				 </div> </li> 
+				<li> 
+				 <div class="lc-title">
+				   &hearts; 社区论坛 
+				 </div> 
+				 <div class="lc-content font-14">
+				   <a data-href="{php echo mywurl('forum/list').$mywe['direct'];}" onclick="myopen(this,'forumlist')" data-title="版块管理" href="javascript:void(0)">论坛版块</a>、<a data-href="{php echo mywurl('forum/postlist').$mywe['direct'];}" onclick="myopen(this,'forumpost')" data-title="话题管理" href="javascript:void(0)">话题管理</a>、<a data-href="{php echo mywurl('forum/replylist').$mywe['direct'];}" onclick="myopen(this,'forumreply')" data-title="回复管理" href="javascript:void(0)">话题回复</a>、<a data-href="{php echo mywurl('forum/complain').$mywe['direct'];}" onclick="myopen(this,'forumcomp')" data-title="投诉管理" href="javascript:void(0)">话题投诉</a>、<a data-href="{php echo mywurl('forum/manager').$mywe['direct'];}" onclick="myopen(this,'forummanager')" data-title="版主管理" href="javascript:void(0)">版主设置</a>、<a data-href="{php echo mywurl('forum/member').$mywe['direct'];}" onclick="myopen(this,'forumfans')" data-title="社区会员" href="javascript:void(0)">社区会员</a>等 
+				 </div> </li> 
+			   </ul> 
+			</div>		
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	function myopen(obj,myop){
+		$.post("{php echo mywurl('guide/grant').$mywe['direct'];}", {myop:myop}, function(data){
+			if(data=='ok'){
+				parent.Hui_admin_tab(obj);
+			}
+			else{
+				layer.msg(data,{icon:0});
+			}
+		});
+	}
+	$("#workarea").height($(window).height()- 150);
+</script>

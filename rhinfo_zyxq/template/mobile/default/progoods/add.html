@@ -1,0 +1,103 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/rhui/css/mui.picker.css">
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/rhui/css/mui.poppicker.css">
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170802">
+<style>
+.mui-btn-blue,.mui-btn-primary{
+	color: #fff;
+	border: 1px solid #1ab394;
+	background-color: #1ab394;
+}
+.mui-btn{
+	border:none;
+	background-color:none;
+}
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+</style>
+<div class="fui-page fui-page-current">
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back" ></a>
+		</div>
+        <div class="title">
+			物品登记
+		</div>
+		<div class="fui-header-right">&nbsp;</div>
+    </div>
+    <div class="fui-content">
+		<div class="fui-cell-group">
+			<div class="fui-cell must">
+				<div class="fui-cell-label">物品类别</div>
+				<div class="fui-cell-info">
+					<input type="text" class='fui-input' id='mycate' name='mycate' readonly placeholder="请选择"  value="" />
+					<input id="cateid" type="hidden" name="cateid" value="" />
+				</div>
+			</div>
+			<div class="fui-cell must">
+				<div class="fui-cell-label">物品名称</div>
+				<div class="fui-cell-info">
+					<input type="text" class='fui-input' id="title"  value="" />
+				</div>
+			</div>
+			<div class="fui-cell">
+				<div class="fui-cell-label">规格型号</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input' id="spec" value="" />
+				</div>
+			</div>
+			<div class="fui-cell">
+				<div class="fui-cell-label">厂商品牌</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input' id="brand" value="" />
+				</div>
+			</div>
+			<div class="fui-cell must">
+				<div class="fui-cell-label">安装位置</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input' id="position" value="" />
+				</div>
+			</div>
+			<div class="fui-cell must">
+				<div class="fui-cell-label">物品编号</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input'  id="goodssn" value="" />
+				</div>
+			</div>
+			<div class="fui-cell">
+				<div class="fui-cell-label">备注</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input' id='remark' name='remark' placeholder="输入备注"  value="" />
+				</div>
+			</div>
+		</div>
+		<a href='#' id='btnSubmit' class='btn btn-success block'>提交</a>
+    </div>	
+</div>
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.min.js"></script>		
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.picker.js"></script>			
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.poppicker.js"></script>	
+<script>
+	var mycates = {php echo json_encode($cates);};	
+	(function($, doc){
+		$.init();
+		$.ready(function() {
+			var mycatePicker = new $.PopPicker();
+					
+			mycatePicker.setData(mycates);		
+			var catePickerButton = doc.getElementById('mycate');
+			var cateidResult = doc.getElementById('cateid');
+			
+			catePickerButton.addEventListener('tap', function(event) {
+				mycatePicker.show(function(items) {			
+					cateidResult.value=items[0].value;
+					catePickerButton.value=items[0].text;		
+				});
+			}, false);			
+		});
+	})(mui, document);
+	require(['progoods/list'], function (modal) {
+		modal.initAdd({rid:"{$myrid}"});
+	});
+</script>
+{template $this->mytpl('_footer')}

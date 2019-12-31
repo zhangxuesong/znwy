@@ -1,0 +1,153 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body">     
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+		{if $rights['delete'] == 1}
+			{if $_W['role'] == 'founder' || $_W['role']=='owner' || $_W['role']=='manager'}
+				<a href="javascript:;" onclick="mydelselect()" class="btn btn-danger"><i class="fa fa-trash-o"></i> 批量删除</a>
+			{/if}
+		{/if}
+			{if $rights['add'] == 1}
+   		    <a href="javascript:;" onclick="myadd({$_GPC['category']})" class="btn btn-info">
+			<i class="fa fa-plus"></i> 添加分组</a></span>{/if}			
+			<span class="pull-right" style="line-height:38px;">共有数据：<strong id="count">{$total}</strong> 条</span> 
+	    </div>
+  
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+				<tr>
+					<th width="25"><input type="checkbox" name="selectall" id="selectall" value="" onClick="myallselect(this)"></th>
+					<th width="30">ID</th>
+					<th width="80">分组名称</th>										
+					<th width="150">所属主体</th>		
+					<th width="80">计算规则</th>		
+					<th width="80">备注</th>
+					<th width="100">操作</th>
+				</tr>
+			</thead>
+			{loop $data $k $v}
+				<tr>
+					<td><input type="checkbox" value="{$v['id']}" name="myselect" id="myselect_{$k}"  ></td>
+					<td>{$v['id']}</td>					
+					<td>{$v['title']}</td>					
+					<td>{$v['region']}</td>	
+					<td class="td-status"><span class="label {if $v['pricerule']=='1'}label-success{else}label-default{/if} radius">
+					{if $v['pricerule']=='1'}启用{else}禁用{/if}					
+					</span></td>
+					<td>{$v['remark']}</td>	
+					<td>
+					{if $rights['edit'] == 1}	
+					<a href="javascript:;" onclick="myedit({$v['id']},{$v['category']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="编辑" ><i class="fa fa-edit"></i> 编辑</a> {/if}
+					{if $rights['delete'] == 1}
+					<a href="javascript:;" onclick="mydel(this,{$v['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="删除"><i class="fa fa-trash"></i> 删除</a>{/if}					
+					</td>									
+				</tr>
+			{/loop}				
+		</table>
+	  </div>    	  
+	</div>	
+  </div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+
+/*全选*/
+function myallselect(select){ 
+
+	var obj = document.getElementsByName('myselect'); 
+	var tempsta = select.checked; 
+	
+	for(var k in obj){ 
+		if (obj[k].checked != tempsta) {      
+		     $("#myselect_"+k).prop("checked", tempsta);  
+		}
+	}	
+}	
+/*删除所选*/
+function mydelselect(){   
+	var count = parseInt($("#count").html());
+	if (count == 0){
+		return;
+	}
+
+	var obj = document.getElementsByName('myselect'); //选择所有name="myselect" id="myselect_{$k}" 的对象，返回数组 
+	var i = 0;
+	for(var j in obj){ 
+		if (obj[j].checked) {//如果选中,则删除   
+			i++;
+		}
+	}
+	
+	if (i==0){
+		layer.msg('请选择要删除的对象.',{icon:0});
+	   return ;
+	}
+	layer.confirm('将删除下属所有相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		//取到对象数组后，循环检测它是不是被选中 
+			//取到对象数组后，循环检测它是不是被选中 
+		layer.load(1);
+		layer.close(index);
+		for(var k in obj){ 
+			if (obj[k].checked) {//如果选中,则删除                
+				$.post("{php echo $this->createWebUrl('feea').$mywe['direct'];}",
+				{op:"dellocation",id:obj[k].value},
+				function(data,status){
+					 if (data=='ok'){
+					 }
+					 else{
+						layer.msg(data,{icon:0});
+						return false;
+					 }
+				});		
+			}
+		}
+		layer.closeAll();
+		location.reload();
+	});
+}
+
+/*删除*/
+function mydel(obj,id){
+	layer.confirm('将删除下属所有相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl('feea').$mywe['direct'];}",
+			{op:"dellocation",id:id},
+			function(data,status){
+			 if (data=='ok'){
+				$(obj).parents("tr").remove();
+				var count = $("#count").html();
+				$("#count").html(count - 1);
+				layer.msg('删除成功!',{icon:1});
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+			 }
+		});		
+		layer.close(index);
+    });
+}
+
+function myedit(id,category){
+	var url = "{php echo $this->createWeburl('feea',array('op'=>'editlocation')).$mywe['direct'];}" + "&category=" + category + "&id=" + id;
+	window.location.href = url;
+}
+
+function myadd(category){
+	var url = "{php echo $this->createWeburl('feea',array('op'=>'addlocation')).$mywe['direct'];}" + '&category=' + category ;	
+	window.location.href = url;
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'item')).$mywe['direct'];}";	
+	 location.href = url;
+}
+</script>
+</body>
+</html>

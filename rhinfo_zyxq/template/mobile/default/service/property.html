@@ -1,0 +1,32 @@
+{template $this->mytpl('_header')}
+
+<div class="fui-page fui-page-current">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">物业介绍</div>
+		<div class="fui-header-right"></div>
+	</div>
+	
+	<div class='fui-content'>
+		{if !empty($property['banner'])}
+			<img style="width:100%;" src="{php echo tomedia($property['banner'])}" />			
+		{/if}
+		
+		<div class="fui-card fui-card-list fui-card-full" >
+			{$content}			
+		</div>
+		<br>
+		 <div class='fui-navbar'>
+			 <a href="tel:{$property['telphone']}" class='nav-item btn btn-warning external' data-nocache="true"><i class="icon icon-service"></i> 服务热线</a>
+			 <a href="{php echo $this->createMobileurl('service',array('op'=>'map','id'=>$property['id']))}" class='nav-item btn btn-danger external' data-nocache="true"><i class="icon icon-location"></i> 位置导航</a>			 
+			 {if $property['service']}
+			 <a href="{$property['service']}" class='nav-item btn btn-warning external' data-nocache="true"><i class="icon icon-chat"></i> 在线客服</a>
+			 {/if}
+		</div>
+    </div>
+	{template $this->mytpl('_copyright')}
+ </div>
+
+{template $this->mytpl('_footer')}

@@ -1,0 +1,104 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/rhui/css/mui.picker.css">
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/rhui/css/mui.poppicker.css">
+{if !empty($this->syscfg['btncolor'])}
+    <style>
+		#btnSubmit {
+			background-color:{php echo $this->syscfg['btncolor']};
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+		}
+		#btnSubmit:active,
+		#btnSubmit.disabled {
+			background: {php echo $this->syscfg['btncolor']};			
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+			opacity:0.5;
+		}
+    </style>
+{/if}
+<style>
+<style>
+.mui-btn-blue,.mui-btn-primary{
+	color: #fff;
+	border: 1px solid #04ab02;
+	background-color: #04ab02;
+}
+.mui-btn{
+	border:none;
+	background-color:none;
+}
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+</style>
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">{php echo $_GPC['io']==1?'寄件地址':'收件地址';}</div> 
+		<div class="fui-header-right">&nbsp;</div>
+	</div>
+	<div class='fui-content'>
+	    {if $_GPC['io']==2}
+		<div class='fui-cell-group'>
+			<div class="fui-cell">
+				<div class="fui-cell-info">
+				<textarea rows="3" placeholder="请将复制的地址粘贴此处，将自动识别地址" id='copyaddress' name='copyaddress'></textarea>
+				</div>
+			</div>
+		</div>
+		{/if}
+		<div class="fui-title">请填写正确的地址和手机号</div>
+		<input type='hidden' id='addressid' value="{$address['id']}"/>
+		<div class='fui-cell-group'>
+			<div class='fui-cell'>
+				<div class='fui-cell-label'>{php echo $_GPC['io']==1?'寄件人':'收件人';}</div>
+				<div class='fui-cell-info'><input type="text" id='realname'  name='realname' value="{if $_GPC['io']==1}{$user['realname']}{else}{$address['realname']}{/if}" placeholder="请填写姓名" class="fui-input"/></div>
+			</div>
+			<div class='fui-cell'>
+				<div class='fui-cell-label'>手机号码</div>
+
+				<div class='fui-cell-info'><input type="tel" id='mobile' name='mobile' value="{if $_GPC['io']==1}{$user['mobile']}{else}{$address['mobile']}{/if}" placeholder="请填写手机号码"  class="fui-input"/></div>
+			</div>
+
+			<div class='fui-cell'>
+				<div class='fui-cell-label'>所在地区</div>
+				<div class='fui-cell-info'><input type="text" id='areas'  name='areas' value="{if !empty($address['city'])}{$address['province']} {$address['city']} {$address['district']}{/if}" placeholder="选择地区"  class="fui-input" readonly=""/></div>
+			</div>
+
+			<div class='fui-cell'>
+				<div class='fui-cell-label'>详细地址</div>
+				<div class='fui-cell-info'><input type="text" id='address' name='address' value="{$address['address']}" placeholder='街道，楼牌号等'  class="fui-input"/></div>
+				<div class="fui-cell-remark noremark"><i class="icon icon-record text-success"></i></div>
+			</div>
+		</div>          
+		<a id="btnSubmit" class='external btn btn-danger block' style="margin-top:1.25rem">保存地址</a>     
+	</div>
+</div> 
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.min.js"></script>
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.picker.js"></script>
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.poppicker.js"></script>
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.city.data.js" type="text/javascript" charset="utf-8"></script>
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.city.data-3.js" type="text/javascript" charset="utf-8"></script>
+<script>
+	(function($, doc) {
+		$.init();
+		$.ready(function() {
+			var cityPicker = new $.PopPicker({
+				layer: 3
+			});
+			cityPicker.setData(cityData3);
+			var showCityPickerButton = doc.getElementById('areas');			
+			showCityPickerButton.addEventListener('tap', function(event) {
+				cityPicker.show(function(items) {
+					showCityPickerButton.value = items[0].text + " " + items[1].text + " " + items[2].text;	                  
+				});
+			}, false);
+		});
+	})(mui, document);
+	require(['express/list'], function (modal) {
+		modal.initPostadd({					
+			io:"{php echo !empty($_GPC['io'])?$_GPC['io']:$address['io'];}"
+		});
+	});	
+</script>
+{template $this->mytpl('_footer')}

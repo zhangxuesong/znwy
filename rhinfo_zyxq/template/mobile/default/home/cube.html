@@ -1,0 +1,65 @@
+{if !empty($cubes)}
+	{if count($cubes)>4}
+		<div class="fui-images fui-images-md">			
+		{loop $cubes $k $cube}
+			{if count($cubes) == $k + 1}
+			<a href="javascript:;" {if !empty($cube['link'])} onclick="countHit(this,'{$cube['pid']}','{$cube['rid']}','{$cube['id']}','{$cube['link']}','{$cube['wxappid']}','{$cube['wxapppage']}','{php echo !empty($cube['bgimage'])?tomedia($cube['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if} >
+				<img src="{php echo tomedia($cube['thumb'])}" align="top" style="width:48%;margin-left:0.1rem;"  />
+			</a>
+			{else}
+			<a href="javascript:;" {if !empty($cube['link'])} onclick="countHit(this,'{$cube['pid']}','{$cube['rid']}','{$cube['id']}','{$cube['link']}','{$cube['wxappid']}','{$cube['wxapppage']}','{php echo !empty($cube['bgimage'])?tomedia($cube['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if} >
+				<img src="{php echo tomedia($cube['thumb'])}" align="top" style="width:48%;margin-left:0.1rem;margin-bottom:0.2rem;" />		
+			</a>
+			{/if}
+		{/loop}
+		</div>
+	{else}
+	<div class="fui-cube" style="margin-top:0.3rem;">
+		{if count($cubes)==1}
+		<a  href="javascript:;" {if !empty($cubes[0]['link'])} onclick="countHit(this,'{$cubes[0]['pid']}','{$cubes[0]['rid']}','{$cubes[0]['id']}','{$cubes[0]['link']}','{$cubes[0]['wxappid']}','{$cubes[0]['wxapppage']}','{php echo !empty($cubes[0]['bgimage'])?tomedia($cubes[0]['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if}>
+			<img src="{php echo tomedia($cubes[0]['thumb'])}" />
+		</a>
+		{/if}			
+		{if count($cubes)>1}
+			<div class="fui-cube-left" style="padding-right:2px;">
+				<a href="javascript:;" {if !empty($cubes[0]['link'])} onclick="countHit(this,'{$cubes[0]['pid']}','{$cubes[0]['rid']}','{$cubes[0]['id']}','{$cubes[0]['link']}','{$cubes[0]['wxappid']}','{$cubes[0]['wxapppage']}','{php echo !empty($cubes[0]['bgimage'])?tomedia($cubes[0]['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if}> 
+					<img src="{php echo tomedia($cubes[0]['thumb'])}" />
+				</a>
+			</div>
+			<div class="fui-cube-right">
+				{if count($cubes)==2}
+				<a href="javascript:;" {if !empty($cubes[1]['link'])} onclick="countHit(this,'{$cubes[1]['pid']}','{$cubes[1]['rid']}','{$cubes[1]['id']}','{$cubes[1]['link']}','{$cubes[1]['wxappid']}','{$cubes[1]['wxapppage']}','{php echo !empty($cubes[1]['bgimage'])?tomedia($cubes[1]['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if}>
+					<img src="{php echo tomedia($cubes[1]['thumb'])}" />
+				</a>
+				{/if}
+				{if count($cubes)>2}
+					<div class="fui-cube-right1" style="padding-bottom:2px;">
+						<a href="javascript:;" {if !empty($cubes[1]['link'])} onclick="countHit(this,'{$cubes[1]['pid']}','{$cubes[1]['rid']}','{$cubes[1]['id']}','{$cubes[1]['link']}','{$cubes[1]['wxappid']}','{$cubes[1]['wxapppage']}','{php echo !empty($cubes[1]['bgimage'])?tomedia($cubes[1]['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if}>
+							<img src="{php echo tomedia($cubes[1]['thumb'])}" />
+						</a>
+					</div>
+					<div class="fui-cube-right2">
+						{if count($cubes)==3}
+							<a href="javascript:;" {if !empty($cubes[2]['link'])} onclick="countHit(this,'{$cubes[2]['pid']}','{$cubes[2]['rid']}','{$cubes[2]['id']}','{$cubes[2]['link']}','{$cubes[2]['wxappid']}','{$cubes[2]['wxapppage']}','{php echo !empty($cubes[2]['bgimage'])?tomedia($cubes[2]['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if}>
+								<img src="{php echo tomedia($cubes[2]['thumb'])}" />
+							</a>
+						{/if}
+						{if count($cubes)>3}
+							<a href="javascript:;" class="left" style="padding-right:2px;" {if !empty($cubes[2]['link'])} onclick="countHit(this,'{$cubes[2]['pid']}','{$cubes[2]['rid']}','{$cubes[2]['id']}','{$cubes[2]['link']}','{$cubes[2]['wxappid']}','{$cubes[2]['wxapppage']}','{php echo !empty($cubes[2]['bgimage'])?tomedia($cubes[2]['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if}>
+								<img src="{php echo tomedia($cubes[2]['thumb'])}" />
+							</a>
+						{/if}
+						{if count($cubes)==4}
+							<div class="right">
+								<a href="javascript:;" {if !empty($cubes[3]['link'])} onclick="countHit(this,'{$cubes[3]['pid']}','{$cubes[3]['rid']}','{$cubes[3]['id']}','{$cubes[3]['link']}','{$cubes[3]['wxappid']}','{$cubes[3]['wxapppage']}','{php echo !empty($cubes[3]['bgimage'])?tomedia($cubes[3]['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if}>
+									<img src="{php echo tomedia($cubes[3]['thumb'])}" />
+								</a>
+							</div>
+						{/if}
+					</div>
+				{/if}
+			</div>
+		{/if}
+	</div>
+	{/if}
+{/if}

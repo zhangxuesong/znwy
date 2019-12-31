@@ -1,0 +1,78 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:30px;">
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/form'}	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+var pid = "{$pid}";
+var rid = "{$rid}";
+
+function mysubmit(obj){
+	var title = $.trim($("#title").val());
+	var id = $.trim($("#id").val());
+    if (title=='') {
+	   layer.msg("楼幢名称不能为空！",{icon:0});
+	   return;
+	}	
+	
+    $.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+	{ op:"check",post:"{$_GPC['op']}",title:title,pid:pid,rid:rid,id:id},
+	function(data,status){
+	 if (data=='ok'){		
+	    myprocess(obj);
+		$("#myform").submit();
+	 }
+	 else{
+		layer.msg(data,{icon:0});
+		return ;
+	 }
+	});	
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'list','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid;
+	 location.href = url;
+}
+
+function mybatchroom(){
+	var units = parseInt($("#units").val());
+	var floors = parseInt($("#floors").val());
+	if ( units >0){
+	}
+	else {
+		G.alert('请输入单元数.');
+		return;
+	}
+	var str = '';
+	for(var i=1;i<=units;i++){
+		str = str + '<div class="form-group">\
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">第' + i + '单元</label>\
+		<div class="col-sm-3 col-lg-4 col-xs-12"><div class="input-group">\
+		<input type="number" class="form-control"  value="2" placeholder="输入每层房间数" name="uroom' + i + '">\
+		<span class="input-group-addon">间房屋 / 层</span></div></div>\
+		<div class="col-sm-3 col-lg-4 col-xs-12"><div class="input-group"><span class="input-group-addon">共</span>\
+		<input type="number" class="form-control" value="' + floors +'" placeholder="输入该单元楼层数" name="ufloor' + i + '">\
+		<span class="input-group-addon">层</span>\
+		<div class="col-sm-3 col-lg-4 col-xs-12">\
+		<button class="btn btn-danger" type="button" onclick="mydelete(this)" ><i class="fa fa-trash-o"></i> 删除</button>\
+		</div></div></div></div>';		
+	}
+	$("#myroom").html(str) ;
+}
+
+function mydelete(obj){
+	 $(obj).parents(".form-group").remove();
+}
+
+</script> 
+
+</body>
+</html>

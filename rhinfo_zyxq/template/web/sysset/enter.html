@@ -1,0 +1,487 @@
+﻿<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">多物业后台</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$propertyadmin}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$propertyadmin}">复制链接</a></span>		
+		<p class="text-success">可将模块目录下的property.php移至{$_W['siteroot']}下，property.php可任意命名<br>直接访问：{if !empty($item['binddomain'])}<a href="http://{$item['binddomain']}/property.php" target="_blank">http://{$item['binddomain']}/property.php</a>{else}<a href="{$_W['siteroot']}property.php?i={$mywe['weid']}" target="_blank">{$_W['siteroot']}property.php?i={$mywe['weid']}</a>{/if} 即可。</p>
+		<p class="text-danger">注意：平台管理后台与物业管理后台在同一个浏览只能使用一个，如需同时打开操作请用两个浏览器分别打开。</p>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">小区首页</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$home}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$home}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$home_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业入驻</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$regproperty}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$regproperty}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$regproperty_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业介绍</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$property}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$property}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$property_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定入口</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$bind}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$bind}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$bind_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>&nbsp;
+		<span style="cursor:pointer;" data-toggle="modal" data-target="#formModal"><i class="fa fa-code"></i>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">小区列表</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$region}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$region}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$region_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">拷贝下面代码复制到对应的模板文件即可，用于其他模块提醒房产绑定</h4>
+			</div>
+			<div class="modal-body table-responsive">					
+				<div class="modal-body" style="white-space:normal;">					
+					{$scripthtml}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">管家入口</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$steward}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$steward}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$steward_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">通知入口</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$notice}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$notice}">复制链接</a>
+			<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$notice_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+				<i class="fa fa-qrcode"></i>
+			</span>
+		</span>		
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">报修入口</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$repair}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$repar}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$repair_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">我的报修</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$myrepair}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$repar}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$myrepair_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">投诉入口</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$suggest}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$suggest}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$suggest_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">我的投诉</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$mysuggest}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$suggest}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$mysuggest_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">开门入口</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$opendoor}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$opendoor}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$opendoor_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">缴费入口</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$payfee}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$payfee}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$payfee_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">缴费中心</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$paycenter}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$paycenter}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$paycenter_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+{if $this->syscfg['version']>'2.0'}	
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">租赁缴费</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$leaseindex}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$leaseindex}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$leaseindex_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+{/if}
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">服务入口</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$service}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$service}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$service_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">资讯入口</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$article}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$article}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$article_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">社区入口</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$forum}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$forum}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$forum_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">业主中心</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$member}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$member}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$member_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">我的房产</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$myhouse}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$myhouse}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$myhouse_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">我的车位</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$myparking}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$myparking}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$myparking_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">我的车辆</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$mycar}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$mycar}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$mycar_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">车位共享</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$parkshare}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$parkshare}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$parkshare_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+{if $this->syscfg['version']>'2.0'}	
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">停车缴费</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$parkpay}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$parkpay}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$parkpay_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">停车场</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$parklist}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$parklist}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$parklist_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+{/if}
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">业委入口</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$proprietorindex}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$proprietorindex}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$proprietorindex_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">关注入口</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$fav}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$fav}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$fav_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">我的关注</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$myfav}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$myfav}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$myfav_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业中心</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$manage}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$manage}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$manage_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">任务中心</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$tasklist}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$tasklist}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$tasklist_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">挪车服务</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$movecar}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$movecar}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$movecar_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">活动中心</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$activity}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$activity}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$activity_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">智能充电</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$charginglist}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$charginglist}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$charginglist_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">自助设备</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$selfdevicelist}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$selfdevicelist}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$selfdevicelist_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">便民电话</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$telphoneindex}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$telphoneindex}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$telphoneindex_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+{if $this->syscfg['version']>'2.0'}	
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">商家入口</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$business}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$business}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$business_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">商家列表</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$businesslist}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$businesslist}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$businesslist_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">商家管理</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$businessadmin}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$businessadmin}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$businessadmin_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+{/if}
+{if $this->syscfg['version']>'2.0'}	
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">快递入口</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$expressindex}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$expressindex}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$expressindex_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">驿站入口</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$expressmindex}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$expressmindex}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$expressmindex_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">快递员入口</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$expresseindex}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$expresseindex}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$expresseindex_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">我的快件</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$myexpress}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$myexpress}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$myexpress_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+{/if}
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">天气查询</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$weather}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$weather}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$weather_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">常见问题</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<span class="help-block">{$questionindex}&nbsp;&nbsp;<a class="js-clip" href="javascript:;" data-url="{$questionindex}">复制链接</a>
+		<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$questionindex_qrcode}' width='130' alt='链接二维码'>" data-placement="auto right">
+			<i class="fa fa-qrcode"></i>
+		</span>
+		</span>		
+	</div>	
+</div>
+<br>

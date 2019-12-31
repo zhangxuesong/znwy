@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no">
+        <meta name="format-detection" content="telephone=no" />
+        <title>{if empty($this->syscfg['wxtitle'])}{$_W['account']['name']}{else}{php echo $this->syscfg['wxtitle'];}{/if}
+		</title>
+        <link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/rhui.min.css?v={TIMESTAMP}">
+        <link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/style.css?v={TIMESTAMP}">
+        <link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/fonts/iconfont.css?v={TIMESTAMP}">
+		<script src="../addons/rhinfo_zyxq/static/lib/jquery/jquery-1.11.1.min.js"></script>
+		{if $this->rhinfo_isalipay}<script src="https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.min.js"></script>{/if}
+        <script src='https://res.wx.qq.com/open/js/jweixin-1.4.0.js'></script>
+        <script src="../addons/rhinfo_zyxq/static/mobile/require.js"></script>
+        <script src="../addons/rhinfo_zyxq/static/mobile/config.js"></script>
+        <script language="javascript">require(['core'],function(modal){modal.init({siteUrl: "{php echo $this->syscfg['siteurl'];}",baseUrl: "{php echo $this->syscfg['siteurl'].'app/index.php?i='.$_W['uniacid'].'&c=entryROUTES&m=rhinfo_zyxq'}"})});</script>
+		{if !empty($this->syscfg['btncolor'])}
+		<style>
+			.btn.btn-default,.btn.btn-success,.btn.btn-primary,.btn.btn-warning,.btn.btn-danger{background: {php echo $this->syscfg['btncolor']};border: 1px solid {php echo $this->syscfg['btncolor']};}		
+			.btn.btn-default:active,.btn.btn-success:active,.btn.btn-primary:active,.btn.btn-warning:active,.btn.btn-danger:active{background:{php echo $this->syscfg['btncolor']};border: 1px solid {php echo $this->syscfg['btncolor']};opacity:0.5;}
+		</style>
+		{/if}
+    </head>
+    <body ontouchstart > 

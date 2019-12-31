@@ -1,0 +1,221 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+.fui-list-group:not(.fui-list-group-o):before {border-top:0px;}
+.fui-list-group:not(.fui-list-group-o):after {border-top:0px;}
+.btn.btn-primary {
+	background: #f7f7f7;
+	color: #fff;
+	border: 1px solid #f7f7f7
+}
+
+.btn.btn-primary:active,
+.btn.btn-primary.disabled {
+	background: #f7f7f7;
+	color: #f7f7f7;
+	border: 1px solid #f7f7f7;
+}
+input[type=radio]:after {
+    content: "";
+    display:block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 14px;
+    font-size: 16px;
+    color: #fff;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    box-sizing:border-box;
+}
+input[type=radio]:checked:after {
+    content: "L";
+    transform:matrix(-0.766044,-0.642788,-0.642788,0.766044,0,0);
+    -webkit-transform:matrix(-0.766044,-0.642788,-0.642788,0.766044,0,0);
+    border-color: #ef4f4f;
+    background-color: #ef4f4f;
+}
+.option-picker{
+	position:fixed;
+	bottom:0;
+}
+.fui-list-media img.circle {
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 1.5rem;
+    display: block;
+}
+</style>
+<div class="fui-page fui-current-page">
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">快速寄件</div>
+       <div class="fui-header-right"></div>
+    </div>
+    <div class="fui-content navbar">
+		<div class="fui-list-group">
+			<a class='fui-list' href="{php echo $this->createMobileUrl($mydo,array('op'=>'selectstore'));}" data-nocache="true">
+				{if empty($store)}
+					<div class='fui-list-inner'>
+						<div class="subtitle">请选择相应的快递驿站</div>
+					</div>
+				{else}
+					{if !empty($store['thumb'])}<div class='fui-list-media'>
+						<img src="{php echo tomedia($store['thumb']);}" class='round'/>
+					</div>
+					{/if}
+					<div class="fui-list-inner">
+						<div class="subtitle">{$store['title']}</div>
+					</div>
+				{/if}
+				<div class="fui-list-angle">
+					<div class='angle'></div>
+				</div>
+			</a>			
+		</div>
+		<div class="fui-list-group">
+			<a class='fui-list' href="{php echo $this->createMobileUrl($mydo,array('op'=>'address','sid'=>$sid,'io'=>1));}" data-nocache="true">
+				<div class='fui-list-media'>
+					<img src="../addons/rhinfo_zyxq/static/mobile/images/send.png" class='round' />
+				</div>
+				<div class='fui-list-inner'>
+					<div class='subtitle'>{php echo empty($sendadd['mobile'])?'请填写寄件人联系方式':$sendadd['realname'].' '.$sendadd['mobile'];}</div>
+					<div class='text'>{php echo $sendadd['province'].$sendadd['city'].$sendadd['district'].$sendadd['address'];}</div>
+				</div>
+				<div class="fui-list-angle">
+					<div class='angle'></div>
+				</div>
+			</a>
+			<a class='fui-list' href="{php echo $this->createMobileUrl($mydo,array('op'=>'address','sid'=>$sid,'io'=>2));}" data-nocache="true">
+				<div class='fui-list-media'>
+					<img src="../addons/rhinfo_zyxq/static/mobile/images/take.png" class='round' />
+				</div>
+				<div class='fui-list-inner'>
+					<div class='subtitle'>{php echo empty($takeadd['mobile'])?'请填写收件人联系方式':$takeadd['realname'].' '.$takeadd['mobile'];}</div>
+					<div class='text'>{php echo $takeadd['province'].$takeadd['city'].$takeadd['district'].$takeadd['address'];}</div>
+				</div>
+				<div class="fui-list-angle">
+					<div class='angle'></div>
+				</div>
+			</a>
+		</div>
+		{if !empty($store)}
+			{if !empty($company)}
+			<div class="fui-list-group">
+				<a class='fui-list' href="{php echo $this->createMobileUrl($mydo,array('op'=>'company','sid'=>$sid));}" data-nocache="true">
+					<div class='fui-list-media'>
+						{if !empty($company['thumb'])}
+							<img src="{php echo tomedia($company['thumb']);}" class='circle' />
+						{/if}
+					</div>
+					<div class='fui-list-inner'>
+						<div class='subtitle'>{$company['title']}</div>
+					</div>
+					<div class="fui-list-angle">
+						<div class='angle'></div>
+					</div>
+				</a>			
+			</div>
+			<div class="fui-list-group">
+				<a class='fui-list' id="pickerspec">
+					<div class='fui-list-inner'>
+						<div class='subtitle' id="selectpicker">输入物品类别及重量</div>
+					</div>
+					<div class="fui-list-angle">
+						<div class='angle'></div>
+					</div>
+				</a>			
+			</div>
+			{else}
+			<div class="fui-list-group">
+			   <div class="inner" style="text-align:center;padding-top:0.2rem;">
+					<div class="title" style="font-size:0.7rem;" >请选择快递公司</div>
+				</div>
+				<a class='fui-list' href="{php echo $this->createMobileUrl($mydo,array('op'=>'company','sid'=>$sid));}" data-nocache="true">
+					<div class='fui-list-media' style="margin:0 auto;">
+					{loop $comps $comp}
+						{if !empty($comp['thumb'])}
+							<img src="{php echo tomedia($comp['thumb']);}" class='circle' />&nbsp;
+						{else}
+							<div class='subtitle'>{$comp['title']}</div>
+						{/if}
+					{/loop}
+					</div>
+					<div class="fui-list-angle">
+						<div class='angle'></div>
+					</div>
+				</a>			
+			</div>
+			{/if}
+		{/if}
+		<input type="hidden" id="sid" name="sid" value="{$sid}" />
+		<input type="hidden" id="fromaid" name="fromaid" value="{$sendadd['id']}" />
+		<input type="hidden" id="toaid" name="toaid" value="{$takeadd['id']}" />
+		<input type="hidden" id="compid" name="compid" value="{$_GPC['compid']}" />
+		
+		<div class='fui-cell-group'>
+			<div class='fui-cell'>
+				 <div class='fui-cell-label '>备注</div>
+				 <div class='fui-cell-info'><textarea rows="4" placeholder="内容 10-50个字" id='remark' name='remark'></textarea></div>
+			 </div>
+		</div>	
+    </div> 
+	<div class="pop-express-hidden" style="display:none;">
+		<div class='fui-mask-m visible'></div>
+		<div class="option-picker">
+			<div class="option-picker-inner">
+				<div class="option-picker-cell">
+					<div class="closebtn pull-right"><i class="icon icon-roundclose" style="color:#ccc;margin-top:0.3rem;margin-right:0.3rem;font-size:1rem;"></i></div>
+						<div class="fui-cell-group">
+							<div class="fui-cell">
+								<div class="fui-cell-label">支付方式</div>
+								<div class="fui-cell-info">
+									<input type="radio" name="paytype" value="1" checked /> 寄付&nbsp;&nbsp;
+									<input type="radio" name="paytype" value="2" /> 到付									
+								</div>				
+							</div>	
+							<div class='fui-cell must'>
+								<div class='fui-cell-label'>物品类别</div>
+								<div class='fui-cell-info'><input type='text' class='fui-input' id='title' value=""></div>				
+								<div class="fui-cell-remark noremark"></div>
+							</div>
+							<div class='fui-cell must'>
+								<div class='fui-cell-label'>重量(kg)</div>
+								<div class='fui-cell-info'><input type='number' class='fui-input' id='weight' value=""></div>				
+								<div class="fui-cell-remark noremark"></div>
+							</div>							
+							<div class="fui-cell">
+							<div class="fui-cell-label">数量</div>
+							<div class="fui-cell-info"></div>
+							<div class="fui-cell-mask noremark">
+								 <div class="fui-number">
+									<div class="minus">-</div>
+									<input class="num" type="tel" name="qty" id="qty" value="1"/>
+									<div class="plus ">+</div>
+								</div>
+							</div>
+						</div>
+				　　</div>
+				</div>
+				<div class="fui-navbar">
+					<a class='nav-item btn btn-danger block external btnsubmit'>确定</a>
+				</div>
+			</div>
+		</div>
+	 </div>
+	 <div class='fui-navbar'>
+		<a class='nav-item btn btn-primary external'><span class="text-default">送达时间以快递公司时效为准</span></a>
+		<a id="sendorder" class='nav-item btn btn-warning external'><i class="icon icon-box"></i> 下单</a>
+	</div>
+	<script language='javascript'>
+		require(['express/list'], function (modal) {
+			modal.initSend(); 
+		});
+	</script>
+</div>
+
+{template $this->mytpl('_footer')}

@@ -1,0 +1,93 @@
+﻿{template 'web/_print_header'}
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="pull-right" style="padding:8px;">
+		<a href="javascript:;" class="btn btn-info"  onclick="myprint()"><i class="fa fa-print"></i> 打印</a>		
+	</div>
+</nav>
+
+<div class="panel panel-default" style="padding:30px;" >
+	<div class="panel-body" id="myprintarea">
+		<div id="print-content">				
+		<div class="header"><h1 style="text-align:center;">缴费凭证</h1></div>
+		<!-- 页面顶部信息 -->
+		<p> 缴费日期:{php echo !empty($item['paydate'])?date('Y-m-d',$item['paydate']):date('Y-m-d',TIMESTAMP);}&nbsp;&nbsp;承租人：{$item['lessee']}&nbsp;&nbsp;应缴金额：{$item['totalfee']}元<span class="pull-right">凭证编号：{$printpznum}</span></p>
+			 <!-- 页面记录信息 -->
+				<table >
+						<thead>
+						  <tr>
+						    <th>序号</th>
+							<th>项目</th>
+							<th>交费周期</th>
+							<th>起数</th>
+							<th>止数</th>
+							<th>数量</th>
+							<th>单位</th>
+							<th>单价</th>
+							<th>金额</th>
+							<th>备注</th>
+						  </tr>
+						</thead>
+						<tbody>
+						{loop $data $k $v}
+						<tr>
+							<td>{php echo $k + 1;}</td>
+							<td>{$v['title']}</td>
+							<td>{$v['daterange']}</td>						
+							<td>{php echo $v['feetype']=='3' || $v['feetype']=='4' ?'':$v['startqty'];}</td>
+							<td>{php echo $v['feetype']=='3' || $v['feetype']=='4' ?'':$v['endqty'];}</td>
+							<td>{if $v['feetype']=='3' || $v['feetype']=='4'}{else}{php echo empty($v['price'])?0:round($v['fee']/$v['price'],2);}{/if}</td>
+							<td>{$v['measure']}</td>
+							<td>{$v['price']}</td>
+							<td>{$v['fee']}</td>
+							<td></td>
+						</tr>
+						{/loop}
+						<tr>
+							<td colspan="7" >合计(大写)：{$item['ctotalfee']}</td>
+							<td colspan="4">{$item['totalfee']}元</td>						
+						</tr>
+					</tbody>
+			</table>
+			<!-- 页脚信息 -->
+              <div class="table-footer">
+				<span class="floatLeft" style="display:block;">{$region['title']}	联系电话：{$region['telphone']}</span>
+				<span class="floatRight" style="display:block;">{$property['title']}	投诉电话:{$property['telphone']}</span>
+			  </div>
+			 <br>
+		    <p style="text-align:right;">打印人员：{$mywe['name']}&nbsp;打印时间：{php echo date('Y-m-d H:i:s');}</p>
+		</div>
+	</div>
+</div>
+
+{template 'web/_iframe_footer'}
+
+<script type="text/javascript">
+
+var billids = "{$billids}";
+
+function myprint(){
+  $("#myprintarea").printArea();
+  setTimeout("isprint();", 1000);
+}
+
+function isprint(){
+layer.confirm('打印正确吗？',{icon: 3, title:'提示'},
+	function(index){		
+        layer.close(index);
+		var loadindex = layer.load(2);
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'payprint')).$mywe['direct'];}",
+			{billids:billids},
+			function(data,status){
+			 layer.close(loadindex);
+		});			
+    });
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'paybill')).$mywe['direct'];}";
+	 location.href = url;
+}
+</script>
+</body>
+</html>

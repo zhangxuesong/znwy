@@ -1,0 +1,75 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+			<h3 class="panel-title">已缴账单统计</h3>
+			<span class="count">缴费总金额：<strong>{$total}</strong> 元</span>
+	</div>
+	<div class="panel-body">				
+		<div class="chart" id="chartPay"></div>
+	</div>
+</div>
+<script type="text/javascript">
+	var chartPay = echarts.init(document.getElementById('chartPay'));
+		option_pay = {
+			tooltip : {
+				trigger: 'axis'
+			},
+			legend: {
+				data:[{$legend_data}],
+				textStyle:{
+					color:'#fff',
+				}
+			},
+			toolbox: {
+				show : true,
+				feature : {
+					magicType : {show: true, type: ['line', 'bar']},
+					restore : {show: true},
+					saveAsImage : {show: true}
+				}
+			},
+			calculable : true,
+			xAxis : [
+				{
+					type : 'category',
+					boundaryGap : false,
+					data : function (){
+						var list = [];
+						for (var i = 6; i >=0; i--) {
+							list.push(getDay(-i));
+						}
+						return list;
+					}(),
+					axisLabel: {
+						textStyle: {
+							color: '#fff',//坐标值得具体的颜色
+						}
+					}
+				}
+			],
+			yAxis : [
+				{
+					type : 'value',
+					axisLabel: {
+						textStyle: {
+							color: '#fff',//坐标值得具体的颜色
+						}
+					}
+				}
+			],
+			series : [
+				{loop $feeitems $feeitem}
+					{
+						name:'{$feeitem["title"]}',
+						type:'line',
+						smooth:true,
+						itemStyle: {normal: {areaStyle: {type: 'default'}}},
+						data:[{$feeitem['data']}]
+					},
+				{/loop}
+			]
+		};
+	chartPay.setOption(option_pay);
+	window.onresize = function() {
+		chartPay.resize();
+	};
+</script>

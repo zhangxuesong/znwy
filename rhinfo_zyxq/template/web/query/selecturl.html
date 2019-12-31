@@ -1,0 +1,75 @@
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/fonts/iconfont.css?v=20170703">
+<style>
+	#selectIcon .main nav {height: 60px; width: 80px; margin: 5px; display: block; float: left; cursor: pointer;}
+	#selectIcon .main nav .icon {font-size: 30px; height: 38px; width: 80px; display: block; text-align: center; line-height: 42px;}
+	#selectIcon .main nav .text {font-size: 10px; height: 22px; width: 80px; display: block; text-align: center; line-height: 16px;}
+	#selectIcon .main nav:hover {background: #f6f6f6;}
+</style>
+<div id="selectIcon" data-dismiss="modal" style="margin-top:-50px;">
+	<div class="main">
+		<nav data-href="{php echo mymurl('home');}" data-page="/pages/index/index"><span class="icon icon-home"></span><span class="text">小区首页</span></nav>
+		<nav data-href="{php echo mymurl('auth',array('op'=>'regproperty'));}" data-page="/pages/index/regproperty"><span class="icon icon-form"></span><span class="text">物业入驻</span></nav>
+		<nav data-href="{php echo mymurl('service',array('op'=>'property'));}" data-page="/pages/index/intro"><span class="icon icon-form"></span><span class="text">物业介绍</span></nav>
+		<nav data-href="{php echo mymurl('home',array('op'=>'blist'));}" data-page="/pages/index/blist"><span class="icon icon-city"></span><span class="text">房产绑定</span></nav>
+		<nav data-href="{php echo mymurl('home',array('op'=>'list'));}" data-page="/pages/index/list"><span class="icon icon-menu"></span><span class="text">小区列表</span></nav>
+		<nav data-href="{php echo mymurl('steward');}" data-page="/pages/steward/index"><span class="icon icon-lights"></span><span class="text">管家入口</span></nav>
+		<nav data-href="{php echo mymurl('notice');}" data-page="/pages/notice/index"><span class="icon icon-mark1"></span><span class="text">通知入口</span></nav>
+		<nav data-href="{php echo mymurl('steward',array('op'=>'repair'));}" data-page="/pages/repair/index"><span class="icon icon-repair"></span><span class="text">报修入口</span></nav>
+		<nav data-href="{php echo mymurl('service',array('op'=>'myrepair'));}" data-page="/pages/mine/repair"><span class="icon icon-repair"></span><span class="text">我的报修</span></nav>
+		<nav data-href="{php echo mymurl('steward',array('op'=>'suggest'));}" data-page="/pages/suggest/index"><span class="icon icon-write"></span><span class="text">投诉入口</span></nav>
+		<nav data-href="{php echo mymurl('service',array('op'=>'mysuggest'));}" data-page="/pages/mine/suggest"><span class="icon icon-write"></span><span class="text">我的投诉</span></nav>
+		<nav data-href="{php echo mymurl('opendoor');}" data-page="/pages/opendoor/door"><span class="icon icon-lock"></span><span class="text">开门入口</span></nav>
+		<nav data-href="{php echo mymurl('member',array('op'=>'myfee'));}" data-page="/pages/fee/bill"><span class="icon icon-sponsor"></span><span class="text">缴费入口</span></nav>
+		<nav data-href="{php echo mymurl('fee');}" data-page="/pages/fee/index"><span class="icon icon-money"></span><span class="text">缴费中心</span></nav>
+		{if $this->syscfg['version']>'2.0'}	
+		<nav data-href="{php echo mymurl('lease');}" data-page="/pages/lease/index"><span class="icon icon-sponsorfill"></span><span class="text">租赁缴费</span></nav>
+		{/if}
+		<nav data-href="{php echo mymurl('service');}" data-page="/pages/service/index"><span class="icon icon-like1"></span><span class="text">服务入口</span></nav>
+		<nav data-href="{php echo mymurl('article');}" data-page="/pages/article/list"><span class="icon icon-info"></span><span class="text">资讯入口</span></nav>
+		<nav data-href="{php echo mymurl('forum');}" data-page="/pages/forum/index"><span class="icon icon-friends"></span><span class="text">社区入口</span></nav>
+		<nav data-href="{php echo mymurl('member');}" data-page="/pages/mine/index"><span class="icon icon-person2"></span><span class="text">业主中心</span></nav>
+		<nav data-href="{php echo mymurl('member',array('op'=>'myhouse'));}" data-page="/pages/mine/property"><span class="icon icon-city"></span><span class="text">我的房产</span></nav>
+		<nav data-href="{php echo mymurl('member',array('op'=>'myparking'));}" data-page="/pages/mine/parking"><span class="icon icon-card"></span><span class="text">我的车位</span></nav>
+		<nav data-href="{php echo mymurl('service',array('op'=>'mycar'));}" data-page="/pages/mine/car"><span class="icon icon-taxi"></span><span class="text">我的车辆</span></nav>
+		<nav data-href="{php echo mymurl('proprietor');}" data-page="/pages/proprietor/index"><span class="icon icon-group"></span><span class="text">业委入口</span></nav>
+		<nav data-href="{php echo mymurl('home',array('op'=>'flist'));}" data-page="/pages/index/follow"><span class="icon icon-friendfamous"></span><span class="text">关注入口</span></nav>
+		<nav data-href="{php echo mymurl('member',array('op'=>'myfav'));}" data-page="/pages/mine/fav"><span class="icon icon-friendfamous"></span><span class="text">我的关注</span></nav>
+		<nav data-href="{php echo mymurl('manage');}" data-page="/pages/manage/index"><span class="icon icon-shengfen1"></span><span class="text">物业中心</span></nav>
+		<nav data-href="{php echo mymurl('task');}" data-page="/pages/task/index"><span class="icon icon-present"></span><span class="text">任务中心</span></nav>
+		<nav data-href="{php echo mymurl('car',array('op'=>'moveadd'));}" data-page="/pages/car/move"><span class="icon icon-auto"></span><span class="text">挪车服务</span></nav>
+		<nav data-href="{php echo mymurl('activity',array('op'=>'list'));}" data-page="/pages/activity/index"><span class="icon icon-activityfill"></span><span class="text">活动中心</span></nav>
+		{if $this->syscfg['version']>'2.0'}	
+		<nav data-href="{php echo mymurl('car',array('op'=>'pay'));}" data-page="/pages/car/pay"><span class="icon icon-auto"></span><span class="text">停车缴费</span></nav>
+		<nav data-href="{php echo mymurl('car',array('op'=>'parklist'));}" data-page="/pages/car/list"><span class="icon icon-auto"></span><span class="text">停车场</span></nav>
+		<nav data-href="{php echo mymurl('car',array('op'=>'sharelist'));}" data-page="/pages/car/share"><span class="icon icon-share"></span><span class="text">车位共享</span></nav>
+		{/if}
+		<nav data-href="{php echo mymurl('charging',array('op'=>'list'));}" data-page="/pages/charging/index"><span class="icon icon-electrical"></span><span class="text">智能充电</span></nav>
+		<nav data-href="{php echo mymurl('selfdevice',array('op'=>'list'));}" data-page="/pages/selfdevice/index"><span class="icon icon-operation"></span><span class="text">自助设备</span></nav>
+		<nav data-href="{php echo mymurl('telphone');}"><span class="icon icon-phone" data-page="/pages/telphone/index"></span><span class="text">便民电话</span></nav>
+		{if $this->syscfg['version']>'2.0'}	
+		<nav data-href="{php echo mymurl('business');}" data-page="/pages/business/index"><span class="icon icon-store"></span><span class="text">商家入口</span></nav>
+		<nav data-href="{php echo mymurl('business',array('op'=>'list'));}" data-page="/pages/business/list"><span class="icon icon-store"></span><span class="text">商家列表</span></nav>
+		<nav data-href="{php echo mymurl('business',array('op'=>'mindex'));}" data-page="/pages/business/manage"><span class="icon icon-store"></span><span class="text">商家管理</span></nav>		
+		{/if}
+		{if $this->syscfg['version']>'1.8'}	
+		<nav data-href="{php echo mymurl('express',array('op'=>'mindex'));}" data-page="/pages/express/mindex"><span class="icon icon-similarproduct"></span><span class="text">驿站入口</span></nav>
+		<nav data-href="{php echo mymurl('express',array('op'=>'eindex'));}" data-page="/pages/express/eindex"><span class="icon icon-similarproduct"></span><span class="text">快递员</span></nav>
+		<nav data-href="{php echo mymurl('expressp',array('op'=>'list'));}" data-page="/pages/express/list"><span class="icon icon-similarproduct"></span><span class="text">快递入口</span></nav>
+		<nav data-href="{php echo mymurl('expressp',array('op'=>'myexpress'));}" data-page="/pages/mine/express"><span class="icon icon-similarproduct"></span><span class="text">我的快件</span></nav>
+		{/if}
+		<nav data-href="{php echo mymurl('wether');}" data-page="/pages/wether/index"><span class="icon icon-browser"></span><span class="text">天气查询</span></nav>
+		<nav data-href="{php echo mymurl('question');}" data-page="/pages/question/index"><span class="icon icon-question"></span><span class="text">常见问题</span></nav>
+	</div>
+</div>	
+  <script>
+	var myurl = "{$_GPC['myurl']}";
+	$(function(){		
+		$("#selectIcon").find('nav').click(function(e) {
+			var url = $(this).data('href');	
+			var page = $(this).data('page');				
+			$("#"+myurl).val(url);
+			$("#wxapppage").val(page);
+		});	
+	});
+</script>    
+ 

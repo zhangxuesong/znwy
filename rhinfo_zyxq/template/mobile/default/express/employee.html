@@ -1,0 +1,56 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-list-group:not(.fui-list-group-o):before,.fui-list-group:not(.fui-list-group-o):after {border-top: 0px;}
+</style>
+<div class="fui-page fui-current-page">
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">员工管理</div>
+       <div class="fui-header-right">
+	   <a href="{php echo $this->createMobileUrl($mydo,array('op'=>'mobilenext','sid'=>$sid));}"><i class="icon icon-add" ></i></a>
+	   </div>
+    </div>
+    <div class="fui-content navbar">
+		{if empty($employee)}
+			<div class="content-empty">
+			<i class="icon icon-information"></i> <br/>暂时没有任何内容</div>
+		{else}
+			<div class="fui-list-group">
+				{loop $employee $emp}			
+				<div class='fui-list'>
+					{if !empty($emp['thumb'])}
+					<div class='fui-list-media'>
+						<img src="{php echo tomedia($emp['thumb']);}" class='round' />
+					</div>
+					{else}
+					   {if !empty($emp['avatar'])}
+						<div class='fui-list-media'>
+							<img src="{php echo tomedia($emp['avatar']);}" class='round' />
+						</div>
+						{/if}
+					{/if}
+					<div class='fui-list-inner'>
+						<div class='title'>{$emp['title']}</div>
+						<div class='subtitle'>{$emp['mobile']}</div>
+						<div class='text'>{$emp['remark']}</div>
+					</div>
+					<div class="fui-list-angle">
+						<a data-id="{$emp['id']}" data-toggle='delete'><i class='icon icon-delete'></i></a>
+					</div>
+				</div>
+			{/loop}
+			</div>
+		{/if}		
+    </div>  
+	<script language='javascript'>
+		require(['express/eindex'], function (modal) {
+			modal.initEmp({
+			sid:"{$sid}"
+			});
+		});
+	</script>
+</div>
+
+{template $this->mytpl('_footer')}

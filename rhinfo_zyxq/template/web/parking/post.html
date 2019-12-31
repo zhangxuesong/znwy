@@ -1,0 +1,49 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle'}
+
+<div class="panel panel-default" style="padding-top:30px;">
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/form'}	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+var pid = "{$pid}";
+var rid = "{$rid}";
+
+function mysubmit(obj){
+	var id = $.trim($("#id").val());
+	var title = $.trim($("#title").val());
+	var lid = $("#lid").find("option:selected").val(); 
+	
+    if (title=='') {
+	   layer.msg("车位名称不能为空！",{icon:0});
+	   return;
+	}	
+	
+    $.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+	{ op:"check",post:"{$_GPC['op']}",title:title,pid:pid,rid:rid,id:id,lid:lid},
+	function(data,status){
+	 if (data=='ok'){		
+	    myprocess(obj);
+		$("#myform").submit();
+	 }
+	 else{
+		layer.msg(data,{icon:0});
+		return ;
+	 }
+	});	
+}
+
+function myreturn(){
+	 window.history.back();
+}
+
+</script> 
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title">{$region['title']}概况</h3>
+		<span class="count">总共户数：<strong>{$region['roomqty']}</strong> 户</span>
+	</div>
+	<div class="panel-body">
+		<div class="chart" id="chartPop">
+			<div class="bs-callout bs-callout-warning">
+				<p>占地面积：{$region['coveredarea']}</p>
+				<p>建筑面积：{$region['buildarea']}</p>
+				<p>楼宇数量：{$region['buildqty']}</p>
+				<p>车位数量：{$region['parkingqty']}</p>
+				<p>商铺数量：{$region['shopqty']}</p>	
+				<p>储物间数：{$region['garageqty']}</p>	
+				<p>电梯数量：{$region['elevatorqty']}</p>	
+				<div  id="chartPark" style="position:absolute;right:0;top:10px;width:50%;height:200px;"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	var chartPark = echarts.init(document.getElementById('chartPark'));
+	option_park = {
+		tooltip : {
+			trigger: 'item',
+			formatter: "{a} <br/>{b} : {c} ({d}%)"
+		},
+		legend: {
+			orient : 'vertical',
+			x : 'right',
+			data:['楼宇','车位','商铺','储物间'],
+			textStyle:{
+				color:'#fff',
+			}
+		},
+		toolbox: {
+			show : true,
+			feature : {
+				mark : {show: false},
+				dataView : {show: false, readOnly: false},
+				magicType : {
+					show: false, 
+					type: ['pie', 'funnel'],
+					option: {
+						funnel: {
+							x: '25%',
+							width: '50%',
+							funnelAlign: 'center',
+							max: 1548
+						}
+					}
+				},
+				restore : {show: false},
+				saveAsImage : {show: false}
+			}
+		},
+		calculable : true,
+		series : [
+			{
+				name:'房产数量',
+				type:'pie',
+				radius : ['50%', '70%'],
+				itemStyle : {
+					normal : {
+						label : {
+							show : false
+						},
+						labelLine : {
+							show : false
+						}
+					},
+					emphasis : {
+						label : {
+							show : true,
+							position : 'center',
+							textStyle : {
+								fontSize : '30',
+								fontWeight : 'bold'
+							}
+						}
+					}
+				},
+				data:[
+					{value:'{$qty["buildqty"]}', name:'楼宇'},
+					{value:'{$qty["parkingqty"]}', name:'车位'},
+					{value:'{$qty["garageqty"]}', name:'商铺'},
+					{value:'{$qty["elevatorqty"]}', name:'储物间'}
+				]
+			}
+		]
+	};
+	chartPark.setOption(option_park);
+	window.onresize = function() {
+		chartPark.resize();
+	};
+</script>

@@ -1,0 +1,429 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />	
+			<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+			<input type="hidden" name="mobile" id="mobile" value="{$item['mobile']}" />
+			<div class="form-group">		
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">支付参数说明</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">			
+					 <div class="alert alert-info" role="alert"> 
+					如需使用微信独立支付，请务必到微擎功能选项中开启微信支付，并且在系统配中填写服务商账户和密钥.<br>
+					<span class="text-danger">请在公众平台->微信支付->公众号支付 追加支付授权目录: {php echo $_W['siteroot'].'app/';}</span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>独立支付</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<label class='radio-inline'><input type="radio" name="ispay" value="0" {if $item['ispay'] == 0 || empty($item['ispay'])} checked="true" {/if} >禁用</label>
+					<label class='radio-inline'><input type="radio" name="ispay" value="1" {if $item['ispay'] == 1} checked="true" {/if} >启用</label>										
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">微信支付类型</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<label  class="radio-inline">
+						<input type="radio" name="paytype" value="2" id="wx" {if empty($item['paytype']) || $item['paytype']==2 } checked{/if} /> 微信服务商支付</label>
+					<label class="radio-inline" >
+						<input type="radio" name="paytype" value="3" id="bank" {if $item['paytype']==3 } checked{/if} /> 一码支付</label>					
+					<label class="radio-inline">
+						<input type="radio" name="paytype" value="4" id="rsd" {if $item['paytype']==4 } checked{/if} /> 银行通道R</label>
+					<label class="radio-inline">
+						<input type="radio" name="paytype" value="5" id="star" {if $item['paytype']==5 } checked{/if} /> 银行通道S</label>
+					<span class="help-block">开启后物业费直接付到该独立账户. </span>	
+				</div>
+			</div>			
+			<div class="form-group" id="wxpay">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>子商户号</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" id="submerchid" value="{$item['submerchid']}" placeholder="输入子商户号" name="submerchid">
+					<span class="help-block">微信支付为公众号服务商户下子商户号,且须开启微擎功能选项-支付参数-<a href="{php echo url('profile/payment')}" target="_blank">微信支付</a>.</span>
+				</div>		
+			</div>
+			<div  id="payurl">
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>商户号</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="bankmerchid" value="{$item['bankmerchid']}" placeholder="输入商户号" name="bankmerchid">
+						<span class="help-block">支付平台商户号.</span>
+					</div>		
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>接口地址</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="ymfurl" value="{$item['ymfurl']}" placeholder="输入接口地址" name="ymfurl">
+						<span class="help-block">支付平台接口地址.</span>
+					</div>		
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label">访问密钥</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="ymfkey" value="{$item['ymfkey']}" placeholder="输入密钥" name="ymfkey">
+						<span class="help-block">支付平台访问密钥，不需要密钥则为空.</span>
+					</div>		
+				</div>
+			</div>
+			<div  id="paykey">
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>商户号</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="rsdbankmerchid" value="{$item['rsdbankmerchid']}" placeholder="输入商户号" name="rsdbankmerchid">
+						<span class="help-block">支付平台商户号.</span>
+					</div>		
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>访问密钥</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="bankkey" value="{$item['bankkey']}" placeholder="输入密钥" name="bankkey">
+						<span class="help-block">支付平台访问密钥，不需要密钥则为空.</span>
+					</div>		
+				</div>
+			</div>	
+			<div  id="starpay">
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>商户号</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="starmerchid" value="{$item['starmerchid']}" placeholder="输入商户号" name="starmerchid">
+						<span class="help-block">支付平台商户号.</span>
+					</div>		
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>访问密钥</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="starkey" value="{$item['starkey']}" placeholder="输入密钥" name="starkey">
+						<span class="help-block">支付平台访问密钥.</span>
+					</div>		
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>组织机构</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="starorg" value="{$item['starorg']}" placeholder="输入组织机构" name="starorg">					</div>		
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>设备终端</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="startrm" value="{$item['startrm']}" placeholder="输入设备终端" name="startrm">
+					</div>		
+				</div>
+			</div>
+			
+			<div class="form-group" style="display:none;">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">支付宝支付</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<label class="radio-inline">
+					<input type="radio" name="isalipay" value="1" {if $item['isalipay']==1 } checked{/if} />微信禁用</label>
+					<label class="radio-inline">
+					<input type="radio" name="isalipay" value="2" {if $item['isalipay']==2 } checked{/if} />微信启用</label>
+					<label  class="radio-inline">
+					<input type="radio" name="isalipay" value="0" {if empty($item['isalipay']) || $item['isalipay']==0 } checked{/if} /> 不启用</label>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">支付宝类型</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+						<label class="radio-inline" style="display:none;">
+						<input type="radio" name="alipay_type" value="0" {if empty($item['alipay_type'])} checked{/if} />依支付宝账号</label>
+						<label  class="radio-inline">
+						<input type="radio" name="alipay_type" value="1" {if $item['alipay_type']==1 } checked{/if} />依蚂蚁金服应用</label>
+						<label  class="radio-inline">
+						<input type="radio" name="alipay_type" value="2" {if $item['alipay_type']==2 } checked{/if} />依银行通道S</label>
+				</div>
+			</div>
+			
+			<div id="alipay" style="display:none;"> 
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>支付宝账号</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="aliaccount" value="{$item['aliaccount']}" placeholder="输入企业支付宝账号" name="aliaccount">
+						<span class="help-block">如您没有支付宝帐号，<a href="https://memberprod.alipay.com/account/reg/enterpriseIndex.htm" target="_blank">请点击这里注册</a></span>
+					</div>	
+				</div>	
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>合作者身份</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="alipartner" value="{$item['alipartner']}" placeholder="输入合作者身份" name="alipartner">
+						<span class="help-block">支付宝签约用户请在此处填写支付宝分配给您的合作者身份，签约用户的手续费按照您与支付宝官方的签约协议为准。<br>如果您还未签约，<a href="https://memberprod.alipay.com/account/reg/enterpriseIndex.htm" target="_blank">请点击这里签约</a>；如果已签约,<a href="https://b.alipay.com/order/pidKey.htm?pid=2088501719138773&amp;product=fastpay" target="_blank">请点击这里获取PID、Key</a>;如果在签约时出现合同模板冲突，请咨询0571-88158090</span>
+					</div>	
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>校验密钥</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="alisecret" value="{$item['alisecret']}" placeholder="输入交易安全校验码" name="alisecret">
+						<span class="help-block">支付宝签约用户可以在此处填写支付宝分配给您的交易安全校验码，此校验码您到支付宝官方的商家服务功能处查看</span>
+					</div>
+				
+				</div>
+			</div>
+			<div id="aliapp" {if $item['alipay_type']==1}{else}style="display:none;"{/if}>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">支付宝应用appid</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="alipay_appid" value="{$item['alipay_appid']}" placeholder="输入支付宝应用appid" name="alipay_appid">
+						<span class="help-block">蚂蚁金服开放平台创建应用，<a href="https://open.alipay.com" target="_blank"><span class="text-danger">我要申请</span></a>.</span>
+					</div>		
+				</div>	
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">支付宝seller_id</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="alipay_seller_id" value="{$item['alipay_seller_id']}" placeholder="输入seller_id" name="alipay_seller_id">
+						<span class="help-block">如果该值为空，则默认为商户签约账号对应的支付宝用户ID 例如 : 2088102146225135 非支付宝账号.</span>
+					</div>		
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">支付宝授权token</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<input type="text" class="form-control" id="alipay_app_auth_token" value="{$item['alipay_app_auth_token']}" placeholder="输入支付宝授权token" name="alipay_app_auth_token">
+						<span class="help-block">支付宝授权token,如果授权给其他用户,填写这项.</span>
+					</div>		
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">支付宝公钥PUBLIC_KEY</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<textarea class="form-control" name="alipay_rsa2" rows="6" id="alipay_rsa2" autocomplete="off">{$item['alipay_rsa2']}</textarea>	
+						<span class="help-block">蚂蚁服务开平台获取</span>
+					</div>	
+				</div>	
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">应用私钥PRIVATE_KEY</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<textarea class="form-control" name="alipay_private" rows="6" id="alipay_private" autocomplete="off">{$item['alipay_private']}</textarea>	
+						<span class="help-block">蚂蚁服务开平台获取</span>
+					</div>	
+				</div>	
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">快件管理价格</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<div class="input-group">
+					   <span class="input-group-addon">取件</span>
+					   <input type="number" name="outprice" class="form-control" value="{$item['outprice']}" />
+					   <span class="input-group-addon">元，寄件</span>
+					   <input type="number" name="inprice" class="form-control" value="{$item['inprice']}" />
+					   <span class="input-group-addon">元</span>
+					</div>
+					<span class="help-block">驿站管理快件价格定义</span>
+			   </div>
+			</div>	
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">快件超时天数</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<div class="input-group">
+					   <span class="input-group-addon">默认天数</span>
+					   <input type="number" name="outdays" class="form-control" value="{$item['outdays']}" />
+					   <span class="input-group-addon">天，超时计费</span>
+					   <input type="number" name="dayprice" class="form-control" value="{$item['dayprice']}" />
+					   <span class="input-group-addon">元/天</span>
+					</div>
+					<span class="help-block">超过默认天数开始计算超时，为空则不计算超时，超时不足1天按1天计算(1天=24小时)</span>
+			   </div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">快递柜密钥</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" id="cabtoken" value="{$item['cabtoken']}" placeholder="输入快递柜密钥" name="cabtoken">
+					<span class="help-block">用于对接快递柜.</span>
+				</div>		
+			</div>
+			<div class="form-group" style="display:none;">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">云喇叭ID</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" id="ylbid" value="{$item['ylbid']}" placeholder="输入云喇叭ID" name="ylbid">
+					<span class="help-block">云喇叭用于快件语音提醒.</span>
+				</div>		
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">支付成功跳转</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" id="paysuccessurl" value="{$item['paysuccessurl']}" placeholder="输入跳转地址" name="paysuccessurl">
+					<span class="help-block">请输入网址 ,外部链接请包含http://</span>
+				</div>		
+			</div>	
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">取件模板通知</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<label class='radio-inline'><input type="radio" name="istplmsg" value="0" {if $item['istplmsg'] == 0 || empty($item['istplmsg'])} checked="true" {/if} >禁用</label>
+					<label class='radio-inline'><input type="radio" name="istplmsg" value="1" {if $item['istplmsg'] == 1} checked="true" {/if} >启用</label>										
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">取件短信通知</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<label class='radio-inline'><input type="radio" name="issmsmsg" value="0" {if $item['issmsmsg'] == 0 || empty($item['issmsmsg'])} checked="true" {/if} >禁用</label>
+					<label class='radio-inline'><input type="radio" name="issmsmsg" value="1" {if $item['issmsmsg'] == 1} checked="true" {/if} >启用</label>										
+				</div>
+			</div>
+		</form>	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+var paytype = "{$item['paytype']}";
+	 
+if (paytype == '1'){	   
+   $("#wxpay").hide();
+   $("#payurl").hide();
+   $("#paykey").hide();
+   $("#starpay").hide();
+}
+else if(paytype == '3') {
+   $("#wxpay").hide();
+   $("#payurl").show();
+   $("#paykey").hide();
+   $("#starpay").hide();
+}
+else if(paytype == '4') {
+   $("#wxpay").hide();
+   $("#payurl").hide();
+   $("#paykey").show();
+   $("#starpay").hide();
+}
+else if(paytype == '5') {
+   $("#wxpay").hide();
+   $("#payurl").hide();
+   $("#paykey").hide();
+   $("#starpay").show();
+}
+else {
+   $("#wxpay").show();
+   $("#payurl").hide();
+   $("#paykey").hide();
+   $("#starpay").hide();
+}
+ 
+ $("input[name=paytype]").click(function(){	
+	  switch($("input[name=paytype]:checked").attr("id")){
+	  case "ali":	
+		   $("#wxpay").hide(); 
+		   $("#payurl").hide();
+		   $("#paykey").hide();
+		   $("#starpay").hide();
+		   break;
+	  case "wx":			
+		   $("#wxpay").show();
+		   $("#payurl").hide();
+		   $("#paykey").hide();
+		   $("#starpay").hide();
+		   break;		
+	  case "bank":
+		   $("#wxpay").hide();
+		   $("#payurl").show();
+		   $("#paykey").hide();
+		   $("#starpay").hide();
+		   break;
+	  case "rsd":
+		   $("#wxpay").hide();
+		   $("#payurl").hide();	
+		   $("#paykey").show();	
+		   $("#starpay").hide();
+			break;
+	  case "star":
+		   $("#wxpay").hide();
+		   $("#payurl").hide();	
+		   $("#paykey").hide();	
+		   $("#starpay").show();
+			break;
+	  default:
+	   break;
+	}		
+ });
+$("input[name=alipay_type]").click(function(){	
+	 switch($("input[name=alipay_type]:checked").val()){
+	 case "0":	
+		$("#alipay").show();			
+		$("#aliapp").hide();
+		break;
+	 case "1":	
+		$("#alipay").hide();			
+		$("#aliapp").show();
+		break;
+	  default:
+		$("#alipay").hide();			
+		$("#aliapp").hide();
+		break;
+	}		
+});
+function mysubmit(obj){	
+	window.scrollTo(0,0);
+	var aliaccount = $.trim($("#aliaccount").val());
+	var alipartner =  $.trim($("#alipartner").val());
+	var alisecret= $.trim($("#alisecret").val());
+	var submerchid = $.trim($("#submerchid").val());	
+	var submerchsecret = $.trim($("#submerchsecret").val());
+	var bankmerchid = $.trim($("#bankmerchid").val());	
+	var rsdbankmerchid = $.trim($("#rsdbankmerchid").val());
+	var ymfurl = $.trim($("#ymfurl").val());
+	var bankkey = $.trim($("#bankkey").val());	
+	var paytype = $("input[name=paytype]:checked").val();
+	var ispay = $("input[name=ispay]:checked").val();
+	var ylbid = $.trim($("#ylbid").val());
+	var mobile = $.trim($("#mobile").val());
+	
+	if(ispay == 1){	
+		if (paytype=='1'){
+			if (aliaccount=='') {
+			   layer.msg("支付账号不能为空！",{icon:0});
+			   return;
+			}	
+			
+			 if (alipartner=='') {
+			   layer.msg("合作身份不能为空！",{icon:0});
+			   return;
+			}	
+			
+			if (alisecret=='') {
+			   layer.msg("检验密钥不能为空！",{icon:0});
+			   return;
+			}
+		}
+		else if(paytype=='2'){
+			if (submerchid=='') {
+			   layer.msg("子商户号不能为空！",{icon:0});
+			   return;
+			}
+		}
+		else if(paytype=='3'){
+			if (bankmerchid=='') {
+			   layer.msg("商户号不能为空！",{icon:0});
+			   return;
+			}	
+			if (ymfurl=='') {
+			   layer.msg("接口地址不能为空！",{icon:0});
+			   return;
+			}			
+		}
+		else if(paytype=='4'){
+			if (rsdbankmerchid=='') {
+			   layer.msg("商户号不能为空！",{icon:0});
+			   return;
+			}			
+			if (bankkey=='') {
+			   layer.msg("访问密钥不能为空！",{icon:0});
+			   return;
+			}	
+		}
+	}
+	if(ylbid !='' && mobile==''){
+	   layer.msg("驿站未设置手机号，云喇叭不可用",{icon:0});
+	   return;
+	}	
+	myprocess(obj);
+	$("#myform").submit();
+}
+
+function myreturn(){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'storelist'));}";	
+	location.href = url;
+}
+</script> 
+
+</body>
+</html>

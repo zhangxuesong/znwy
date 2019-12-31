@@ -1,0 +1,64 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170712">
+
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">住户变更</div>
+		<div class="fui-header-right"></div>
+	</div>
+	<div class='fui-content navbar'> 
+		<input type="hidden" value="{$_GPC['rid']}" name="rid" id="rid" />
+       	<input type="hidden" value="{$_GPC['room']}" name="room" id="room" />
+        <div class="fui-title"><i class="icon icon-city"></i> {$region['title']} {$_GPC['myroom']}</div>
+		<div class="fui-cell-group">
+		
+			<div class="fui-cell">
+                <div class="fui-cell-label">原业主姓名</div>
+                <div class="fui-cell-info">
+                   {$item['ownername']}
+                </div>
+            </div>
+
+            <div class="fui-cell">
+                <div class="fui-cell-label">原业主手机</div>
+                <div class="fui-cell-info">
+                   {$item['mobile']}
+                </div>
+            </div>
+            <div class="fui-cell">
+                <div class="fui-cell-label">新业主姓名</div>
+                <div class="fui-cell-info">
+                    <input type="text" placeholder="请输入真实姓名" class="fui-input" value="" id="ownername" />
+                </div>
+            </div>
+
+            <div class="fui-cell">
+                <div class="fui-cell-label">新业主手机</div>
+                <div class="fui-cell-info">
+                    <input type="tel" placeholder="请输入手机号" class="fui-input" value="" maxlength="11" id="mobile" />
+                </div>
+            </div>
+
+        </div>
+
+        <div class="btn btn-success block" id="btn-submit">保存</div>
+      
+    </div>
+ </div>
+<script language='javascript'>		
+	require(['manage/member'], function (modal) {
+		modal.initChangeroom({rid:"{$myrid}"});
+	});
+	
+	jssdkconfig = {php echo json_encode($_W['account']['jssdkconfig']);} || { jsApiList:[] };
+	jssdkconfig.debug = false;
+	wx.config(jssdkconfig);	
+	wx.ready(function () {
+		wx.hideOptionMenu();
+	});
+</script>
+</body>
+</html>

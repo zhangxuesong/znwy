@@ -1,0 +1,86 @@
+﻿
+<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+    
+	{if $_W['uid']} 
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"> <span class="text-danger">*</span>所属物业</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+				<option value="0">请选择所属物业</option>
+				{loop $myproperty $k $v}
+					<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>
+	{else}
+		<input type="hidden" class="form-control" id="pid" value="{$mywe['pid']}" name="pid" />
+	{/if}
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>小区或商圈</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="rid" name="rid" onchange="renderCategory(this,'building','bid')">
+				<option value="0">请选择小区或商圈</option>
+				{if $_W['uid']} 
+				{else}
+					{loop $regions $r}
+						<option value="{$r['id']}" >{$r['title']}</option>
+					{/loop}
+				{/if}
+			</select>
+		</div>
+	</div>		
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">楼宇</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="bid" name="bid" onchange="renderCategory(this,'unit','tid')">
+				<option value="0">请选择楼宇</option>					
+			</select>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">单元</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="tid" name="tid" >
+				<option value="0">请选择单元</option>							
+			</select>
+		</div>
+	</div>	 
+       
+	
+</form>	
+
+<script type="text/javascript">
+	window._region = {php echo json_encode($myregion);};				
+	window._building = {php echo json_encode($mybuilding);};
+	window._unit = {php echo json_encode($myunit);};
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择</option>';
+			if (id=='rid'){
+				$("#bid").html(html);
+				$("#tid").html(html);
+			}
+			else if (id=='bid'){
+				$("#tid").html(html);
+			}
+
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}			
+			
+			$selectChild.html(html);
+		});
+	}
+</script>

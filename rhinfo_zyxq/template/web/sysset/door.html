@@ -1,0 +1,85 @@
+﻿<div class="form-group" style="display:none;">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">门禁类型</label>
+	<div class="col-sm-7 col-lg-8 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="doortype" value="1" {if empty($item['doortype']) || $item['doortype']==1 } checked{/if} /> ZR系列</label>
+		<label  class="radio-inline">
+			<input type="radio" name="doortype" value="4" {if $item['doortype']==4 } checked{/if} /> MX系列</label>
+		<label  class="radio-inline">
+			<input type="radio" name="doortype" value="2" {if $item['doortype']==2 } checked{/if} /> BL系列</label>
+		<label  class="radio-inline">
+			<input type="radio" name="doortype" value="3" {if $item['doortype']==3 } checked{/if} /> MJ系列</label>	
+		<span class="help-block">门禁类别不同，密钥不同.</span>			
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">ZR系列密钥</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="apikey" value="{$item['apikey']}" placeholder="输入门禁密钥" name="apikey">
+		<span class="help-block">请填写智能门禁密钥，需要购买硬件模块.</span>
+	</div>	
+</div>
+
+<div class="form-group" style="display:none;">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">ZR系列APPID</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="apiid" value="{$item['apiid']}" placeholder="输入门禁密钥ID" name="apiid">
+		<span class="help-block">请填写智能门禁APPID，需要购买硬件模块.</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">BL系列密钥</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="bl_apikey" value="{$item['bl_apikey']}" placeholder="输入门禁密钥" name="bl_apikey">
+		<span class="help-block">请填写智能门禁密钥，需要购买硬件模块.</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">BL系列APPID</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="bl_apiid" value="{$item['bl_apiid']}" placeholder="输入门禁密钥ID" name="bl_apiid">
+		<span class="help-block">请填写智能门禁APPID，需要购买硬件模块.</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">MJ系列密钥</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="mj_apikey" value="{$item['mj_apikey']}" placeholder="输入门禁密钥" name="mj_apikey">
+		<span class="help-block">请填写智能门禁密钥，需要购买硬件模块.</span>
+	</div>	
+</div>
+
+<div class="form-group" >
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">MJ系列APPID</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="mj_apiid" value="{$item['mj_apiid']}" placeholder="输入门禁密钥ID" name="mj_apiid">
+		<span class="help-block">请填写智能门禁APPID，需要购买硬件模块.</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">定位开门</label>
+	<div class="col-sm-7 col-lg-8 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="locationdoor" value="1" {if empty($item['locationdoor']) || $item['locationdoor']==1 } checked{/if} /> 不启用</label>
+		<label  class="radio-inline">
+			<input type="radio" name="locationdoor" value="2" {if $item['locationdoor']==2 } checked{/if} /> 启用</label>
+		<span class="help-block">开启定位后，门禁需要添加经纬度.</span>			
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">开门范围</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<div class="input-group">
+		   <input type="number" name="doorrange" class="form-control" placeholder="输入距离" value="{$item['doorrange']}" />
+		   <span class="input-group-addon">米</span>		   
+	   </div>
+	   <span class="help-block">开门定位范围，需开启定位开门，默认为10米.</span>
+	</div>	
+</div>
+

@@ -1,0 +1,121 @@
+{template 'web/_iframe_header'}
+<style>
+#treeview{
+	height:600px;
+	overflow-y:auto;
+	overflow-x:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+::-webkit-scrollbar{
+	width: 5px;
+	height: 5px;
+}
+::-webkit-scrollbar-thumb{
+	background-color: #ccc;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:vertical:hover{
+	background-color: #999;
+}
+::-webkit-scrollbar-thumb:vertical:active{
+	background-color: #999;
+}
+::-webkit-scrollbar-button{
+	display: none;
+}
+::-webkit-scrollbar-track{
+	background-color: #f1f1f1;
+}
+.margin-top{margin-top:60px;}
+.panel-title{
+	display:inline-block;
+	height:26px;
+	line-height:26px;
+	font-size:14px;
+	font-weight:bold;
+}
+</style>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div style="padding:8px;">
+		<span class="pull-left" style="line-height:36px;"><i class="fa fa-hand-o-right"></i> {$region['title']}&nbsp;&gt;&nbsp;快捷收银台</span>
+		<span class="pull-right">
+			 <a class="btn btn-success" href="javascript:location.replace(location.href);" title="刷新">
+				<i class="fa fa-refresh"></i>
+			</a>
+		</span>
+	</div>
+</nav>
+<div class="col-xs-12 col-sm-3 col-lg-2">
+	<div class="panel panel-default margin-top">
+		<div class="panel-heading">
+			<div class="panel-title">选择房产</div>
+		</div>
+		<div id="treeview"></div>
+	</div>
+</div>
+<div class="col-xs-12 col-sm-9 col-lg-10">
+	<div id="selectable-output" class="margin-top"></div>
+</div>
+{template 'web/_iframe_footer'}
+<script src="../addons/rhinfo_zyxq/static/lib/tree/js/bootstrap-treeview.min.js"></script>
+<script type="text/javascript">			
+	$(function() {
+        var json = {php echo json_encode($houses);};
+	    $('#treeview').treeview({
+			  color: "#000",
+			  enableLinks: false,
+			  showBorder: false,
+			  highlightSelected: true,
+			  selectedColor: "#fff",
+			  selectedBackColor: "#5bc0de",
+			  showIcon:true,
+			  data: json,
+			  onNodeSelected: function(event, node) {
+				// alert(JSON.stringify(node));
+				 var index = layer.msg('正在加载...', {icon: 16});
+				 if((node.category==1 && node.level==3) || (node.category>1 && node.level==2)){
+					  var url = "{php echo $this->createWebUrl('feeb',array('op'=>'mybill','rid'=>$_GPC['rid'])).$mywe['direct'];}"; 
+						$.get(url, {category:node.category,hid:node.id}, function(data){
+							layer.close(index);
+							$('#selectable-output').html(data);
+						});	
+				 }
+				 else if(node.category==1 && node.level==2){
+					  var url = "{php echo $this->createWebUrl('feeb',array('op'=>'unitbill','rid'=>$_GPC['rid'])).$mywe['direct'];}"; 
+						$.get(url, {category:node.category,tid:node.id}, function(data){
+							layer.close(index);
+							$('#selectable-output').html(data);
+						});		
+				 }
+				 else if(node.level==1){
+					  var url = "{php echo $this->createWebUrl('feeb',array('op'=>'buildbill','rid'=>$_GPC['rid'])).$mywe['direct'];}"; 						
+						$.get(url, {category:node.category,bid:node.id}, function(data){
+							layer.close(index);
+							$('#selectable-output').html(data);
+						});		
+				 }
+				 else if(node.level==0){
+						var url = "{php echo $this->createWebUrl('feeb',array('op'=>'catebill','rid'=>$_GPC['rid'])).$mywe['direct'];}"; 
+						$.get(url, {category:node.category}, function(data){
+							layer.close(index);
+							$('#selectable-output').html(data);
+						});		
+				 }
+				},
+				onNodeUnselected: function (event, node) {
+				 
+				}
+        });
+		$("#treeview").height($(window).height()- 120);
+		var index = layer.msg('正在加载...', {icon: 16});
+		var url = "{php echo $this->createWebUrl('feeb',array('op'=>'catebill','rid'=>$_GPC['rid'])).$mywe['direct'];}"; 
+		$.get(url, {category:1}, function(data){
+			layer.close(index);
+			$('#selectable-output').html(data);
+		});		
+	});
+</script> 
+</body>
+</html>

@@ -1,0 +1,109 @@
+{template 'web/_iframe_header'}
+<style>
+#guidenav{
+	height:600px;
+	overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+#workarea{
+	width:100%;
+	height:600px;
+	overflow-y:auto;
+}
+
+::-webkit-scrollbar{
+	width: 5px;
+	height: 5px;
+}
+::-webkit-scrollbar-thumb{
+	background-color: #ccc;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:vertical:hover{
+	background-color: #999;
+}
+::-webkit-scrollbar-thumb:vertical:active{
+	background-color: #999;
+}
+::-webkit-scrollbar-button{
+	display: none;
+}
+::-webkit-scrollbar-track{
+	background-color: #f1f1f1;
+}
+.margin-top{margin-top:60px;}
+.panel-title{
+	display:inline-block;
+	height:26px;
+	line-height:26px;
+	font-size:14px;
+	font-weight:bold;
+}
+</style>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div style="padding:8px;">
+		<span class="pull-left" style="line-height:36px;"><i class="fa fa-hand-o-right"></i> {$region['title']}&nbsp;&gt;&nbsp;初始操作向导</span>
+		<span class="pull-right">
+			 <a class="btn btn-success" href="javascript:location.replace(location.href);" title="刷新">
+				<i class="fa fa-refresh"></i>
+			</a>
+		</span>
+	</div>
+</nav>
+<div class="col-xs-12 col-sm-3 col-lg-2">
+	<div class="panel panel-default margin-top">
+		<div class="panel-heading">
+			<div class="panel-title"><a href="javascript:;" onclick="myguide()" style="color:#222;">初始操作向导</a></div>
+		</div>
+			<div id="guidenav"></div>
+	</div>
+</div>
+<div class="col-xs-12 col-sm-9 col-lg-10">
+	<div id="guide-output" class="margin-top"></div>
+</div>
+{template 'web/_iframe_footer'}
+<script src="../addons/rhinfo_zyxq/static/lib/tree/js/bootstrap-treeview.min.js"></script>
+<script type="text/javascript">			
+	$(function() {
+		 myguide();
+	});
+	function myguide(){
+		var json = {php echo json_encode($navs);};
+	    $('#guidenav').treeview({
+			  color: "#000",
+			  enableLinks: false,
+			  showBorder: false,
+			  highlightSelected: true,
+			  selectedColor: "#fff",
+			  selectedBackColor: "#5bc0de",
+			  showIcon:false,
+			  data: json,
+			  onNodeSelected: function(event, node) {
+					if(node.category=='nogrant'){
+						layer.msg('抱歉，您无权操作',{icon:0});
+						return
+					}
+					var index = layer.msg('正在加载...', {icon: 16});
+					var url = "{php echo mywurl($mydo,array('rid'=>$_GPC['rid'])).$mywe['direct'];}"; 
+					$.get(url, {op:node.category}, function(data){
+						layer.close(index);
+						$("#guide-output").html(data);
+					});		
+				},
+				onNodeUnselected: function (event, node) {
+				 
+				}
+        });
+		$("#guidenav").height($(window).height()- 120);
+		var index = layer.msg('正在加载...', {icon: 16});
+		var url = "{php echo mywurl('guide/guide',array('rid'=>$_GPC['rid'])).$mywe['direct'];}"; 
+		$.get(url, {category:1}, function(data){
+			layer.close(index);
+			$('#guide-output').html(data);
+		});		
+	}
+</script> 
+</body>
+</html>

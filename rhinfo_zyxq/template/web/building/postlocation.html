@@ -1,0 +1,169 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />
+			<input type="hidden" value="{$item['id']}" id="id" name="id" />
+			<input type="hidden" name="pid" value="{$pid}" />
+			<input type="hidden" name="rid" value="{$rid}" />			
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>区域名称</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入区域名称" name="title" />
+				</div>	
+			</div>
+			<div class="form-group">
+			   <label class="col-sm-2 col-md-2 col-xs-12 control-label">背景颜色</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+				  {php echo tpl_form_field_color('bg',$item['bg'])}
+				  <span class="help-block">楼宇图标背景颜色，为空取默认颜色</span>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">备注</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" id="remark" value="{$item['remark']}" placeholder="输入备注" name="remark" />
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">选择楼宇</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+			<!--效果html开始-->
+			<div class="selectbox">
+			<div class="select-bar">
+				<span class="text-warning">请选择楼宇</span>
+				<select multiple="multiple" id="select1" class="form-control">
+				{loop $data $value}
+					<option value="{$value['id']}">{$value['title']}</option>
+				{/loop}
+				</select>				
+			</div>
+
+			<div class="btn-bar">
+				<p><span id="add"><input type="button" class="btn" value=">" title="移动选择项到右侧"/></span></p>
+				<p><span id="add_all"><input type="button" class="btn" value=">>" title="全部移到右侧"/></span></p>
+				<p><span id="remove"><input type="button" class="btn" value="<" title="移动选择项到左侧"/></span></p>
+				<p><span id="remove_all"><input type="button" class="btn" value="<<" title="全部移到左侧"/></span></p>
+			</div>
+			<div class="select-bar">
+				<span class="text-success">已选择楼宇</span>
+				<select multiple="multiple" id="select2" class="form-control">
+				{loop $buildings $building}
+					<option value="{$building['id']}">{$building['title']}</option>
+				{/loop}				
+				</select>				
+			</div>	
+			</div>
+			<!--效果html结束-->
+			</div>	
+			</div>
+			<input type="hidden" name="bids" id="bids" value="" />	
+		</form>	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+var pid = {$pid};
+var rid = {$rid};
+
+function mysubmit(obj){
+	var id = $.trim($("#id").val());
+	var title = $.trim($("#title").val());
+	var bidstr = '';
+    if (title=='') {
+	   layer.msg("区域名称不能为空！",{icon:0});
+	   return;
+	}
+   
+	$('#select2 option').each(function () {
+		var $option = $(this);
+		bidstr += $option.val() + ',';		
+	});
+	
+	if (bidstr=='') {
+	   layer.msg("已选择楼宇不能为空！",{icon:0});
+	   return;
+	}
+	    
+	bidstr = bidstr.substring(0,bidstr.length - 1);
+	$("#bids").val(bidstr);
+	
+    $.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+	{ post:"{$_GPC['op']}",op:"check_location",title:title,pid:pid,rid:rid,id:id},
+	function(data,status){
+	 if (data=='ok'){
+		myprocess(obj);
+		$("#myform").submit();
+	 }
+	 else{
+		layer.msg(data,{icon:0});
+		return ;
+	 }
+	});	
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'list','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid;
+	 location.href = url;
+}
+
+
+$(function(){	
+	//移到右边
+	$('#add').click(function(){
+		//先判断是否有选中
+		if(!$("#select1 option").is(":selected")){			
+			layer.msg("请选择需要移动的选项",{icon:0})
+		}
+		//获取选中的选项，删除并追加给对方
+		else{
+			$('#select1 option:selected').appendTo('#select2');
+		}	
+	});
+	
+	//移到左边
+	$('#remove').click(function(){
+		//先判断是否有选中
+		if(!$("#select2 option").is(":selected")){			
+			layer.msg("请选择需要移动的选项",{icon:0})
+		}
+		else{
+			$('#select2 option:selected').appendTo('#select1');
+		}
+	});
+	
+	//全部移到右边
+	$('#add_all').click(function(){
+		//获取全部的选项,删除并追加给对方
+		$('#select1 option').appendTo('#select2');
+	});
+	
+	//全部移到左边
+	$('#remove_all').click(function(){
+		$('#select2 option').appendTo('#select1');
+	});
+	
+	//双击选项
+	$('#select1').dblclick(function(){ //绑定双击事件
+		//获取全部的选项,删除并追加给对方
+		$("option:selected",this).appendTo('#select2'); //追加给对方
+	});
+	
+	//双击选项
+	$('#select2').dblclick(function(){
+		$("option:selected",this).appendTo('#select1');
+	});
+	
+});
+
+</script> 
+
+</body>
+</html>

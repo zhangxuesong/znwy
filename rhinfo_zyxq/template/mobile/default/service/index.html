@@ -1,0 +1,138 @@
+{template $this->mytpl('_header')}
+<style>
+.service-page .btn-service-post {
+    position: absolute;
+    bottom:{php echo $region['servicebottom']?$region['servicebottom']:4}rem;
+    right:{php echo $region['serviceright']?$region['serviceright']:1}rem;
+    width:2rem;
+    height:2rem;
+    -webkit-border-radius:2rem;
+    -moz-border-radius:2rem;
+    border-radius:2rem;
+    line-height:2rem;
+	background-color:{php echo $region['servicethumb']?'none':'#ff6600';};
+	border:{php echo $region['servicethumb']?'none':'#ff6600';};
+	opacity:0.8;
+	text-align:center;
+}
+
+.service-page .btn-service-post .icon {
+    font-size:1.2rem;
+    font-weight:bold;
+	color:#fff;
+}
+.fui-block-group {
+	border-bottom: 0px;
+	margin-top:0;
+	overflow: hidden;}
+</style>
+<div class="fui-page fui-page-current service-page">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back" ></a>
+		</div>
+		<div class="title">就近服务</div>
+		<div class="fui-header-right"></div>
+	</div>	
+	<div class='fui-content navbar'>	
+		{if !empty($banners)}
+		<div class='fui-swipe'>
+			<div class='fui-swipe-wrapper'>
+				{loop $banners $banner}
+					<a href="javascript:;" class='fui-swipe-item' {if !empty($banner['link'])} onclick="countHit(this,'{$banner['pid']}','{$banner['rid']}','{$banner['id']}','{$banner['link']}','{$banner['wxappid']}','{$banner['wxapppage']}','{php echo !empty($banner['bgimage'])?tomedia($banner['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if}><img src="{php echo tomedia($banner['thumb'])}" /></a>
+				{/loop}
+			</div>
+			<div class='fui-swipe-page'></div>
+		</div>
+		{/if}
+		 {if !empty($navs)}
+			<div class="fui-block-group col-3">
+				 {loop $navs $item}
+					<a class="fui-block-child" href="javascript:;" onclick="navtourl('{$item['link']}','{$item['wxappid']}','{$item['wxapppage']}')">				 
+						<div class="icon"><img src="{php echo tomedia($item['thumb'])}" style="width:2rem;height:2rem;"/></div>
+						<div class="title" style="padding-top:5px;">{$item['title']}</div>
+						<div class="text"></div>
+					</a>
+				{/loop}			
+			</div>
+		{/if}
+	  </div>  
+	  {if $region['servicepageser']}
+		 {if $region['service']}
+			 <a class="btn-service-post" href="{$region['service']}">{if $region['servicethumb']}<i class="icon"><img src="{php echo tomedia($region['servicethumb']);}" width="45" /></i>{else}{if $region['serviceicon']}<i class="icon {$region['serviceicon']}"></i>{else}<i class="icon icon-chat"></i>{/if}{/if}</a>
+		 {else}
+			{if $property['service']}
+			 <a class="btn-service-post" href="{$property['service']}">{if $region['servicethumb']}<i class="icon"><img src="{php echo tomedia($region['servicethumb']);}" /></i>{else}{if $region['serviceicon']}<i class="icon {$region['serviceicon']}"></i>{else}<i class="icon icon-chat"></i>{/if}{/if}</a>
+			 {/if}
+		 {/if}
+	  {/if}
+ </div>
+{if $this->rhinfo_wap}
+ <script type="text/javascript">
+	function countHit(obj,pid,rid,bannerid,link,wxappid,wxapppage,bgimage){	
+	 core.json('service/bannerhit', {
+			pid:pid,rid:rid,bannerid:bannerid
+		}, function(ret) {
+			if (ret.status == 1) {
+				location.href = link;
+				return	   
+			}				
+		},false, true)
+	}
+	
+	function navtourl(link,wxappid,wxapppage){	
+		location.href = link;
+	}
+</script>
+{else}
+ <script type="text/javascript">	
+    function countHit(obj,pid,rid,bannerid,link,wxappid,wxapppage,bgimage){	
+	 core.json('service/bannerhit', {
+			pid:pid,rid:rid,bannerid:bannerid
+		}, function(ret) {
+			if (ret.status == 1) {
+				wx.miniProgram.getEnv(function(res){
+					if(res.miniprogram){
+						if(wxappid !==''){
+							var path = '/pages/index/navto?wxappid=' + wxappid +'&wxapppage=' + wxapppage +'&bgimage=' + bgimage;
+							wx.miniProgram.navigateTo({
+								url: path
+							});
+						}
+						else{
+							 location.href = link;
+						}
+						return
+					}
+					else{
+					    location.href = link;
+						return
+					}
+				});			   
+			}				
+		},false, true)
+	}
+	function navtourl(link,wxappid,wxapppage){	
+		wx.miniProgram.getEnv(function(res){
+			if(res.miniprogram){
+				if(wxappid !==''){
+					var path = '/pages/index/navto?wxappid=' + wxappid +'&wxapppage=' + wxapppage;
+					wx.miniProgram.navigateTo({
+						url: path
+					});
+				}
+				else{
+					 location.href = link;
+				}
+				return
+			}
+			else{
+				location.href = link;
+				return
+			}
+		});			   
+	}
+</script>
+{/if}
+{template $this->mytpl('_menu')}
+{template $this->mytpl('_footer')}

@@ -1,0 +1,67 @@
+{template $this->mytpl('_header')}
+<style type="text/css">
+.car-font{
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 500;
+    padding-top: 0.5rem;
+    font-family: "微软雅黑";
+}
+</style>
+<div class='fui-page fui-page-current'>
+
+  <div class='fui-content'>    
+
+	  <div class="fui-title" style="text-align:center;">
+	  <span class="car-font">亲，您的爱车要挪一下</span>
+	  </div>
+	  
+	 <div class="fui-cell-group"> 
+		 <div class='fui-cell'>	
+			<div class="fui-cell-label">来自</div>
+			 <div class='fui-cell-info' style="vertical-align:middle;">{if !empty($fans['avatar'])}<img src="{$fans['avatar']}" class="circle" width="15" />&nbsp;{/if}{$fans['nickname']}</div>
+			 <div class="fui-cell-remark noremark">
+				<a href="tel:{$item['mobile']}"><i class="icon icon-caller"></i></a>
+			 </div>
+		 </div> 
+		 <div class='fui-cell'>	
+			<div class="fui-cell-label">车牌</div>
+			 <div class='fui-cell-info'>{$item['title']}</div>
+		 </div> 
+         		 
+	     {if !empty($images)}
+		 <div class='fui-cell'>
+			 <div class='fui-cell-info myimg'>			 
+				 <div class="fui-images fui-images-md image repair-images">
+				 {loop $images $image}
+					<img src="{php echo tomedia($image);}" align='top' onload="if (this.height> 100) {this.style.marginTop = (100 - this.height)/2 + 'px';}" />
+				  {/loop}
+				 </div>			
+			 </div>
+		 </div>
+		 {/if}	
+		<div class="fui-cell">
+			<div class="fui-cell-label">备注</div>
+			<div class="fui-cell-info">
+			<input type="text" class='fui-input' id='remark' name='remark' value="{$item['remark']}" readonly />
+			</div>
+		</div>
+		<div class="fui-cell">
+			<div class="fui-cell-label">回复</div>
+			<div class="fui-cell-info">
+			<input type="text" class='fui-input' id='reply' name='reply' value="" />
+			</div>
+		</div>
+	</div>
+	<a id='btnSubmit' class='btn btn-success block'>我知道了</a>
+	</div>	 
+
+	<script language='javascript'>
+		require(['service/car'], function (modal) {
+		modal.initMovecfm({
+			id: "{$item['id']}"
+			}); 
+		});
+	</script>	
+</div> 
+{template $this->mytpl('_footer')}

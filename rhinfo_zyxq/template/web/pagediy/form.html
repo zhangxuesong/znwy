@@ -1,0 +1,205 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+    
+	{if $cate==2} 
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"> <span class="text-danger">*</span>所属物业</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+				{if $operation=='add'}<option value="0">请选择所属物业</option>{/if}
+				{loop $myproperty $k $v}
+					<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>所属主体</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="rid" name="rid" onchange="renderCategory(this,'category','cid')">
+				{if $operation=='add'}	<option value="0">请选择所属主体</option>{/if}
+				{loop $eregions $i $r}
+					<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+				{/loop}
+			</select>
+		</div>
+	</div>
+	{else}
+		<input type="hidden" class="form-control" id="pid" value="0" name="pid" />
+		<input type="hidden" class="form-control" id="rid" value="0" name="rid" />
+	{/if}
+			
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">链接分类</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="cid" name="cid">
+			{if $cate==2} 
+				{if $operation=='add'}
+					<option value="0">请选择分类</option>					
+				{else}							
+					{loop $ecategorys $category}
+						<option value="{$category['id']}" {if $item['cateid'] == $category['id']} selected {/if} >{$category['title']}</option>
+					{/loop}			
+				{/if}
+			{else}
+				{if $operation=='add'}
+					<option value="0">请选择分类</option>	
+					{loop $categorys $category}
+						<option value="{$category['id']}" {if $item['cateid'] == $category['id']} selected {/if}>{$category['title']}</option>
+					{/loop}	
+				{else}						
+					{loop $categorys $category}
+						<option value="{$category['id']}" {if $item['cateid'] == $category['id']} selected {/if}>{$category['title']}</option>
+					{/loop}	
+				{/if}				
+			{/if}
+			</select>
+			<span class="help-block">依相同分类分组显示</span>
+		</div>
+	</div>	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">排序</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" placeholder="数字越大，排名越靠前" name="displayorder" value="{$item['displayorder']}">
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>链接标题</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入链接标题" name="title" />
+		</div>	
+	</div>
+	
+	 <div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">链接地址</label>	
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+		<div class="input-group ">
+			<input type="text" class="form-control" id="link" value="{$item['url']}" placeholder="输入链接地址" name="link" >
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="button" onclick="myshowLinkDialog(this);">内部链接</button>
+				<button class="btn btn-default" type="button" onclick="showLinkDialog(this);">系统链接</button>
+			</span>
+		</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">小程序链接</label>		
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="input-group ">
+				<span class="input-group-addon">小程序APPID</span>
+				<input type="text" class="form-control"  value="{$item['wxappid']}" placeholder="输入小程序APPID" name="wxappid" />
+				<span class="input-group-addon">小程序页面</span>
+				<input type="text" class="form-control"  value="{$item['wxapppage']}" placeholder="输入小程序页面" name="wxapppage" id="wxapppage"/>				
+			</div>
+			<span class="help-block">第三方小程序APPID必须输入，页面可以为空，默认小程序首页</span>
+		</div>	
+	</div>	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">缩略图片</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_image('thumb',$item['thumb']);}
+			<span class="help-block">建议尺寸60*60</span>
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">选择图标</label>	
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="input-group">
+				<input type="text" id="icon" value="{$item['icon']}" name="icon" class="form-control" autocomplete="off">
+				<span class="input-group-addon"><i class="icon {$item['icon']}"></i></span>
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" onclick="showIconDialog(this);">选择图标</button>
+				</span>
+			</div>
+			<span class="help-block">图片为空则图标生效</span>
+		</div>
+	</div>
+	
+	 <div class="form-group">
+	   <label class="col-xs-12 col-sm-2 col-md-2 control-label">图标颜色</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+		  {php echo tpl_form_field_color('color',$item['color'])}
+		  <span class="help-block">图标不为空生效，为空取默认颜色</span>
+		</div>
+	</div> 
+	
+	
+
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">状态</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<label class='radio-inline'>
+			<input type='radio' name='status' value='1'  {if $item['status']==1 } checked{/if}/> 显示
+			</label>
+			<label class='radio-inline'>
+				<input type='radio' name='status' value='0' {if empty($item['status']) || $item['status']==0 } checked{/if} /> 隐藏
+			</label>
+		</div>
+	</div>
+	</br>
+</form>	
+
+<script type="text/javascript">
+	window._region = {php echo json_encode($myregion);};				
+	window._category = {php echo json_encode($mycategory);};
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择</option>';
+			if (id=='rid'){
+				$("#cid").html(html);				
+			}			
+
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		});
+	}
+	
+	function showLinkDialog(elm) {
+		var ipt = $(elm).parent().prev();
+		util.linkBrowser(function(href){		
+			ipt.val(href);			
+		});
+	}
+	function showIconDialog(elm) {
+		require(["util","jquery"], function(u, $){
+			var btn = $(elm);
+			var spview = btn.parent().prev();
+			var ipt = spview.prev();
+			if(!ipt.val()){
+				spview.css("display","none");
+			}
+			
+			var myicon = ipt.attr('id');
+			
+			var footer = '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>';
+			var modalobj = util.dialog('请选择图标',["{php echo $this->createWeburl('query',array('op'=>'icon')).$mywe['direct'];}&myicon=" + myicon],footer,{containerName:'icon-container'});
+			modalobj.modal({'keyboard': false});
+			modalobj.find('.modal-dialog').css({'width':'70%'});
+			modalobj.find('.modal-body').css({'height':'70%','overflow-y':'scroll'});
+			modalobj.modal('show');
+		});
+	}
+	function myshowLinkDialog(elm) {
+		var ipt = $(elm).parent().prev();
+		require(["util","jquery"], function(u, $){
+			var myurl = ipt.attr('id');			
+			var footer = '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>';
+			var modalobj = util.dialog('请选择链接',["{php echo $this->createWeburl('query',array('op'=>'url')).$mywe['direct'];}&myurl=" + myurl],footer,{containerName:'icon-container'});
+			modalobj.modal({'keyboard': false});
+			modalobj.find('.modal-dialog').css({'width':'70%'});
+			modalobj.find('.modal-body').css({'height':'70%','overflow-y':'scroll'});
+			modalobj.modal('show');
+		});	
+	}
+</script>

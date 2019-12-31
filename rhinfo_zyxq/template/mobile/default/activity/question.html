@@ -1,0 +1,248 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/activity.css?v={TIMESTAMP}">
+{if !empty($this->syscfg['btncolor'])}
+    <style>
+		#btnSubmit {
+			background-color:{php echo $this->syscfg['btncolor']};
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+		}
+		#btnSubmit:active,
+		#btnSubmit.disabled {
+			background: {php echo $this->syscfg['btncolor']};			
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+			opacity:0.5;
+		}
+    </style>
+{/if}
+<style type="text/css">
+	.paging{
+		display: flex;
+		justify-content: center;
+	}
+	.question-group{
+		display: none;
+	}
+	.question-group.now{
+		display: inherit;
+	}
+	#btnHome{
+		display: none;
+	}
+	.fui-cell-group {
+		margin-top: 0;
+	}
+	.verify-pop .bind {
+		width: 250px;
+		padding:0 10px 10px 10px;
+		position: absolute;
+		top: 100px;
+		z-index: 1001;
+		background:#ffa64d;
+		opacity:0.9;
+		left: 50%;
+		margin-left: -125px;
+		border-radius:6px;
+	}
+	.verify-pop .bind .fui-cell-group{
+		border-radius:6px;
+		background:#fff;	
+	}
+	.verify-pop .bind .title{
+		text-align:center;
+		padding-top:5px;
+		color:#fff;
+	}
+	/* 分页底部按钮样式 */
+	.paging button{
+		height: 1.5rem;
+		line-height: 1.5rem;
+		font-size: 12px;
+	} 
+</style>
+
+<div class="fui-page fui-page-current">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">问卷调查</div>
+		<div class="fui-header-right"></div>
+	</div>
+	<div class="fui-content"> 
+		<div class="fui-cell-group" >	
+			<!-- 进度条 -->
+			<div class="progressbar" style="display:none;"><span></span></div>
+			<form id="myform">
+				<input type="hidden" name="id" value="{$id}" />
+				{loop $groups $i $group}
+				<div class="question-group {if $i==0}now{/if}">
+					{if $i==0}
+					<div class='fui-article'>
+						<div class="title"><b>{$item['title']}</b></div>
+						<div class='subtitle'>
+							{$item['replydesc']}
+						</div>
+					</div>
+					{/if}
+					{loop $group $gv}
+					<div class="fui-cell">
+						<div class="question-view">
+							<p>{$gv['id']}.{$gv['itemtitle']}</p>
+							<ul class="answer-view">
+								{loop $gv['itemvalue'] $j $iv}
+								<li class="answer-cell">
+									<input type="radio" name="q_{$gv['id']}" value={$j} class="fui-radio fui-radio-success">
+									<label>{$iv}</label>
+								</li>
+								{/loop}
+							</ul>
+						</div>
+					</div>
+					{/loop}
+				</div>
+				{/loop}
+			</form>
+		</div>
+		<div class="paging">
+			<button class="btn btn-default" id="btnPre">上一页</button>
+			<button class="btn btn-default" id="btnNext">下一页</button>
+			<button class="btn btn-default" id="btnHome">回首页</button>
+		</div>
+		<a class="btn btn-success btn-submit block" style="display: none;" id="btnSubmit" >提交</a>
+	</div>
+	{if $_W['fans']['follow']=='1'}
+	{else}
+		{if $this->rhinfo_wap}
+		{elseif $item['checkmethod']==1 || $item['checkmethod']==3}
+			<div class="pop-region-hidden pop-region-wxapp" >
+				<div class='fui-mask-m visible'></div>
+				<div class="verify-pop pop">	
+						<div class="bind">
+							<div class="title">欢迎访问<span class="pull-right"><i class="icon icon-roundclose"></i></span></div>
+							<div class="fui-cell-group fui-cell-click external">
+								<a class="fui-cell"  href="{php echo $this->syscfg['followurl']}">
+									<div class="fui-cell-icon"><i class="icon icon-friendadd"></i></div>
+									<div class="fui-cell-text"><p class="text text-danger">请关注公众号</p></div>
+									<div class="fui-cell-remark"></div>
+								</a>
+								<div class="fui-cell-tip">您还未关注【{$_W['account']['name']}】</div>
+							</div>						
+							<div class="fui-cell-group fui-cell-click external">
+								<div style="text-align:center;">{if $this->syscfg['qrcode']}<img src="{php echo tomedia($this->syscfg['qrcode']);}" width="150px;"/>{/if}</div>
+								<div class="fui-cell-tip">{php echo empty($this->syscfg['followtip'])?'请关注公众号，享受更好的服务.':$this->syscfg['followtip'];}</div>
+							</div>							
+						</div>
+				</div>
+			</div>
+		{/if}
+	{/if}
+</div>
+<script type="text/javascript">
+	var total = $(".fui-cell").length;
+	var $bar=$(".progressbar span");
+	var now=0;
+	var isAllCheck=0;
+	var len = $(".question-group").length;
+	var $btnSumbit=$("#btnSubmit");
+	var $btnPre=$("#btnPre");
+	var $btnNext=$("#btnNext");
+	var $btnHome=$("#btnHome");
+	var $pageIndex=0;
+//	changeTop();
+	changeProgress();
+	paging();
+	// 控制进度条到顶部的距离
+	function changeTop(){
+		var $progressbar=$(".progressbar");		
+		$(".fui-content").scroll(function(){
+			var t=$(".fui-header").height()+parseFloat($(".fui-cell-group").css("marginTop"));
+			var scrollTop=$(this).scrollTop();
+			$progressbar.css("top",t-scrollTop+5+"px")
+			if(scrollTop>10){
+				$progressbar.css("top",'2.2rem')
+			}
+		})
+	}
+	//改变进度条
+	function changeProgress(){
+		$(".fui-radio").click(function(){
+			$(".progressbar").show();
+			now = $(":checked").length;
+			$bar.animate({width:now/total*100+"%"});
+			if(now==total){
+				isAllCheck=1
+			}
+			if(isAllCheck){
+				$btnSumbit.show();
+			}else{
+				$btnSumbit.hide();
+			}
+		})
+	}
+	function paging(){
+		changeBtn()
+		$btnNext.click(function(){
+			$pageIndex++;
+			$(".question-group").removeClass("now");
+			$(".question-group").eq($pageIndex).addClass("now");
+			changeBtn()
+		})
+		$btnPre.click(function(){
+			$pageIndex--;
+			$(".question-group").removeClass("now");
+			$(".question-group").eq($pageIndex).addClass("now");
+			changeBtn()
+		})
+		$btnHome.click(function(){
+			$pageIndex=0;
+			$(".question-group").removeClass("now");
+			$(".question-group").eq($pageIndex).addClass("now");
+			changeBtn()
+		})
+	}
+	function changeBtn(){
+		$(".fui-content").animate({scrollTop:0})
+		$(".question-group").each(function(idx){
+			if($(this).hasClass("now")){
+				if(len==(idx+1)&&len>1){
+					$btnNext.hide();
+					$btnPre.show();
+					$btnHome.show();
+				}else if(idx==0&&len>1){
+					$btnPre.hide();
+					$btnHome.hide();
+					$btnNext.show();
+				}else if(len==1){
+					$btnPre.hide();
+					$btnNext.hide();
+					$btnHome.hide();
+				}else if(idx>0){
+					$btnNext.show();
+					$btnPre.show();
+					$btnHome.hide();
+				}
+			}
+		})
+	}
+	$('#btnSubmit').click(function() {
+		if ($(this).attr('stop')) {
+			return
+		}
+		var that = $(this);
+		RhUI.confirm('确认提交吗？','回答确认',function(){					
+			that.html('正在处理...').attr('stop', 1);						
+			core.json('activity/question',
+			$("#myform").serializeObject(),
+			function(rjson) {
+				if (rjson.status != 1) {
+					that.html('提交').removeAttr('stop');					
+					RhUI.toast.show(rjson.result.message);
+					return
+				}
+				RhUI.toast.show(rjson.result.message);	
+				location.href = core.getUrl('home/index');
+			})
+		})
+	})
+</script>
+{template $this->mytpl('_footer')}

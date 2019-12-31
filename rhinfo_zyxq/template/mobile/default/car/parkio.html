@@ -1,0 +1,72 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+.fui-list-group:not(.fui-list-group-o):before,.fui-list-group:not(.fui-list-group-o):after{border-top:0px;}
+</style>
+	<div class="fui-page fui-page-current page-commission-index ">
+	<div class="fui-header">
+		<div class="fui-header-left">	
+			<a class="back"></a>		
+		</div>
+		<div class="title">选择入出口</div>
+		<div class="fui-header-right">			
+		</div>
+	</div>
+	
+	<div class='fui-content member-page navbar'>	
+	
+		 <div class='fui-content-inner'>
+		    {if empty($parkios)}	
+            <div class='content-empty'>
+               <i class="icon icon-lock" ></i> <br/>暂未设置
+            </div>
+			{else}
+			<div class="fui-list-group" >  
+				<div class="fui-list external">
+				    {if !empty($region['thumb'])}
+					<div class="fui-list-media">		    
+						<img src="{php echo tomedia($region['thumb'])}" class="round">
+					</div>
+					{/if}
+					<div class="fui-list-inner">
+						<a href="{php echo $this->createMobileurl($mydo,array('op'=>'parklist','cfrom'=>3));}">
+							<div class="title"> {$park['title']}</div>
+							<div class="text">{$park['address']}</div>	
+						</a>
+					</div>
+					<div class="angle"></div>
+				 </div>		
+				</div>
+			{/if}
+			{if $park['parktype']==1}
+				{loop $parkios $item}					
+				<div class="fui-cell-group fui-cell-click">
+					<a class="fui-cell parkopen1" data-url="{php echo $this->createMobileurl('service',array('op'=>'scanopen','id'=>$item['id'],'lotid'=>$item['lotid']));}" >
+						<div class="fui-cell-icon" {if $item['isonline']==1}style="color:orange;"{/if}><i class="icon icon-lock" ></i></div>
+						<div class="fui-cell-text"><p>{$item['title']}</p></div>
+						<div class="fui-cell-remark"></div>
+					</a>					
+				</div>				
+				{/loop}
+			{/if}
+			{if $park['parktype']==2}
+				{loop $parkios $item}
+					<div class="fui-cell-group fui-cell-click">
+						<a class="fui-cell parkopen2" data-id="{$item['id']}" data-lotid="{$item['lotid']}" data-online="{$item['isonline']}">
+							<div class="fui-cell-icon" {if $item['isonline']==1}style="color:orange;"{/if}><i class="icon icon-lock" ></i></div>
+							<div class="fui-cell-text"><p>{$item['title']}</p></div>
+							<div class="fui-cell-remark"></div>
+						</a>					
+					</div>					
+				{/loop}
+			{/if}
+        </div>		
+	 </div>
+ </div> 
+<script language='javascript'>
+	require(['service/park'], function (modal) {
+		modal.init();
+	});
+</script>
+{template $this->mytpl('_footer')}

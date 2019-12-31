@@ -1,0 +1,110 @@
+﻿{template 'web/_iframe_header'}
+<style>
+html { overflow-x:hidden; }
+</style>
+<nav class="navbar navbar-fixed-top" style="margin-top:5px;margin-right:15px;">
+<span class="pull-left">&nbsp;<a href="javascript:;" class="btn btn-info" onclick="myprice()" ><i class="fa fa-plus"></i> 增加价格</a></span>
+<span class="pull-right"><a href="javascript:;" class="btn btn-success"  onclick="mysubmit(this)"><i class="fa fa-save"></i> 保存</a>&nbsp;&nbsp;</span>   
+</nav>
+<div class="panel panel-default" style="width:580px;">
+	<div class="panel-body">		
+		<form action="" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			
+			<input type="hidden" name="token" value="{$_W['token']}" />
+			<input type="hidden" name="chargid" value="{$chargid}" id="chargid">
+			<br><br>
+			{if $charging['devtype']==1}
+				<div class="alert alert-success">充电时间小时为单位，必须输入整数</div>
+			{/if}
+            {if empty($rules)}
+			<div class="form-group">
+				<input type="hidden" class="form-control" value="0"  name="subid[]">			
+					<div class="input-group">
+						<span class="input-group-addon">电流</span>		
+						<input type="number" class="form-control" value="1"  name="current[]">	
+						<span class="input-group-addon">A，充电时间</span>		
+						<input type="number" class="form-control" value="1"  name="hour[]">			
+						<span class="input-group-addon">小时，等于</span>		
+						<input type="number" class="form-control"   value="1" name="price[]">
+						<span class="input-group-addon">元</span>
+						<span class="input-group-btn">
+						<button class="btn btn-danger" type="button" onclick="removeprice(this)" ><i class="fa fa-trash-o"></i> 删除</button>
+						</span>
+					</div>
+			</div>
+			{/if}	
+			<div id="prices" >
+				{loop $rules $rule}
+				<div class="form-group member-group">
+					<input type="hidden" class="form-control" value="{$rule['id']}"  name="subid[]">							
+					<div class="input-group">
+						<span class="input-group-addon">电流</span>		
+						<input type="number" class="form-control" value="{$rule['current']}"  name="current[]">	
+						<span class="input-group-addon">A，充电时间</span>			
+						<input type="number" class="form-control"  value="{$rule['hour']}" name="hour[]">										
+						<span class="input-group-addon">小时，等于</span>		
+						<input type="number" class="form-control" value="{$rule['price']}"  name="price[]">										
+						<span class="input-group-addon">元</span>											
+						<span class="input-group-btn">
+							<button class="btn btn-danger" type="button" onclick="delprice(this,{$rule['id']})" ><i class="fa fa-trash-o"></i> 删除</button>
+						</span>			
+					</div>
+				</div>
+				{/loop}
+			</div>
+		</form>	
+    </div>
+</div>
+
+{template 'web/_iframe_footer'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	myprocess(obj);
+	$.post("{php echo $this->createWeburl($mydo,array('op'=>'rule')).$mywe['direct'];}",
+	$("#myform").serializeObject(),
+	function(data,status){
+		if(data=='ok'){
+			var index = parent.layer.getFrameIndex(window.name); 
+			parent.layer.close(index);	
+		}
+		else{			
+			layer.msg(data,{icon:0});
+			myreset(obj);
+		}
+	 });	
+}
+
+function myprice() {
+	$.ajax({
+		url: "{php echo $this->createWeburl($mydo,array('op'=>'pricetpl')).$mywe['direct'];}",
+		cache: false
+	}).done(function (html) {
+		$("#prices").append(html);          
+	});
+}
+function removeprice(obj) {
+	$(obj).parents(".member-group").remove();
+}
+function delprice(obj,id) {	
+	 $.post("{php echo $this->createWeburl($mydo,array('op'=>'delprice')).$mywe['direct'];}", {subid:id}, function (ret){
+		if(ret=='ok'){
+			$(obj).parents(".member-group").remove();
+		}
+	 });
+}
+function myprocess(obj){
+	var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/> 处理中...';
+	$(obj).html(html);  
+	$(obj).attr("disabled", "disabled"); 
+}
+function myreset(obj){
+	var html = '<i class="fa fa-save"></i> 保存';
+	$(obj).html(html);  
+	$(obj).removeAttr("disabled"); 
+}
+</script> 
+
+</body>
+</html>

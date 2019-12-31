@@ -1,0 +1,78 @@
+﻿<div class="panel panel-default" >
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>					
+					<th width="60">ID</th>
+					<th width="100">收费项目</th>
+					<th width="150">账单日期</th>
+					<th width="80">状态</th>
+					<th width="80">费用</th>
+					<th width="80">实付</th>
+					<th width="80">违约金</th>
+					<th width="100">付款日期</th>
+					<th width="80">付款方式</th>
+					<th width="80">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			{loop $payfeebill $pfv}
+				<tr>					
+					<td>{$pfv['id']}</td>					
+					<td>{$pfv['title']}</td>					
+					<td>{$pfv['daterange']}</td>
+					<td class="td-status">
+					{if $pfv['status']=='1'}<span class="label label-danger radius">未支付</span>{elseif $pfv['status']=='2'}<span class="label label-success radius">已支付</span>{else}<span class="label label-warning radius">免单</span>{/if}
+					</td>
+					<td>{$pfv['fee']}</td>
+					<td>{$pfv['payfee']}</td>
+					<td>{$pfv['latefee']}</td>
+					<td>{php echo date('Y-m-d',$pfv['paydate']);}</td>
+					<td>{$pfv['paytype']}</td>
+					<td>
+					<a href="javascript:;" onclick="mydelbill(this,'{$pfv['id']}')"  class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="撤销" ><i class="fa fa-reply"></i> 撤销</a> 					
+					</td>													
+				</tr>
+			{/loop}	
+			</tbody>
+		</table> 
+		{$paypager}
+	</div>	
+</div>
+<script type="text/javascript">	
+
+function mydelbill(obj,id){
+	layer.confirm('将撤销还原至未支付状态吗？',{btn: ['单笔撤销','整单撤销'],icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl('feecal').$mywe['direct'];}",
+			{op:"deletebill",id:id,btn:1},
+			function(data,status){
+				 if (data=='ok'){
+					$(obj).parents("tr").remove();					
+					layer.msg('撤销成功!',{icon:1});
+					location.reload();
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+				 }
+			});
+		layer.close(index);
+    },
+	function(index){
+		$.post("{php echo $this->createWebUrl('feecal').$mywe['direct'];}",
+			{op:"deletebill",id:id,btn:2},			
+			function(data,status){
+				 if (data=='ok'){
+					$(obj).parents("tr").remove();					
+					layer.msg('撤销成功!',{icon:1});
+					location.reload();
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+				 }
+			}
+		);
+		layer.close(index);
+    });
+}
+</script>

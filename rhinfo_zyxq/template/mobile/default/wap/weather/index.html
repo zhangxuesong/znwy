@@ -1,0 +1,63 @@
+{template $this->mytpl('_header')}
+<div class='fui-page fui-page-current'>
+	<div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">天气详情</div>
+        <div class="fui-header-right">	
+		
+		</div>
+    </div>
+	<div class='fui-content member-page'>
+		<div class='fui-content-inner'>			
+			<div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+         </div>
+	</div>
+</div>
+<script charset="utf-8" src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js"></script>
+{if !empty($_GPC['city'])}
+<script type="application/javascript">
+	$.get("{php echo $this->createMobileUrl('weather',array('op'=>'ajax','city'=>$_GPC['city'],'street'=>$_GPC['street'],'isdetail'=>1));}", {}, function(data){
+		$('.fui-content-inner').html(data);						
+	});
+</script>
+{else}
+<script type="application/javascript">
+var latitude;
+var longitude;
+var gps = false;
+var getaddr;
+$(function() {
+   var geolocation = new qq.maps.Geolocation("{$sysconifg['qq_lbskey']}", "myapp");
+　　var options = {timeout: 1000};//设置定位超时
+　　var positionNum = 0;　　　　
+	geolocation.getLocation(showPosition,null,options);
+	
+});
+function showPosition(position){      		
+	latitude = position.lat; // 纬度，浮点数，范围为90 ~ -90
+	longitude = position.lng; // 经度，浮点数，范围为180 ~ -180。
+	getaddr(); 
+}
+getaddr = function(){
+	$.ajax({
+		url: 'https://apis.map.qq.com/ws/geocoder/v1/?location='+latitude+','+longitude+'&key={$sysconifg["qq_lbskey"]}&get_poi=0&output=jsonp',
+		cache: false,
+		dataType: 'jsonp',
+		jsonp: 'callback',
+		success: function(json){
+			gps = true;			
+			var city = json.result.address_component.district;		
+			var street = json.result.address_component.street;					
+			$.get("{php echo $this->createMobileUrl('weather',array('op'=>'ajax','isdetail'=>1));}", {city:city,street:street}, function(data){
+				$('.fui-content-inner').html(data);					
+			});
+		},
+		error: function(){			
+		}
+	});
+};
+</script>
+{/if}
+{template $this->mytpl('_footer')}

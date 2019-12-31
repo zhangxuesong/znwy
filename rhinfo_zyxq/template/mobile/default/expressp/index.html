@@ -1,0 +1,142 @@
+{template $this->mytpl('_header')}
+<style>
+.verify-pop .bind {
+    width: 250px;
+	padding:0 10px 10px 10px;
+    position: absolute;
+    top: 100px;
+    z-index: 1001;
+	background:{php echo $this->syscfg['bgcolor']?$this->syscfg['bgcolor']:'#ffa64d';};
+    opacity:0.9;
+    left: 50%;
+    margin-left: -125px;
+	border-radius:6px;
+}
+.verify-pop .bind .fui-cell-group{
+	border-radius:6px;
+	background:#fff;	
+}
+.verify-pop .bind .title{
+	text-align:center;
+	padding-top:5px;
+	color:#fff;
+}
+.fui-block-group {
+	border-bottom: 0px;
+	margin-top:0;
+	overflow: hidden;}
+</style>
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header"> 
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">{$item['title']}</div>
+        <div class="fui-header-right">
+		{if $res['from']=='store' || $res['from']=='employee'}
+			<a href="{php echo $this->createMobileUrl('express',array('op'=>'mindex','sid'=>$item['id']));}"><i class="icon icon-shengfen1" ></i></a>
+		{/if}
+		</div>
+	</div>		
+		
+	<div class='fui-content navbar'>
+		{if !empty($banners)}
+			<div class='fui-swipe'>
+				<div class='fui-swipe-wrapper'>
+				{loop $banners $banner}
+					<a class='fui-swipe-item external' href="javascript:;" {if !empty($banner['link'])} onclick="countHit(this,'{$banner['pid']}','{$banner['rid']}','{$banner['id']}','{$banner['link']}','{$banner['wxappid']}','{$banner['wxapppage']}','{php echo !empty($banner['bgimage'])?tomedia($banner['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if}><img src="{php echo tomedia($banner['thumb'])}" /></a>
+				{/loop}
+				</div>
+				<div class='fui-swipe-page'></div>
+			</div>
+		{/if}
+		<div class="fui-block-group col-3">			 
+			<a class="fui-block-child" href="{php echo $this->createMobileUrl($mydo,array('op'=>'sendexpress','sid'=>$sid));}">				 
+				<div class="icon text-orange"><i class="icon icon-box"></i></div>
+				<div class="title" style="padding-top:5px;">快速寄件</div>
+				<div class="text"></div>
+			</a>
+			<a class="fui-block-child" href="{php echo $this->createMobileUrl($mydo,array('op'=>'quicktake','sid'=>$sid));}">				 
+				<div class="icon text-yellow"><i class="icon icon-similarproduct"></i></div>
+				<div class="title" style="padding-top:5px;">快速取件</div>
+				<div class="text"></div>
+			</a>
+			<a class="fui-block-child" href="{php echo $this->createMobileUrl($mydo,array('op'=>'pay','sid'=>$sid));}">				 
+				<div class="icon text-orange"><i class="icon icon-money"></i></div>
+				<div class="title" style="padding-top:5px;">在线付款</div>
+				<div class="text"></div>
+			</a>	
+		</div>
+	</div>	
+	{if $_W['fans']['follow']=='1'}
+	{else}
+		{if $this->rhinfo_wap}
+		{else}
+			<div class="pop-region-hidden pop-region-wxapp" >
+				<div class='fui-mask-m visible'></div>
+				<div class="verify-pop pop">					
+						<div class="bind">
+							<div class="title">欢迎访问</div>
+							<div class="fui-cell-group fui-cell-click external">
+								<a class="fui-cell"  href="{php echo $this->syscfg['followurl']}">
+									<div class="fui-cell-icon"><i class="icon icon-friendadd"></i></div>
+									<div class="fui-cell-text"><p class="text text-danger">请关注公众号</p></div>
+									<div class="fui-cell-remark"></div>
+								</a>
+								<div class="fui-cell-tip">您还未关注【{$_W['account']['name']}】</div>
+							</div>						
+							<div class="fui-cell-group fui-cell-click external">
+								<div style="text-align:center;">{if $this->syscfg['qrcode']}<img src="{php echo tomedia($this->syscfg['qrcode']);}" width="150px;"/>{/if}</div>
+								<div class="fui-cell-tip">{php echo empty($this->syscfg['followtip'])?'请关注公众号，享受更好的服务.':$this->syscfg['followtip'];}</div>
+							</div>							
+						</div>
+				</div>
+			</div>
+		{/if}
+	{/if}
+	{if $this->rhinfo_wap}
+	 <script type="text/javascript">
+		function countHit(obj,pid,rid,bannerid,link,wxappid,wxapppage,bgimage){	
+		 core.json('service/bannerhit', {
+				pid:pid,rid:rid,bannerid:bannerid
+			}, function(ret) {
+				if (ret.status == 1) {
+					location.href = link;
+					return	   
+				}				
+			},false, true)
+		}
+	</script>
+	{else}
+	 <script language="javascript">
+		function countHit(obj,pid,rid,bannerid,link,wxappid,wxapppage,bgimage){	
+		 core.json('service/bannerhit', {
+				pid:pid,rid:rid,bannerid:bannerid
+			}, function(ret) {
+				if (ret.status == 1) {
+					wx.miniProgram.getEnv(function(res){
+						if(res.miniprogram){
+							if(wxappid !==''){
+								var path = '/pages/index/navto?wxappid=' + wxappid +'&wxapppage=' + wxapppage +'&bgimage=' + bgimage;
+								wx.miniProgram.navigateTo({
+									url: path
+								}); 							
+							}
+							else{
+								 location.href = link;
+							}
+							return
+						}
+						else{
+							location.href = link;
+							return
+						}
+					});			   
+				}				
+			},false, true)
+		}
+    </script>
+	{/if}
+</div>
+{template $this->mytpl('_menu')}
+{template $this->mytpl('_footer')}

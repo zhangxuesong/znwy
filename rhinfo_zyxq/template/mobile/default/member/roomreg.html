@@ -1,0 +1,64 @@
+{template $this->mytpl('_header')}
+{if !empty($this->syscfg['btncolor'])}
+    <style>
+		#btnSubmit {
+			background-color:{php echo $this->syscfg['btncolor']};
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+		}
+		#btnSubmit:active,
+		#btnSubmit.disabled {
+			background: {php echo $this->syscfg['btncolor']};			
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+			opacity:0.5;
+		}
+    </style>
+{/if}
+<style>
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+</style>
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back" ></a>
+		</div>
+		<div class="title">业主认证</div>
+		<div class="fui-header-right">&nbsp;</div>
+	</div>
+	
+	<div class='fui-content'>	
+		<form action="{php echo $this->createMobileUrl('member',array('op'=>'roomreg','rid'=>$rid));}" method="post" id="myform">
+		<input type="hidden" id='doorid' name='doorid' value="{$_GPC['id']}" />
+		<div class="fui-cell-group">
+			<div class="fui-cell must">
+				<div class="fui-cell-label">楼宇</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input' id='building' name='building' placeholder="输入楼宇"  value="" /></div>				
+			</div>
+			<div class="fui-cell must">
+				<div class="fui-cell-label">单元</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input' id='unit' name='unit' placeholder="输入单元"  value="" /></div>				
+			</div>
+			<div class="fui-cell must">
+				<div class="fui-cell-label">楼层</div>
+				<div class="fui-cell-info">
+				<input type="number" class='fui-input' id='floor' name='floor' placeholder="输入楼层"  value="" /></div>				
+			</div>				
+			<div class="fui-cell must">
+				<div class="fui-cell-label">房屋</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input' id='room' name='room' placeholder="输入房屋"  value="" /></div>				
+			</div>	
+		</div>
+		</form>
+		<a href='#' id='btnSubmit' class='btn btn-success block'>下一步</a>
+	</div>	
+	<script language='javascript'>
+		require(['member/account'], function (modal) {
+		  	modal.initRoomreg();
+		});
+	</script>
+</div>
+
+{template $this->mytpl('_footer')}

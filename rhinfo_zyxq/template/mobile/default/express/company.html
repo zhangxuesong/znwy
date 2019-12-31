@@ -1,0 +1,39 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-list-group:not(.fui-list-group-o):before,.fui-list-group:not(.fui-list-group-o):after {border-top: 0px;}
+</style>
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">快递公司</div> 
+		<div class="fui-header-right">&nbsp;</div>
+	</div>
+	<div class='fui-content navbar' >
+		{if empty($company)}
+			<div class="board-list-empty" style="color:#999;font-size:.75rem;margin:.5rem;text-align: center;">
+			<i class="icon icon-information" style="font-size:4rem;color:#ccc;"></i> <br/>暂时没有任何内容</div>
+		{else}
+			<div class="fui-list-group">
+				{loop $company $comp}			
+				<a class='fui-list' href="{$comp['url']}" data-nocache="true">
+					{if !empty($comp['thumb'])}
+					<div class='fui-list-media'>
+						<img src="{php echo tomedia($comp['thumb']);}" class='round' />
+					</div>
+					{/if}
+					<div class='fui-list-inner'>
+						<div class='subtitle'>{$comp['title']}</div>
+					</div>
+					<div class="fui-list-angle">
+						<div class='angle'></div>
+					</div>
+				</a>
+			{/loop}
+			</div>
+		{/if}		
+	</div>	 
+</div> 
+
+{template $this->mytpl('_footer')}

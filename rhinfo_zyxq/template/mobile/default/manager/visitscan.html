@@ -1,0 +1,56 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-list-group:not(.fui-list-group-o):before {	
+	border-top:0px;	
+}
+.fui-list-group:not(.fui-list-group-o):after {
+	border-top:0px;	
+}
+</style>
+	<div class="fui-page fui-page-current">
+	<div class="fui-header">
+		<div class="fui-header-left">			
+		</div>
+		<div class="title">访客确认</div>
+		<div class="fui-header-right">			
+		</div>
+	</div>
+	
+	<div class='fui-content' >		
+		<div class="fui-list-group address-item" style='margin-top:5px;'>
+			<div  class="fui-list" >
+				<div class="fui-list-inner">
+					<div class="title"><span class='realname'>{$item['title']}</span> </div>					
+				</div>				
+			</div>	
+		</div>
+		<div class="fui-cell-group">
+			<div class="fui-cell">
+				<div class="fui-cell-label">有效时间</div>
+				<div class="fui-cell-info">
+				{$item['effedate']}
+				</div>				
+			</div>						
+			<div class="fui-cell">
+				<div class="fui-cell-label">开门次数</div>
+				<div class="fui-cell-info">
+				{$item['opentimes']}
+				</div>
+			</div>	
+			<div class="fui-cell">
+				<div class="fui-cell-label">来访事由</div>
+				<div class="fui-cell-info">
+				{$item['reason']}
+				</div>
+			</div>	
+		</div>
+		<a href='#' id='btnSubmit' class='btn btn-success block'>确定</a>
+		<a href='javascript:WeixinJSBridge.call("closeWindow")' class='btn btn-default block'>关闭</a>
+	 </div>
+	<script language='javascript'>
+	require(['visit/index'], function (modal) {
+		modal.init({visitid:"{$item['id']}",rid: "{$myrid}"});
+	});
+	</script>
+ </div> 
+{template $this->mytpl('_footer')}

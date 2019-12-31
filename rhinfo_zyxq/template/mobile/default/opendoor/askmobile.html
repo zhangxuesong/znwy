@@ -1,0 +1,52 @@
+{template $this->mytpl('_header')}
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/rharea.min.js"></script>  
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/rhui/css/rharea.css">
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">申请访客</div>
+		<div class="fui-header-right">&nbsp;</div>
+	</div>
+
+	<div class='fui-content' style='margin-top:5px;'>		
+		<form action="{php echo $this->createMobileUrl('opendoor',array('op'=>'askvisit_mobile'));}" method="post" id="myform">
+		<input type="hidden" id='id' name='id' value="{$_GPC['id']}" />
+		<div class="fui-cell-group">
+			<div class="fui-cell">
+				<div class="fui-cell-label">业主手机</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input' id='mobile' name='mobile' placeholder="访问对象手机号码"  value="" /></div>				
+			</div>
+			<div class="fui-cell">
+				<div class="fui-cell-label">有效分钟</div>
+				<div class="fui-cell-info">
+					<input type="number" class='fui-input' id='effedate' name='effedate' value="15" readonly />
+				</div>				
+			</div>						
+			<div class="fui-cell">
+				<div class="fui-cell-label">开门次数</div>
+				<div class="fui-cell-info">
+				<input type="tel" class='fui-input' id='opentimes' name='opentimes' value="1" maxlength="2" readonly />
+				</div>
+			</div>	
+			<div class="fui-cell">
+				<div class="fui-cell-label">来访事由</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input' id='reason' name='reason' placeholder="输入来访事由 非必填" />
+				</div>
+			</div>	
+		</div>
+		</form>
+		<a href='#' id='btnSubmit' class='btn btn-success block'>提交</a>		
+	</div>
+	<script language='javascript'>
+		require(['opendoor/index'], function (modal) {
+		  	modal.initAskmobile();
+		});
+	</script>
+
+</div>
+{template $this->mytpl('_footer')}
+

@@ -1,0 +1,183 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id"  value="{$item['id']}" />	
+    <input type="hidden" name="io" id='category' value="{$category}" />	
+	{if $_W['uid']} 
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"> <span class="text-danger">*</span>所属物业</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')" {if $item['io']>2 && $item['status']==1} disabled {/if}>
+				<option value="0">请选择所属物业</option>
+				{loop $myproperty $k $v}
+					<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>
+	{else}
+		<input type="hidden" class="form-control" id="pid" value="{$mywe['pid']}" name="pid" />
+	{/if}
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>小区或商圈</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="rid" name="rid" onchange="renderCategory(this,'item','itemid')" {if $item['io']>2 && $item['status']==1} disabled {/if}>
+				<option value="0">请选择</option>	
+				{loop $eregions $i $r}
+					<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+				{/loop}
+				{if $_W['uid']} 
+				{else}
+					{if $operation=='costadd'}
+						{loop $regions $i $r}
+							<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+						{/loop}
+					{/if}
+				{/if}
+			</select>
+		</div>
+	</div>	
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">{if $category>2}<span class="text-danger">*</span>{/if}楼宇</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="bid" name="bid" onchange="renderCategory(this,'unit','tid')" {if $item['io']>2 && $item['status']==1} disabled {/if}>
+				<option value="0">请选择</option>	
+				{loop $ebuildings $bd}
+					<option value="{$bd['id']}" {if $item['bid'] == $bd['id']} selected {/if} >{$bd['title']}</option>
+				{/loop}			
+			</select>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">{if $category>2}<span class="text-danger">*</span>{/if}单元</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="tid" name="tid" onchange="renderCategory(this,'room','hid')" {if $item['io']>2 && $item['status']==1} disabled {/if} >
+				<option value="0">请选择</option>	
+				{loop $eunits $mt}
+					<option value="{$mt['id']}" {if $item['tid'] == $mt['id']} selected {/if} >{$mt['title']}</option>
+				{/loop}				
+			</select>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">{if $category>2}<span class="text-danger">*</span>{/if}房屋</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="hid" name="hid" {if $item['io']>2 && $item['status']==1} disabled {/if}>
+				<option value="0">请选择</option>	
+				{loop $erooms $rv}
+					<option value="{$rv['id']}" {if $item['hid'] == $rv['id']} selected {/if} >{$rv['title']}</option>
+				{/loop}				
+			</select>
+		</div>
+	</div>
+	
+	{if $category==1 || $category==2}
+	<div class="form-group" >
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>{if $category==1}收入{else}支出{/if}项目</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="itemid" name="itemid" >
+				<option value="0">请选择</option>
+				{loop $eitems $iv}
+					<option value="{$iv['id']}" {if $item['itemid'] == $iv['id']} selected {/if} >{$iv['title']}</option>
+				{/loop}	
+			</select>
+		</div>
+	</div>
+	{elseif $category==3}
+		<input type="hidden" class="form-control" id="itemid" value="0" name="itemid" />
+	{elseif $category==4}
+		<input type="hidden" class="form-control" id="itemid" value="0" name="itemid" />
+	    <div class="form-group" >
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>预收款项</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="cate" name="cate" {if $item['io']>2 && $item['status']==1} disabled {/if}>
+				<option value="1">预收物业费</option>
+				<option value="2">预收电费</option>
+				<option value="3">预收水费</option>
+			</select>
+		</div>
+	</div>
+	{/if}
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>金额</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="number" class="form-control" id="money" value="{$item['money']}" {if $item['io']>2 && $item['status']==1} disabled {/if} placeholder="输入金额" name="money" />
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">经手人</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="handling" value="{$item['handling']}" placeholder="输入经手人" name="handling" />
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">经手日期</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_date('handledate',$item['handledate']);}	
+		</div>	
+	</div>
+	{if $category==2}
+	<div class="form-group" >
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">是否公示</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<label class='radio-inline'><input type="radio" name="publicity" value="0" {if $item['publicity'] == 0 || empty($item['publicity'])} checked="true" {/if} >不公示</label>
+			<label class='radio-inline'><input type="radio" name="publicity" value="1" {if $item['publicity'] == 1} checked="true" {/if} >公示</label>										
+		</div>
+	</div>
+	{else}
+		<input type="hidden" class="form-control" value="0" name="publicity" />
+	{/if}
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">备注</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="remark" value="{$item['remark']}" placeholder="输入备注" name="remark" />
+		</div>	
+	</div>
+	<br>
+</form>	
+
+<script type="text/javascript">
+	window._region = {php echo json_encode($myregion);};				
+	window._item = {php echo json_encode($myitem);};	
+	window._building = {php echo json_encode($mybuilding);};	
+	window._unit = {php echo json_encode($myunit);};	
+	window._room = {php echo json_encode($myroom);};	
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择</option>';
+			var html1 = '<option value="0">请选择</option>';
+			if (id=='rid'){
+				$("#itemid").html(html);
+				$("#bid").html(html);
+				$("#tid").html(html);
+				$("#hid").html(html);
+			}
+			if(id=='itemid'){
+				$("#tid").html(html);
+				$("#hid").html(html);
+				if (!window['_building'] || !window['_building'][index]) {
+					$("#bid").html(html1);					
+				}
+				for(var j=0; j< window['_building'][index].length; j++){
+					html1 += '<option value="'+window['_building'][index][j]['id']+'">'+window['_building'][index][j]['title']+'</option>';
+				}
+				$("#bid").html(html1);
+			}			
+			
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		});
+	}	
+</script>

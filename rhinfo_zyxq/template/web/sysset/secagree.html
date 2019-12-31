@@ -1,0 +1,56 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />	
+			<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">平台入驻协议</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					{php echo tpl_ueditor('content1', $item['content1']);}
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业入驻协议</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					{php echo tpl_ueditor('content2', $item['content2']);}
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">商家入驻协议</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					{php echo tpl_ueditor('content3', $item['content3']);}
+				</div>	
+			</div>
+		</form>
+	</div>
+</div>
+
+<nav class="navbar navbar-default navbar-fixed-bottom">
+   <div class="col-sm-8 col-lg-9 col-xs-12 col-sm-offset-2" style="margin-top:8px;">   
+	   <a href="javascript:;" class="btn btn-primary"  onclick="mysubmit(this)"><i class="fa fa-check"></i> 保存<a/>
+   </div>
+</nav>
+
+{template 'web/_iframe_footer'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	myprocess(obj);
+	$("#myform").submit();
+}
+function myprocess(obj){
+	var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/> 处理中...';
+	$(obj).html(html);  
+	$(obj).attr("disabled", "disabled"); 
+}
+function myreturn(){
+	 parent.removeIframe();
+}
+</script>
+
+</body>
+</html>

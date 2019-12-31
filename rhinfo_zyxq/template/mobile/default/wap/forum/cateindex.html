@@ -1,0 +1,53 @@
+{template $this->mytpl('_header')}
+
+<div class='fui-page  fui-page-current'>
+
+	<div class='fui-content navbar'>
+
+		{if !empty($banners)}
+			<div class='fui-swipe' data-transition="500" data-gap="1">
+			    <div class='fui-swipe-wrapper'>
+				{loop $banners $banner}
+					<a class='fui-swipe-item external' href="{if !empty($banner['link'])}{$banner['link']}{else}javascript:;{/if}"><img src="{php echo tomedia($banner['thumb'])}" /></a>
+				{/loop}
+			    </div>
+			    <div class='fui-swipe-page'></div>
+			</div>
+		{/if}
+
+		<div class="fui-cell-group qa-title">
+			<div class="fui-cell">
+				<div class="fui-cell-text">{$catetitle}版块</div>
+				<a class="fui-cell-remark noremark" href="#">{php echo count($recommands);}</a>
+			</div>
+		</div>
+		{if empty($recommands)}
+				<div class="content-empty">
+				<i class="icon icon-comment"></i> 
+				<br/>暂时没有发布任何内容<br/>
+				</div>
+		{else}	
+		<div class="fui-list-group" style="margin-top:0;">			
+			{loop $recommands $value}
+			<a class="fui-list external" data-nocache='true' href="{php echo $this->createMobileUrl($mydo,array('op'=>'board','id'=>$value['id']))}">
+				<div class="fui-list-media">
+					<img data-lazy="{php echo tomedia($value['logo'])}" class="round">
+				</div>
+				<div class="fui-list-inner">
+					<div class="row">
+						<div class="row-text">{$value['title']}</div>
+						<div class="angle"></div>
+					</div>
+					<div class='text'>话题数: <span class='text-danger'>{$value['postcount']}</span> 关注数:<span class="text-danger">{$value['followcount']}</span></div>
+					<div class="text">{$value['desc']}</div>
+				</div>
+			</a>
+			{/loop}
+		</div>
+		{/if}
+     	
+	</div>
+</div>
+
+{template $this->mytpl('_menu')}
+{template $this->mytpl('_footer')}

@@ -1,0 +1,126 @@
+{template $this->mytpl('_header')}
+ <style>
+	.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+	.fui-cell-group:after {border-bottom:0px;}
+	.fui-icon-group  .fui-icon-col .icon {height:1.5rem;margin: auto;  text-align: center; line-height:1.5rem;}
+	.fui-icon-group  .fui-icon-col .icon img {height:1.5rem;width:1.5rem;}
+</style>
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header"> 
+		<div class="fui-header-left">
+			<a class="back"　href="{php echo $this->createMobileurl('home');}"></a>
+		</div>
+		<div class="title">缴费中心</div>
+		<div class="fui-header-right">
+		 <a href="{php echo $this->createMobileUrl('fee',array('op'=>'prepayfee'));}" >预缴</a>
+		</div>
+	</div>		
+		
+	<div class='fui-content navbar'>
+		
+		{if !empty($banners)}
+			<div class='fui-swipe'>
+				<div class='fui-swipe-wrapper'>
+					{loop $banners $banner}
+						<a href="javascript:;" class='fui-swipe-item' {if !empty($banner['link'])} onclick="countHit(this,'{$banner['pid']}','{$banner['rid']}','{$banner['id']}','{$banner['link']}','{$banner['wxappid']}','{$banner['wxapppage']}','{php echo !empty($banner['bgimage'])?tomedia($banner['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if}><img src="{php echo tomedia($banner['thumb'])}" /></a>
+					{/loop}
+				</div>
+				<div class='fui-swipe-page'></div>
+			</div>
+		{/if}
+		
+		{if empty($list)}
+			 <div class='content-empty'>
+				<div class="empty-bg"><i class='icon icon-money'></i></div>
+				<p>您还没有绑定房产</p>
+				<a href="{php echo $this->createMobileUrl('home',array('op'=>'blist'));}" class='btn btn-default-o external'>绑定房产</a>
+            </div>
+		{/if}
+		
+		{loop $list $vm}
+		<div class="fui-cell-group fui-cell-click">
+			<a class="fui-cell external" href="{$vm['url']}">
+				<div class="fui-cell-icon"><i class="icon icon-city"></i></div>
+				<div class="fui-cell-text">{$vm['address']}</div>
+				<div class="fui-cell-remark" style="font-size: 0.6rem;">全部账单</div>
+			</a>			
+			{loop $vm['items'] $i $v}
+				{if $i==0 || $i%4 == 0}<div class="fui-icon-group selecter">{/if}
+					<a class="fui-icon-col external" href="{$v['url']}">
+						{if $v['total']}
+						<div class="badge">{$v['total']}</div>
+						{/if}
+						<div class="icon icon-green radius">{if !empty($v['thumb'])}<img src="{php echo tomedia($v['thumb']);}" />{else}<i class="icon {$v['icon']}" {if !empty($v['color'])}style="color:{$v['color']};"{/if}></i>{/if}</div>
+						<div class="text">{$v['title']}</div>
+					</a>
+				{if ($i + 1)%4 == 0}</div>{/if}
+			{/loop}
+			{if count($vm['items'])%4 == 0}{else}</div>{/if}	
+		</div>
+		{/loop}	
+		{loop $parkinglots $vp}
+		<div class="fui-cell-group fui-cell-click">
+			<a class="fui-cell external" href="{$vp['url']}">
+				<div class="fui-cell-icon"><i class="icon icon-city"></i></div>
+				<div class="fui-cell-text">{$vp['title']}</div>
+				<div class="fui-cell-remark" style="font-size: 0.6rem;"></div>
+			</a>			
+			{loop $vp['items'] $j $vv}
+				{if $j==0 || $j%4 == 0}<div class="fui-icon-group selecter">{/if}
+					<a class="fui-icon-col external" href="{$vv['url']}">
+						<div class="icon icon-green radius"><i class="icon {$vv['icon']}"></i></div>
+						<div class="text">{$vv['title']}</div>
+					</a>
+				{if ($j + 1)%4 == 0}</div>{/if}
+			{/loop}
+			{if count($vp['items'])%4 == 0}{else}</div>{/if}	
+		</div>
+		{/loop}	
+		</div>
+	</div>	
+</div>
+{if $this->rhinfo_wap}
+<script type="text/javascript">
+	function countHit(obj,pid,rid,bannerid,link,wxappid,wxapppage,bgimage){	
+	 core.json('service/bannerhit', {
+			pid:pid,rid:rid,bannerid:bannerid
+		}, function(ret) {
+			if (ret.status == 1) {
+				location.href = link;
+				return	   
+			}				
+		},false, true)
+	}
+</script>
+{else}
+<script type="text/javascript">
+	function countHit(obj,pid,rid,bannerid,link,wxappid,wxapppage,bgimage){	
+	 core.json('service/bannerhit', {
+			pid:pid,rid:rid,bannerid:bannerid
+		}, function(ret) {
+			if (ret.status == 1) {
+				wx.miniProgram.getEnv(function(res){
+					if(res.miniprogram){
+						if(wxappid !==''){
+							var path = '/pages/index/navto?wxappid=' + wxappid +'&wxapppage=' + wxapppage +'&bgimage=' + bgimage;
+							wx.miniProgram.navigateTo({
+								url: path
+							});
+						}
+						else{
+							 location.href = link;
+						}
+						return
+					}
+					else{
+					    location.href = link;
+						return
+					}
+				});			   
+			}				
+		},false, true)
+	}
+</script>
+{/if}
+{template $this->mytpl('_menu')}
+{template $this->mytpl('_footer')}

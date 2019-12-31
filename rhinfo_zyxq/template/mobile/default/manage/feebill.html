@@ -1,0 +1,67 @@
+{template $this->mytpl('_header')}
+
+<div class='fui-page  fui-page-current member-cart-page'>
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back"></a>
+	</div>
+	<div class="title">{if $_GPC['status']>1}已缴费账单{else}待缴费账单{/if}</div> 
+	<div class="fui-header-right" ></div>
+    </div>
+
+    <div class='fui-content navbar' >
+    {if empty($list)}
+		<div class='content-empty'>
+			 <i class='icon icon-money'></i><br/>您还没有任何账单<br/>							 
+		</div>
+	{else}
+	<div class="fui-title"><i class="icon icon-city"></i> {$address}</div>
+	<div class="fui-cell-group">		
+		{if $_GPC['category']==1}
+		<div class="fui-cell">
+				<div class="fui-cell-label">建筑面积</div>
+				<div class="fui-cell-info">{$room['buildarea']}</div>				
+		</div>
+		<div class="fui-cell">
+				<div class="fui-cell-label">使用面积</div>
+				<div class="fui-cell-info">{$room['usearea']}</div>				
+		</div>
+		<div class="fui-cell">
+				<div class="fui-cell-label">附加面积</div>
+				<div class="fui-cell-info">{$room['addarea']}</div>				
+		</div>
+		{/if}
+		
+		{loop $list $item}						
+			<div class="fui-cell">			
+				<div class="fui-cell-label">{$item['title']}{if $item['feetype']==3}公摊{/if}</div>
+				<div class="fui-cell-info">{$item['fee']}</div>	
+				<div class="fui-cell-remark noremark feebill-item">{if $item['feetype']==2}用量：{$item['threeqty']}{/if}&nbsp;单价：{$item['price']} {$item['measure']} 
+				</div>					
+			</div>				
+			<div class="fui-cell-tip" >	
+			交费周期：{$item['daterange']}{if !empty($item['paydate'])}<span class="pull-right">缴费日期：{php echo date('Y-m-d',$item['paydate']);}</span>{/if}									
+			</div>
+		{/loop}
+		
+		<div class="fui-cell" style="display:none;">
+			<div class="fui-cell-title">金额合计：<span class="text-danger" id="totalfee">￥{$totalfee}</span></div>			
+		</div>
+	</div>
+	 {/if}
+    </div>	 
+</div>
+
+ <div class='fui-navbar'>
+	<a class='nav-item'>金额合计：<span class="text-danger" id="totalfee">￥{$totalfee}</span></a>
+</div>
+<script language="javascript">      
+	jssdkconfig = {php echo json_encode($_W['account']['jssdkconfig']);} || { jsApiList:[] };
+	jssdkconfig.debug = false;
+	wx.config(jssdkconfig);	
+	wx.ready(function () {
+		wx.hideOptionMenu();
+	});
+</script>
+</body>
+</html>

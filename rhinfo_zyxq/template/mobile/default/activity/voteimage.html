@@ -1,0 +1,202 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/activity.css?v={TIMESTAMP}">
+{if !empty($this->syscfg['btncolor'])}
+    <style>
+		#btnSubmit {
+			background-color:{php echo $this->syscfg['btncolor']};
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+		}
+		#btnSubmit:active,
+		#btnSubmit.disabled {
+			background: {php echo $this->syscfg['btncolor']};			
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+			opacity:0.5;
+		}
+    </style>
+{/if}
+<style>
+	.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+	.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+	.fui-cell-group,.fui-according-group{
+		margin-top: 0;
+	}
+	.fui-article {
+		padding:0.3rem .5rem;
+
+	}
+	.fui-article .title{
+		font-size:0.85rem;
+	}
+	.verify-pop .bind {
+		width: 250px;
+		padding:0 10px 10px 10px;
+		position: absolute;
+		top: 100px;
+		z-index: 1001;
+		background:#ffa64d;
+		opacity:0.9;
+		left: 50%;
+		margin-left: -125px;
+		border-radius:6px;
+	}
+	.verify-pop .bind .fui-cell-group{
+		border-radius:6px;
+		background:#fff;	
+	}
+	.verify-pop .bind .title{
+		text-align:center;
+		padding-top:5px;
+		color:#fff;
+	}
+</style>
+<div class="fui-page fui-page-current">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">投票活动</div>
+		<div class="fui-header-right"></div>
+	</div>
+	<div class="fui-content navbar"> 
+		<div class="fui-cell-group" >
+			<div class="fui-cell">
+				<div class="question-view">
+					<img  class="vote-img" src="{$item['image']}" alt="">
+					<div class='fui-article'>
+						<div class="title">{$item['title']}</div>
+						<div class='subtitle'>{$item['replydesc']}</div>
+					</div>
+					<ul class="answer-view">
+						<form id="myform">
+						<input type="hidden" name="id" value="{$id}" />
+						{if $item['votetype']==2}
+							<input type="radio" name="mysel" value="0" checked style="display:none;"/>
+							{loop $multimages $vote}
+							<li class="answer-cell">
+								<img src="{php echo tomedia($vote['imgurl'])}" />
+								<div class="imgname">{$vote['imgname']}</div>
+								<div class="votenum">{$vote['votenum']}票</div>
+								<div class="imgradio">
+									<input type="radio" name="mysel" value="{$vote['id']}"  style="display:none;">								
+									<div class="praise-icon">
+										<i class="icon icon-check"></i>
+									</div>
+								</div>
+							</li>
+							{/loop}
+						{else}
+							{loop $multimages $vote}
+							<li class="answer-cell">
+								<img src="{php echo tomedia($vote['imgurl'])}" />
+								<div class="imgname">{$vote['imgname']}</div>
+								<div class="votenum">{$vote['votenum']}票</div>
+								<div class="imgradio">
+									<input type="radio" name="mysel_{$vote['id']}" value="{$vote['id']}" style="display:none;">	
+									<div class="praise-icon">
+										<i class="icon icon-check"></i>
+									</div>
+								</div>
+							</li>
+							{/loop}
+						{/if}
+						</form>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="fui-footer">
+		<a class="btn btn-success btn-submit block" id="btnSubmit" >确认投票</a>
+	</div>
+	{if $_W['fans']['follow']=='1'}
+	{else}
+		{if $this->rhinfo_wap}
+		{elseif $item['checkmethod']==1 || $item['checkmethod']==3}
+			<div class="pop-region-hidden pop-region-wxapp" >
+				<div class='fui-mask-m visible'></div>
+				<div class="verify-pop pop">	
+						<div class="bind">
+							<div class="title">欢迎访问<span class="pull-right"><i class="icon icon-roundclose"></i></span></div>
+							<div class="fui-cell-group fui-cell-click external">
+								<a class="fui-cell"  href="{php echo $this->syscfg['followurl']}">
+									<div class="fui-cell-icon"><i class="icon icon-friendadd"></i></div>
+									<div class="fui-cell-text"><p class="text text-danger">请关注公众号</p></div>
+									<div class="fui-cell-remark"></div>
+								</a>
+								<div class="fui-cell-tip">您还未关注【{$_W['account']['name']}】</div>
+							</div>						
+							<div class="fui-cell-group fui-cell-click external">
+								<div style="text-align:center;">{if $this->syscfg['qrcode']}<img src="{php echo tomedia($this->syscfg['qrcode']);}" width="150px;"/>{/if}</div>
+								<div class="fui-cell-tip">{php echo empty($this->syscfg['followtip'])?'请关注公众号，享受更好的服务.':$this->syscfg['followtip'];}</div>
+							</div>							
+						</div>
+				</div>
+			</div>
+		{/if}
+	{/if}
+</div>
+<script type="text/javascript">
+	var votetype = "{$item['votetype']}";
+	$('.imgradio').click(function() {
+		if(votetype==2){
+			$(".imgradio").each(function(){
+				$(this).find('.praise-icon').removeClass('active');
+				$(this).find(':radio').prop('checked', false);	
+			})
+			$(this).find('.praise-icon').toggleClass('active');
+			if ($(this).find(':radio').prop('checked')) {
+				$(this).find(':radio').prop('checked', false);			
+			} else {
+				$(this).find(':radio').prop('checked', true);
+			}
+		}
+		if(votetype==3){			
+			$(this).find('.praise-icon').toggleClass('active');
+			if ($(this).find(':radio').prop('checked')) {
+				$(this).find(':radio').prop('checked', false);			
+			} else {
+				$(this).find(':radio').prop('checked', true);
+			}
+		}
+	})
+	$('#btnSubmit').click(function() {
+		if ($(this).attr('stop')) {
+			return
+		}
+		if(votetype==2){
+			var mysel = $("input[name=mysel]:checked").val();
+			if(mysel==0){
+				RhUI.toast.show('未做出选择');
+				return
+			}
+		}
+		if(votetype==3){
+			var i = 0;
+			$(".imgradio").each(function(){
+				if ($(this).find(':radio').prop('checked')) {
+					i++;
+				}
+			})			
+			if(i==0){
+				RhUI.toast.show('未做出选择');
+				return
+			}
+		}
+		var that = $(this);
+		RhUI.confirm('确认提交吗？','投票确认',function(){					
+			that.html('正在处理...').attr('stop', 1);						
+			core.json('activity/voteimage',
+			$("#myform").serializeObject(),
+			function(rjson) {
+				if (rjson.status != 1) {
+					that.html('提交').removeAttr('stop');					
+					RhUI.toast.show(rjson.result.message);
+					return
+				}
+				RhUI.toast.show(rjson.result.message);	
+				location.href = core.getUrl('home/index');
+			})
+		})
+	})
+</script>
+{template $this->mytpl('_footer')}

@@ -1,0 +1,120 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>物业名称</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入物业公司名称" name="title">
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>管理账号</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="userno" value="{$item['userno']}"  placeholder="输入用户代号" name="userno">
+			<span class="help-block">此管理账号用于独立物业后台入口登录，物业登录后可到用户管理->用户管理->建立子用户</span>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>管理名称</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="myuser" value="{$item['username']}" placeholder="输入用户名称" name="myuser">
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>用户密码</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" onfocus="this.type='password'" autocomplete="off"  class="form-control" id="mypass1" name="mypass1" value="" >
+			<span class="help-block">请填写密码，最小长度为 8 个字符。如果不更改密码此处请留空</span>
+		</div>				
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>确认密码</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" onfocus="this.type='password'" autocomplete="off" class="form-control" id="mypass2" name="mypass2" value="" >
+			<span class="help-block">重复输入密码，确认正确输入。如果不更改密码此处请留空</span>
+		</div>				
+	</div>
+	<div class="form-group" {if !empty($mywe['pid'])}style="display:none;"{/if}>
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">限制主体数量</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="number" class="form-control" id="limitqty" value="{$item['limitqty']}" placeholder="输入可建立主体数量" name="limitqty">		
+		<span class="help-block">为0则不限制，默认为0，允许该物业建立所属主体数量</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业电话</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="telphone" value="{$item['telphone']}" placeholder="输入物业电话" name="telphone">
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业LOGO</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_image('logo',$item['logo']);}
+			<span class="help-block">物业LOGO图片，建议尺寸100*100</span>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业招牌</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_image('banner',$item['banner']);}
+			<span class="help-block">物业介绍头部图片，建议尺寸640*320</span>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定注册</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_image('image',$item['image']);}
+			<span class="help-block">绑定注册头部图片，建议尺寸640*320，也可所属主体基础中设置</span>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">网站地址</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="input-group ">
+				<input type="text" class="form-control" id="website" value="{$item['website']}" placeholder="输入网站地址" name="website">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" onclick="showLinkDialog(this);">系统链接</button>
+				</span>				
+			</div>			
+			<span class="help-block">请输入网址 ,外部链接请包含http://</span>
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">省/市/区</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_district('area', array('province' => $item['province'], 'city' => $item['city'], 'district' => $item['district'] ));}
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">详细地址</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="address" value="{$item['address']}" placeholder="输入详细地址" name="address">
+		</div>	
+	</div>
+	
+	<div class="form-group" style="display:none;">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">客服链接</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="service" value="{$item['service']}" placeholder="输入客服链接地址" name="service">
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业介绍</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_ueditor('content', $item['content']);}
+		</div>	
+	</div>
+</form>
+
+<script>
+	function showLinkDialog(elm) {
+		var ipt = $(elm).parent().prev();
+		util.linkBrowser(function(href){		
+			ipt.val(href);			
+		});
+	}
+</script>

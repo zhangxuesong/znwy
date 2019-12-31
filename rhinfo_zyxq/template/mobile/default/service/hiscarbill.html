@@ -1,0 +1,46 @@
+{template $this->mytpl('_header')}
+
+<div class='fui-page  fui-page-current member-cart-page'>
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back"></a>
+	</div>
+	<div class="title">历史账单</div> 
+	<div class="fui-header-right" ></div>
+    </div>
+
+    <div class='fui-content navbar' >
+    {if empty($list)}
+		<div class='content-empty'>
+			 <i class='icon icon-money'></i><br/>您还没有任何历史账单<br/>							 
+		</div>
+	{else}
+	<div class="fui-cell-group" style="margin-top:0;">			
+		{loop $list $i $item}	
+			{if $i==0}
+				<div class="fui-cell">			
+					<div class="fui-cell-info"><i class="icon icon-taxi"> {$user['rtitle']}-{$item['title']}</i></div>					
+				</div>	
+			{/if}
+			<div class="fui-cell">			
+				<div class="fui-cell-label">费用</div>
+				<div class="fui-cell-info">{$item['fee']}</div>	
+				<div class="fui-cell-remark noremark feebill-item">单价：{$item['price']} {$item['measure']} 
+				</div>					
+			</div>				
+			<div class="fui-cell-tip" >	
+			交费周期：{$item['daterange']}	<span class="pull-right">缴费日期：{php echo date('Y-m-d',$item['paydate']);}</span>					
+			</div>	
+		{/loop}	
+		
+	</div>
+	 {/if}
+    </div>	
+	{if !empty($list)}
+	 <div class='fui-navbar'>
+		<a class='nav-item'>累计缴费：<span class="text-danger" id="totalfee">￥{$totalfee}</span></a>
+	</div>
+	{/if}
+</div>
+
+{template $this->mytpl('_footer')}

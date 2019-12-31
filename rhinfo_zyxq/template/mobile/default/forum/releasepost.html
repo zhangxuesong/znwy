@@ -1,0 +1,84 @@
+{template $this->mytpl('_header')}
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/rharea.min.js"></script>  
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/rhui/css/rharea.css">
+<style>
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+</style>
+<div class='fui-page fui-page-current sns-board-post-page'>
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">发表话题</div>
+        <div class="fui-header-right"><span id="btnSend" class="btn btn-warning btn-sm"><i class="icon icon-check1"></i> 提交</span></div>
+    </div>
+    <div class="fui-content">
+		<div class="fui-title"><i class="icon icon-city"></i> {if $user['isbind']}{$user['address']}{else}{$user['rtitle']}{/if}</div>
+	     <div class="fui-cell-group">	
+			<div class="fui-cell">
+				<div class="fui-cell-info">
+					<input type="text" class='fui-input' id='myboard' name='myboard' readonly placeholder="请选择版块＞"  value="" />
+					<input id="boardid" type="hidden" name="boardid" value="" />
+				</div>
+			</div>
+            <div class="fui-cell">
+                <div class="fui-cell-info">
+                    <input type="text" class="fui-input post-input" placeholder="标题 3-25个字" id="title" minlength="3" maxlength="25"/>
+                </div>
+            </div>
+
+            <div class="fui-cell">
+                <div class="fui-cell-info">
+                    <textarea placeholder="内容 10-100个字" class="post-input" rows="6" id="content" minlength="10" maxlength="1000"></textarea>
+                </div>
+				{if $this->rhinfo_isweixin}<div class='fui-cell-icon'><i class="icon icon-record text-success"></i></div>{/if}
+            </div>
+            <div class="fui-cell reply-func-cell">
+                <div class="fui-cell-info post-func">
+                    <i class="icon icon-emoji"></i>  <i class="icon icon-pic"></i>
+                </div>
+            </div>
+
+            <div class="post-face">
+                <?php for($i=1;$i<=75;$i++) {?>
+                <div class="item" data-face="{$i}"><img src="../addons/rhinfo_zyxq/static/mobile/images/face/{$i}.gif" /></div>
+                <?php } ?>
+            </div>
+
+            <div class='fui-cell post-image' id="cell-images" style="display:none;">
+                <div class='fui-cell-info'>
+                    <ul class="fui-images fui-images-md" id="myimages1"></ul>
+                    <div class="fui-uploader fui-uploader-md" id="uploadimages1"  data-max="5"  data-count="0">
+                       <!-- <input type="file" multiple="multiple" aria-multiselectable="true" name="imgFile[]"  id="imgFile{$borad['id']}" accept="image/*"  >-->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+    </div>
+	
+	<script language='javascript'>
+		var regions = {php echo json_encode($regions);};	
+		var cates = {php echo json_encode($cates);};
+		var boards = {php echo json_encode($boards);};
+		var myarea = new RHArea();
+		myarea.init({
+			'trigger': '#myboard',
+			'valueTo': '#boardid',
+			'keys': {
+				id: 'id',
+				name: 'title'
+			},
+			'type': 2,
+			'data': [regions,cates,boards]
+		});
+		require(['forum/board'], function (modal) {
+			modal.initRelease({rid:'{$rid}'});
+		});
+	</script>
+
+</div>
+{template $this->mytpl('_menu')}
+{template $this->mytpl('_footer')}

@@ -1,0 +1,87 @@
+﻿<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">使用设备支付方式</label>
+	<div class="col-sm-7 col-lg-8 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="devpaytype" value="1" {if $item['devpaytype']==1 } checked{/if} /> 余额支付</label>
+		<label class="radio-inline">
+			<input type="radio" name="devpaytype" value="2" {if $item['devpaytype']==2 } checked{/if} /> 在线支付</label>
+		<label  class="radio-inline">
+			<input type="radio" name="devpaytype" value="0" {if empty($item['devpaytype']) || $item['devpaytype']==0 } checked{/if} /> 不限</label>
+		<span class="help-block">使用设备时可采用的支付方式，不限则先自动扣余额，余额不足则在线支付.</span>			
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">先充电后扣费最低余额</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<div class="input-group">
+		   <input type="number" name="credit3" class="form-control"  value="{php echo empty($item['credit3'])?20:$item['credit3'];}" />
+		   <span class="input-group-addon">元</span>		   
+	   </div>
+	   <span class="help-block">此余额为会员中心个人余额账户，默认账户最低余额为20元.</span>
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">是否提醒关注</label>
+	<div class="col-sm-7 col-lg-8 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="isdevreg" value="1" {if $item['isdevreg']==1 } checked{/if} /> 提醒</label>
+		<label  class="radio-inline">
+			<input type="radio" name="isdevreg" value="0" {if empty($item['isdevreg']) || $item['isdevreg']==0 } checked{/if} /> 不提醒</label>
+		<span class="help-block">使用智能设备时提醒用户关注公众号.</span>			
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">MX系列设备APPID</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="mx_appid" value="{$item['mx_appid']}" placeholder="输入设备APPID" name="mx_appid">
+		<span class="help-block">请填写智能设备APPID，需要购买硬件模块.</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">MX系列设备APPKEY</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="mx_appkey" value="{$item['mx_appkey']}" placeholder="输入设备APPKEY" name="mx_appkey">
+		<span class="help-block">请填写智能设备APPKEY，需要购买硬件模块.</span>
+	</div>	
+</div>
+
+<div class="form-group" {if empty($item['ds_appid'])}style="display:none;"{/if}>
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">DS系列设备APPID</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="ds_appid" value="{$item['ds_appid']}" placeholder="输入设备APPID" name="ds_appid">
+		<span class="help-block">请填写智能设备APPID，需要购买硬件模块.</span>
+	</div>	
+</div>
+
+<div class="form-group" {if empty($item['ds_appkey'])}style="display:none;"{/if}>
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">DS系列设备APPKEY</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="ds_appkey" value="{$item['ds_appkey']}" placeholder="输入设备APPKEY" name="ds_appkey">
+		<span class="help-block">请填写智能设备APPKEY，需要购买硬件模块.</span>
+	</div>	
+</div>
+
+<div class="form-group" style="display:none;">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">YK系列设备APPID</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="yk_appid" value="{$item['yk_appid']}" placeholder="输入设备APPID" name="yk_appid">
+		<span class="help-block">请填写智能设备APPID，需要购买硬件模块.</span>
+	</div>	
+</div>
+
+<div class="form-group" style="display:none;">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">YK系列设备APPKEY</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="yk_appkey" value="{$item['yk_appkey']}" placeholder="输入设备APPKEY" name="yk_appkey">
+		<span class="help-block">请填写智能设备APPKEY，需要购买硬件模块.</span>
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">云喇叭Token</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="ylb_token" value="{$item['ylb_token']}" placeholder="输入云喇叭Token" name="ylb_token">
+		<span class="help-block">请填写智能设备APPKEY，需要购买硬件模块.</span>
+	</div>	
+</div>

@@ -1,0 +1,75 @@
+{template $this->mytpl('_header')}
+
+<div class='fui-page  fui-page-current'>
+
+	<div class='fui-content navbar'>
+
+		{if !empty($banners)}
+			<div class='fui-swipe' data-transition="500" data-gap="1">
+			    <div class='fui-swipe-wrapper'>
+				{loop $banners $banner}
+					<a class='fui-swipe-item external' {if !empty($banner['link'])}href="{$banner['link']}" onclick="countHit(this,'{$banner['pid']}','{$banner['rid']}','{$banner['id']}')"{/if}><img src="{php echo tomedia($banner['thumb'])}" /></a>
+				{/loop}
+			    </div>
+			    <div class='fui-swipe-page'></div>
+			</div>
+		{/if}
+
+
+		{if count($category)>0}
+			<div class="fui-icon-group noborder circle" style="margin-top:0;">
+				{loop $category $cate}
+					<a href="{php echo $this->createMobileUrl($mydo, array('op'=>'cateindex','cid'=>$cate['id']))}" data-nocache="true">
+						<div class="fui-icon-col">
+							<div class="icon"><img data-lazy="{php echo tomedia($cate['thumb'])}"/></div>
+							<div class="text">{$cate['title']}</div>
+						</div>
+					</a>
+				{/loop}
+			</div>
+		{/if}
+
+		<div class="fui-cell-group qa-title">
+			<div class="fui-cell">
+				<div class="fui-cell-text">推荐版块</div>
+				<a class="fui-cell-remark external" href="{php echo $this->createMobileUrl($mydo,array('op'=>'boardlist','rid'=>$rid))}" data-nocache="true">全部</a>
+			</div>
+		</div>
+		
+	    {if empty($recommands)}
+				<div class="content-empty">
+				<i class="icon icon-comment"></i> <br/>暂时没有推荐版块<br/></div>
+		{else}	
+        
+		<div class="fui-list-group" style="margin-top:0;">  			
+			{loop $recommands $value}
+			<a class="fui-list external" href="{php echo $this->createMobileUrl($mydo,array('op'=>'board','id'=>$value['id']))}" data-nocache="true">
+				<div class="fui-list-media">
+					<img data-lazy="{php echo tomedia($value['logo'])}" class="round">
+				</div>
+				<div class="fui-list-inner">
+					<div class="row">
+						<div class="row-text">{$value['title']}</div>
+						<div class="angle"></div>
+					</div>
+					<div class='text'>话题数: <span class='text-danger'>{$value['postcount']}</span> 关注数:<span class="text-danger">{$value['followcount']}</span></div>
+					<div class="text">{$value['desc']}</div>
+				</div>
+			</a>
+			{/loop}
+		</div>
+     	{/if}
+	</div>
+</div>
+<script type="text/javascript">
+	function countHit(obj,pid,rid,bannerid){	
+	 core.json('service/bannerhit', {
+			pid:pid,rid:rid,bannerid:bannerid
+		}, function(ret) {
+			if (ret.status == 1) {
+			}				
+		},false, true)
+	}
+</script>
+{template $this->mytpl('_menu')}
+{template $this->mytpl('_footer')}

@@ -1,0 +1,94 @@
+<span class="echart-title">智能设备</span>
+<span class="echart-count">单位：元</span>
+<div id="chartSelf"></div>
+<script type="text/javascript">
+	var chartSelf = echarts.init(document.getElementById('chartSelf'),'shine');
+	option_self = {
+		legend: {
+				data:['停车','充电','自助'],
+				textStyle: {
+					color: "rgb(249, 249, 249)"
+				},
+				show:true
+			},
+			grid:{
+				y:25,
+				y2:20,
+				x2:40,
+				left:'1%',
+				right:'8%',
+				top:'5%',
+				containLabel:true
+			},
+			calculable : true,
+			xAxis : [
+				{
+					type : 'category',
+					boundaryGap : false,
+					data : function (){
+						var list = [];
+						for (var i = 2; i >=0; i--) {
+							list.push(getDay(-i));
+						}
+						return list;
+					}(),
+					axisLabel:{
+						textStyle:{
+							color: "#ffffff"
+						}
+					},
+					axisLine:{
+						lineStyle:{
+							color: "#ffffff"
+						}
+					},
+				}
+			],
+			yAxis : [
+				{
+					type : 'value',
+					textStyle:{
+						color: "#fffff"
+					},
+					axisLabel:{
+						textStyle:{
+							color: "#ffffff"
+						}
+					},
+					axisLine:{
+						lineStyle:{
+							color: "#ffffff"
+						}
+					},
+				}
+			],
+			series : [				
+				{
+					name:'停车',
+					type:'line',
+					smooth:true,
+					itemStyle: {normal: {areaStyle: {type: 'default'}}},
+					data:[{$selfdata[0]}]
+				},
+				{
+					name:'充电',
+					type:'line',
+					smooth:true,
+					itemStyle: {normal: {areaStyle: {type: 'default'}}},
+					data:[{$selfdata[1]}]
+				},
+				{
+					name:'自助',
+					type:'line',
+					smooth:true,
+					itemStyle: {normal: {areaStyle: {type: 'default'}}},
+					data:[{$selfdata[2]}]
+				},
+			]
+		};
+	chartSelf.setOption(option_self);
+	autoPlay(chartSelf,option_self);
+	window.onresize = function() {
+		chartSelf.resize();
+	};
+</script>

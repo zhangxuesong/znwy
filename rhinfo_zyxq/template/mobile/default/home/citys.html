@@ -1,0 +1,20 @@
+{if !empty($currcity)}
+<div class="fui-title">当前城市</div>
+<div class="fui-cell-group fui-cell-click">
+	<a class="fui-cell" href="{$currcityurl}">					
+		<div class="fui-cell-text">{$currcity}</div>
+		<div class="fui-cell-remark"></div>
+	</a>
+</div>
+{/if}
+{loop $citys $key $city}
+	<div class="fui-title">{$key}</div>
+	<div class="fui-cell-group fui-cell-click">
+	{loop $city $item}
+		<a class="fui-cell" href="{$item['cityurl']}">					
+			<div class="fui-cell-text">{$item['city']}</div>
+			<div class="fui-cell-remark"></div>
+		</a>
+	{/loop}
+	</div>
+{/loop}

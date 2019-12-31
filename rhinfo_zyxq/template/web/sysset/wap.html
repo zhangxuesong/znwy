@@ -1,0 +1,52 @@
+﻿	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">手机WAP访问</label>
+		<div class="col-sm-7 col-lg-8 col-xs-12">
+			<label class="radio-inline">
+				<input type="radio" name="iswap" value="1" {if $item['iswap']==1 } checked{/if} /> 启用</label>
+			<label  class="radio-inline">
+				<input type="radio" name="iswap" value="0" {if empty($item['iswap']) || $item['iswap']==0 } checked{/if} /> 不启用</label>
+			<span class="help-block">开启后，支持手机浏览器、微信、APP同时访问，请配置APP相关支付参数。</span>			
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">游客访问权限</label>
+		<div class="col-sm-7 col-lg-8 col-xs-12">
+			<label class="radio-inline">
+				<input type="radio" name="isvisitor" value="1" {if $item['isvisitor']==1 } checked{/if} /> 直接访问(仅支持部份功能)</label>
+			<label  class="radio-inline">
+				<input type="radio" name="isvisitor" value="0" {if empty($item['isvisitor']) || $item['isvisitor']==0 } checked{/if} /> 不能访问(必须注册登录)</label>
+			<span class="help-block">微信用户不受权限控制，可以直接访问，支付宝、手机浏览器、APP将按权限访问。</span>			
+		</div>
+	</div>
+	<div class="form-group" style="display:none;">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">应用APPID</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="wxappid" value="{$item['wxappid']}" placeholder="输入APPID" name="wxappid">
+			<span class="help-block">可以为空，则使用公众号H5支付，或至微信开放平台申请移动应用支付，<a href="https://open.weixin.qq.com" target="_blank">申请</a>.</span>
+		</div>		
+	</div>
+	 <div class="form-group" style="display:none;">
+		<label class="col-xs-12 col-sm-3 col-md-2 control-label">应用APPSECRET</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">		
+			<input type="text" name="wxappsecret" id="wxappsecret" class="form-control" value="{$item['wxappsecret']}" autocomplete="off"/>
+			<span class="help-block">可以为空，则使用公众号H5支付，或至微信开放平台申请移动应用支付，<a href="https://open.weixin.qq.com" target="_blank">申请</a>.</span>
+		</div>
+	</div>
+		
+	<div class="form-group" style="display:none;">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">商户号</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="wxmerchid" value="{$item['wxmerchid']}" placeholder="输入商户号" name="wxmerchid">
+			<span class="help-block">对应相关的商户号</span>
+		</div>		
+	</div>
+	 <div class="form-group" style="display:none;">
+		<label class="col-xs-12 col-sm-3 col-md-2 control-label">商户支付密钥</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<div class="input-group">
+				<input type="text" name="wxmerchsecret" id="wxmerchsecret" class="form-control" value="{$item['wxmerchsecret']}" autocomplete="off"/>
+				<span onclick="tokenGen('wxmerchsecret');" style="cursor:pointer" class="input-group-addon">生成新的</span>
+			</div>
+			<span class="help-block">对应商户号的支付秘钥</span>
+		</div>
+	</div>

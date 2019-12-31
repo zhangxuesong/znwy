@@ -1,0 +1,62 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-footer {
+	position: fixed;
+	width: 100%;
+	bottom: 0;
+	height: 2.5rem;
+	box-shadow:none;
+	text-align:center;
+	font-size:12px;
+	background:#fff;
+}
+.fui-footer a{color:#777777;}
+</style>
+<div class='fui-page  fui-page-current message-page' style="height:100%;"> 	
+	<div class='fui-message'>
+		<div class='icon '>
+			{if $type=='error'}
+			   <i class='icon icon-roundclose' style="color:#fd5454;"></i>
+			{elseif $type=='success'}
+			   <i class='icon icon-roundcheckfill ' style='color:#04ab02;'></i>
+			{else}
+			   <i class='icon icon-information' ></i>
+			{/if}
+			
+		</div>
+		{if !empty($title)}<div class='title'>{$title}</div>{/if}
+		<div class='content'>{$message}</div>
+		{if $buttondisplay}
+			<div class='button'>
+			{if $type=='error'}
+			   <a href='{$redirect}' class='btn btn-danger external block'>{if empty($buttontext)}确认{else}{$buttontext}{/if}</a>
+			 {elseif $type=='success'}
+			   <a href='{$redirect}' class='btn btn-success external block '>{if empty($buttontext)}确认{else}{$buttontext}{/if}</a>
+			{else}
+			   <a href='{$redirect}' class='btn btn-default  external block'>{if empty($buttontext)}确认{else}{$buttontext}{/if}</a>
+			{/if}
+			</div>
+		{/if}		
+	</div> 
+	<div class="fui-footer">
+		<a href="{php echo $this->createMobileUrl('home');}">返回首页</a>
+	</div>
+</div>
+<script language="javascript">
+	function alipay_ready(callback) {
+	  // 如果jsbridge已经注入则直接调用
+	  if (window.AlipayJSBridge) {
+		callback && callback();
+	  } 
+	  else {
+		// 如果没有注入则监听注入的事件
+		document.addEventListener('AlipayJSBridgeReady', callback, false);
+	  }
+	}
+	function alipay_close(){
+		alipay_ready(function () {
+		  AlipayJSBridge.call('popWindow');
+		}); 
+	}
+</script>
+{template $this->mytpl('_footer')}

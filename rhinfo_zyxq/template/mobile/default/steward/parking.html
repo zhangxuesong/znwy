@@ -1,0 +1,34 @@
+{template $this->mytpl('_header')}
+
+<div class='fui-page  fui-page-current member-cart-page'>
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back"></a>
+	</div>
+	<div class="title">租赁车位</div> 
+
+    </div>
+
+    <div class='fui-content ' >
+    {if empty($list)}
+		<div class='content-empty'>
+			 <i class='icon icon-location'></i><br/>还没有可租车位<br/>			
+		</div>
+	{else}
+		{loop $list $item}
+	    <div class="fui-list goods-item align-start" data-id="{$item['id']}">
+			<div class="fui-list-media image-media">		    
+				<img data-lazy="{php echo tomedia($item['avatar'])}" class="circle">
+			</div>
+			<div class="fui-list-inner">		   
+	
+			</div>					
+	   	 </div>
+		
+		{/loop}
+	 {/if}
+
+    </div>	
+</div>
+
+{template $this->mytpl('_footer')}

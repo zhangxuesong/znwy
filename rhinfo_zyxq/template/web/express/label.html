@@ -1,0 +1,105 @@
+﻿{template 'web/_layer_header'}
+<style>
+html { overflow-x:hidden; }
+</style>
+
+<div class="panel panel-default" style="width:580px;">
+  <div class="panel-body"> 
+	<div class="tab-content">			
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				{if $rights['delete'] == 1}	
+				<a href="javascript:;" onclick="mydelall()" class="btn btn-danger"><i class="fa fa-trash-o"></i> 全部删除</a> {/if}
+				<span class="pull-right" style="line-height:38px;">共有数据：<strong id="count">{$total}</strong> 条</span> 
+			</div>  
+			<div class="panel-body">
+			{if $rights['query'] == 1}  		
+				{loop $data $k $v}	
+				<div style="margin:15px 10px -10px 10px;">
+					{if $k > 0}<hr>{/if}	
+					<button class="btn btn-success btn-sm" style="margin-bottom:10px;margin-right:5px;" >{$v['title']}</button>					
+					{loop $v['cate'] $i $r}
+						<span  style="position:relative;padding-right:12px;" onmouseenter="myshow({$r['id']})" onmouseleave="myhide({$r['id']})">
+							<a href="javascript:;" {if $rights['edit'] == 1} onclick="mypost({$v['id']},{$r['id']},'{$r['title']}')" {/if} class="btn btn-default btn-sm" style="margin-bottom:10px;margin-right:5px;" >{$r['title']}</a>							
+							{if $rights['delete'] == 1}  
+							<a href="javascript:;" class="btn btn-sm" id ="delete{$r['id']}" style="display:none;position:absolute;right:-2px;top:-25px;" onclick="mydelete(this,{$r['id']})"><i class="fa fa-close"></i></a>
+							{/if}
+
+						</span>					
+					{/loop}
+					<a href="javascript:;" {if $rights['add'] == 1} {else} disabled {/if} onclick="mypost({$v['id']},0,'')" class="btn btn-default btn-sm" style="margin-bottom:10px;margin-right:5px;" data-toggle="tooltip" data-placement="bottom" title="添加" ><i class="fa fa-plus"> 添加</i></a>			
+				</div>			
+			{/loop}	
+			{/if}
+		  </div>  
+	</div>
+	</div>	
+  </div>
+
+{template 'web/_layer_footer'}
+
+<script type="text/javascript">
+function mydelall(){
+	layer.confirm('确认要删除所有数据吗？',{icon: 3, title:'提示',resize:false},
+	function(index){		
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'delalllabel')).$mywe['direct'];}",
+			{},
+			function(data,status){
+				 if (data=='ok'){
+					location.reload();					
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+					return;
+				 }
+			});				
+		layer.close(index);
+	});
+}
+function mydelete(obj,id){   	
+	layer.confirm('确认要删除吗？',{icon: 3, title:'提示',resize:false},
+	function(index){		
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'dellabel')).$mywe['direct'];}",
+			{id:id},
+			function(data,status){
+				 if (data=='ok'){
+					$(obj).parents("span").remove();	
+					var count = $("#count").html();
+					$("#count").html(count - 1);
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+					return;
+				 }
+			});		
+		layer.close(index);
+	});
+}
+function mypost(category,id,title){
+	layer.prompt({title: '输入标签内容',value:title,area: ['300px', '40px'], formType: 2}, function(label, index){
+	layer.close(index);	   
+	var loadindex = layer.load(2);
+	$.post("{php echo $this->createWebUrl($mydo,array('op'=>'label')).$mywe['direct'];}",
+		{category:category,id:id,label:label},
+		function(data,status){
+		 layer.close(loadindex);
+		 if (data=='ok'){								
+			layer.msg('添加成功!',{icon:1});
+			window.location.reload();
+		 }
+		 else{
+			layer.msg(data,{icon:0});
+		 }
+	});	
+  });
+}
+function myshow(id){
+	$("#delete"+id).show();
+}
+function myhide(id){
+	$("#delete"+id).hide();
+}
+
+</script>
+</body>
+</html>

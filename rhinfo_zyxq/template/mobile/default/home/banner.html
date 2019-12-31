@@ -1,0 +1,10 @@
+{if !empty($banners)}
+	<div class='fui-swipe'style="margin-top:2px;">
+		<div class='fui-swipe-wrapper'>
+			{loop $banners $banner}
+				<a class='fui-swipe-item' href="javascript:;" {if !empty($banner['link'])}onclick="countHit(this,'{$banner['pid']}','{$banner['rid']}','{$banner['id']}','{$banner['link']}','{$banner['wxappid']}','{$banner['wxapppage']}','{php echo !empty($banner['bgimage'])?tomedia($banner['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if}><img src="{php echo tomedia($banner['thumb'])}" /></a>
+			{/loop}
+		</div>
+		<div class='fui-swipe-page'></div>
+	</div>
+{/if}

@@ -1,0 +1,63 @@
+{template $this->mytpl('_pheader')}
+<style type="text/css">
+	.fui-navbar ~ .fui-content, .fui-content.navbar{padding:0;}
+	.fui-cell-group{margin-top:0;}
+</style>
+
+<div class='fui-page fui-page-current creditshop-creditlog-page'>
+		<div class="fui-header">
+				<div class="fui-header-left">
+						<a class="back"></a>
+				</div>
+				<div class="title">{$credittitle}记录</div>
+				<div class="fui-header-right"><a href="{php echo $this->createMobileUrl('business',array('op'=>'recharge','id'=>$_GPC['id']));}">充值</a></div>
+		</div>
+		
+		<div class='fui-content'>
+			<div class="fui-cell-group">
+				<div class="fui-cell">
+					<div class="fui-cell-icon"><i class="icon icon-jifen"></i></div>
+					<div class="fui-cell-text"><p>我的{$credittitle}: {$business['onhand']}</p></div>					
+		 	 	</div>
+			 </div>
+		 
+		 	<div class="fui-message fui-message-popup in content-empty" style="display: none; margin: 0; padding: 0; position: relative;">
+				<div class="icon ">
+					<i class="icon icon-information"></i>
+				</div>
+				<div class="content">未找到相关记录~</div>
+			</div>
+		
+			<div class="fui-list-group noborder nomargin container"></div>
+			
+	    	<div class='infinite-loading' style="text-align: center; color: #666;">
+	    		<span class='fui-preloader'></span>
+	    		<span class='text'> 正在加载...</span>
+	    	</div>			
+		</div>		
+</div>
+
+<script id='tpl_creditlog_list' type='text/html'>
+	<%each list as item%>
+	  <div class="fui-list">
+		<div class="fui-list-inner">
+			<div class="title"><%item.title%></div>			
+			<div class="text"><%item.ctime%></div>			
+		</div>
+		<div class="fui-list-angle">
+		<%if item.io==1 %> 
+			<span class="text-success"><%item.credit%></span>
+		<%else%>
+			<span class="text-danger">-<%item.credit%></span>
+		<%/if%>
+		</div>
+	</div>
+	<%/each%>
+</script>
+<script language="javascript">
+	require(['business/credit'],function(modal){
+		modal.init({bid:"{$_GPC['id']}"});
+	});
+</script>
+
+{template $this->mytpl('_footer')}

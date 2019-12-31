@@ -1,0 +1,129 @@
+{template $this->mytpl('_header')}
+<style>
+	.fui-cell-group .fui-cell .fui-cell-icon {
+		width:2rem;
+	}
+	.goods-label-list {
+		padding: 0.4rem 0.4rem;
+		background: #fff;
+	}
+	.standard-list{
+		overflow: hidden;
+	}
+	.standard-list li{
+		list-style-type: none;
+		display: inline-block;
+		float: left;
+		font-size: 0.6rem;
+		min-height: 1.2rem;
+		line-height: 1.2rem;
+		border-radius: 0.2rem;
+		border: 1px solid #cacaca;
+		padding: 0 0.3rem 0 0.3rem;
+		margin-right: 5px;
+		margin-top: 5px;
+		max-width: 355px;
+	}
+</style>
+
+<div class="fui-page fui-page-current" id="fui-page-1531976550146">
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">设备巡检</div>
+        <div class="fui-header-right"></div>
+    </div>
+    <div class="fui-content navbar">        
+         <div class="fui-title">
+			 <i class="icon icon-city"></i>
+			 小区名称
+		 </div>
+		 <div class="fui-cell-group">
+			 <div class="goods-label-list" style="overflow: hidden;">
+			 	<div class="goods-label-style3">
+			 		<span class="cl-3 cl-4 cl-3">
+			 			<strong>巡检类别</strong>
+			 		</span>
+			 	</div>
+			 	<div class="pull-right">
+			 	<span>
+			 		<strong class="text-danger">状态</strong>
+			 	</span>
+			 	</div>
+			 </div>   
+			 <div class="fui-cell">
+				<div class="fui-cell-text">规格型号：</div>
+			 </div>
+			 <div class="fui-cell">
+				<div class="fui-cell-text">厂商品牌：</div>
+			 </div>
+			 <div class="fui-cell">
+				<div class="fui-cell-text">维保厂商：</div>
+			 </div>
+			 <div class="fui-cell">
+				<div class="fui-cell-text">
+					巡检标准：
+					<ul class="standard-list">
+						<li>标准1标准1标准1</li>
+						<li>标准1标准1</li>
+						<li>标准1</li>
+						<li>标准准1</li>
+						<li>标1</li>
+						<li>标准1</li>
+						<li>标准2</li>
+					</ul>
+				</div>
+				
+			 </div>
+			 <div class="fui-cell">
+				<div class="fui-cell-text">地址：</div>
+				<i class="icon icon-location" ></i>
+			 </div>
+			 <div class="fui-cell">
+				<div class="fui-cell-text">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：无</div>
+			 </div>
+		 </div>
+		 
+		 <div class="fui-cell-group">
+			 <div class="category-type">
+				 <p>请选择您巡检状态：</p>
+				 <span class="fui-lg-1 fui-md-2 fui-sm-3 fui-xs-4">
+					 <a href="javascript:void(0)" data-type="1">待处理</a>
+				 </span>
+				 <span class="fui-lg-1 fui-md-2 fui-sm-3 fui-xs-4">
+				 	<a href="javascript:void(0)" data-type="2">处理中</a>
+				 </span>
+				 <span class="fui-lg-1 fui-md-2 fui-sm-3 fui-xs-4">
+				 	<a href="javascript:void(0)" data-type="3">已处理</a>
+				 </span>
+				 <div style="clear: both;"></div>
+			 </div>
+			 <div class="fui-cell must">
+			 	<div class="fui-cell-label">内容</div>
+			 	<div class="fui-cell-info">
+			 		<textarea rows="6" placeholder="内容 10-100个字" id="content" name="content"></textarea>
+			 	</div>
+			 	
+			 	<div class="fui-cell-icon">
+			 		<i class="icon icon-record text-success"  style="font-size:1.5rem"></i>
+			 	</div>
+			 </div>
+			 <div class="fui-cell">
+				 <div class="fui-cell-label">晒图</div>
+				 <div class="fui-cell-info">
+					 <ul class="fui-images fui-images-md" id="images">
+						 <div class="fui-uploader fui-uploader-md" data-max="3" data-count="0">
+							 
+						 </div>
+					 </ul>
+				 </div>
+			 </div>
+		 </div>
+		
+    </div>
+	<div class="fui-footer">
+		<a href="" class="btn btn-warning btn-submit block">提交</a>
+	</div>
+ </div>
+{template $this->mytpl('_footer')}

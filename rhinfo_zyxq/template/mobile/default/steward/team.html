@@ -1,0 +1,44 @@
+{template $this->mytpl('_header')}
+
+<div class='fui-page  fui-page-current member-cart-page'>
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back"></a>
+	</div>
+	<div class="title">团队成员</div> 
+
+    </div>
+
+    <div class='fui-content ' >
+    {if empty($list)}
+		<div class='content-empty'>
+			 <i class='icon icon-friend'></i><br/>团队成员还没有建立<br/>			
+		</div>
+	{else}
+		{loop $list $item}
+	    <div class="fui-list goods-item align-start" data-id="{$item['id']}">
+			<div class="fui-list-media image-media">		    
+				<img data-lazy="{php echo tomedia($item['avatar'])}" class="circle">
+			</div>
+			<div class="fui-list-inner">
+				{if !empty($item['chaturl'])}
+				<a href="{$item['chaturl']}">
+					<div class="title"> {$item['nickname']}</div>
+					<div class="text">{$item['content']}</div>	
+				</a>
+				{else}
+					<div class="title"> {$item['nickname']}</div>
+					<div class="text">{$item['content']}</div>	
+				{/if}							   
+				<div class="text pull-right">
+				<a href="{php echo $this->createMobileurl($mydo,array('op'=>'teamcomm','type'=>'2','id'=>$item['id']));}">{if $item['down']}{$item['down']}{/if} <i class='icon icon-bad1'></i></a>&nbsp;&nbsp;&nbsp;
+				<a href="{php echo $this->createMobileurl($mydo,array('op'=>'teamcomm','type'=>'1','id'=>$item['id']));}"> <i class='icon icon-good'></i> {if $item['up']}{$item['up']}{/if}</a></div>		
+			</div>			
+	   	 </div>		
+		{/loop}
+	 {/if}
+
+    </div>	
+</div>
+
+{template $this->mytpl('_footer')}

@@ -1,0 +1,43 @@
+{template $this->mytpl('_header')}
+
+<div class='fui-page fui-page-current  fui-page-current sns-board-page'>
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">我的回复</div>
+        <div class="fui-header-right btn-edit">&nbsp;</div>
+    </div>
+    <div class="fui-content">
+         <div class="fui-list-group" id="user-replys-list" style="margin-top:0"></div>
+        <div class="empty" style="display:none;"><i class="icon icon-cascades" style="font-size:4rem;color:#ccc;"></i> <br/>暂时没有任何评论</div>
+        <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+    </div>
+
+
+    <script language='javascript'>
+        require(['forum/user'], function (modal) {
+            modal.initReply();
+        });		
+    </script>
+
+</div>
+<script type="text/html" id="tpl_user_reply_list">
+	<%each list as row%>
+        <a class='fui-list'  href="{php echo $this->createMobileUrl('forum',array('op'=>'comment'));}&pid=<%row.postid%>&bid=<%row.boardid%>">
+		<div class="fui-list-media post-detail-avatar">
+			<img data-lazy="<%row.logo%>" class="round">
+		</div>
+		 <div class="fui-list-inner">
+			<div class="subtitle"><%row.title%>&nbsp;&nbsp;<%row.posttitle%>
+			</div>			
+			<div class="text text-remark">发布时间:<%row.createtime%></div>
+		</div>  
+			 <div class="fui-list-angle">
+                    <div class="angle"> </div>
+                </div>
+        </a>    
+    <%/each%>
+</script>
+
+{template $this->mytpl('_footer')}

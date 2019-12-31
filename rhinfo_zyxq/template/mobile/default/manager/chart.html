@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<title>mobile-chart</title>
+	<link rel="stylesheet" type="text/css" href="../../../../static/mobile/fonts/iconfont.css">
+	<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="../../../../static/mobile/css/rhui.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../../static/mobile/css/style.css">
+	<script src="../../../../static/lib/chart/chart.min.js"></script>
+	<script src="../../../../static/lib/echarts/echarts-all.js"></script>
+	
+
+	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css"/>
+	<link href="http://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/daterangepicker.css" rel="stylesheet">
+	<script type="text/javascript" src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="http://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/moment.min.js"></script>
+	<script src="http://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/daterangepicker.js"></script>
+	
+	<style>
+		html{
+			font-size: 20px;
+		}
+		.m-chart-block {
+			background: #FFFFFF;
+		}
+
+		.m-chart {
+			height: 240px;
+			width: 100%;
+			padding: 5px;
+		}
+
+		.m-chart-item {
+			overflow: hidden;
+			margin: 0.5rem;
+			background: #fff;
+			box-shadow: 0 0.1rem 0.1rem rgba(204, 204, 204, 0.3);
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			position: relative;
+		}
+
+		.my-panel-head {
+			min-height: 2rem;
+			background: #f7f7f7;
+			position: relative;
+			overflow: hidden;
+			border-top-left-radius: 3px;
+			border-top-right-radius: 3px;
+			padding-top: 0.3rem;
+		}
+
+		.my-panel-head:after {
+			content: "";
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			width: 100%;
+			height: 1px;
+			border-bottom: 1px solid #D9D9D9;
+			-webkit-transform-origin: 0 100%;
+			-ms-transform-origin: 0 100%;
+			transform-origin: 0 100%;
+			-webkit-transform: scaleY(0.5);
+			-ms-transform: scaleY(0.5);
+			transform: scaleY(0.5);
+		}
+
+		.count.right-bottom {
+			position: absolute;
+			right: 10px;
+			bottom: 10px;
+			font-size: 0.6rem;
+		}
+
+		.search-ele {
+			height: 1.4rem;
+			margin-bottom: 0.3rem;
+			margin-left: 0.3rem;
+			margin-right: 0;
+			float: left;
+			border: 1px solid #ccc;
+			color: #333;
+			border-radius: 3px;
+			border-top-left-radius: 3px;
+			border-top-right-radius: 3px;
+			border-bottom-right-radius: 3px;
+			border-bottom-left-radius: 3px;
+			font-size: 0.6rem;
+		}
+
+		.search-ele.button {
+			height: 1.4rem;
+			background-color: #fff;
+			background-clip: padding-box;
+			width: 54px;
+			line-height: 1.4rem;
+		}
+
+		.search-ele.button:active {
+			background: rgb(146, 146, 146);
+			color: #ffffff;
+		}
+		
+		.my-panel-head button{
+			height: 1.4rem;
+			line-height: 1.4rem;
+			padding: 0;
+			margin: 0;
+			width: 8.5rem;
+			font-size: 0.6rem;
+			margin-bottom: 0.3rem;
+			margin-left: 0.3rem;
+			margin-right: 0;
+			float: left !important;
+			background: #fff !important;
+			border: 1px solid #ccc !important;
+		}
+		
+		.daterangepicker{
+			font-size: 0.2rem;
+		}
+		.form-control{
+			font-size: 0.2rem;
+		}
+		
+		.btn-sm{
+			padding: 0 10px;
+		}
+		.table-condensed,.input-mini,.daterangepicker_input i{
+			font-size: 0.6rem;
+		}
+		.fui-content.margin{
+			overflow: hidden;
+			overflow-y: scroll;
+		}
+		.daterangepicker.center{
+			left: 50% !important;
+			top: 52px !important;
+			margin-left: -139px;
+		}
+		.daterangepicker.opensleft:before,.daterangepicker.opensleft:after{
+			content: '';
+			border: 0;
+		}
+		@media screen and (max-width: 320px) {
+			.calendar{
+				height: 230px;
+			}
+			.calendar-table,.table-condensed{
+				height: 180px;
+				overflow: hidden
+			}
+			.daterangepicker td, .daterangepicker th{
+				height: 14px;
+			}
+			.table-condensed > tbody > tr > td{
+				padding: 0px;
+			}
+
+		}
+	</style>
+</head>
+
+<body>
+	<div class="fui-page fui-page-current" id="fui-page">
+		<div class="fui-header">
+			<div class="fui-header-left">
+				<a class="back"></a>
+			</div>
+			<div class="title">统计分析</div>
+			<div class="fui-header-right"></div>
+		</div>
+		<div class="fui-content margin">
+			<div class="continer">
+				<ul class="m-chart-block">
+					<li class="m-chart-item">
+						<div class="my-panel-head">
+							<select class="search-ele">
+								<option value="">请选择主体</option>
+							</select>
+							<select class="search-ele">
+								<option value="">不限</option>
+							</select>
+							
+							<button class="search-ele button" type="button">
+								<i class="fa fa-search"></i>
+								搜索
+							</button>
+						</div>
+						<span class="count right-bottom">总共数据：
+							<strong>9</strong> 条</span>
+						<div class="m-chart" id="chartComplain"></div>
+					</li>
+					<li class="m-chart-item">
+						<div class="my-panel-head">
+							<select class="search-ele">
+								<option value="">请选择主体</option>
+							</select>
+							<button type="button" class="btn btn-default pull-right" id="daterange-btn">
+								<i class="fa fa-calendar"></i>
+								<span>时间</span>
+								<i class="fa fa-caret-down"></i>
+							</button>
+							<select class="search-ele">
+								<option value="">不限</option>
+							</select>
+							<button class="search-ele button" type="button">
+								<i class="fa fa-search"></i>
+								搜索
+							</button>
+						</div>
+						<span class="count right-bottom">总共数据：
+							<strong>9</strong> 条</span>
+						<div class="m-chart" id="chartFix"></div>
+					</li>
+					<li class="m-chart-item">
+						<div class="my-panel-head">
+							<select class="search-ele">
+								<option value="">请选择主体</option>
+							</select>
+							<select class="search-ele">
+								<option value="">不限</option>
+							</select>
+							<button class="search-ele button" type="button">
+								<i class="fa fa-search"></i>
+								搜索
+							</button>
+						</div>
+						<span class="count right-bottom">总共数据：
+							<strong>9</strong> 条</span>
+						<div class="m-chart" id="chartBind"></div>
+					</li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+	<script type="text/javascript" src="phone.js"></script>
+	
+	<script>
+    function init() {
+        //定义locale汉化插件
+        var locale = {
+            "format": 'YYYY-MM-DD',
+            "separator": " -222 ",
+            "applyLabel": "确定",
+            "cancelLabel": "取消",
+            "fromLabel": "起始时间",
+            "toLabel": "结束时间'",
+            "customRangeLabel": "自定义",
+            "weekLabel": "W",
+            "daysOfWeek": ["日", "一", "二", "三", "四", "五", "六"],
+            "monthNames": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+            "firstDay": 1
+        };
+        //初始化显示当前时间
+        $('#daterange-btn span').html(moment().subtract('hours', 1).format('YYYY-MM-DD') + ' - ' + moment().format('YYYY-MM-DD'));
+        //日期控件初始化
+        $('#daterange-btn').daterangepicker(
+            {
+                'locale': locale,
+                startDate: moment().subtract(29, 'days'),
+                endDate: moment()
+            },
+            function (start, end) {
+                $('#daterange-btn span').html(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
+            }
+       );
+    };
+    $(document).ready(function() {
+        init();
+		
+		$(".daterangepicker").addClass('center');
+　　	
+		
+		
+    });
+</script>
+</body>
+
+</html>

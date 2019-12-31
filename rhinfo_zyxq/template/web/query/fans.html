@@ -1,0 +1,46 @@
+<div class="form-group">
+		<div class="col-sm-12 col-lg-12 col-xs-12">
+			<div class="input-group ">
+				<input type="text" class="form-control" id="keyword"  placeholder="昵称/姓名/手机号" name="keyword">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" onclick="searchfans();">搜索</button>
+				</span>
+			</div>
+		</div>	
+</div>
+
+<div class="panel-body table-responsive" id="tpl_fans_result">
+	<table class="table table-hover"><tr><td></td></tr></table>
+</div>    	  
+
+<script>
+	function searchfans(){
+		var keyword =  $.trim($("#keyword").val());	
+		if (keyword==''){
+			return;
+		}
+		var html = '<table class="table table-hover">';
+		$.post("{php echo $this->createWeburl($mydo,array('op'=>'fans')).$mywe['direct'];}",
+		{keyword:keyword},
+		function(data,status){
+			if (data=='none'){
+				html += '<tr><td>没有找到相关内容.</td></tr></table>';
+			}
+			else {
+			    var json = eval(data);
+			    for(var i=0; i<json.length; i++) {  
+					html += '<tr><td><img style="height:45px;" src="'+ json[i].avatar + '"/></td><td>' + json[i].nickname + '</td><td>' + json[i].realname + '</td><td><a href="javascript:;" onclick="';
+					html += "myselect('" + json[i].uid + "','" + json[i].openid + "','"+ json[i].nickname +"')";
+					html += '" data-dismiss="modal">选择</a></td></tr>';
+				  }  
+				html +='</table>';
+			}
+			$("#tpl_fans_result").html(html);
+		});
+	}
+	function myselect(uid,openid,nickname){
+		$("#uid").val(uid);
+		$("#openid").val(openid);
+		$("#nickname1").val(nickname);
+	}	
+</script>

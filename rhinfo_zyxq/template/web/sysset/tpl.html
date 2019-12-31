@@ -1,0 +1,144 @@
+﻿ 
+
+  <div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">模板消息设置</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		 <div class="alert alert-info" role="alert"> 
+		注: 只有 认证服务号 添加消息模板后才可以使用模板消息功能。
+		登陆【微信公众平台】-【功能】-【模板消息】
+		选择行业为：“IT科技/互联网|电子商务，房地产/物业”
+		在【模板库】搜索对应模板标题找到对应模板,点击详情保存添加,重复执行。
+		把【我的模板】下对应标题复制模板ID到本页设置对应位置。</div>
+	</div>
+</div>
+
+ <div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">模板标题颜色</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+		  {php echo tpl_form_field_color('topcolor',$item['topcolor'])}
+		  <span class="help-block">通知模板标题颜色，可为空。</span>
+		</div>
+ </div>
+ 
+  <div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">模板文本颜色</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+		  {php echo tpl_form_field_color('textcolor',$item['textcolor'])}
+		  <span class="help-block">通知模板文本颜色，可为空。 </span>
+		</div>
+ </div>
+ 
+ <div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">缴费金额颜色</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+		  {php echo tpl_form_field_color('feecolor',$item['feecolor'])}
+		  <span class="help-block">缴费模板金额颜色，可为空。 </span>
+		</div>
+ </div>
+ 
+  <div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业管理通知</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" name="tplid1"  class="form-control" value="{$item['tplid1']}" placeholder="请输入新报修通知模板ID,从微信公众号后台添加获取">
+		<span class="help-block">编号：OPENTM204594069 物业管理通知</span>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业缴费通知</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" name="tplid12" class="form-control" value="{$item['tplid12']}" placeholder='请输入物业费缴费通知模板ID,从微信公众号后台添加获取' />
+		<span class="help-block">编号：TM00131 物业费缴费提醒</span>
+	</div>
+</div> 
+ <div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">新报修通知</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" name="tplid2"  class="form-control" value="{$item['tplid2']}" placeholder="请输入新报修通知模板ID,从微信公众号后台添加获取">
+		<span class="help-block">编号：OPENTM202109939 新报修通知</span>
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">报修完成通知</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" name="tplid3" value="{$item['tplid3']}" class="form-control" placeholder='请输入报修完成通知通知模板ID,从微信公众号后台添加获取'>
+		<span class="help-block">编号：OPENTM400221028 报修完成通知</span>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">意见处理通知</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" name="tplid4" value="{$item['tplid4']}" class="form-control" placeholder='请输入投诉处理结果模板ID,从微信公众号后台添加获取'>
+		<span class="help-block">编号：OPENTM403082610 意见处理通知</span>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">新投诉通知</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" name="tplid5" class="form-control" value="{$item['tplid5']}" placeholder='请输入投诉通知模板ID,从微信公众号后台添加获取' />
+		<span class="help-block">编号：OPENTM202374445 新投诉通知</span>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">停水通知</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" name="tplid6" value="{$item['tplid6']}" class="form-control" placeholder='请输入停水通知模板ID,从微信公众号后台添加获取'>
+		<span class="help-block">编号：TM00135 小区停水通知</span>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">停燃气通知</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" name="tplid7" value="{$item['tplid7']}" class="form-control" placeholder='请输入燃气通知模板ID,从微信公众号后台添加获取'>
+		<span class="help-block">编号：TM00137 小区停燃气通知</span>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">停电通知</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" name="tplid8" value="{$item['tplid8']}" class="form-control" placeholder='请输入停电通知模板ID,从微信公众号后台添加获取'>
+		<span class="help-block">编号：TM00136 小区停电通知</span>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">门禁到期通知</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" name="tplid9" value="{$item['tplid9']}" class="form-control" placeholder='请输入门禁通知模板ID,从微信公众号后台添加获取'>
+		<span class="help-block">编号：TM00418 小区门禁卡到期失效提醒</span>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">电梯中断通知</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" name="tplid10" value="{$item['tplid10']}" class="form-control" placeholder='请输入电梯通知模板ID,从微信公众号后台添加获取'>
+		<span class="help-block">编号：TM00415 小区电梯中断服务通知</span>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">停车场停用通知</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" name="tplid11" value="{$item['tplid11']}" class="form-control" placeholder='请输入停车场通知模板ID,从微信公众号后台添加获取'>
+		<span class="help-block">编号：TM00416 小区停车场中断服务通知</span>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">支付成功通知</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" name="businesstplid" value="{$item['businesstplid']}" class="form-control" placeholder='请输入支付成功通知模板ID,从微信公众号后台添加获取'>
+		<span class="help-block">编号：OPENTM400231951 支付成功通知</span>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">邀请注册成功通知</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" name="redpackettplid" value="{$item['redpackettplid']}" class="form-control" placeholder='请输入邀请注册成功通知模板ID,从微信公众号后台添加获取'>
+		<span class="help-block">编号：OPENTM401095581 邀请注册成功通知</span>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">快件到站通知</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" name="expresstplid" value="{$item['expresstplid']}" class="form-control" placeholder='请输入快件到达通知模板ID,从微信公众号后台添加获取'>
+		<span class="help-block">编号：OPENTM406278751 快件到达通知</span>
+	</div>
+</div>

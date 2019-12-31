@@ -1,0 +1,159 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-list-media img { width:4rem;height:4rem;}
+.fui-stars .icon{color:orange;}
+.fui-list:before {border-top:none;}
+.fui-list-group:not(.fui-list-group-o):before {border-top:0px;}
+.fui-list-group:not(.fui-list-group-o):after {border-top:0px;}
+.sortMenu > li{border-right:none;}
+</style>
+<div class="fui-page shop-index-page page-merch-list">
+    <div class="fui-header">
+	 <div class="fui-header-left"><a class="back"></a> </div>
+	<div class="title">周边商家	</div>
+	<div class="fui-header-right"><a href="{php echo $this->createMobileUrl('auth',array('op'=>'regbusiness'))}">入驻</a></div>
+	</div>
+    <div class="fui-content">
+		<form action="{php echo $this->createMobileUrl('business',array('op'=>'index'))}" method="post">
+			<div class="fui-searchbar bar">
+				<div class="searchbar center">
+					<input type="hidden" name="lbs" value="{$lbs}" />
+					<input type="submit" class="searchbar-cancel searchbtn" value="搜索" />
+					<div class="search-input">
+						<i class="icon icon-search"></i>
+						<input type="search" placeholder="输入关键字..." value="{$_GPC['keyword']}" class="search" name="keyword" id="keyword">
+					</div>
+				</div>
+			</div>
+		</form>
+		 <ul class="sortMenu fui-list">
+            <li class="fui-list-inner" id="sortmenu_rule" data-class="sortmenu_rule"><span id="sortmenu_rule_text">附近</span><i class="icon icon-down"></i></li>
+			<li class="fui-list-inner" id="sortmenu_cate" data-class="sortmenu_cate"><span id="sortmenu_cate_text">分类</span><i class="icon icon-down"></i></li>
+            <li class="fui-list-inner" id="sortmenu_sort" data-class="sortmenu_sort"><span id="sortmenu_sort_text">排序</span><i class="icon icon-down"></i></li>
+            <div class="sortmenu_rule" style="display: none;">
+                <ul>
+                    <li range="500" text="附近">附近</li>
+                    <li range="0.5" text="500米">500米</li>
+                    <li range="1" text="1000米">1000米</li>
+                    <li range="2" text="2000米">2000米</li>
+                    <li range="5" text="5000米">5000米</li>
+                    <li range="10000" text="5000米+">5000米+</li>
+                </ul>
+            </div>
+            <div class="sortmenu_cate" style="display: none;">
+                <ul>
+                    <li cateid="0" text="全部分类" class="on"><i class="fa fa-th-large"></i>&nbsp;全部分类</li>
+
+                    {loop $category $item}
+						<li cateid="{$item['id']}" text="{$item['title']}">
+							<span class="imgWrap">
+							<img src="{php echo tomedia($item['thumb']);}" class="thumb_url">
+							</span>
+							&nbsp;{$item['title']}
+						</li>
+						{loop $item['category'] $cate}
+							<li cateid="{$cate['id']}" text="{$cate['title']}">
+							<span class="imgWrap">
+							<img src="{php echo tomedia($cate['thumb']);}" class="thumb_url">
+							</span>
+							&nbsp;{$item['title']}-{$cate['title']}
+						</li>
+						{/loop}
+                    {/loop}
+
+                </ul>
+            </div>
+            <div class="sortmenu_sort" style="display: none;">
+                <ul>
+                    <li sorttype="0" text="距离最近">距离最近</li>
+                    <li sorttype="1" text="最新入驻">最新入驻</li>
+                 </ul>
+            </div>
+        </ul>
+        <div class="fui-mask-m sort-mask" style="display: none;"></div>
+        <div class='fui-content-inner'>
+            <div class='content-empty' style='display:none;'>
+                <i class='icon icon-lights'></i><br/>抱歉，还没有商家入驻呢<br/>	
+            </div>
+            <div class='container'></div>
+            <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+        </div>
+    </div>
+	<script type="application/javascript">
+    wx.ready(function () {
+        asd();        
+    });
+    function asd() {
+        wx.getLocation({
+            type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+            success: function (res) {
+                var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                var speed = res.speed; // 速度，以米/每秒计
+                var accuracy = res.accuracy; // 位置精度
+				require(['business/list'], function (modal) {
+					modal.init({
+					keyword:'{$_GPC['keyword']}',
+					lbs:'{$_GPC['lbs']}',
+					range:'{$_GPC['range']}',
+					cateid:'{$_GPC['cateid']}',
+					lat:latitude,
+					lng:longitude
+					});
+				});
+            }
+        });
+    }
+</script>
+    <script id='tpl_region_list' type='text/html'>
+        <%each list as value%>
+            <div class="fui-list store-item"
+                  data-lng="<%value.lng%>"
+                  data-lat="<%value.lat%>">
+
+                <div class="fui-list-media">
+					<%if value.thumb!=''%>
+                        <a href="<%value.businessurl%>">						
+                        <img src="<%value.thumb%>" class="round">						
+                        </a>
+					<%/if%>
+                </div>
+                <div class="fui-list-inner store-inner">
+                    <a href="<%value.businessurl%>">
+                    <div class="title"> <span class='storename'><%value.title%></span></div>
+					 <div class='fui-stars'>
+						<%if value.level>=1%><i class='icon icon-favorfill'></i><%else%><i class='icon icon-favor'></i><%/if%>
+						<%if value.level>=2%><i class='icon icon-favorfill'></i><%else%><i class='icon icon-favor'></i><%/if%>
+						<%if value.level>=3%><i class='icon icon-favorfill'></i><%else%><i class='icon icon-favor'></i><%/if%>
+						<%if value.level>=4%><i class='icon icon-favorfill'></i><%else%><i class='icon icon-favor'></i><%/if%>
+						<%if value.level>=5%><i class='icon icon-favorfill'></i><%else%><i class='icon icon-favor'></i><%/if%>			 
+					</div>
+                    <%if value.address!=''%>
+                    <div class="text">
+                        地址: <span class='realname'><%value.city%><%value.district%><%value.address%></span>
+                    </div>
+                    <%/if%>
+
+                    <div class="text location" style="color:green;">
+                        <%if value.distance<100000%>
+                        距离您:<%value.distance%>km
+                        <%else%>
+                        <%/if%>
+                    </div>
+                    </a>
+                </div>
+                <div class="fui-list-angle ">
+                    <%if value.telphone!=''%><a href="tel:<%value.telphone%>" class='external '><i class=' icon icon-phone' style='color:green'></i></a><%/if%>
+                    <a href="<%value.mapurl%>" class='external' ><i class='icon icon-location' style='color:#f90'></i></a>
+                </div>
+            </div>
+        <%/each%>
+
+        <div id="nearStore" style="display:none">
+            <div class='fui-list store-item' id='nearStoreHtml'></div>
+        </div>
+		
+    </script>		
+</div>
+
+{template $this->mytpl('_footer')}

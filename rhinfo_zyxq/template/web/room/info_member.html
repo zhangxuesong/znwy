@@ -1,0 +1,26 @@
+﻿<div class="panel panel-default">
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>					
+					<th width="80">ID</th>
+					<th width="120">成员姓名</th>
+					<th width="100">手机号码</th>
+					<th width="60">{if $mv['otype']==1}成员{else}租户{/if}</th>
+					<th width="60">状态</th>
+				</tr>
+			</thead>
+			<tbody>
+				{loop $room_mp $mv}
+				<tr>					
+					<td>{$mv['id']}</td>
+					<td>{$mv['ownername']}</td>
+					<td>{$mv['mobile']}</td>
+					<td>{$mv['otype']}</td>
+					<td>{if $mv['deleted']==1}禁用{else}正常{/if}</td>					
+				</tr>
+			{/loop}	
+			</tbody>
+		</table>    	  
+	</div>	
+</div>

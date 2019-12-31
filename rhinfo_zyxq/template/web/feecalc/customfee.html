@@ -1,0 +1,112 @@
+{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+<style>
+#treeview{
+	height:600px;
+	overflow-y:auto;
+	overflow-x:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+::-webkit-scrollbar{
+	width: 5px;
+	height: 5px;
+}
+::-webkit-scrollbar-thumb{
+	background-color: #ccc;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:vertical:hover{
+	background-color: #999;
+}
+::-webkit-scrollbar-thumb:vertical:active{
+	background-color: #999;
+}
+::-webkit-scrollbar-button{
+	display: none;
+}
+::-webkit-scrollbar-track{
+	background-color: #f1f1f1;
+}
+.margin-top{margin-top:60px;}
+.panel-title{
+	display:inline-block;
+	height:26px;
+	line-height:26px;
+	font-size:14px;
+	font-weight:bold;
+}
+</style>
+
+<div class="col-xs-12 col-sm-3 col-lg-2">
+	<div class="panel panel-default margin-top">
+		<div class="panel-heading">
+			<div class="panel-title">选择房产</div>
+		</div>
+		<div id="treeview"></div>
+	</div>
+</div>
+<div class="col-xs-12 col-sm-9 col-lg-10">
+	<div id="selectable-output" class="margin-top"></div>
+</div>
+{template 'web/_iframe_footer'}
+<script src="../addons/rhinfo_zyxq/static/lib/tree/js/bootstrap-treeview.min.js"></script>
+<script type="text/javascript">			
+	$(function() {
+        var json = {php echo json_encode($houses);};
+	    $('#treeview').treeview({
+			  color: "#000",
+			  enableLinks: false,
+			  showBorder: false,
+			  highlightSelected: true,
+			  selectedColor: "#fff",
+			  selectedBackColor: "#5bc0de",
+			  showIcon:true,
+			  data: json,
+			  onNodeSelected: function(event, node) {
+				// alert(JSON.stringify(node));
+				 var index = layer.msg('正在加载...', {icon: 16});
+				 if(node.level==3){
+					  var url = "{php echo $this->createWebUrl('feecalc',array('op'=>'customitem')).$mywe['direct'];}"; 
+						$.get(url, {rid:node.rid,bid:node.bid,tid:node.tid,hid:node.id}, function(data){
+							layer.close(index);
+							$('#selectable-output').html(data);
+						});	
+				 }
+				 else if(node.level==2){
+					  var url = "{php echo $this->createWebUrl('feecalc',array('op'=>'customitem')).$mywe['direct'];}"; 
+						$.get(url, {rid:node.rid,bid:node.bid,tid:node.id}, function(data){
+							layer.close(index);
+							$('#selectable-output').html(data);
+						});		
+				 }
+				 else if(node.level==1){
+					  var url = "{php echo $this->createWebUrl('feecalc',array('op'=>'customitem')).$mywe['direct'];}"; 						
+						$.get(url, {rid:node.rid,bid:node.id}, function(data){
+							layer.close(index);
+							$('#selectable-output').html(data);
+						});		
+				 }
+				 else if(node.level==0){
+						var url = "{php echo $this->createWebUrl('feecalc',array('op'=>'customitem')).$mywe['direct'];}"; 
+						$.get(url, {rid:node.id}, function(data){
+							layer.close(index);
+							$('#selectable-output').html(data);
+						});		
+				 }
+				},
+				onNodeUnselected: function (event, node) {
+				 
+				}
+        });
+		$("#treeview").height($(window).height()- 120);
+		$('#selectable-output').html('');	
+	});
+	function myreturn(){
+		var url = "{php echo $this->createWeburl('fee',array('op'=>'item')).$mywe['direct'];}";	
+		window.location.href = url;
+	}
+</script> 
+</body>
+</html>

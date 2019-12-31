@@ -1,0 +1,80 @@
+<span class="echart-title">已缴账单</span>
+<span class="echart-count">单位：元</span>
+<div id="chartPay"></div>
+<script type="text/javascript">
+	var chartPay = echarts.init(document.getElementById('chartPay'),'shine');
+		option_pay = {
+			legend: {
+				data:['缴费金额'],
+				textStyle: {
+					color: "rgb(249, 249, 249)"
+				},
+				show:false
+			},
+			grid:{
+				y:25,
+				y2:20,
+				x2:40,
+				left:'1%',
+				right:'5%',
+				top:'5%',
+				containLabel:true
+			},
+			calculable : true,
+			xAxis : [
+				{
+					type : 'category',
+					boundaryGap : false,
+					data : function (){
+						var list = [];
+						for (var i = 6; i >=0; i--) {
+							list.push(getDay(-i));
+						}
+						return list;
+					}(),
+					axisLabel:{
+						textStyle:{
+							color: "#ffffff"
+						}
+					},
+					axisLine:{
+						lineStyle:{
+							color: "#ffffff"
+						}
+					},
+				}
+			],
+			yAxis : [
+				{
+					type : 'value',
+					textStyle:{
+						color: "#fffff"
+					},
+					axisLabel:{
+						textStyle:{
+							color: "#ffffff"
+						}
+					},
+					axisLine:{
+						lineStyle:{
+							color: "#ffffff"
+						}
+					},
+				}
+			],
+			series : [				
+				{
+					name:'缴费金额',
+					type:'line',
+					smooth:true,
+					itemStyle: {normal: {areaStyle: {type: 'default'}}},
+					data:[{$data}]
+				},
+			]
+		};
+	chartPay.setOption(option_pay);
+	autoPlay(chartPay,option_pay);
+	window.onresize = function() {
+		chartPay.resize();
+	};
+</script>

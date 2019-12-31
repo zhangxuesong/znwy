@@ -1,0 +1,334 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<style type="text/css">
+.nav-tabs li a { padding: 3px 10px;}
+</style>
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body">  
+	<!-- Nav tabs -->		
+		<ul class="nav nav-tabs" role="tablist" id="mytabs">
+		   <li class="active" role="presentation"><a href="#repair" role="tab" data-toggle="tab">数据维护</a></li>		  
+		  <!--  <li role="presentation"><a href="#update" role="tab" data-toggle="tab">系统更新</a></li>
+		    <li role="presentation"><a href="#license" role="tab" data-toggle="tab">系统授权</a></li>-->
+		</ul>
+		<div class="tab-content">		 		  
+		  
+		  <div role="tabpanel" class="tab-pane active" id="repair">
+			<div class="form-group">
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					 <div class="alert alert-info" role="alert"> 
+					数据库修复主要用于修复缺失字段。<br>
+					菜单修复主要用于修复系统菜单配置，如使用了菜单自定义请勿修复。<br>
+					<span class="text-danger">系统恢复默认，保留系统配置、物业和小区信息，将清空系统所有数据，请谨慎操作！</span><br>
+					<span class="text-danger">系统初始化，保留房产信息，清除所有交易记录，请谨慎操作!</span><br>
+					<span class="text-danger">数据清理，可以指定清除相关记录，请谨慎操作!</span><br>
+					数据备份直接使用微擎后台备份数据库。
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+				{if $_W['isfounder']}
+					<a onClick="myrepair(this)" href="javascript:;" class="btn btn-default btn-sm" title="数据库修复"><i class="fa fa-wrench"></i> 数据库修复</a>
+					<a onClick="mynavmenu(this)" href="javascript:;" class="btn btn-default btn-sm" title="菜单修复"><i class="fa fa-bars"></i> 菜单修复</a>   
+				{/if}
+					<a onClick="mydefault(this)" href="javascript:;" class="btn btn-default btn-sm" title="系统恢复默认"><i class="fa fa-undo"></i> 系统恢复默认</a> 
+					<a onClick="myinit(this)" href="javascript:;" class="btn btn-default btn-sm" title="系统初始化"><i class="fa fa-circle-thin"></i> 系统初始化</a> 					
+					<a onClick="myclear(this)" href="javascript:;" class="btn btn-default btn-sm" title="数据清理"><i class="fa fa-trash"></i> 数据清理</a> 
+					<a onClick="mymodify(this)" href="javascript:;" class="btn btn-default btn-sm" title="主体变更"><i class="fa fa-sitemap"></i> 主体变更</a> 
+					<a href="{php echo url('system/database');}" target="_blank" class="btn btn-default btn-sm" title="数据备份"><i class="fa fa-database"></i> 数据备份</a> 
+					{if $_W['role'] == 'founder' && $_W['user']['username']=='administrator'}
+					<a onClick="myadmin(this)" href="javascript:;" class="btn btn-warning btn-sm" title="开发者维护"><i class="fa fa-cogs"></i> 开发者维护</a> 
+					{/if}
+				</div>
+			</div>		    
+		  </div>
+		   <div role="tabpanel" class="tab-pane" id="update">		   
+		   <br>
+		   {if !empty($filesnum)||!empty($databasenum)}
+				 <div>最新版本: <span style='color:red'> {$version['version']} </span></div>   
+				 <div>共检测到有 <span style='color:red'> {$filesnum} </span>需要更新</div>
+				 <div>共检测到有 <span style='color:red'> {$databasenum} </span>数据库需要更新</div><br>
+				<a href="{php echo $this->createWebUrl($mydo,array('op'=>'download'));}" class="btn btn-default btn-sm" title="立即更新"><i class="fa fa-wrench"></i> 立即更新</a>
+				<input type="hidden" value="{$filedow}" id="files"/>
+				<input type="hidden" id="secretkey"   value="{$version['secretkey']}"  />
+			{else}
+				<span>&nbsp;&nbsp;^_^ 恭喜您，您现在是最新版本！</span>
+			{/if}
+		    <!--  <a onClick="mycheck(this)" href="javascript:;" class="btn btn-default btn-sm" title="检测更新"><i class="fa fa-wrench"></i> 检测更新</a>-->
+		  </div>
+		   <div role="tabpanel" class="tab-pane" id="license">
+				<br>
+				<form action="" method="post" class="form-horizontal form" id="myform">		
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">网站URL</label>
+					<div class="col-xs-12 col-sm-8">
+						<input type="text" name="siteurl" class="form-control" value="{$version['siteurl']}" readonly/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">网站IP</label>
+					<div class="col-xs-12 col-sm-8">
+						<input type="text" name="siteip" class="form-control" value="{$version['siteip']}" readonly/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">站点ID</label>
+					<div class="col-xs-12 col-sm-8">
+						<input type="text" name="siteid" class="form-control" value="{$_W['setting']['site']['key']}" readonly />
+						<span class="help-block">站点ID,如果为空，请至系统->云服务-><a href="{php echo url('cloud/profile')}" target="_blank">注册站点</a></span>
+					</div>
+				</div>
+				{if empty($version['status'])}
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">授权码</label>
+					<div class="col-xs-12 col-sm-8">
+						<input type="text" name="secretkey" class="form-control" value="{$version['secretckey']}" placeholder='请填写授权码' />
+						<span class="help-block">系统未授权，暂无法更新，请联系官方授权。</span>							
+					</div>
+				</div>
+				{/if}
+				<div class="form-group">
+                    <label class="col-sm-2 control-label">授权状态</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <div class='form-control-static'>
+                            {if $version['status'] == 1}
+							<span class='label label-primary'>已授权</span>
+							{elseif $version['status'] == 2}
+							<span class='label label-default'>已过期</span>
+							{else}
+                            <span class='label label-danger'>未授权</span>
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+
+				<div class="form-group">
+					<div class="col-xs-12 col-sm-9 col-md-10 col-lg-10 col-sm-offset-3 col-md-offset-2 col-lg-offset-2">
+						 {if $version['status'] == 1} {else}<input name="submit" type="submit" value="验证授权" class="btn btn-primary" />{/if}
+						<input type="hidden" name="token" value="{$_W['token']}" />
+					</div>
+				</div>
+				
+			</form>
+		  </div>
+		  
+		</div>	
+    
+  </div>	
+ </div>
+
+{template 'web/_iframe_footer'}
+
+<script type="text/javascript">
+	function myrepair(obj){		
+		layer.confirm('确认修复吗？',{icon: 3, title:'提示',resize:false},
+		function(index){
+			//此处请求后台程序
+			$(obj).attr("disabled",true);	
+			layer.close(index);
+			var loadindex = layer.load(2);
+			$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+				{op:"repair"},
+				function(data,status){
+				 layer.close(loadindex);
+				 if (data=='ok'){
+					layer.msg('修复成功！',{icon:1});
+					$(obj).attr("disabled",false);
+					parent.location.reload();
+				 }
+				 else{
+					$(obj).attr("disabled",false);
+					layer.alert(data);
+				 }
+			});				
+		});	
+	}
+	function mycheck(obj){		
+		layer.confirm('确认检测更新吗？',{icon: 3, title:'提示',resize:false},
+		function(index){			
+			//此处请求后台程序
+			$(obj).attr("disabled",true);	
+			layer.close(index);
+			var loadindex = layer.load(2);
+			$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+				{op:"check"},
+				function(data,status){
+				 layer.close(loadindex);
+				 if (data=='0'){
+					$("#update").html("<span>&nbsp;&nbsp;^_^ 恭喜您，您现在是最新版本！</span>");
+				 }else{
+					var html = "<div>共检测到有 <span style='color:red'>"+ data + "</span>个文件需要更新</div><br/>"; 
+ 			  			html += "<a onClick='myupdate(this)' href='javascript:;' class='btn btn-default btn-sm' title='立即更新'><i class='fa fa-wrench'></i> 立即更新</a>";
+					$("#update").html(html);	
+				 }
+			});				
+		});	
+	}
+	function myupdate(obj){		
+		layer.confirm('确认更新？',{icon: 3, title:'提示',resize:false},
+		function(index){
+			var sk="{php echo $version['secretkey'];}";
+			var version="{php echo $version['version'];}";
+			//此处请求后台程序
+			$(obj).attr("disabled",true);	
+			layer.close(index);
+			var loadindex = layer.load(2);
+			$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+				{op:'download'},
+				function(data,status){
+				 layer.close(loadindex);
+				 if (data=='ok'){
+					layer.msg('更新成功！',{icon:1});
+					$(obj).attr("disabled",false);
+					location.replace(location.href);
+				 }else{
+					$(obj).attr("disabled",false);
+					layer.alert(data);
+				//	location.replace(location.href);
+				 }
+			});				
+		});	
+	}
+	function mynavmenu(obj){		
+		layer.confirm('确认修复吗？',{icon: 3, title:'提示',resize:false},
+		function(index){
+			//此处请求后台程序
+			$(obj).attr("disabled",true);	
+			layer.close(index);
+			var loadindex = layer.load(2);
+			$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+				{op:"navmenu"},
+				function(data,status){
+				 layer.close(loadindex);
+				 if (data=='ok'){
+					layer.msg('修复成功！',{icon:1});
+					$(obj).attr("disabled",false);
+					parent.location.reload();
+				 }
+				 else{
+					$(obj).attr("disabled",false);
+					layer.alert(data);
+				 }
+			});				
+		});	
+	}
+	function mydefault(obj){		
+		layer.confirm('确认恢复系统默认吗？',{icon: 3, title:'提示',resize:false},
+		function(index){
+			//此处请求后台程序
+			$(obj).attr("disabled",true);	
+			layer.close(index);
+			var loadindex = layer.load(2);
+			$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+				{op:"default"},
+				function(data,status){
+				 layer.close(loadindex);
+				 if (data=='ok'){
+					layer.msg('恢复成功！',{icon:1});
+					$(obj).attr("disabled",false);
+					parent.location.reload();
+				 }
+				 else{
+					$(obj).attr("disabled",false);
+					layer.alert(data);
+				 }
+			});				
+		});	
+	}
+	function myinit(obj){		
+		layer.confirm('确认系统初始化吗？',{icon: 3, title:'提示',resize:false},
+		function(index){
+			//此处请求后台程序
+			$(obj).attr("disabled",true);	
+			layer.close(index);
+			var loadindex = layer.load(2);
+			$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+				{op:"init"},
+				function(data,status){
+				 layer.close(loadindex);
+				 if (data=='ok'){
+					layer.msg('初始化成功！',{icon:1});
+					$(obj).attr("disabled",false);
+					parent.location.reload();
+				 }
+				 else{
+					$(obj).attr("disabled",false);
+					layer.alert(data);
+				 }
+			});				
+		});	
+	}
+	function myclear(obj){
+		var url = "{php echo $this->createWeburl($mydo,array('op'=>'clear')).$mywe['direct'];}";
+		title = '<i class="fa fa-hand-o-right"></i> 系统维护&nbsp;&gt;&nbsp;数据清理';
+		var index = layer.open({
+			type: 2,
+			title:title,
+			content: url,
+			area: ['800px','600px'],
+			fix: false, 
+			shade:0.4,
+			resize:false
+		});
+	}
+	function mymodify(obj){
+		var url = "{php echo $this->createWeburl($mydo,array('op'=>'modify')).$mywe['direct'];}";
+		title = '<i class="fa fa-hand-o-right"></i> 主体变更&nbsp;&gt;&nbsp;变更物业';
+		var index = layer.open({
+			type: 2,
+			title:title,
+			content: url,
+			area: ['600px','500px'],
+			fix: false, 
+			shade:0.4,
+			resize:false
+		});
+	}
+	function myadmin(obj){
+		layer.prompt({title: '输入密码',area: ['300px', '30px'], formType: 1}, function(pwd, index){
+			$(obj).attr("disabled",true);	
+			layer.close(index);	   
+			var loadindex = layer.load(2);
+			$.post("{php echo $this->createWebUrl('rhao').$mywe['direct'];}",
+				{pwd:pwd},
+				function(data,status){
+				 layer.close(loadindex);
+				 if (data=='ok'){								
+					layer.msg('维护成功!',{icon:1});
+					$(obj).attr("disabled",false);	
+					parent.location.reload();
+				 }
+				 else{
+					$(obj).attr("disabled",false);	
+					layer.msg(data,{icon:0});
+				 }
+			});	
+		  });	  
+	}
+	$(function(){
+		$('#myform').submit(function(){			
+			if($('input[name="siteurl"]').val() == ''){
+				layer.msg('未获取到网站域名.',{icon:0});
+				return false;
+			}
+			if($('input[name="siteip"]').val() == ''){
+				layer.msg('未获取到网站IP.',{icon:0});
+				return false;
+			}
+			if($('input[name="siteid"]').val() == ''){
+				layer.msg('站点ID为空，请先注册站点.',{icon:0});
+				return false;
+			}
+			if($('input[name="secretkey"]').val() == ''){
+				layer.msg('请输入授权码.',{icon:0});
+				return false;
+			}
+			return true;
+		});
+	});
+</script>
+</body>
+</html>

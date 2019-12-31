@@ -1,0 +1,83 @@
+{template $this->mytpl('_pheader')}
+<style>
+.fui-card .fui-card-info img {
+	width: 0.8rem;
+	height: 0.8rem;
+}
+.btn.btn-primary {
+	background: #f7f7f7;
+	color: #fff;
+	border: 1px solid #f7f7f7
+}
+
+.btn.btn-primary:active,
+.btn.btn-primary.disabled {
+	background: #f7f7f7;
+	color: #f7f7f7;
+	border: 1px solid #f7f7f7;
+}
+</style>
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">快件结算</div>
+		<div class="fui-header-right"></div>
+	</div>
+
+	<div class="fui-content {if ($count_send>0 || $count_take>0) && $_GPC['bstatus']==0}navbar{/if}">		
+		<div class="container"></div>
+		<div class="content-empty" style="display:none;">
+		<i class="icon icon-information"></i> <br/>暂时没有任何内容</div>
+        <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+	</div>  
+	{if ($count_send>0 || $count_take>0) && $_GPC['bstatus']==0}
+	 <div class='fui-navbar'>		
+		<a class='nav-item btn btn-primary'><span class="text-default">取件</span><span class="text-success">{$count_take}</span> <span class="text-default">寄件</span><span class="text-blue">{$count_send}</span> <span class="text-default">金额</span><span class="text-danger">{$money}元</span></a>
+		{if $res['from']=='company' || $res['from']=='express'}
+		<a id="btn-pay" class='nav-item btn btn-warning external'><i class="icon icon-money"></i> 支付</a>	
+		{else}
+		<a id="btn-recharge" class='nav-item btn btn-warning external'><i class="icon icon-money"></i> 核销</a>
+		{/if}
+	</div>
+	{/if}
+ </div>
+<script type="text/html" id="tpl_express_list">
+ <%each list as row%>
+	<div class="fui-card fui-card-list " style="overflow:hidden;">
+		<div class='fui-card-info' style="padding-bottom:0.5rem;">
+			<div class="text">                        
+				<div class="title text-orange"><%row.expresssn%><span class="pull-right"><%if row.thumb!=""%><img src="<%row.thumb%>"/><%/if%> <%row.comptitle%></span></div>
+				<%if row.io==2%><div class="subtitle">入库时间：<%row.ctime%><% if row.status==1%><span class="text-default pull-right">已取件</span><%/if%><% if row.status==0%><span class="text-danger pull-right">待取件</span><%/if%></div><%/if%>	
+				<%if row.io==1%><div class="subtitle">下单时间：<%row.ctime%><% if row.status==1%><span class="text-default pull-right">已派件</span><%/if%><% if row.status==0%><span class="text-danger pull-right">待派件</span><%/if%></div><%/if%>
+				<%if row.realname !="" %><div class="subtitle">业主：<%row.realname%> <%row.address%></div><%/if%>
+			</div>	
+		</div>
+	</div>
+<%/each%>
+</script>
+<script language='javascript'>
+	require(['express/pay'], function (modal) {
+		modal.initMoney({
+		   sid:"{$sid}",
+		   compid:"{$_GPC['compid']}",
+		   today:"{$_GPC['today']}",
+		   bstatus:"{$_GPC['bstatus']}",
+		   cfrom:"{$res['from']}",
+		   money:"{$money}",
+		   billids:"{$billids}",
+		   payfrom:"{php echo $this->rhinfo_isalipay==true?2:1;}"
+		});
+	});
+</script>
+<script language='javascript'>		
+	jssdkconfig = {php echo json_encode($_W['account']['jssdkconfig']);} || { jsApiList:[] };
+	jssdkconfig.debug = false;
+	wx.config(jssdkconfig);	
+	wx.ready(function () {
+		wx.hideOptionMenu();
+	});
+</script>
+</body>
+</html>

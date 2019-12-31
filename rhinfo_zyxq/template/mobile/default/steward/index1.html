@@ -1,0 +1,473 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-remark{
+	content: " ";
+	display: inline-block;
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+	height: 0.5rem;
+	width: 0.5rem;
+	border-width: 2px 2px 0 0;
+	border-color: #C8C8CD;
+	border-style: solid;
+	position: relative;
+	top: -1px;
+	margin-left: .3em;
+	margin-right:.3rem;
+}
+.member-page .mytitle{text-align:center;width:100%;background:#ff8000;padding-top:0.3rem;color:#fff;font-size:0.75rem;}
+.member-page .headinfo {
+    padding-top: 0.5rem;
+ }
+
+.member-page .headinfo .child {
+    padding-bottom: 0.5rem;
+}
+
+.headinfo .child .name{width:3rem;white-space: nowrap;
+text-overflow: ellipsis;
+overflow: hidden;margin:0 auto;}
+
+.fui-stars .icon{color:orange;}
+.right-remark{position:absolute;right:0;z-index:999;top:2rem;}
+</style>
+{if !empty($this->syscfg['bgcolor'])}
+    <style>
+        .member-page .headinfo
+        {background: {php echo $this->syscfg['bgcolor']};
+		 border-color:{php echo $this->syscfg['bgcolor']};}
+		.member-page .mytitle{background:{php echo $this->syscfg['bgcolor']};}
+    </style>
+{/if}
+	<style type="text/css">
+	*{padding:0;margin: 0}
+	.shake_box {
+		background: url(../addons/rhinfo_zyxq/static/mobile/images/lock.png) no-repeat #1e2020 center center;
+		position: fixed;
+		top : 0;
+		left: 0;
+		width  : 100%;
+		height : 100%;
+		z-index:999;
+	}
+	.shakTop,.shakBottom {
+		background: #282c2d;
+		position : fixed;
+		left  : 0;
+		width : 100%;
+		height: 50%;
+	}
+	.shakTop    {top    : 0;}
+	.shakBottom {bottom : 0;}
+
+	.shakTop span,.shakBottom span{
+		background: url(../addons/rhinfo_zyxq/static/mobile/images/shakBox.png) no-repeat;
+		position : absolute;
+		left: 50%;
+		width : 450px;
+		height: 254px;
+		margin: 0 0 0 -275px;
+	}
+	.shakTop    span{bottom : 0;}
+	.shakBottom span{
+		background-position: 0 -254px;
+		top : 0;
+	}
+
+	.shake_box_focus .shakTop{
+		animation        : shakTop 1s 1 linear;
+		-moz-animation   : shakTop 1s 1 linear;
+		-webkit-animation: shakTop 1s 1 linear;
+		-ms-animation    : shakTop 1s 1 linear;
+		-o-animation     : shakTop 1s 1 linear;
+	}
+	.shake_box_focus .shakBottom{
+		animation        : shakBottom 1s 1 linear;
+		-moz-animation   : shakBottom 1s 1 linear;
+		-webkit-animation: shakBottom 1s 1 linear;
+		-ms-animation    : shakBottom 1s 1 linear;
+		-o-animation     : shakBottom 1s 1 linear;
+	}
+
+	/* 向上拉动画效果 */
+	@-webkit-keyframes shakTop   {
+		0%   {top: 0;}
+		50%  {top: -200px;}
+		100% {top: 0;}
+	}
+	@-moz-keyframes shakTop      {
+		0%   {top: 0;}
+		50%  {top: -200px;}
+		100% {top: 0;}
+	}
+	@-ms-keyframes shakTop       {
+		0%   {top: 0;}
+		50%  {top: -200px;}
+		100% {top: 0;}
+	}
+	@-o-keyframes shakTop        { 
+		0%   {top: 0;}
+		50%  {top: -200px;}
+		100% {top: 0;}
+	}
+	
+	/* 向下拉动画效果 */
+	@-webkit-keyframes shakBottom   {
+		0%   {bottom: 0;}
+		50%  {bottom: -200px;}
+		100% {bottom: 0;}
+	}
+	@-moz-keyframes shakBottom      {
+		0%   {bottom: 0;}
+		50%  {bottom: -200px;}
+		100% {bottom: 0;}
+	}
+	@-ms-keyframes shakBottom       {
+		0%   {bottom: 0;}
+		50%  {bottom: -200px;}
+		100% {bottom: 0;}
+	}
+	@-o-keyframes shakBottom        { 
+		0%   {bottom: 0;}
+		50%  {bottom: -200px;}
+		100% {bottom: 0;}
+	}
+	.imggray { 
+		-webkit-filter: grayscale(100%);
+		-moz-filter: grayscale(100%);
+		-ms-filter: grayscale(100%);
+		-o-filter: grayscale(100%);
+		
+		filter: grayscale(100%);
+		
+		filter: gray;
+	}
+</style>
+
+<div class="fui-page fui-page-current page-commission-index ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">物业管家</div>
+		<div class="fui-header-right"></div>
+	</div>
+	
+	<div class='fui-content member-page navbar'>
+		{if !empty($teams)}
+		<div class="mytitle">他们为您服务</div>
+		<div class="headinfo" >	
+				{loop $teams $i $item}						
+					<div class="child userinfo">						
+						<a href="{php echo $this->createMobileurl($mydo,array('op'=>'teamperson','id'=>$item['id']));}">
+							<div class="face"><img src="{$item['avatar']}" /></div>
+						</a>
+						<div class="name">{$item['nickname']}</div>
+						<div class="level"></div>	
+						{if $user['isbind'] || $user['isfollow']}
+							{if $i==4}
+								<span class="right-remark">
+									<a href="{php echo $this->createMobileurl($mydo,array('op'=>'team'));}">
+										<div class="fui-remark"></div>	
+									</a>	
+								</span>
+							{/if}
+						{/if}			
+					</div>							
+				{/loop}							
+		</div>
+		{/if}	
+		 <div class="fui-cell-group" style="margin-top:0;">  
+			 <div class='fui-cell-info'>
+				<a class="fui-cell external" href="{php echo $this->createMobileurl($mydo,array('op'=>'comment'));}">
+					<div class="fui-cell-text">本月物业服务评价</div>
+					 <div class='fui-stars'>
+						{if $level>=1}<i class='icon icon-favorfill'></i>{else}<i class='icon icon-favor'></i>{/if}
+                        {if $level>=2}<i class='icon icon-favorfill'></i>{else}<i class='icon icon-favor'></i>{/if}
+                        {if $level>=3}<i class='icon icon-favorfill'></i>{else}<i class='icon icon-favor'></i>{/if}
+                        {if $level>=4}<i class='icon icon-favorfill'></i>{else}<i class='icon icon-favor'></i>{/if}
+                        {if $level>=5}<i class='icon icon-favorfill'></i>{else}<i class='icon icon-favor'></i>{/if}			 
+					 </div>
+				</a>			
+			</div>
+		 </div>
+		<div class="fui-block-group col-4" style='margin-top:0; overflow:hidden;'>		
+
+		<a class="fui-block-child" href="{php echo $this->createMobileurl($mydo,array('op'=>'repair'));}">
+			<div class="icon text-yellow"><i class="icon icon-repair"></i></div>
+			<div class="title">报修</div>
+			<div class="text"></div>
+		</a>
+
+		<a class="fui-block-child" href="{php echo $this->createMobileurl($mydo,array('op'=>'teamhelp'));}">
+			<div class="icon text-orange"><i class="icon icon-friends"></i></div>
+			<div class="title">求助</div>
+			<div class="text"></div>
+		</a>
+        
+		<a class="fui-block-child" href="tel:{$user['telphone']}">
+			<div class="icon text-yellow"><i class="icon icon-phone3"></i></div>
+			<div class="title">呼叫</div>
+			<div class="text"></div>
+		</a>
+		<a class="fui-block-child" href="{php echo $this->createMobileurl($mydo,array('op'=>'suggest'));}">
+			<div class="icon text-orange"><i class="icon icon-write"></i></div>
+			<div class="title">建议</div>
+			<div class="text"></div>
+		</a>	
+		
+		</div>
+		{if empty($doors)}			
+			<div class="container">
+				<div class="content-empty">
+				<i class="icon icon-lock"></i> <br/>暂未开通智能门禁</div>			
+			</div>
+		{else}
+				{if count($doors)>4}
+					{loop $doors $item}					
+					<div class="fui-cell-group fui-cell-click">
+						<a class="fui-cell" id="{$item['id']}" data-online="{$item['isonline']}">
+							<div class="fui-cell-icon icon" {if $item['isonline']==1}style="color:orange;"{/if}><i class="icon icon-lock" ></i></div>
+							<div class="fui-cell-text"><p>{$item['title']}</p></div>
+							<div class="fui-cell-remark"></div>
+						</a>					
+					</div>				
+					{/loop}
+					
+				{else}					
+					<div class="fui-cube">						
+					{if count($doors)==1}
+							<div class="fui-block-group-door" style="height:6rem;" >
+							<a class="fui-block-child" id="{$doors[0]['id']}" data-online="{$doors[0]['isonline']}">
+								<div class="icon" {if $doors[0]['image']}><img src="{$doors[0]['image']}" style="width:2rem;height:auto;" {if $doors[0]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[0]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+								<div class="title">{$doors[0]['title']}</div>
+								<div class="text"></div>
+							</a>
+							</div>
+					{/if}			
+					{if count($doors)>1}
+						<div class="fui-cube-left" style="padding-right:2px;"> 
+							<div class="fui-block-group-door">
+							<a class="fui-block-child" id="{$doors[0]['id']}" {if count($doors)>=2}style="padding-top:2rem;"{/if} data-online="{$doors[0]['isonline']}">
+								<div class="icon" {if $doors[0]['image']}><img src="{$doors[0]['image']}" style="width:2rem;height:auto;" {if $doors[0]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[0]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+								<div class="title">{$doors[0]['title']}</div>
+								<div class="text" ></div>
+							</a>
+							</div>
+						</div>
+						<div class="fui-cube-right">
+							{if count($doors)==2}							
+									<div class="fui-block-group-door">
+									<a class="fui-block-child" id="{$doors[1]['id']}" style="padding-top:2rem;" data-online="{$doors[1]['isonline']}">
+										<div class="icon" {if $doors[1]['image']}><img src="{$doors[0]['image']}" style="width:2rem;height:auto;" {if $doors[1]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[1]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+										<div class="title">{$doors[1]['title']}</div>
+										<div class="text" ></div>
+									</a>
+									</div>
+							{/if}
+							{if count($doors)>2}
+								<div class="fui-cube-right1" style="padding-bottom:2px;">
+										<div class="fui-block-group-door">
+										<a class="fui-block-child" id="{$doors[1]['id']}" data-online="{$doors[1]['isonline']}">
+											<div class="icon" {if $doors[1]['image']}><img src="{$doors[1]['image']}" style="width:2rem;height:auto;" {if $doors[1]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[1]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+											<div class="title">{$doors[1]['title']}</div>
+											<div class="text" ></div>
+										</a>
+										</div>				
+								</div>
+								<div class="fui-cube-right2">
+									{if count($doors)==3}								
+										<div class="fui-block-group-door">
+											<a class="fui-block-child" id="{$doors[2]['id']}" data-online="{$doors[2]['isonline']}">
+												<div class="icon" {if $doors[2]['image']}><img src="{$doors[2]['image']}" style="width:2rem;height:auto;" {if $doors[2]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[2]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+												<div class="title">{$doors[2]['title']}</div>
+												<div class="text" ></div>
+											</a>	
+										</div>
+									{/if}
+									{if count($doors)>3}
+										<div class="left" style="padding-right:2px;">
+											<div class="fui-block-group-door">
+											<a class="fui-block-child" id="{$doors[2]['id']}" data-online="{$doors[2]['isonline']}">
+												<div class="icon" {if $doors[2]['image']}><img src="{$doors[2]['image']}" style="width:2rem;height:auto;" {if $doors[2]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[2]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+												<div class="title">{$doors[2]['title']}</div>
+												<div class="text" ></div>
+											</a>	
+											</div>
+										</div>
+									{/if}
+									{if count($doors)==4}
+										<div class="right">
+											<div class="fui-block-group-door">
+											<a class="fui-block-child" id="{$doors[3]['id']}" data-online="{$doors[3]['isonline']}">
+												<div class="icon" {if $doors[3]['image']}><img src="{$doors[3]['image']}" style="width:2rem;height:auto;" {if $doors[3]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[3]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+												<div class="title">{$doors[3]['title']}</div>
+												<div class="text" ></div>
+											</a>	
+											</div>
+										</div>
+									{/if}
+								</div>
+							{/if}
+							</div>
+						</div>
+					{/if}
+				{/if}
+			<script language='javascript'>
+				require(['steward/index'], function (modal) {
+					modal.init();
+				});				
+			</script>
+		{/if}
+	 </div>
+	 {if $region['service']}
+		 <a class="btn btn-primary btn-add-post" href="{$region['service']}">{if $this->syscfg['service']==1}<span style="font-size:0.6rem;">客服</span>{else}<i class="icon icon-chat"></i>{/if}</a>
+	 {else}
+		{if $property['service']}
+		 <a class="btn btn-primary btn-add-post" href="{$property['service']}">{if $this->syscfg['service']==1}<span style="font-size:0.6rem;">客服</span>{else}<i class="icon icon-chat"></i>{/if}</a>
+	 	 {/if}
+	 {/if}
+ </div> 
+ <div class="shake_box" style="display:none;">
+	<div class="shakTop"><span></span></div>
+	<div class="shakBottom"><span></span></div>
+</div>
+
+<input type="hidden" id="latelydoor" name="latelydoor" />
+<input type="hidden" id="mylat" name="mylat" />
+<input type="hidden" id="mylng" name="mylng" />
+
+ <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=TPBXoGaFt9pXVq0tVZ7puGRUneloGhnh"></script>
+<script type="text/javascript">
+  
+  getlatelydoor();
+  
+  function getlatelydoor(){  
+	  var geolocation = new BMap.Geolocation();
+	  geolocation.getCurrentPosition(function (r) {
+		var _this = this;
+		if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+			var lat = r.point.lat;
+			var lng = r.point.lng;
+			$("#mylat").val(lat);
+			$("#mylng").val(lng);
+		}
+		core.json('opendoor/index',{lat:lat,lng:lng,range:500}, function(ret){
+			$("#latelydoor").val(ret.status);			
+		},false,true);		
+	});  
+  }
+
+	//先判断设备是否支持HTML5摇一摇功能	
+	if (window.DeviceMotionEvent) {
+		//获取移动速度，得到device移动时相对之前某个时间的差值比
+		window.addEventListener('devicemotion', deviceMotionHandler, false);
+	}else{
+		RhUI.alert('您好，你目前所用的设置好像不支持重力感应哦！');
+	}
+
+	//设置临界值,这个值可根据自己的需求进行设定，默认就3000也差不多了
+	var shakeThreshold = 3000;
+	//设置最后更新时间，用于对比
+	var lastUpdate     = 0;
+	var myTime = 0;
+	//设置位置速率
+	var curShakeX=curShakeY=curShakeZ=lastShakeX=lastShakeY=lastShakeZ=0;
+
+	function deviceMotionHandler(event){
+		    
+		//获得重力加速
+		var acceleration =event.accelerationIncludingGravity;
+
+		//获得当前时间戳
+		var curTime = new Date().getTime();
+
+		if ((curTime - lastUpdate)> 100) {
+
+			//时间差
+			var diffTime = curTime -lastUpdate;
+				lastUpdate = curTime;
+
+			//x轴加速度
+			curShakeX = acceleration.x;
+			//y轴加速度
+			curShakeY = acceleration.y;
+			//z轴加速度
+			curShakeZ = acceleration.z;
+
+			var speed = Math.abs(curShakeX + curShakeY + curShakeZ - lastShakeX - lastShakeY - lastShakeZ) / diffTime * 10000;
+
+			if (speed > shakeThreshold) {
+				//TODO 相关方法，比如：
+				$(".shake_box").show();
+				//播放音效
+				shakeAudio.play();
+				//播放动画
+				$('.shake_box').addClass('shake_box_focus');
+				clearTimeout(shakeTimeout);
+												
+				var shakeTimeout = setTimeout(function(){
+					$('.shake_box').removeClass('shake_box_focus');
+					$(".shake_box").hide();
+				},1000);				
+												
+			    //----	
+				if ((curTime - myTime)< 3000) {
+					RhUI.toast.show('请不要频繁摇呢');
+				    return
+				}
+				
+				myTime = curTime ;
+				
+                var latelydoor = $("#latelydoor").val();
+				if(latelydoor==0 || latelydoor == "" || latelydoor == undefined || latelydoor == null){
+				   RhUI.toast.show('定位不成功');
+				   return
+				}
+				var self = $("#"+latelydoor);
+				var lockid = self.attr("id"); 
+				var online = self.data("online");				
+				if(online==2){
+				   RhUI.toast.show('设备不在线');
+				   return
+				}
+				self.find('.icon').html('<i class="icon icon-yaochi"></i>'); 
+				core.json('steward/opendoor', {
+					id: lockid
+				}, function(ret) {
+					if (ret.status != 1) {
+						self.find('.icon').html('<i class="icon icon-unlock"></i>'); 
+						RhUI.toast.show('开门成功');
+						setTimeout(function(){self.find('.icon').html('<i class="icon icon-lock"></i>'); },2000);
+					}
+					if (ret.status == 1) {
+						self.find('.icon').html('<i class="icon icon-warn"></i>');
+						RhUI.toast.show(ret.result.message);
+						setTimeout(function(){self.find('.icon').html('<i class="icon icon-lock"></i>'); },2000);
+					}
+				}, false, true);
+				//----
+			}
+
+			lastShakeX = curShakeX;
+			lastShakeY = curShakeY;
+			lastShakeZ = curShakeZ;
+		}
+	}
+
+
+	//预加摇一摇声音
+	var shakeAudio = new Audio();
+		shakeAudio.src = '../addons/rhinfo_zyxq/static/mobile/sound/shake_sound.mp3';
+	var shake_options = {
+		preload  : 'auto'
+	}
+	for(var key in shake_options){
+		if(shake_options.hasOwnProperty(key) && (key in shakeAudio)){
+			shakeAudio[key] = shake_options[key];
+		}
+	}
+</script>
+{template $this->mytpl('_menu')}
+{template $this->mytpl('_footer')}

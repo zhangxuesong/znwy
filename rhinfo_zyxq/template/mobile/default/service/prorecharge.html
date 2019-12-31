@@ -1,0 +1,76 @@
+{template $this->mytpl('_header')}
+{if !empty($this->syscfg['btncolor'])}
+    <style>
+		#btnSubmit {
+			background-color:{php echo $this->syscfg['btncolor']};
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+		}
+		#btnSubmit:active,
+		#btnSubmit.disabled {
+			background: {php echo $this->syscfg['btncolor']};			
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+			opacity:0.5;
+		}
+    </style>
+{/if}
+<style>
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:after{border-bottom:0px;}
+.fui-list-group:not(.fui-list-group-o):before {
+	border-top: 0px;	
+}
+.fui-list-group:not(.fui-list-group-o):after {	
+	border-top: 0px;	
+}
+.fui-list:before{
+	border-top: 0px;
+}
+</style>
+<div class='fui-page fui-page-current'>
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">物业续费</div> 
+		<div class="fui-header-right">&nbsp;</div>
+    </div>
+    <div class='fui-content navbar' >	
+		<div class="fui-title"><i class="icon icon-city"> {$property['title']}</i></div>
+		<div class='fui-cell-group'>								
+			<div class='fui-cell'>
+				<div class='fui-cell-label'>到期日期</div>
+				<div class='fui-cell-info'>{php echo date('Y-m-d',$property['enddate']}</div>
+			</div>
+			<div class='fui-cell'>
+				<div class='fui-cell-label'>续费金额</div>
+				<div class='fui-cell-info'><input type='number' class='fui-input' id='yearprice' value="{$property['yearprice']}" readonly></div>
+			</div>
+			<div class='fui-cell-tip'>有效日期：{php echo date('Y-m-d',date()).'~'.date('Y-m-d',strtotime('+1 year'));}</div>
+		</div>
+		{if $this->syscfg['iswepay']==1}
+			<a id='weixin-btn' class='btn btn-success block btn-pay' >立即支付</a>
+		{else}
+			{if $setting['payment']['wechat']['switch']==1 || !empty($this->syscfg['iswxpay'])}	
+				<div class='fui-list-group margin' id='weixin-btn' >      
+					 <div class='fui-list btn-pay'>
+						<div class='fui-list-media'>
+							 <img src="../addons/rhinfo_zyxq/static/mobile/images/wxpay.png" width="40" />
+						</div>
+						<div class='fui-list-inner'>
+							<div class="title">微信支付</div>
+							<div class="subtitle">微信安全支付</div>					
+						</div>
+						<div class='fui-list-angle'><span class="angle"></span></div>
+					</div>
+				</div>
+			{/if}	
+		{/if}
+    </div>
+	
+	<script language='javascript'>
+		require(['service/recharge'], function (modal) {
+			modal.initSmspro({pid:"{$property['id']}",payfrom:"{php echo $this->rhinfo_isalipay==true?2:1;}"});
+	});
+</script>
+</div> 
+{template $this->mytpl('_footer')}

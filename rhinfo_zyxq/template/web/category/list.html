@@ -1,0 +1,143 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<style type="text/css">
+.nav-tabs li a { padding: 3px 10px;}
+button a:hover{color:#fff;}
+</style>
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body"> 
+	<ul class="nav nav-tabs">		 		  
+		  <li class="active"><a href="{php echo $this->createWeburl('category',array('op'=>'list','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >分类设置</a></li>		
+		  <li><a href="{php echo $this->createWeburl('sms',array('op'=>'base','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >基本设置</a></li>
+		  <li><a href="{php echo $this->createWeburl('sms',array('op'=>'fee','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >账单设置</a></li>
+		  {if !empty($_W['uid'])}<li><a href="{php echo $this->createWeburl('sms',array('op'=>'market','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >策略设置</a></li>{/if}
+		  <li ><a href="{php echo $this->createWeburl('printer',array('op'=>'list','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >云打印机</a></li>
+		   <li ><a href="{php echo $this->createWeburl('sms',array('op'=>'index','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >短信设置</a></li>
+		  {if !empty($_W['uid'])}  <li><a href="{php echo $this->createWeburl('sms',array('op'=>'intelligence','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >智慧设置</a></li>{/if}
+		   <li><a href="{php echo $this->createWeburl('sms',array('op'=>'door','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >其他设置</a></li>
+	</ul>
+	<br>
+	<div class="tab-content">			
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				{if $rights['delete'] == 1}	
+				<a href="javascript:;" onclick="mydelall()" class="btn btn-danger"><i class="fa fa-trash-o"></i> 全部删除</a> {/if}
+				<span class="pull-right" style="line-height:38px;">共有数据：<strong id="count">{$total}</strong> 条</span> 
+			</div>  
+			<div class="panel-body">
+			{if $rights['query'] == 1}  		
+			{loop $data $k $v}	
+				<div style="margin:15px 10px -10px 10px;">
+					{if $k > 0}<hr>{/if}
+					<button {if $v['id']==6 || $v['id']==7}class="btn btn-info btn-sm"{else}class="btn btn-success btn-sm"{/if} style="margin-bottom:10px;margin-right:5px;" >{if $v['id']==6}<a href="javascript:;" data-toggle="tooltip" data-placement="bottom" title="报修投诉快捷回复">{$v['title']}</a>{else if $v['id']==7}<a href="javascript:;" data-toggle="tooltip" data-placement="bottom" title="访客原因快捷录入">{$v['title']}</a>{else}{$v['title']}{/if}</button>										
+					{loop $v['cate'] $i $r}
+						<span  style="position:relative;padding-right:12px;" onmouseenter="myshow({$r['id']})" onmouseleave="myhide({$r['id']})">
+							{if $v['id']==6 || $v['id']==7}
+							<a href="javascript:;" {if $rights['edit'] == 1} onclick="myreply({$r['pid']},{$r['rid']},{$r['id']},'{$r['title']}',{$v['id']})" {/if} class="btn btn-default btn-sm" style="margin-bottom:10px;margin-right:5px;" >{$r['title']}</a>
+							{else}
+							<a href="javascript:;" {if $rights['edit'] == 1} onclick="myedit({$r['id']},{$r['pid']},{$r['rid']})" {/if} class="btn btn-default btn-sm" style="margin-bottom:10px;margin-right:5px;" >{$r['title']}</a>
+							{/if}
+							{if $rights['delete'] == 1}  
+							<a href="javascript:;" class="btn btn-sm" id ="delete{$r['id']}" style="display:none;position:absolute;right:-2px;top:-25px;" onclick="mydelete(this,{$pid},{$rid},{$r['id']})"><i class="fa fa-close"></i></a>
+							{/if}
+
+						</span>					
+					{/loop}
+					{if $v['id']==6 || $v['id']==7}
+					<a href="javascript:;" {if $rights['add'] == 1} {else} disabled {/if} onclick="myreply({$pid},{$rid},0,'',{$v['id']})" class="btn btn-default btn-sm" style="margin-bottom:10px;margin-right:5px;" data-toggle="tooltip" data-placement="bottom" title="添加" ><i class="fa fa-plus"> 添加</i></a>
+					{else}
+					<a href="javascript:;" {if $rights['add'] == 1} {else} disabled {/if} onclick="myadd({$pid},{$rid},{$v['id']})" class="btn btn-default btn-sm" style="margin-bottom:10px;margin-right:5px;" data-toggle="tooltip" data-placement="bottom" title="添加" ><i class="fa fa-plus"> 添加</i></a>
+					{/if}					
+				</div>			
+			{/loop}	
+			{/if}
+		  </div>  
+	</div>
+	</div>	
+  </div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+var pid = {$pid};
+var rid = {$rid};
+
+function myadd(pid,rid,type){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'add','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid + "&type=" + type;
+	window.location.href = url;
+}
+function mydelall(){
+	layer.confirm('确认要删除所有分类数据吗？',{icon: 3, title:'提示',resize:false},
+	function(index){		
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'delall')).$mywe['direct'];}",
+			{pid:pid,rid:rid},
+			function(data,status){
+				 if (data=='ok'){
+					location.reload();					
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+					return;
+				 }
+			});				
+		layer.close(index);
+	});
+}
+function mydelete(obj,pid,rid,id){   	
+	layer.confirm('确认要删除吗？',{icon: 3, title:'提示',resize:false},
+	function(index){		
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'delete')).$mywe['direct'];}",
+			{pid:pid,rid:rid,id:id},
+			function(data,status){
+				 if (data=='ok'){
+					$(obj).parents("span").remove();	
+					var count = $("#count").html();
+					$("#count").html(count - 1);
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+					return;
+				 }
+			});		
+		layer.close(index);
+	});
+}
+function myedit(id,pid,rid){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'edit')).$mywe['direct'];}" + "&id=" + id + "&pid=" + pid + "&rid=" + rid; 
+	window.location.href = url;
+}
+function myreply(pid,rid,id,title,replytype){
+	layer.prompt({title: '输入快捷回复内容',value:title,area: ['300px', '40px'], formType: 2}, function(reply, index){
+	layer.close(index);	   
+	var loadindex = layer.load(2);
+	$.post("{php echo $this->createWebUrl($mydo,array('op'=>'reply')).$mywe['direct'];}",
+		{pid:pid,rid:rid,id:id,reply:reply,replytype:replytype},
+		function(data,status){
+		 layer.close(loadindex);
+		 if (data=='ok'){								
+			layer.msg('添加成功!',{icon:1});
+			window.location.reload();
+		 }
+		 else{
+			layer.msg(data,{icon:0});
+		 }
+	});	
+  });
+}
+function myreturn(){
+	var url = "{php echo $this->createWeburl('region',array('op'=>$rlist,'category'=>$category)).$mywe['direct'];}";	
+	window.location.href = url;
+}
+function myshow(id){
+	$("#delete"+id).show();
+}
+function myhide(id){
+	$("#delete"+id).hide();
+}
+
+</script>
+</body>
+</html>

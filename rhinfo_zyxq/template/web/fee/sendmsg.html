@@ -1,0 +1,121 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+<style>
+.selectbox{width:500px;height:220px;}
+.selectbox div{float:left;}
+.selectbox .select-bar select{width:200px;height:200px;font-size:14px;font-family:"microsoft yahei";}
+.btn-bar{padding:20px;}
+.btn-bar p{margin-top:16px;}
+.btn-bar p .btn{width:50px;height:30px;cursor:pointer;font-family:simsun;font-size:14px;}
+</style>
+<div class="panel panel-default" style="padding-top:30px;">
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/sendform'}	
+	   <div class="col-lg-9 col-xs-12 col-sm-offset-2" style="margin-top:8px;">   
+		   <a href="javascript:;" class="btn btn-primary"  onclick="mysubmit(this)"><i class="fa fa-send"></i> 发送<a/>
+		   <a href="javascript:;" class="btn btn-default"  onclick="myreturn()"><i class="fa fa-reply"></i> 返回列表<a/>
+		</div>
+    </div>
+
+</div>
+
+{template 'web/_layer_footer'}
+
+<script type="text/javascript">
+var uid = "{$_W['uid']}";
+
+function mysubmit(obj){
+	var id = $.trim($("#id").val());
+	var title = $.trim($("#title").val());
+	if (uid == ""){
+		var pid = $("#pid").val();	
+	}
+	else{		
+		var pid = $("#pid").find("option:selected").val();
+	}	
+	var rid = $("#rid").find("option:selected").val(); 
+	var bid = $("#bid").find("option:selected").val(); 
+	var tid = $("#tid").find("option:selected").val(); 
+	var sendtype = $("#sendtype").val();	
+	var roomidstr = '';
+    
+	if (pid=='0') {
+	   layer.msg("所属物业不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (rid=='0') {
+	   layer.msg("所属主体不能为空！",{icon:0});
+	   return;
+	}
+	
+	$('#select2 option').each(function () {
+		var $option = $(this);
+		roomidstr += $option.val() + ',';		
+	});
+	    
+	roomidstr = roomidstr.substring(0,roomidstr.length - 1);
+	$("#roomsid").val(roomidstr);
+	
+	layer.confirm('确认发送吗？',{icon: 3, title:'提示'},
+	function(index){
+		//此处请求后台程序
+		myprocess(obj);
+		layer.close(index);
+		var loadindex = layer.load(2);
+		$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+		{op:"sendcount",pid:pid,rid:rid,bid:bid,tid:tid,roomsid:roomidstr,sendtype:sendtype},
+		function(data,status){
+			layer.close(loadindex);
+			if(data>0){
+			   resend(obj,pid,rid,bid,tid,roomidstr,sendtype,0,data);
+			}
+			else{
+			   myreset(obj);
+			   layer.msg('没有可发送对象.',{icon:0});
+			}			
+		});				
+	});	
+
+}
+
+function resend(obj,pid,rid,bid,tid,roomsid,sendtype,i,count){	
+	var loadindex = layer.load(2);
+	$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+		{op:"sendmsg",pid:pid,rid:rid,bid:bid,tid:tid,roomsid:roomsid,sendtype:sendtype},
+		function(data,status){
+			 layer.close(loadindex);
+			 if (data=='ok'){
+				layer.msg('成功发送' + count + '人.',{icon:1});	
+				myreset(obj);
+			 }
+			 else if(data=='send'){
+				var send = i + 100;
+				layer.msg('成功发送' + send + '/' + count + '人，自动继续...',{icon:1});
+				setTimeout(function(){resend(obj,pid,rid,bid,tid,roomsid,send,count);},3000);
+			 }
+			 else{
+				myreset(obj);
+				layer.msg(data,{icon:0});
+			 }
+		});	
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'bill')).$mywe['direct'];}";
+	 location.href = url;
+}
+function myprocess(obj){
+	var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/> 处理中...';
+	$(obj).html(html);  
+	$(obj).attr("disabled", "disabled"); 
+}
+function myreset(obj){
+	var html = '<i class="fa fa-send"></i> 发送';
+	$(obj).html(html);  
+	$(obj).removeAttr("disabled"); 
+}
+</script> 
+
+</body>
+</html>

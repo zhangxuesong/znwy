@@ -1,0 +1,160 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+<style>
+	.nav-tabs li a { padding: 3px 10px;}
+	.account-stat-num > div{width:25%; float:left; font-size:16px; text-align:center;}
+	.account-stat-num > div span{display:block; font-size:30px; font-weight:bold;}
+</style>
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body">  
+	<ul class="nav nav-tabs" role="tablist" id="mytabs">		 		  
+		<li role="presentation" {if $_GPC['page']}class="active"{/if}><a href="#feebill" role="tab" data-toggle="tab">绑定记录</a></li>		
+	   <li role="presentation" {if $_GPC['page']}{else}class="active"{/if}><a href="#feetotal" role="tab" data-toggle="tab">绑定分析</a></li>		   
+	</ul>
+	<div class="panel-body">
+			<div class="account-stat-num row">
+				<div>今日绑定人数<span class="text-warning">{php echo !empty($bindroom['today'])?$bindroom['today']:0;}</span></div>
+				<div>昨日绑定人数<span class="text-info">{php echo !empty($bindroom['yesterday'])?$bindroom['yesterday']:0;}</span></div>				
+				<div>{php echo date('Y-m-d', $starttime);}~{php echo date('Y-m-d', $endtime1);}绑定人数<span class="text-success">{php echo !empty($bindroom['month'])?$bindroom['month']:0;}</span></div>
+				<div>总绑定人数<span class="text-danger">{php echo !empty($bindroom['total'])?$bindroom['total']:0;}</span></div>
+			</div>
+	</div>
+    
+	<div class="panel panel-default">
+	    <div class="panel-heading" style="height:60px;">
+			<form action="./index.php" method="get" class="form-inline" role="form" id="form-search">
+				<input type="hidden" name="c" value="site" />
+				<input type="hidden" name="a" value="entry" />
+				<input type="hidden" name="m" value="rhinfo_zyxq" />
+				<input type="hidden" name="do" value="report" />
+				<input type="hidden" name="op" value="bindlist" />	
+				<input type="hidden" name="direct" value="1" />
+				
+					<div class="form-group">				
+						<select class="form-control" id="rid" name="rid" onchange="mybuildingselect(this)" style="width:200px;">
+							<option value="">请选择主体</option>
+							{loop $myregions $region}
+								<option value="{$region['id']}" {if $_GPC['rid']==$region['id']}selected{/if}>{$region['title']}</option>	
+							{/loop}
+						</select>
+					</div>
+				
+					<div class="form-group">				
+						<select class="form-control" id="bid" name="bid"  style="width:200px;">
+							<option value="">不限</option>
+							{loop $select_buildings $select_building}
+								<option value="{$select_building['id']}" {if (!empty($_GPC['bid']) && $_GPC['bid']==$select_building['id'])}selected{/if} >{$select_building['title']}</option>	
+							{/loop}
+						</select>
+					</div>
+				
+					<div class="form-group">				
+						{php echo tpl_form_field_daterange('billdate', array('starttime' => date('Y-m-d',$starttime),'endtime' => date('Y-m-d',$endtime1)));}
+					</div>
+				
+					<div class="form-group">				
+						<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>						
+					</div>
+				
+				<span class="pull-right" style="line-height:38px;">总共数据：<strong>{$total}</strong> 条</span> 
+			</form>
+	    </div>
+		
+		<div class="tab-content">
+			 <div role="tabpanel" class="tab-pane {if $_GPC['page']}active{/if}" id="feebill">			 
+				<div class="panel-body table-responsive">
+					<table class="table table-hover">
+						<thead class="navbar-inner">
+						<tr>					
+							<th width="60">ID</th>
+							<th>绑定日期</th>			
+							<th>所属主体</th>
+							<th>楼宇或区</th>
+							<th>房屋或商铺</th>
+							<th>业主姓名</th>						
+							
+						</tr>
+					</thead>
+					{loop $data $k $v}
+						<tr>
+							<td>{$v['id']}</td>					
+							<td>{php echo date('Y-m-d H:i',$v['ctime'])}</td>
+							<td>{$v['region']}</td>
+							<td>{$v['building']}</td>
+							<td>{$v['room']}</td>
+							<td><span class="label {if $v['isowner']}label-success{else}label-default{/if}">{$v['realname']}</span></td>														
+						</tr>
+					{/loop}				
+				</table>
+				{$pager}
+			  </div> 
+			</div>
+			 <div role="tabpanel" class="tab-pane {if $_GPC['page']}{else}active{/if}" id="feetotal">
+				<div class="pull-left">
+					<div class="checkbox"><span class="text-warning">&nbsp;&nbsp;人数</span></div>
+				</div>
+				<div class="pull-right">
+					<div class="checkbox">
+						<label style="color:{$color}1)">微信绑定</label>&nbsp;
+					</div>
+				</div>
+				<canvas id="myChart" width="1200" height="300"></canvas>
+			 </div>
+	</div>	
+  </div>
+  </div>
+ </div>
+
+{template 'web/_iframe_footer'}
+
+<script type="text/javascript">
+
+window._region = {php echo json_encode($myregions);};	
+window._building = {php echo json_encode($mybuildings);};
+function mybuildingselect(obj){
+	var index = obj.options[obj.selectedIndex].value;
+	require(['jquery', 'util'], function($, u){
+		var html = '<option value="">不限</option>';
+		for(var i=0; i< window['_building'][index].length; i++){			
+			html += '<option value="'+window['_building'][index][i]['id']+'">'+window['_building'][index][i]['title']+'</option>';
+		}    						
+		$("#bid").html(html);
+	});	
+	
+}
+
+require(['../addons/rhinfo_zyxq/static/lib/chart/chart.min.js'], function(c) {		
+	var chart = null;
+	var chartDatasets = null;
+	var templates = {$lable_tpl};
+	
+	var url = location.href + '&#rhinfo';
+
+	$.post(url, function(data){
+		var data = $.parseJSON(data)
+		var datasets = data.datasets;
+		if(!chart) {				
+			var label = data.label;
+			var ds = $.extend(true, {}, templates);
+			
+			{php echo $ds_data_temp;}
+			
+			var lineChartData = {
+				labels : label,
+				datasets : [{php echo $ds_temp;}]
+			};
+			
+			var ctx = document.getElementById("myChart").getContext("2d");
+		
+			chart = new Chart(ctx).Line(lineChartData, {					
+				responsive: true
+			});
+			chartDatasets = $.extend(true, {}, chart.datasets);				
+		}		
+	});
+	
+});
+
+</script>
+</body>
+</html>

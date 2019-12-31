@@ -1,0 +1,61 @@
+{template $this->mytpl('_pheader')}
+{if !empty($this->syscfg['btncolor'])}
+    <style>
+		#btnSubmit {
+			background-color:{php echo $this->syscfg['btncolor']};
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+		}
+		#btnSubmit:active,
+		#btnSubmit.disabled {
+			background: {php echo $this->syscfg['btncolor']};			
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+			opacity:0.5;
+		}
+    </style>
+{/if}
+
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back" ></a>
+		</div>
+		<div class="title">消费送积分</div>
+		<div class="fui-header-right">&nbsp;</div>
+	</div>
+	
+	<div class='fui-content'>		
+		<div class="fui-cell-group">
+			<input type="hidden" class='fui-input' name='creditid' id='creditid' value="{$item['id']}" />	
+			<div class="fui-cell">
+				 <div class='fui-cell-info'><textarea rows="4" placeholder="内容 10-50个字">{$item['title']}</textarea></div>							
+			</div>			
+		</div>
+			<a href='#' id='btnSubmit' class='btn btn-success block'>审核通过</a>
+			<a href="#auditno" class='btn btn-warning-o block'>审核不通过</a>	
+	</div>
+</div>
+<div class='fui-page' id="auditno">
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">审核不通过原因</div>
+		<div class="fui-header-right">&nbsp;</div>
+	</div>
+	
+	<div class='fui-content' style='margin-top:5px;'>		
+		<div class="fui-cell-group">
+			<input type="hidden" class='fui-input' name='creditoid' id='creditoid' value="{$item['id']}" />	
+			<div class="fui-cell must">				
+				 <div class='fui-cell-info'><textarea rows="4" placeholder="内容 10-50个字" id='reason' name='reason'></textarea></div>				
+			</div>	
+		</div>
+		<a href='#' id='btnSubmitno' class='btn btn-success block'>提交</a>		
+	</div>
+</div>
+<script language='javascript'>
+	require(['business/audit'], function (modal) {
+		modal.initBind();
+	});
+</script>
+{template $this->mytpl('_footer')}

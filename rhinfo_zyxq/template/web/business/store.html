@@ -1,0 +1,268 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:50px;" >
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />	
+			<input type="hidden" name="id"  value="{$item['id']}" />	
+			<input type="hidden" name="bid" value="{$bid}" />	
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">门店编号</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="storeno" value="{$item['storeno']}" placeholder="输入门店编号" name="storeno" />
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>门店名称</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入门店名称" name="title" />
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">联系人</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+				<input type="text" class="form-control" placeholder="输入联系人" name="contact" value="{$item['contact']}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">联系电话</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+				<input type="text" class="form-control" placeholder="输入联系电话" name="telphone" value="{$item['telphone']}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">手机号码</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+				<input type="number" class="form-control" placeholder="输入手机号码" name="mobile" value="{$item['mobile']}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">营业时间</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<div class="input-group">
+						<span class="input-group-addon">开始时间</span>
+						<input type="text" class="form-control starttime" name="starttime" id="starttime" value="{$item['starttime']}" readonly />
+						<span class="input-group-addon">结束时间 </span>
+						<input type="text" class="form-control endtime" name="endtime" id="endtime" value="{$item['endtime']}" readonly />							
+					</div>
+					<span class="help-block">为空则24小时营业</span>
+				</div> 
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定微信</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<div class="input-group ">
+						<input type="hidden" class="form-control" id="uid" value="{$item['uid']}" name="uid">
+						<input type="hidden" class="form-control" id="openid" value="{$item['openid']}"  name="openid">
+						<input type="text" class="form-control" id="nickname1" value="{$item['nickname1']}" readonly name="nickname1">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" onclick="showFansDialog(this);">选择微信</button>
+						</span>
+					</div>
+				</div>	
+			</div>	
+			<script type="text/javascript">
+				function showFansDialog(elm) {
+					require(['util', 'jquery'], function(u, $){
+						var footer = '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>';
+						var modalobj = u.dialog('粉丝选择', ["{php echo $this->createWeburl('query',array('op'=>'fans')).$mywe['direct'];}"], footer, {containerName:'link-container'});
+						modalobj.find('.modal-body').css({'overflow-y':'auto' });
+						modalobj.modal('show');
+						});
+				}
+			</script>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>省/市/区</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					{php echo tpl_form_field_district('area', array('province' => $item['province'], 'city' => $item['city'], 'district' => $item['district'] ));}
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>商家地址</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+				<input type="text" class="form-control" placeholder="输入商家地址" id="address" name="address" value="{$item['address']}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">经纬度坐标</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<div class="input-group">
+						<span class="input-group-addon">经度</span>
+						<input type="number" class="form-control" name="lng" id="lng" value="{$item['lng']}" />
+						<span class="input-group-addon">纬度</span>
+						<input type="number" class="form-control" name="lat" id="lat" value="{$item['lat']}" />
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" id="positioning" onclick="showMapDialog(this)">选择坐标</button>
+						</span>
+					</div> 
+					<span class="help-block">输入商家地址后点击地图获取坐标</span>
+				</div> 
+			</div>			
+			</br>
+		</form>	
+		<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key={$conifg['qq_lbskey']}"></script>
+		<script type="text/javascript">
+			var lbskey = "{$conifg['qq_lbskey']}";
+			window._region = {php echo json_encode($myregion);};				
+			window._pcategory = {php echo json_encode($pcategory);};
+			window._category = {php echo json_encode($category);};
+			function renderCategory(obj, name,id){
+				var index = obj.options[obj.selectedIndex].value;
+				require(['jquery', 'util'], function($, u){
+					$selectChild = $("#"+ id);
+					var html = '<option value="0">请选择</option>';
+					if (id=='rid'){
+						$("#pcategory").html(html);	
+						$("#cateid").html(html);					
+					}
+					if (id=='pcategory'){
+						$("#cateid").html(html);					
+					}				
+
+					if (!window['_'+name] || !window['_'+name][index]) {
+						$selectChild.html(html);
+						return false;
+					}
+					for(var i=0; i< window['_'+name][index].length; i++){
+						html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+					}
+					$selectChild.html(html);
+				});
+			}
+			
+			require(['angular.sanitize','clockpicker'], function(angular, $, _){
+				$('.starttime').clockpicker({autoclose: true});
+				$('.endtime').clockpicker({autoclose: true});
+			});
+
+			function showMapDialog(elm) {
+				var province = $(".tpl-province").find("option:selected").val();
+				var city = $(".tpl-city").find("option:selected").val();
+				var district = $(".tpl-district").find("option:selected").val();		
+				require(["util","jquery"], function(u, $){		
+					var content =
+							'<div class="form-group">' +
+								'<div class="input-group">' +
+									'<input type="text" class="form-control" id="seachaddress" placeholder="请输入地址来直接查找相关位置">' +
+									'<div class="input-group-btn">' +
+										'<button class="btn btn-default" id="btnSearch"><i class="fa fa-search"></i> 搜索</button>' +
+									'</div>' +
+								'</div>' +
+							'</div>' +
+							'<div id="map-container" style="height:400px;"></div>';
+						var footer =
+							'<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>';
+						modalobj = util.dialog('请选择坐标', content, footer, {containerName : 'map-dialog'});
+						modalobj.find('.modal-dialog').css('width', '80%');
+						modalobj.modal({'keyboard': false});
+						
+						var container = "#map-container";
+						var map = new qq.maps.Map('map-container', {
+									zoom: 10
+								}),
+							label = new qq.maps.Label({
+								 map: map,
+								 offset: new qq.maps.Size(15,-12),
+								 draggable: false,
+								 clickable: false
+							});
+						if(city !=''){
+							var address = $("#address").val();
+							if(address =='') address = city + district;
+							var url = encodeURI("https://apis.map.qq.com/ws/geocoder/v1/?region=" + city + "&address=" + address + "&key=" + lbskey + "&output=jsonp&&callback=?");
+							$.getJSON(url, function (result) {
+								map.setCenter(new qq.maps.LatLng(result.result.location.lat, result.result.location.lng));
+								map.setZoom(15);
+							});
+						}
+						else{
+						  var cityservice = new qq.maps.CityService({
+								complete: function (result) {
+									map.setCenter(result.detail.latLng);
+								}
+							});
+							cityservice.searchLocalCity();
+						}
+						map.setOptions({
+							draggableCursor: "crosshair"
+						});
+						$(container).mouseenter(function () {
+							label.setMap(map);
+						});
+						$(container).mouseleave(function () {
+							label.setMap(null);
+						});
+						qq.maps.event.addListener(map, "mousemove", function (e) {
+							var latlng = e.latLng;
+							label.setPosition(latlng);
+							label.setContent(latlng.getLat().toFixed(6) + "," + latlng.getLng().toFixed(6));
+						});
+						qq.maps.event.addListener(map, "click", function (e) {					
+							$("#lat").val(e.latLng.getLat().toFixed(6));
+							$("#lng").val(e.latLng.getLng().toFixed(6));
+							modalobj.modal('hide');
+						});				
+						modalobj.modal('show');
+						$("#seachaddress").val(district + $("#address").val());
+						var btnSearch = btnSearch = document.getElementById("btnSearch");
+						qq.maps.event.addDomListener(btnSearch, 'click', function () {
+							var value = city + district + $("#seachaddress").val();					
+							var url = encodeURI("https://apis.map.qq.com/ws/geocoder/v1/?region=" + city + "&address=" + value + "&key=" + lbskey + "&output=jsonp&&callback=?");
+							$.getJSON(url, function (result) {
+								map.setCenter(new qq.maps.LatLng(result.result.location.lat, result.result.location.lng));
+								map.setZoom(15);
+							});
+						});
+				});
+			}
+		</script>
+	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	var id = $.trim($("#id").val());
+	var title = $.trim($("#title").val());
+	var address = $.trim($("#address").val());
+	var province = $(".tpl-province").find("option:selected").val();
+	var city = $(".tpl-city").find("option:selected").val();
+	var district = $(".tpl-district").find("option:selected").val();	
+
+	if (title=='') {
+	   layer.msg("商家名称不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (province=='') {
+	   layer.msg("省不能为空！",{icon:0});
+	   return;
+	}
+     if (city=='') {
+	  layer.msg("市不能为空！",{icon:0});
+	   return;
+	}		
+   if (address=='') {
+	   layer.msg("详细地址不能为空！",{icon:0});
+	   return;
+	}
+		
+	myprocess(obj);
+	$("#myform").submit();
+	
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'storelist','bid'=>$bid)).$mywe['direct'];}";
+	 location.href = url;
+}
+
+</script> 
+
+</body>
+</html>

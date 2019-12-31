@@ -1,0 +1,46 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/fonts/iconfont.css?v=20170703">
+<div class="panel panel-default" style="padding-top:30px;">
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/cateform'}	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+var cate = "{$cate}";
+function mysubmit(obj){
+	var id = $.trim($("#id").val());
+	var title = $.trim($("#title").val());
+	var pid = $("#pid").find("option:selected").val();
+	var rid = $("#rid").find("option:selected").val(); 
+		
+	if (pid=='0' && cate==2) {
+	   layer.msg("所属物业不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (rid=='0' && cate==2) {
+	   layer.msg("所属主体不能为空！",{icon:0});
+	   return;
+	}
+	if (title=='') {
+	   layer.msg("分类名称不能为空！",{icon:0});
+	   return;
+	}
+		
+	myprocess(obj);
+	$("#myform").submit();
+}
+
+function myreturn(){
+	 window.history.back();
+}
+
+</script> 
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-cell-group .fui-cell .fui-cell-icon {
+	width:2rem;
+}
+.fui-according:before {
+	left: 0;
+}
+.fui-according-header {
+	padding: 0;
+}
+
+.fui-according-header:active {
+	background: none;
+}
+
+.fui-according-header .text {
+	padding:0;
+
+}
+.fui-according-content .content-block {
+	padding: .5rem 1rem;
+	font-size: 0.75rem;
+}
+</style>
+<div class='fui-page  fui-page-current order-comment-page'>
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back"></a>
+	</div>
+	<div class="title">投诉建议</div> 
+	<div class="fui-header-right"><a href="{php echo $this->createMobileurl('service',array('op'=>'suggest'));}">历史</a></div>
+    </div>
+  <div class='fui-content margin navbar'>
+	  <div class="fui-title">
+	  {if $user['isbind']}
+		{if count($user['houses'])>1}				
+			 <div class="fui-according">
+				<div class="fui-according-header">
+					<span class="text"><i class="icon icon-city"></i> {$user['address']}</span>
+					<span class="remark"></span>
+				</div>
+				<div class="fui-according-content">
+					{loop $user['houses'] $house}
+						{if $house['hid']!=$user['hid']}
+						<div class="content-block address-item" data-addressid="{$house['id']}">{$house['address']}</div>
+						{/if}
+					{/loop}
+				</div>
+			</div>
+		{else}
+			<i class="icon icon-city"></i> {$user['address']}
+		{/if}
+	  {else}
+		<i class="icon icon-city"></i> {$user['rtitle']}
+	  {/if}
+	  </div>
+	 <div class="fui-cell-group">	 
+		<input type="hidden" id="category_type" name="category_type" value="">
+		<div class="category-type">
+			<p>请您选择建议类别：</p>
+			{loop $data $item}
+			 <span class="fui-lg-1 fui-md-2 fui-sm-3 fui-xs-4"><a href="javascript:void(0);" data-type="{$item['id']}">{$item['title']}</a></span>
+			{/loop}			
+			<div style="clear:both;"></div>
+		</div>
+		
+		
+		 <div class='fui-cell must'>
+			 <div class='fui-cell-label '>内容</div>
+			 <div class='fui-cell-info'><textarea rows="6" placeholder="内容 10-100个字" id='content' name='content'></textarea></div>
+			{if $this->rhinfo_isweixin}<div class='fui-cell-icon'><i class="icon icon-record text-success" style="font-size:1.5rem;"></i></div>{/if}
+		</div>
+		 
+	 <div class='fui-cell'>
+		 <div class='fui-cell-label'>晒图</div>
+		 <div class='fui-cell-info'>			 
+			 <ul class="fui-images fui-images-md" id="images"></ul>
+			 <div class="fui-uploader fui-uploader-md"
+				 data-max="3" 
+				 data-count="0"> 
+				{if $this->rhinfo_isweixin == false}
+				<input type="file" name='imgFile0' id='imgFile0' multiple="" accept="image/*" >
+				{/if}
+			 </div>
+		 </div>
+	 </div>
+	</div>
+  </div>  
+     <div class='fui-footer'>
+		<a class='btn btn-warning btn-submit block'>提交</a>
+	  </div>
+	{if $this->rhinfo_isweixin == false}  
+    <script language='javascript'>
+	require(['suggest/suggestwap'], function (modal) {
+		modal.init({
+			rid: "{$user['rid']}"
+		}); 
+	});
+	</script>
+	{else}
+	 <script language='javascript'>
+	require(['suggest/suggest'], function (modal) {
+		modal.init({
+			rid: "{$user['rid']}"
+		}); 
+	});
+	</script>
+	{/if}	
+</div> 
+
+{template $this->mytpl('_footer')}

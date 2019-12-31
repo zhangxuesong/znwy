@@ -1,0 +1,33 @@
+﻿<div class="panel panel-default" >
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>					
+					<th width="80">ID</th>
+					<th width="80">报修类别</th>			
+					<th width="100">昵称</th>
+					<th width="60">状态</th>
+					<th width="120">报修时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				{loop $repair $rpv}
+				<tr>					
+					<td>{$rpv['id']}</td>
+					<td>{$rpv['catename']}</td>
+					<td>{if !empty($rpv['headimgurl'])}<img src="{$rpv['headimgurl']}" width="20" />&nbsp;{/if}{$rpv['nickname']}</td>
+					<td class="td-status"><span class="label {if $rpv['status']=='2'}label-warning{elseif $rpv['status']=='4'}label-default{elseif $rpv['status']=='3'}label-success{else}label-danger{/if} radius">
+					{if $rpv['status']=='0' || $rpv['status']=='1'}待处理{/if}
+					{if $rpv['status']=='2'}处理中{/if}
+					{if $rpv['status']=='3' }已处理{/if}
+					{if $rpv['status']=='8' }已结案{/if}
+					{if $rpv['status']=='5' }已回复{/if}
+					{if $rpv['status']=='9' }不显示{/if}
+					</span></td>
+					<td>{php echo date('Y-m-d H:i',$rpv['ctime']);}</td>			
+				</tr>
+			{/loop}	
+			</tbody>
+		</table>    	  
+	</div>	
+</div>

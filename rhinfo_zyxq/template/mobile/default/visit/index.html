@@ -1,0 +1,49 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-list-group:not(.fui-list-group-o):before {	
+	border-top:0px;	
+}
+.fui-list-group:not(.fui-list-group-o):after {
+	border-top:0px;	
+}
+</style>
+	<div class="fui-page fui-page-current">
+	<div class="fui-header">
+		<div class="fui-header-left">		
+		</div>
+		<div class="title">访客通行</div>
+		<div class="fui-header-right">	
+			{if !empty($rid)}<a href="{php echo $this->CreateMobileUrl('visit',array('op'=>'askvisit','rid'=>$rid));}">申请</a>{/if}
+		</div>
+	</div>
+	
+	<div class='fui-content' >		
+		<div class='content-empty' {if !empty($item)}style='display:none'{/if}>
+				<i class='icon icon-friend'></i>
+				<br/>您还没有申请临时访客
+			</div>
+		{if !empty($item)}
+		<div class="fui-list-group address-item" style='margin-top:5px;'>
+			<div  class="fui-list" >
+				<div class="fui-list-inner">
+					<div class="title"><span class='realname'>{$item['title']}</span> </div>
+					
+				</div>				
+			</div>			
+			<div  class="fui-list" >
+				<div class="fui-list-inner">
+					<div class="title text-center"><i class="icon icon-yaoshi"></i>让管理人员扫一扫</div>		
+					<div id="barcode" style="margin:1.5em 0 1.5em auto;clear:both;text-align:center;" ></div> 					
+				</div>
+			</div>			
+		</div> 
+		{/if}
+	 </div>
+ </div>
+{if !empty($item)} 
+	<script type="text/javascript" src="{$_W['siteroot']}web/resource/js/lib/jquery.qrcode.min.js"></script>
+	<script type="text/javascript">
+		$('#barcode').qrcode("{$qrcode_url}");
+	</script>
+{/if}
+{template $this->mytpl('_footer')}

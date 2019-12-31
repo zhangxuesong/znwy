@@ -1,0 +1,403 @@
+{template $this->mytpl('_header')}
+	<style type="text/css">
+	*{padding:0;margin: 0}
+	.shake_box {
+		background: url(../addons/rhinfo_zyxq/static/mobile/images/lock.png) no-repeat #1e2020 center center;
+		position: fixed;
+		top : 0;
+		left: 0;
+		width  : 100%;
+		height : 100%;
+		z-index:999;
+	}
+	.shakTop,.shakBottom {
+		background: #282c2d;
+		position : fixed;
+		left  : 0;
+		width : 100%;
+		height: 50%;
+	}
+	.shakTop    {top    : 0;}
+	.shakBottom {bottom : 0;}
+
+	.shakTop span,.shakBottom span{
+		background: url(../addons/rhinfo_zyxq/static/mobile/images/shakBox.png) no-repeat;
+		position : absolute;
+		left: 50%;
+		width : 450px;
+		height: 254px;
+		margin: 0 0 0 -275px;
+	}
+	.shakTop    span{bottom : 0;}
+	.shakBottom span{
+		background-position: 0 -254px;
+		top : 0;
+	}
+
+	.shake_box_focus .shakTop{
+		animation        : shakTop 1s 1 linear;
+		-moz-animation   : shakTop 1s 1 linear;
+		-webkit-animation: shakTop 1s 1 linear;
+		-ms-animation    : shakTop 1s 1 linear;
+		-o-animation     : shakTop 1s 1 linear;
+	}
+	.shake_box_focus .shakBottom{
+		animation        : shakBottom 1s 1 linear;
+		-moz-animation   : shakBottom 1s 1 linear;
+		-webkit-animation: shakBottom 1s 1 linear;
+		-ms-animation    : shakBottom 1s 1 linear;
+		-o-animation     : shakBottom 1s 1 linear;
+	}
+
+	/* 向上拉动画效果 */
+	@-webkit-keyframes shakTop   {
+		0%   {top: 0;}
+		50%  {top: -200px;}
+		100% {top: 0;}
+	}
+	@-moz-keyframes shakTop      {
+		0%   {top: 0;}
+		50%  {top: -200px;}
+		100% {top: 0;}
+	}
+	@-ms-keyframes shakTop       {
+		0%   {top: 0;}
+		50%  {top: -200px;}
+		100% {top: 0;}
+	}
+	@-o-keyframes shakTop        { 
+		0%   {top: 0;}
+		50%  {top: -200px;}
+		100% {top: 0;}
+	}
+	
+	/* 向下拉动画效果 */
+	@-webkit-keyframes shakBottom   {
+		0%   {bottom: 0;}
+		50%  {bottom: -200px;}
+		100% {bottom: 0;}
+	}
+	@-moz-keyframes shakBottom      {
+		0%   {bottom: 0;}
+		50%  {bottom: -200px;}
+		100% {bottom: 0;}
+	}
+	@-ms-keyframes shakBottom       {
+		0%   {bottom: 0;}
+		50%  {bottom: -200px;}
+		100% {bottom: 0;}
+	}
+	@-o-keyframes shakBottom        { 
+		0%   {bottom: 0;}
+		50%  {bottom: -200px;}
+		100% {bottom: 0;}
+	}
+	.imggray { 
+		-webkit-filter: grayscale(100%);
+		-moz-filter: grayscale(100%);
+		-ms-filter: grayscale(100%);
+		-o-filter: grayscale(100%);
+		
+		filter: grayscale(100%);
+		
+		filter: gray;
+	}
+</style>
+	<div class="fui-page fui-page-current page-commission-index ">
+		<div class="fui-header">
+			<div class="fui-header-left">			
+			</div>
+			<div class="title">我要开门</div>
+			<div class="fui-header-right">			
+			</div>
+		</div>
+	
+	<div class='fui-content member-page navbar'>
+		
+		{if !empty($banners)}
+			<div class='fui-swipe'>
+				<div class='fui-swipe-wrapper'>
+					{loop $banners $item}
+						<a class='fui-swipe-item' href="javascript:;" {if !empty($item['link'])}onclick="countHit(this,'{$item['pid']}','{$item['rid']}','{$item['id']}','{$item['link']}','{$item['wxappid']}','{$item['wxapppage']}','{php echo !empty($item['bgimage'])?tomedia($item['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if}><img src="{php echo tomedia($item['thumb'])}" /></a>
+					{/loop}
+				</div>
+				<div class='fui-swipe-page'></div>
+			</div>
+		{/if}	
+		 <div class='fui-content-inner'>
+		    {if empty($doors)}	
+            <div class='content-empty'>
+               <i class="icon icon-lock" ></i> <br/>暂未开通智能门禁
+            </div>
+			{/if}
+
+			{if count($doors)>4}
+			{loop $doors $item}					
+			<div class="fui-cell-group fui-cell-click">
+				<a class="fui-cell" id="{$item['id']}" data-online="{$item['isonline']}">
+					<div class="fui-cell-icon icon" {if $item['isonline']==1}style="color:orange;"{/if}><i class="icon icon-lock" ></i></div>
+					<div class="fui-cell-text"><p>{$item['title']}</p></div>
+					<div class="fui-cell-remark"></div>
+				</a>					
+			</div>				
+			{/loop}
+			
+			{else}					
+				<div class="fui-cube">						
+					{if count($doors)==1}
+							<div class="fui-block-group-door" style="height:6rem;" >
+							<a class="fui-block-child" id="{$doors[0]['id']}" data-online="{$doors[0]['isonline']}">
+								<div class="icon" {if $doors[0]['image']}><img src="{$doors[0]['image']}" style="width:2rem;height:auto;" {if $doors[0]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[0]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+								<div class="title">{$doors[0]['title']}</div>
+								<div class="text"></div>
+							</a>
+							</div>
+					{/if}			
+					{if count($doors)>1}
+						<div class="fui-cube-left" style="padding-right:2px;"> 
+							<div class="fui-block-group-door">
+							<a class="fui-block-child" id="{$doors[0]['id']}" {if count($doors)>=2}style="padding-top:2rem;"{/if} data-online="{$doors[0]['isonline']}">
+								<div class="icon" {if $doors[0]['image']}><img src="{$doors[0]['image']}" style="width:2rem;height:auto;" {if $doors[0]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[0]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+								<div class="title">{$doors[0]['title']}</div>
+								<div class="text" ></div>
+							</a>
+							</div>
+						</div>
+						<div class="fui-cube-right">
+							{if count($doors)==2}							
+									<div class="fui-block-group-door">
+									<a class="fui-block-child" id="{$doors[1]['id']}" style="padding-top:2rem;" data-online="{$doors[1]['isonline']}">
+										<div class="icon" {if $doors[1]['image']}><img src="{$doors[0]['image']}" style="width:2rem;height:auto;" {if $doors[1]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[1]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+										<div class="title">{$doors[1]['title']}</div>
+										<div class="text" ></div>
+									</a>
+									</div>
+							{/if}
+							{if count($doors)>2}
+								<div class="fui-cube-right1" style="padding-bottom:2px;">
+										<div class="fui-block-group-door">
+										<a class="fui-block-child" id="{$doors[1]['id']}" data-online="{$doors[1]['isonline']}">
+											<div class="icon" {if $doors[1]['image']}><img src="{$doors[1]['image']}" style="width:2rem;height:auto;" {if $doors[1]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[1]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+											<div class="title">{$doors[1]['title']}</div>
+											<div class="text" ></div>
+										</a>
+										</div>				
+								</div>
+								<div class="fui-cube-right2">
+									{if count($doors)==3}								
+										<div class="fui-block-group-door">
+											<a class="fui-block-child" id="{$doors[2]['id']}" data-online="{$doors[2]['isonline']}">
+												<div class="icon" {if $doors[2]['image']}><img src="{$doors[2]['image']}" style="width:2rem;height:auto;" {if $doors[2]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[2]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+												<div class="title">{$doors[2]['title']}</div>
+												<div class="text" ></div>
+											</a>	
+										</div>
+									{/if}
+									{if count($doors)>3}
+										<div class="left" style="padding-right:2px;">
+											<div class="fui-block-group-door">
+											<a class="fui-block-child" id="{$doors[2]['id']}" data-online="{$doors[2]['isonline']}">
+												<div class="icon" {if $doors[2]['image']}><img src="{$doors[2]['image']}" style="width:2rem;height:auto;" {if $doors[2]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[2]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+												<div class="title">{$doors[2]['title']}</div>
+												<div class="text" ></div>
+											</a>	
+											</div>
+										</div>
+									{/if}
+									{if count($doors)==4}
+										<div class="right">
+											<div class="fui-block-group-door">
+											<a class="fui-block-child" id="{$doors[3]['id']}" data-online="{$doors[3]['isonline']}">
+												<div class="icon" {if $doors[3]['image']}><img src="{$doors[3]['image']}" style="width:2rem;height:auto;" {if $doors[3]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[3]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+												<div class="title">{$doors[3]['title']}</div>
+												<div class="text" ></div>
+											</a>	
+											</div>
+										</div>
+									{/if}
+								</div>
+							{/if}
+							</div>
+						</div>
+					{/if}
+			{/if}		
+          
+        </div>
+		<script language='javascript'>
+				require(['opendoor/index'], function (modal) {
+					modal.init({});
+				});				
+		</script>		
+	 </div>
+ </div> 
+
+ <div class="shake_box" style="display:none;">
+	<div class="shakTop"><span></span></div>
+	<div class="shakBottom"><span></span></div>
+</div>
+
+<input type="hidden" id="latelydoor" name="latelydoor" />
+<input type="hidden" id="mylat" name="mylat" />
+<input type="hidden" id="mylng" name="mylng" />
+
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=TPBXoGaFt9pXVq0tVZ7puGRUneloGhnh"></script>
+<script type="text/javascript">
+  
+  getlatelydoor();
+  
+  function getlatelydoor(){  
+	  var geolocation = new BMap.Geolocation();
+	  geolocation.getCurrentPosition(function (r) {
+		var _this = this;
+		if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+			var lat = r.point.lat;
+			var lng = r.point.lng;
+			$("#mylat").val(lat);
+			$("#mylng").val(lng);
+		}
+		core.json('opendoor/index',{lat:lat,lng:lng,range:500}, function(ret){
+			$("#latelydoor").val(ret.status);			
+		},false,true);		
+	});  
+  }
+
+	function countHit(obj,pid,rid,bannerid,link,wxappid,wxapppage,bgimage){	
+	 core.json('service/bannerhit', {
+			pid:pid,rid:rid,bannerid:bannerid
+		}, function(ret) {
+			if (ret.status == 1) {
+				wx.miniProgram.getEnv(function(res){
+					if(res.miniprogram){
+						if(wxappid !==''){
+							var path = '/pages/index/navto?wxappid=' + wxappid +'&wxapppage=' + wxapppage +'&bgimage=' + bgimage;
+							wx.miniProgram.navigateTo({
+								url: path
+							});
+						}
+						else{
+							 location.href = link;
+						}
+						return
+					}
+					else{
+					    location.href = link;
+						return
+					}
+				});			   
+			}				
+		},false, true)
+	}
+	//先判断设备是否支持HTML5摇一摇功能	
+	if (window.DeviceMotionEvent) {
+		//获取移动速度，得到device移动时相对之前某个时间的差值比
+		window.addEventListener('devicemotion', deviceMotionHandler, false);
+	}else{
+		RhUI.alert('您好，你目前所用的设置好像不支持重力感应哦！');
+	}
+
+	//设置临界值,这个值可根据自己的需求进行设定，默认就3000也差不多了
+	var shakeThreshold = 3000;
+	//设置最后更新时间，用于对比
+	var lastUpdate = 0;
+	var myTime = 0;
+	//设置位置速率
+	var curShakeX=curShakeY=curShakeZ=lastShakeX=lastShakeY=lastShakeZ=0;
+
+	function deviceMotionHandler(event){
+		    
+		//获得重力加速
+		var acceleration =event.accelerationIncludingGravity;
+
+		//获得当前时间戳
+		var curTime = new Date().getTime();
+		
+		if ((curTime - lastUpdate)> 100) {
+
+			//时间差
+			var diffTime = curTime -lastUpdate;
+			lastUpdate = curTime;
+
+			//x轴加速度
+			curShakeX = acceleration.x;
+			//y轴加速度
+			curShakeY = acceleration.y;
+			//z轴加速度
+			curShakeZ = acceleration.z;
+
+			var speed = Math.abs(curShakeX + curShakeY + curShakeZ - lastShakeX - lastShakeY - lastShakeZ) / diffTime * 10000;
+
+			if (speed > shakeThreshold) {
+				//TODO 相关方法，比如：
+				$(".shake_box").show();
+				//播放音效
+				shakeAudio.play();
+				//播放动画
+				$('.shake_box').addClass('shake_box_focus');
+				clearTimeout(shakeTimeout);
+												
+				var shakeTimeout = setTimeout(function(){
+					$('.shake_box').removeClass('shake_box_focus');
+					$(".shake_box").hide();
+				},1000);				
+												
+			   
+			   //----					
+				if ((curTime - myTime)< 3000) {
+					RhUI.toast.show('请不要频繁摇呢');
+				    return
+				}
+				
+				myTime = curTime ;
+								
+                var latelydoor = $("#latelydoor").val();
+				if(latelydoor==0 || latelydoor == "" || latelydoor == undefined || latelydoor == null){
+				   RhUI.toast.show('定位不成功');
+				   return
+				}
+				var self = $("#"+latelydoor);
+				var lockid = self.attr("id"); 
+				var online = self.data("online");				
+				if(online==2){
+				   RhUI.toast.show('设备不在线');
+				   return
+				}
+				self.find('.icon').html('<i class="icon icon-yaochi"></i>'); 
+				core.json('steward/opendoor', {
+					id: lockid
+				}, function(ret) {
+					if (ret.status != 1) {
+						self.find('.icon').html('<i class="icon icon-unlock"></i>'); 
+						RhUI.toast.show('开门成功');
+						setTimeout(function(){self.find('.icon').html('<i class="icon icon-lock"></i>'); },2000);
+					}
+					if (ret.status == 1) {
+						self.find('.icon').html('<i class="icon icon-warn"></i>');
+						RhUI.toast.show(ret.result.message);
+						setTimeout(function(){self.find('.icon').html('<i class="icon icon-lock"></i>'); },2000);
+					}
+				}, false, true);
+				//----
+			}
+
+			lastShakeX = curShakeX;
+			lastShakeY = curShakeY;
+			lastShakeZ = curShakeZ;
+		}
+	}
+
+
+	//预加摇一摇声音
+	var shakeAudio = new Audio();
+		shakeAudio.src = '../addons/rhinfo_zyxq/static/mobile/sound/shake_sound.mp3';
+	var shake_options = {
+		preload  : 'auto'
+	}
+	for(var key in shake_options){
+		if(shake_options.hasOwnProperty(key) && (key in shakeAudio)){
+			shakeAudio[key] = shake_options[key];
+		}
+	}
+</script>
+ 
+ {template $this->mytpl('_menu')}
+{template $this->mytpl('_footer')}

@@ -1,0 +1,92 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+<link href="../addons/rhinfo_zyxq/static/lib/lightbox2.6/css/lightbox.css" rel="stylesheet"/>
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />	
+			<input type="hidden" name="id" id="id" value="{$item['id']}" />		
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">报修类别</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" value="{$cname}" readonly />
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">报修内容</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<textarea class="form-control" name="content" rows="6" autocomplete="off" readonly>{$item['content']}</textarea>				
+				</div>		
+			</div>	
+			{if !empty($images)}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">图片</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+				{loop $images $image}				
+					<a  href="{php echo tomedia($image);}" data-lightbox="image-set" ><img src="{php echo tomedia($image);}" class="img-responsive img-thumbnail"  width="100" /></a>
+				{/loop}
+				</div>
+			</div>	
+			{/if}
+			{if !empty($records)}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">回复内容</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+				<table class="table table-hover">
+					{loop $records $record}
+					<tr><td>{if !empty($record['headimgurl'])}<img src="{$record['headimgurl']}" width="20" />&nbsp;{/if}{$record['nickname']}</td>
+					<td>{$record['content']}</td><td>{php echo date('Y-m-d H:i',$record['ctime']);}</td>
+					<td>
+					{loop $record['images'] $img}				
+						<a  href="{php echo tomedia($img);}" data-lightbox="img-set" ><img src="{php echo tomedia($img);}" class="img-responsive img-thumbnail"  width="100" /></a>
+					{/loop}
+					</td>
+					<td>
+					{if $rights['delete'] == 1}
+						<a  href="javascript:;" onclick="mydel(this,{$record['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="删除"><i class="fa fa-trash"></i> 删除</a>
+					{/if}
+					</td>
+					</tr>
+					{/loop}
+				</table>				
+				</div>		
+			</div>				
+			{/if}
+		</form>			
+		 <div class="col-lg-9 col-xs-12 col-sm-offset-2" style="margin-top:8px;">   		  
+		   <a href="javascript:;" class="btn btn-default"  onclick="myreturn()"><i class="fa fa-reply"></i> 返回列表<a/>
+		</div>
+
+    </div>
+</div>
+{template 'web/_layer_footer'}
+<script type="text/javascript" src="../addons/rhinfo_zyxq/static/lib/lightbox2.6/js/lightbox.min.js"></script>
+<script type="text/javascript">
+
+/*删除*/
+function mydel(obj,id){
+	layer.confirm('删除后不可恢复，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+			{op:"deletepost",id:id},
+			function(data,status){
+			 if (data=='ok'){
+				$(obj).parents("tr").remove();			
+				layer.msg('删除成功!',{icon:1});
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+			 }
+		});		
+    });
+}
+
+function myreturn(){
+	  window.history.go(-1);
+}
+
+</script> 
+
+</body>
+</html>

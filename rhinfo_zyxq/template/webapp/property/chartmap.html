@@ -1,0 +1,107 @@
+<span class="echart-title">地图分布</span>
+<div id="chartMap"></div>
+<script language='javascript'>
+	var chartMap = echarts.init(document.getElementById('chartMap'),'shine');
+	option_map = {
+			legend: {
+				orient: 'horizontal',//图例的排列方向
+				x:'center',//图例的位置
+				data:['用户','小区'],
+				textStyle:{
+					color:'#fff'
+				},
+				show:true
+			},
+			visualMap: {//颜色的设置  dataRange
+				x: 'left',
+				y: 'center',				
+			   min: 0,
+			   calculable : false,//颜色呈条状
+			   text:['高','低'],// 文本，默认为数值文本
+			   textStyle:{
+					color:'#fff'
+				},
+				
+			},
+			series : [
+				{
+					name: '用户',
+					type: 'map',
+					mapType: 'china',
+					showLegendSymbol : true, //小点
+					roam: false,//是否开启鼠标缩放和平移漫游
+					itemStyle:{//地图区域的多边形 图形样式
+						normal:{//是图形在默认状态下的样式
+							label:{
+								show:true,//是否显示标签
+								textStyle: {
+									color: "rgb(255,255,255)"
+								}
+							},
+						},
+						emphasis:{//是图形在高亮状态下的样式,比如在鼠标悬浮或者图例联动高亮时
+							label:{
+								show:true,
+								textStyle: {
+									color:'#008c00',
+									fontWeight:'bold'
+								},
+								formatter:'{b}'
+							},
+							areaColor: '#8A2BE2',
+							borderWidth:1,
+						}
+					},
+					top:"0%",//组件距离容器的距离
+					bottom:"5%",
+					data:[			
+						{loop $map1_array $value1}
+							{name:'{$value1["name"]}',value:{$value1['value']}},
+						{/loop}
+					]
+				},
+				{
+					name: '小区',
+					type: 'map',
+					mapType: 'china',
+					showLegendSymbol : true, //小点
+					roam: false,//是否开启鼠标缩放和平移漫游
+					itemStyle:{//地图区域的多边形 图形样式
+						normal:{//是图形在默认状态下的样式
+							label:{
+								show:true,//是否显示标签
+								textStyle: {
+									color: "rgb(255,255,255)"
+								}
+							}
+						},
+						emphasis:{//是图形在高亮状态下的样式,比如在鼠标悬浮或者图例联动高亮时
+							label:{
+								show:false,
+								textStyle: {
+									color:'#008c00',
+									fontWeight:'bold'
+								},
+								formatter:'{b}'
+							},
+							areaColor: '#8A2BE2',
+							borderWidth:1,
+						}
+					},
+					top:"0%",//组件距离容器的距离
+					bottom:"5%",
+					data:[			
+						{loop $map2_array $value2}
+							{name:'{$value2["name"]}',value:{$value2['value']}},
+						{/loop}
+					]
+				}				
+			]
+	};
+	chartMap.setOption(option_map); 
+	autoPlayRange(chartMap,option_map);
+	autoPlay(chartMap,option_map);
+	window.onresize = function() {
+		chartMap.resize();
+	};
+ </script> 

@@ -1,0 +1,78 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" name="myform" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />
+			<input type="hidden" name="sid" value="{$_GPC['sid']}" >		
+			<div class="form-group">				
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">导入方法</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					 <div class="alert alert-danger" role="alert"> 
+						请按姓名、手机号码、备注顺序导入
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">导入模板数据</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="file" id="upfile" class="form-control" title="请选择文件" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.csv" name="upfile">
+				</div>	
+			</div>
+		   <div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">					
+				</div>	
+			</div>
+			
+		</form>	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	var url = "{php echo $this->createWebUrl($mydo,array('op'=>'contactlist','sid'=>$_GPC['sid'])).$mywe['direct'];}";
+	var filename = document.myform.upfile.value;	
+    if (filename=='') {
+	   layer.msg("没有选择任何文件！",{icon:0});
+	   return;
+	}
+	
+	var formData = new FormData();
+	formData.append('upfile', $('#upfile')[0].files[0]);
+	myprocess(obj);
+	$.ajax({
+		url: "{php echo $this->createWebUrl($mydo,array('op'=>'import','sid'=>$_GPC['sid'])).$mywe['direct'];}",
+		type: 'POST',
+		cache: false,
+		data: formData,
+		processData: false,
+		contentType: false,
+		success:function(data){ 			
+			 if (data=='ok'){		
+				layer.msg('导入成功!',{icon:1});
+				location.href = url;		
+			 }
+			 else{
+				var html = '<i class="fa fa-check"></i> 提交';
+				$(obj).html(html);  
+				$(obj).attr("disabled", false); 
+				layer.msg(data,{icon:0});
+			 }
+		} 
+	});
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'storelist')).$mywe['direct'];}";
+	 location.href = url;
+}
+</script> 
+
+</body>
+</html>

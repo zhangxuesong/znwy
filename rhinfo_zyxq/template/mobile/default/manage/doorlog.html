@@ -1,0 +1,95 @@
+{template $this->mytpl('_mheader')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170802">
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left back" ></a>
+		</div>
+		<div class="title">门禁日志</div>
+		<div class="fui-header-right"></div>
+	</div>
+
+	<div class='fui-content navbar'>
+
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper" data-index="1">
+			<div class="mui-scroll">
+				<div class="list-wrapper" style="margin-top:10px;">
+						<!--列表一定要放到容器内,因为会有一个div append到mui-scroll中,需要在底部才能起作用-->
+				</div>	
+			</div>
+		</div>
+    </div>
+</div>
+
+
+<script>  
+    require(['mui'], function (modal) {
+		mui.init({
+			pullRefresh: {
+				container: '#pullrefresh',
+				down: {
+					callback: pulldownRefresh
+				},
+				up: {
+					callback: pullupRefresh
+				}
+			}
+		});
+		/**
+		 * 下拉刷新具体业务实现
+		 */
+		function pulldownRefresh() {
+			setTimeout(function() {
+				var pindex = 1;				
+				var url = "{php echo $this->createMobileUrl('manage',array('op'=>'doorlog','rid'=>$myrid));}";	
+				$.get(url, {'page' : pindex, 'id':'{$id}'}, function(html){
+					if (html.indexOf('mui-card') > - 1) {
+						$('.list-wrapper').innerHTML = html;
+						$("#pullrefresh").data('index', pindex + 1);
+					}
+				});			
+				mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); 
+			}, 1000);
+		}
+
+		/**
+		 * 上拉加载具体业务实现
+		 */
+		function pullupRefresh() {
+			setTimeout(function() {		
+				var pindex =$("#pullrefresh").data('index');
+				var keyword = $('#keyword').val();
+				var url = "{php echo $this->createMobileUrl('manage',array('op'=>'doorlog','rid'=>$myrid));}";	
+				$.get(url, {'page' : pindex ,'id':'{$id}'}, function(html){
+					if (html.indexOf('mui-card') > - 1) {
+						$('.list-wrapper').append(html);
+						$("#pullrefresh").data('index', pindex + 1);
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+					}
+					else {
+					   mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+					}
+				});			
+
+			}, 1000);
+		}
+		if (mui.os.plus) {
+			mui.plusReady(function() {
+				setTimeout(function() {
+					mui('#pullrefresh').pullRefresh().pullupLoading();
+				}, 1000);
+
+			});
+		} else {
+			mui.ready(function() {
+				mui('#pullrefresh').pullRefresh().pullupLoading();
+			});
+		}
+			
+	});  	
+</script>
+
+{template $this->mytpl('_mmenu')}
+
+</body>
+</html>

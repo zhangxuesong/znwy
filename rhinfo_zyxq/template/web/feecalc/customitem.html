@@ -1,0 +1,147 @@
+﻿<div class="panel panel-default">
+	<div class="panel-heading">
+		<h4 class="panel-title">{$region}</h4>		
+		<span class="pull-right">{if !empty($_GPC['hid'])}<a href="javascript:;" class="text-warning" onclick="myaddcustom()"><i class="fa fa-plus"></i> 添加</a>{else}<a href="javascript:;" class="text-warning" onclick="myexport()"><i class="fa fa-download"></i> 导出</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;" class="text-success" onclick="myimport()"><i class="fa fa-upload"></i> 导入</a>{/if}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;共有数据：<strong id="count">{$total}</strong> 条</span> 
+	</div>
+	<div class="panel-body">
+		<div class="panel panel-default" >
+			<div class="panel-body table-responsive">
+				<table class="table table-hover">
+					<thead class="navbar-inner">
+						<tr>					
+							<th width="40">ID</th>
+							<th width="100">房屋</th>
+							<th width="80">收费项目</th>
+							<th width="80">计算方式</th>
+							<th width="60">周期</th>
+							<th width="60">数量</th>
+							<th width="80">单位</th>
+							<th width="60">价格</th>
+							<th width="100">账单日期</th>
+							<th width="80">备注</th>							
+							<th width="120">操作</th>
+
+						</tr>
+					</thead>
+					<tbody>
+					{loop $data $rfv}
+						<tr>					
+							<td>{$rfv['id']}</td>	
+							<td>{$rfv['building']}-{$rfv['unit']}-{$rfv['room']}</td>
+							<td>{$rfv['title']}</td>	
+							<td>{$rfv['calmethod']}</td>	
+							<td>{$rfv['paymonths']}</td>							
+							<td>{$rfv['qty']}</td>
+							<td>{$rfv['measure']}</td>
+							<td>{$rfv['price']}</td>
+							<td>{php echo date('Y-m-d',$rfv['billdate']);}</td>
+							<td>{$rfv['remark']}</td>
+							<td>
+							{if $rights['edit'] == 1 && !empty($_GPC['hid'])}
+							<a href="javascript:;" onclick="myeditcustom({$rfv['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="修改自定收费"><i class="fa fa-edit"></i> 修改</a>{/if}			
+							
+							{if $rights['delete'] == 1}
+							<a href="javascript:;" onclick="mydelcustom(this,{$rfv['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="删除自定收费"><i class="fa fa-trash"></i> 删除</a>{/if}			
+							
+							</td>												
+						</tr>
+					{/loop}	
+					</tbody>
+				</table> 
+				{$pager}
+			</div>	
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	function mydelcustom(obj,id){
+		layer.confirm('确认要删除吗？',{icon: 3, title:'提示'},
+		function(index){
+			$.post("{php echo $this->createWebUrl('room').$mywe['direct'];}",
+				{op:"delcustom",id:id},
+				function(data,status){
+				 if (data=='ok'){
+					$(obj).parents("tr").remove();
+					layer.msg('删除成功!',{icon:1});
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+				 }
+			});		
+			layer.close(index);
+		});
+	}
+	function myaddcustom(){
+		var url = "{php echo $this->createWeburl($mydo,array('op'=>'addcustom','rid'=>$item['rid'],'bid'=>$item['bid'],'tid'=>$item['tid'],'hid'=>$item['id'])).$mywe['direct'];}";
+		var title = "<i class='fa fa-hand-o-right'></i> ";
+		title = title + '自定义收费';
+		var index = layer.open({
+			type: 2,
+			title:title,
+			content: url,
+			area: ['600px','600px'],
+			fix: true, 
+			shade:0.4,
+			resize:false,		
+			end: function () {
+				var url = "{php echo $this->createWebUrl('feecalc',array('op'=>'customitem','rid'=>$item['rid'],'bid'=>$item['bid'],'tid'=>$item['tid'],'hid'=>$item['id'])).$mywe['direct'];}"; 
+				$.get(url, {}, function(data){
+					$('#selectable-output').html(data);
+				});	
+			}
+		});				
+	}
+	function myeditcustom(id){
+		var url = "{php echo $this->createWeburl($mydo,array('op'=>'editcustom','rid'=>$item['rid'],'bid'=>$item['bid'],'tid'=>$item['tid'],'hid'=>$item['id'])).$mywe['direct'];}" + '&id=' + id;
+		var title = "<i class='fa fa-hand-o-right'></i> ";
+		title = title + '自定义收费';
+		var index = layer.open({
+			type: 2,
+			title:title,
+			content: url,
+			area: ['600px','600px'],
+			fix: true, 
+			shade:0.4,
+			resize:false,	
+			end: function () {
+				 var url = "{php echo $this->createWebUrl('feecalc',array('op'=>'customitem','rid'=>$item['rid'],'bid'=>$item['bid'],'tid'=>$item['tid'],'hid'=>$item['id'])).$mywe['direct'];}"; 
+				$.get(url, {}, function(data){
+					$('#selectable-output').html(data);
+				});	
+			}
+		});				
+	}
+	function myexport(){
+		var url = "{php echo $this->createWeburl($mydo,array('op'=>'exportcustom','rid'=>$_GPC['rid'],'bid'=>$_GPC['bid'],'tid'=>$_GPC['tid'])).$mywe['direct'];}";
+		var title = "<i class='fa fa-hand-o-right'></i> ";
+		title = title + '导出模板';
+		var index = layer.open({
+			type: 2,
+			title:title,
+			content: url,
+			area: ['600px','250px'],
+			fix: true, 
+			shade:0.4,
+			resize:false,
+		});				
+	}
+	function myimport(){
+		var url = "{php echo $this->createWeburl($mydo,array('op'=>'importcustom','rid'=>$_GPC['rid'])).$mywe['direct'];}";
+		var title = "<i class='fa fa-hand-o-right'></i> ";
+		title = title + '导入数据';
+		var index = layer.open({
+			type: 2,
+			title:title,
+			content: url,
+			area: ['600px','250px'],
+			fix: true, 
+			shade:0.4,
+			resize:false,
+		});				
+	}
+	function mypage(url,page){
+		$.get(url,{page:page}, function(data){
+			$('#selectable-output').html(data);
+		});	
+	}
+</script>

@@ -1,0 +1,39 @@
+{template $this->mytpl('_header')}
+<div class="fui-page">
+    <div class="fui-header">
+	 <div class="fui-header-left"><a class="back"></a> </div>
+        <div class="title">
+			自助设备机	
+		</div>
+    </div>	
+    <div class="fui-content">
+        <div class='fui-content-inner'>            
+            <div class='container'>
+				<div  class="fui-list store-item">
+
+			<div class="fui-list-inner store-inner">
+				<a data-price="{$item['price']}" data-selfid="{$item['id']}" class="btn-pay">
+				<div class="title"> <span class='storename'>{$item['title']}</span><span class="pull-right" style="font-size:0.65rem;color:green;margin-right:10px;">在线</span></div>
+				<div class="subtitle">设备编号:{$item['devicesn']}<span class="pull-right" style="font-size:0.65rem;color:red;margin-right:10px;">{$item['price']}元/次</span></div>
+				{if !empty($item['address'])}
+				<div class="text">
+					地址: <span class='realname'>{$item['address']}</span>
+				</div>
+				{/if}
+				</a>
+			</div>
+			<div class="fui-list-angle ">
+				 <span class='external'><a href="{$item['detailurl']}"><i class='icon icon-more' style='color:green'></i></a></span>
+				<a href="{$item['mapurl']}" class='external' ><i class='icon icon-location' style='color:#f90'></i></a>
+			</div>
+		</div>
+			</div>          
+        </div>
+    </div>		
+</div>
+<script type="application/javascript">
+	require(['selfdevice/list'], function (modal) {
+		modal.initScan({});
+	});
+</script>	
+{template $this->mytpl('_footer')}

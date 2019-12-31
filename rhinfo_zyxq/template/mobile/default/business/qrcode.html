@@ -1,0 +1,39 @@
+{template $this->mytpl('_pheader')}
+
+	<div class="fui-page fui-page-current page-commission-index ">
+	<div class="fui-header">
+		<div class="fui-header-left"><a class="back"></a></div>
+		<div class="title">收款码</div>
+		<div class="fui-header-right">			
+		</div>
+	</div>	
+	<div class='fui-content' >		
+		<div class="fui-list-group address-item" style='margin-top:5px;'>
+			<div  class="fui-list" >
+				<div class="fui-list-inner">
+					<div class="title"><span class='realname'>{$business['title']}</span> </div>
+					
+				</div>				
+			</div>	
+			<div  class="fui-list" >
+				<div class="fui-list-inner">
+					<div class="title text-center"><i class="icon icon-yaoshi"></i>扫一扫付款</div>		
+					<div id="barcode" style="margin:1.5em 0 1.5em auto;clear:both;text-align:center;" ></div> 
+				 </div>
+			</div>
+		</div> 
+		 </div>
+ </div> 
+<script type="text/javascript" src="{$_W['siteroot']}web/resource/js/lib/jquery.qrcode.min.js"></script>
+
+<script language='javascript'>		
+	jssdkconfig = {php echo json_encode($_W['account']['jssdkconfig']);} || { jsApiList:[] };
+	jssdkconfig.debug = false;
+	wx.config(jssdkconfig);	
+	wx.ready(function () {
+		wx.hideOptionMenu();
+	});
+	$('#barcode').qrcode("{$qrcode_url}");
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div style="padding:8px;">
+		<span class="pull-left" style="line-height:36px;"><i class="fa fa-hand-o-right"></i> {$navtitle}&nbsp;{if $current}&gt;{/if}&nbsp;{$current}</span>
+		<span class="pull-right">
+			{if $myret==1}
+			<a href="javascript:;" onclick="myreturn()" class="btn btn-default" title="返回">
+			<i class="fa fa-reply-all"></i> </a>{/if}
+			<a href="javascript:;" onclick="myhelp()" class="btn btn-default" title="帮助"><i class="fa fa-question-circle"></i> </a>
+			 <a class="btn btn-success" href="javascript:location.replace(location.href);" title="刷新">
+				<i class="fa fa-refresh"></i>
+			</a>
+		</span>
+	</div>
+</nav>

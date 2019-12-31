@@ -1,0 +1,33 @@
+﻿<div class="panel panel-default" >
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>					
+					<th width="60">ID</th>
+					<th width="100">收费项目</th>
+					<th width="150">房屋名称</th>
+					<th width="100">房屋ID</th>
+					<th width="150">账单日期</th>
+					<th width="80">状态</th>
+					<th width="80">费用</th>
+
+				</tr>
+			</thead>
+			<tbody>
+			{loop $lifepays $lifev}
+				<tr>					
+					<td>{$lifev['bill_entry_id']}</td>	
+					<td>{$lifev['cost_type']}</td>	
+					<td>{$lifev['room_address']}</td>					
+					<td>{$lifev['out_room_id']}</td>
+					<td>{$lifev['acct_period']}</td>
+					<td class="td-status">
+					{if $lifev['status']=='FINISH_PAYMENT'}<span class="label label-success radius">已支付</span>{else}<span class="label label-danger radius">未支付</span>{/if}
+					</td>
+					<td>{$lifev['bill_entry_amount']}</td>												
+				</tr>
+			{/loop}	
+			</tbody>
+		</table> 
+	</div>	
+</div>

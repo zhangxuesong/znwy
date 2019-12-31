@@ -1,0 +1,253 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />					
+	<input type="hidden" name="category" value="1" />	
+	{if $_W['uid']} 
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"> <span class="text-danger">*</span>所属物业</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+				{if empty($item['pid'])}
+				<option value="0">请选择所属物业</option>
+				{/if}					
+				{loop $myproperty $v}
+					<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>
+	{else}
+		<input type="hidden" class="form-control" id="pid" value="{$mywe['pid']}" name="pid" />
+	{/if}	
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>所属主体</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="rid" name="rid" onchange="renderCategory(this,'building','bid')">
+				{if empty($item['rid'])}
+				<option value="0">请选择所属主体</option>
+				{/if}				
+				{loop $eregions $r}
+					<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+				{/loop}
+				{if $_W['uid']} 
+				{else}
+					{if $operation=='add'}
+						{loop $regions $r}
+							<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+						{/loop}
+					{/if}
+				{/if}
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>通知主题</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入通知主题" name="title" />
+		</div>	
+	</div>
+
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">通知内容</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_ueditor('content', $item['content']);}
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"> <span class="text-danger">*</span>通知类别</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="cid" id="cid">
+			    {if empty($item['cid'])}
+				<option value="0">请选择通知类别</option>
+				{/if}
+				{loop $ecategorys $cate}
+					<option value="{$cate['id']}" {if $item['cid'] == $cate['id']} selected {/if} >{$cate['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">通知原因</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="reason" value="{$item['reason']}" placeholder="输入原因" name="reason" />
+			<span class="help-block">停电、停水、停气等类型通知需输入，物业管理通知不需输入</span>
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">时间范围</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			 {php echo tpl_form_field_daterange('timerange', array('starttime' => date('Y-m-d H:i',empty($item['stime']) ? TIMESTAMP : $item['stime']),'endtime' => date('Y-m-d H:i',empty($item['etime']) ? TIMESTAMP : $item['etime'])),true);}
+			<span class="help-block">停电、停水、停气等类型通知需输入，物业管理通知不需输入</span>
+		</div>	
+	</div>
+
+
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">发布范围</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<label class="radio-inline">
+				<input type="radio" name="range" value="0" id="all" {if empty($item['range'])} checked {/if} />全部</label>
+			<label class="radio-inline">
+				<input type="radio" name="range" value="1" id="buildings" {if $item['range']==1} checked {/if} /> 指定楼宇</label>
+			<label class="radio-inline">
+				<input type="radio" name="range" value="2" id="unit" {if $item['range']==2} checked {/if} /> 指定单元</label>
+			<label class="radio-inline">
+				<input type="radio" name="range" value="3" id="room" {if $item['range']==3} checked {/if} /> 指定房屋</label>
+			{if $this->syscfg['iswegroup']}	
+			<label class="radio-inline">
+				<input type="radio" name="range" value="9" id="group" {if $item['range']==9} checked {/if} /> 依会员组</label>					
+			<span class="help-block">会员组是依主体自动建立 </span>
+			{/if}
+		</div>
+	</div>	
+	
+	<div id="mybuilding" {if $item['range']==1}{else}style="display:none;" {/if} >
+	   <input type="hidden" id="mulbid" value="{$mulbid}"  name="mulbid" />
+		<div class="form-group" >
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">楼宇</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<select multiple="true" class="form-control" id="mbid" name="mbid" style="height:200px !important;" >	
+					{loop $ebuildings $d}
+						<option value="{$d['id']}" {if strstr($item['bid'],$d['id'])} selected {/if} >{$d['title']}</option>
+					{/loop}	
+				</select>
+				<span class="help-block">可按shift或ctrl点击多选</span>
+			</div>
+		</div>
+	</div>
+	
+	<div id="myunit" {if $item['range']==2 || $item['range']==3}{else}style="display:none;" {/if}>
+		<div class="form-group" >
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">楼宇</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<select class="form-control" id="bid" name="bid" onchange="renderCategory(this,'unit','tid')">					
+					{if empty($item['bid'])}
+						<option value="0">请选择楼宇</option>	
+					{/if}
+					{loop $ebuildings $d}
+						<option value="{$d['id']}" {if $item['bid'] == $d['id']} selected {/if} >{$d['title']}</option>
+					{/loop}
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">单元</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<select class="form-control" id="tid" name="tid" onchange="renderCategory(this,'room','hid')" >
+					{if empty($item['tid'])}
+						<option value="0">请选择单元</option>	
+					{/if}						
+					{loop $eunits $t}
+						<option value="{$t['id']}" {if $item['tid'] == $t['id']} selected {/if} >{$t['title']}</option>
+					{/loop}	
+				</select>
+			</div>
+		</div>	
+		<div id="myroom" {if $item['range']==3}{else}style="display:none;" {/if}>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">房屋</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<select class="form-control" id="hid" name="hid" >
+						{if empty($item['hid'])}
+							<option value="0">请选择房屋</option>	
+						{/if}						
+						{loop $erooms $h}
+							<option value="{$h['id']}" {if $item['hid'] == $h['id']} selected {/if} >{$h['title']}</option>
+						{/loop}	
+					</select>
+				</div>
+			</div>	
+		</div>
+	</div>
+		
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">备注</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="remark" value="{$item['remark']}" placeholder="输入备注" name="remark" />
+			<span class="help-block">通知模板备注信息remark.DATA</span>
+		</div>	
+	</div>	
+</form>	
+
+<script type="text/javascript">
+	window._region = {php echo json_encode($myregion);};				
+	window._building = {php echo json_encode($mybuilding);};
+	window._unit = {php echo json_encode($myunit);};
+	window._room = {php echo json_encode($myroom);};
+	window._category = {php echo json_encode($mycategory);};
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择</option>';
+			var html1 ='<option value="0">请选择</option>';				
+			var html2 = '<option value="0">请选择</option>';
+			
+			if (id=='rid'){
+				$("#bid").html(html);
+				$("#tid").html(html);
+				$("#hid").html(html);				
+				$("#cid").html(html);
+			}
+			else if (id=='bid'){
+				$("#tid").html(html);
+				$("#hid").html(html);
+				$("#cid").html(html);
+			}
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';				
+				html1 += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';				
+			}
+			
+			if(id=='bid'){
+				for(var i=0; i< window['_category'][index].length; i++){
+					html2 += '<option value="'+window['_category'][index][i]['id']+'">'+window['_category'][index][i]['title']+'</option>';			
+				}
+				$("#cid").html(html2);
+			}
+			
+			$selectChild.html(html);
+			if (id=='bid'){			   
+			   $("#m"+ id).html(html1);			  
+			}			
+		});
+	}
+	
+	 $("input[name=range]").click(function(){
+		  switch($("input[name=range]:checked").attr("id")){
+		  case "all":	
+				$("#mybuilding").hide();
+			    $("#myunit").hide();
+			   break;
+		  case "buildings":			
+		        $("#mybuilding").show();
+			    $("#myunit").hide();
+			   break;
+		  case "unit":			
+		       $("#mybuilding").hide();
+			   $("#myunit").show();
+			   $("#myroom").hide();
+			   break;   
+		   case "room":			
+		       $("#mybuilding").hide();
+			   $("#myunit").show();
+			   $("#myroom").show();
+			   break;  
+		  default:
+				$("#mybuilding").hide();
+			    $("#myunit").hide();
+				break;
+		}
+			
+	 });
+
+</script>

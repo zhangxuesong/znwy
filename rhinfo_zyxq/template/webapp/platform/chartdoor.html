@@ -1,0 +1,91 @@
+<span class="echart-title">门禁车闸</span>
+<span class="echart-count">进出频率</span>
+<div id="chartDoor"></div>
+<script type="text/javascript">
+	var chartDoor = echarts.init(document.getElementById('chartDoor'),'shine');
+	option_door = {
+		legend: {
+			data:['门禁','车闸'],
+			textStyle: {
+				color: "rgb(249, 249, 249)"
+			},			
+		},
+		calculable : true,
+		grid:{
+			y:25,
+			y2:18,
+			x2:40,
+			left:'1%',
+			right:'5%',
+			top:'5%',
+			containLabel:true
+		},
+		xAxis : [
+			{
+				type : 'category',
+				boundaryGap : false,
+				axisLabel:{
+					textStyle:{
+						color: "#ffffff"
+					}
+				},
+				axisLine:{
+					lineStyle:{
+						color: "#ffffff"
+					}
+				},
+				data: (function (){
+					var now = new Date();
+					var res = [];
+					var len = 10;
+					while (len--) {
+						var minute = now.getMinutes();
+						minute = minute>9?minute:'0'+ minute;
+						res.unshift(now.getHours() + ":" + minute);
+						now = new Date(now - 5*60*1000);
+					}
+					return res;
+				})()
+			}
+		],
+		yAxis : [
+			{
+				type : 'value',
+				textStyle:{
+					color: "#fffff"
+				},
+				axisLabel:{
+					textStyle:{
+						color: "#ffffff"
+					}
+				},
+				axisLine:{
+					lineStyle:{
+						color: "#ffffff"
+					}
+				},
+			}
+		],
+		series : [
+			{
+				name:'门禁',
+				type:'line',
+				smooth:true,
+				itemStyle: {normal: {areaStyle: {type: 'default'}}},
+				data:[{$doordata}]
+			},
+			{
+				name:'车闸',
+				type:'line',
+				smooth:true,
+				itemStyle: {normal: {areaStyle: {type: 'default'}}},
+				data:[{$cardata}]
+			}
+		]
+	};
+	chartDoor.setOption(option_door);
+	autoPlay(chartDoor,option_door);
+	window.onresize = function() {
+		chartDoor.resize();
+	};
+</script>

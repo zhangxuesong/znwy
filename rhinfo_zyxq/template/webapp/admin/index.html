@@ -1,0 +1,272 @@
+{php include $this->template('_header');}
+<link href="../addons/rhinfo_zyxq/static/web/css/echart.css?v={TIMESTAMP}" rel="stylesheet"/>
+<div class="myContainer">
+	<div class="stats-bar">{php echo include $this->mytpl('chartpop');}</div>	
+	<div class="echart-block">
+		<div class="echart-item md-5">
+			<div id="chartFeebill-output"></div>
+		</div>
+		<div class="echart-item md-5">
+			<div id="chartCarfee-output"></div>
+		</div>
+		<div class="echart-item md-5">
+			<div id="chartBind-output"></div>
+		</div>
+		<div class="echart-item md-5">
+			<div id="chartRepair-output"></div>
+		</div>
+		<div class="echart-item md-5">
+			<div id="chartSuggest-output"></div>
+		</div>		
+		<div class="echart-item md-2">
+			<div id="chartPay-output" style="margin-bottom:10px;"></div>
+			<div id="chartBudget-output"></div>
+		</div>
+		
+		<div class="echart-item md-2 ht-2">
+			<div id="chartMap-output"></div>
+		</div>
+		<div class="echart-item md-5">
+			<div id="chartMember-output"></div>
+		</div>
+		<div class="echart-item md-5">
+			<div id="chartOwner-output"></div>
+		</div>
+		<div class="echart-item md-5">
+			<div id="chartPayrate-output"></div>
+		</div>
+
+		<div class="echart-item md-5">
+			<div id="chartCost-output"></div>
+		</div>
+		<div class="echart-item md-2">
+			<div id="chartDoor-output"></div>
+		</div>
+		<div class="echart-item md-5">
+			<div id="chartSelf-output"></div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="../addons/rhinfo_zyxq/static/lib/echarts/echarts-all-3.js"></script>
+<script type="text/javascript" src="../addons/rhinfo_zyxq/static/lib/echarts/china.js"></script>
+<script type="text/javascript"src="../addons/rhinfo_zyxq/static/lib/echarts/shine.js"></script>
+<script language='javascript'>
+	var url = location.href + '&#rhinfo';	
+	$(function() {
+		{if !empty($this->syscfg['board_password'])}
+			GetPassword();
+		{else}
+			tick();
+			chartdoor();
+		{/if}
+	});
+	function GetPassword(){
+		layer.prompt({title: '输入密码',area: ['300px', '30px'], formType: 1}, function(pwd, index){
+			var loadindex = layer.load(2);
+			$.post(url,	{op:'check_pwd',password:pwd},
+				function(data,status){
+				 layer.close(loadindex);
+				 if (data=='ok'){
+					layer.closeAll();
+					tick();
+					chartdoor();
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+				 }
+			});	
+		  });	  
+	}
+	function initChart(){
+		chartfeebill();
+		chartcarfee();
+		chartbind();
+		chartrepair();	
+		chartsuggest();
+		chartpayfee();
+		chartbudget();
+		chartmap();
+		chartmember();
+		chartowner();
+		chartpayrate();
+		chartcost();
+		chartself();
+	}
+	function chartrepair(){
+		$.get(url, {op:'repair'}, function(data){
+			$('#chartRepair-output').html(data);
+		});	
+	}
+	function chartsuggest(){
+		$.get(url, {op:'suggest'}, function(data){
+			$('#chartSuggest-output').html(data);
+		});	
+	}
+	function chartbind(){
+		$.get(url, {op:'bind'}, function(data){
+			$('#chartBind-output').html(data);
+		});	
+	}
+	function chartfeebill(){
+		$.get(url, {op:'feebill'}, function(data){
+			$('#chartFeebill-output').html(data);
+		});	
+	}
+	function chartcarfee(){
+		$.get(url, {op:'carfee'}, function(data){
+			$('#chartCarfee-output').html(data);
+		});	
+	}
+	function chartmap(){
+		$.get(url, {op:'map'}, function(data){
+			$('#chartMap-output').html(data);
+		});	
+	}
+	function chartpayfee(){
+		$.get(url, {op:'payfee'}, function(data){
+			$('#chartPay-output').html(data);
+		});	
+	}
+	function chartpayrate(){
+		$.get(url, {op:'payrate'}, function(data){
+			$('#chartPayrate-output').html(data);
+		});	
+	}
+	function chartbudget(){
+		$.get(url, {op:'cost'}, function(data){
+			$('#chartBudget-output').html(data);
+		});	
+	}
+	function chartcost(){
+		$.get(url, {op:'costcomp'}, function(data){
+			$('#chartCost-output').html(data);
+		});	
+	}
+	function chartdoor(){
+		$.get(url, {op:'door'}, function(data){
+			$('#chartDoor-output').html(data);
+		});	
+		window.setTimeout("chartdoor()", 1000*60*1);
+	}
+	function chartmember(){
+		$.get(url, {op:'member'}, function(data){
+			$('#chartMember-output').html(data);
+		});	
+	}
+	function chartowner(){
+		$.get(url, {op:'owner'}, function(data){
+			$('#chartOwner-output').html(data);
+		});	
+	}
+	function chartself(){
+		$.get(url, {op:'self'}, function(data){
+			$('#chartSelf-output').html(data);
+		});	
+	}
+	//自动播放
+   function autoPlay(chart,option){
+		var i=0;
+		var len=option.series[0].data.length;
+		setInterval(function(){
+			//loop时候，最后的一个label隐藏
+			chart.dispatchAction({
+				type: 'downplay',
+				seriesIndex: 0,
+				dataIndex: len-1
+			});
+			//当前的显示
+			chart.dispatchAction({
+				type: 'highlight',
+				seriesIndex: 0,
+				dataIndex: i
+			});
+			//之前的隐藏
+			chart.dispatchAction({
+				type: 'downplay',
+				seriesIndex: 0,
+				dataIndex: i-1
+			});
+			i++;
+			if(i==len){
+				i=0;
+			}
+		},2500)
+	}
+   function autoPlayRange(chart,option){
+		var i=0;
+		var len=option.series[0].data.length;
+		var now;
+		setInterval(function(){
+			now=option.series[0].data[i].value;
+			//当前的显示
+			chart.dispatchAction({
+				type: 'selectDataRange',
+				selected: [0,now],       //0为visualmap设定的min值
+			});
+			i++;
+			if(i==len){
+				i=0;
+			}
+		},2500)
+	}
+    function showLocale(objD){
+		 var str,colorhead,colorfoot;
+		 var yy = objD.getYear();
+		 if(yy<1900) yy = yy+1900; 
+		 var MM = objD.getMonth()+1; 
+		 if(MM<10) MM = '0' + MM;
+		 var dd = objD.getDate(); 
+		 if(dd<10) dd = '0' + dd;
+		 var hh = objD.getHours();
+		 if(hh<10) hh = '0' + hh;
+		 var mm = objD.getMinutes();
+		 if(mm<10) mm = '0' + mm; 
+		 var ss = objD.getSeconds(); 
+		 if(ss<10) ss = '0' + ss; 
+		 var ww = objD.getDay(); 
+		 if ( ww==0 ) colorhead="<font color=\"#ff0000\">"; 
+		 if ( ww > 0 && ww < 6 ) colorhead="<font color=\"#fff\">"; 
+		 if ( ww==6 ) colorhead="<font color=\"#ffff00\">";
+		 if (ww==0) ww="星期日"; 
+		 if (ww==1) ww="星期一"; 
+		 if (ww==2) ww="星期二"; 
+		 if (ww==3) ww="星期三"; 
+		 if (ww==4) ww="星期四";  
+		 if (ww==5) ww="星期五";  
+		 if (ww==6) ww="星期六";  
+		 var colorfoot="</font>"  
+		 str = colorhead + ww + colorfoot + " " + MM + "月" + dd + "日 " + hh + ":" + mm + ":" + ss ; 	
+		 return str; 
+	 }
+	function getDay(day){ 
+		var today = new Date(); 
+		var targetday_milliseconds=today.getTime() + 1000*60*60*24*day;
+		today.setTime(targetday_milliseconds); 
+		var tYear = today.getFullYear(); 
+		var tMonth = today.getMonth();  
+		var tDate = today.getDate();   
+		tMonth = doHandleMonth(tMonth + 1); 
+		tDate = doHandleMonth(tDate);  
+	   return tMonth+"-"+tDate;
+	 }
+	function doHandleMonth(month){  
+		var m = month; 
+		if(month.toString().length == 1){ 
+			m = "0" + month;   
+		}    
+		return m;
+	} 
+	 function tick() { 
+		initChart(); 
+		window.setTimeout("tick()", 1000*60*10); 
+	 }	  
+	 function second() { 
+		 var today; 
+		 today = new Date(); 
+		 document.getElementById("localtime").innerHTML = showLocale(today);
+		 window.setTimeout("second()", 1000); 
+	 }
+	second();
+ </script> 
+</body>
+</html>

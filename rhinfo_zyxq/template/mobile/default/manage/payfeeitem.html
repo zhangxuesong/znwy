@@ -1,0 +1,73 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170712">
+
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back"></a>
+	</div>
+	<div class="title">房屋账单</div> 
+	<div class="fui-header-right" ></div>
+    </div>
+
+    <div class='fui-content navbar' >
+    {if empty($items) || empty($list)}
+		<div class='content-empty'>
+			 <i class='icon icon-money'></i><br/>没有找到任何账单<br/>
+			 <a href="{php echo $this->CreateMobileUrl('manage',array('op'=>'selectcharge','rid'=>$myrid));}" class='btn btn-default-o external'> 返回选择房产</a>
+		</div>
+	{else}
+		<div class="fui-title"><i class="icon icon-city"></i> {$region['title']} {$_GPC['myroom']}</div>
+		<div class="fui-cell-group">	
+			{loop $items $i $v}
+				{if $i==0 || $i%4 == 0}<div class="fui-icon-group selecter">{/if}
+					<a class="fui-icon-col external" {if $v['total']} href="{$v['url']}" {/if}>
+						{if $v['total']}
+						<div class="badge">{$v['total']}</div>
+						{/if}
+						<div class="icon icon-green radius"><i class="icon {$v['icon']}"></i></div>
+						<div class="text">{$v['title']}</div>
+					</a>
+				{if ($i + 1)%4 == 0}</div>{/if}
+			{/loop}
+			{if count($items)%4 == 0}{else}</div>{/if}	
+
+		<div class="fui-cell-tip" >如需选择缴费，请从下往上选择取消</div>		
+		{loop $list $k $f}						
+			<div class="fui-cell">			
+				<div class="fui-cell-label">{$f['title']}</div>
+				<div class="fui-cell-info">{$f['fee']}</div>	
+				<div class="fui-cell-remark noremark feebill-item" style="padding-right:20px;" data-billid="{$f['id']}" data-fee="{$f['fee']}" >单价：{$f['price']} {$f['measure']} 
+				&nbsp;&nbsp;<input type="checkbox" name="checkbox" id="fee{$k}" {if $k + 1 < count($list)}disabled{/if} class="fui-radio fui-radio-danger check-item" checked/></div>					
+			</div>				
+			<div class="fui-cell-tip" >	
+			交费周期：{$f['daterange']}	{if $f['latefee']>0}含违约金：<font class="text-danger">{$f['latefee']}</font>{/if}
+			{if $f['feetype']==2}&nbsp;			
+				上期期读数:{$f['startqty']}本期读数:{$f['endqty']}用量:{$f['threeqty']}
+			{/if}
+			</div>	
+		{/loop}
+		</div>		
+	 {/if}
+    </div>	
+	{if !empty($list)}
+		 <div class='fui-navbar'>
+			<a class='nav-item'>总计：<span class="text-danger" id="totalfee">￥{$totalfee}</span></a>
+			<a id="billpay" class='nav-item btn btn-success external'><i class="icon icon-money"></i> 收款</a>
+		</div>
+		 <script language='javascript'>
+			 require(['manage/charge'], function (modal) {
+				modal.init({totalfee:"{$totalfee}",rid:"{$myrid}",billids:"{$billid}",count:"{php echo count($list);}",room:"{$_GPC['room']}",myroom:"{$_GPC['myroom']}",myurl:"{php echo $this->createMobileurl('manage',array('op'=>'charge','rid'=>$myrid));}"});
+			});
+		</script>	
+	{/if}
+<script language='javascript'>		
+	jssdkconfig = {php echo json_encode($_W['account']['jssdkconfig']);} || { jsApiList:[] };
+	jssdkconfig.debug = false;
+	wx.config(jssdkconfig);	
+	wx.ready(function () {
+		wx.hideOptionMenu();
+	});
+</script>
+</body>
+</html>

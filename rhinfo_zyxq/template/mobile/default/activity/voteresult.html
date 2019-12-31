@@ -1,0 +1,79 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/activity.css?v={TIMESTAMP}">
+<style>
+	.answer-cell{
+		width: 100%;
+	}
+</style>
+<div class="fui-page fui-page-current">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">投票1的结果</div>
+		<div class="fui-header-right"></div>
+	</div>
+	<div class="fui-content navbar"> 
+		<div class="fui-cell-group" >
+			<div class="fui-cell">
+				<div class="result-view">
+					<img  class="vote-img" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1536811142214&di=c3fe03af353c82a0641f3a44e8ed7d06&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2018-05-17%2F5afd6b861dd24.jpg" alt="">
+					<p>1.&nbsp;&nbsp;小明和小红和小芳小明和小红和小芳小明和小红和小芳小明和小红和小芳?</p>
+					<span class="allVotes">已经投6票</span>
+					<input type="hidden" value="6" id="allVotes">
+					<!-- 所有人投票结果 -->
+					<ul class="result">
+						<li class="result-cell active">
+							<!-- 当前用户已经投选的结果 -->
+							<div class="result-item">
+								<i class="fa fa-check"></i>
+								<span class="v-content">文字溢出测试文字溢出测试</span>
+								<span class="v">1票</span>
+								<input type="hidden" value="1" class="votes">
+							</div>
+							<div class="result-cover"></div>
+						</li>
+						<li class="result-cell">
+							<div class="result-item">
+								<span class="v-content">文字溢出测试文字溢出测试</span>
+								<span class="v">2票</span>
+								<input type="hidden" value="2" class="votes">
+							</div>
+							<div class="result-cover"></div>
+						</li>
+						<li class="result-cell">
+							<div class="result-item">
+								<span class="v-content">文字溢出测试文字溢出测试</span>
+								<span class="v">2票</span>
+								<input type="hidden" value="2" class="votes">
+							</div>
+							<div class="result-cover"></div>
+						</li>
+						<li class="result-cell">
+							<div class="result-item">
+								<span class="v-content">文字溢出测试文字溢出测试</span>
+								<span class="v">1票</span>
+								<input type="hidden" value="1" class="votes">
+							</div>
+							<div class="result-cover"></div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		changeResultPer();
+		function changeResultPer(){
+			var allVotes=parseInt($("#allVotes").val());
+			$(".votes").each(function(){
+				var nowVotes=parseInt($(this).val());
+				var nowCover=$(this).closest(".result-cell").find(".result-cover");
+				nowCover.css("width",nowVotes/allVotes*100+"%");
+			})
+		}
+	})
+</script>
+{template $this->mytpl('_footer')}

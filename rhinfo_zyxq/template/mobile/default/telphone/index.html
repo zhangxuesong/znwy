@@ -1,0 +1,146 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-according-group:after,.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+.fui-according-group:not(.fui-according-group-o):before,.fui-cell-group:not(.fui-cell-group-o):before,.fui-list-group:not(.fui-list-group-o):before,.fui-list-group:not(.fui-list-group-o):after{border-top:0px;}
+.fui-according-content .content-block {	font-size:0.75rem;}
+.searchbtn {
+    background: none;
+    border: 0;
+}
+</style>
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">便民电话</div>
+        <div class="fui-header-right">
+            <a href="{php echo $this->createMobileUrl('home');}">首页</a>
+        </div>
+    </div>
+    <div class='fui-content'>
+		{if !empty($banners)}
+			<div class='fui-swipe'>
+				<div class='fui-swipe-wrapper'>
+				{loop $banners $banner}
+					<a class='fui-swipe-item external' href="javascript:;" {if !empty($banner['link'])} onclick="countHit(this,'{$banner['pid']}','{$banner['rid']}','{$banner['id']}','{$banner['link']}','{$banner['wxappid']}','{$banner['wxapppage']}','{php echo !empty($banner['bgimage'])?tomedia($banner['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if}><img src="{php echo tomedia($banner['thumb'])}" /></a>
+				{/loop}
+				</div>
+				<div class='fui-swipe-page'></div>
+			</div>
+		{/if}	
+        {if count($category)>0}
+            <div class="fui-icon-group col-4 noborder">
+                {loop $category $item}
+                    <a class="fui-icon-col" href="{php echo $this->createMobileUrl($mydo, array('op'=>'telphone','cate'=>$item['id']))}" data-nocache="true">
+                        <div class="icon">
+                            {if !empty($item['thumb'])}<img src="{php echo tomedia($item['thumb'])}"/>{/if}
+                        </div>
+                        <div class="text">{$item['title']}</div>
+                    </a>
+                {/loop}
+            </div>
+        {/if}
+		<form action="{php echo $this->createMobileUrl($mydo,array('op'=>'telphone'));}" method="post">
+            <div class="fui-searchbar bar">
+                <div class="searchbar center">
+                    <input type="submit" class="searchbar-cancel searchbtn" value="搜索" />
+                    <div class="search-input">
+                        <i class="icon icon-search"></i>
+                        <input type="search" placeholder="输入关键字..." class="search" name="keyword">
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+		 <div class='fui-content-inner'>
+			<div class='content-empty' style='display:none;'>
+				<div class="icon ">
+					<i class="icon icon-information"></i>
+				</div>
+				<div class="content">还未建立电话</div>
+			</div>
+			<div id="container"></div>
+			<div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+		</div>
+				
+    </div>
+
+	<script type="text/html" id="tpl_list">
+	   <%each list as item%>
+	   <div class="fui-list-group">
+			<div class="fui-list">
+				<%if item.thumb!=""%>
+				<div class="fui-list-media">		
+					<img src="<%item.thumb%>" class="round">						
+				</div>
+				<%/if%>
+				<a class="fui-list-inner" href="<%item.mapurl%>">
+					<div class="subtitle"><%item.title%></div>
+						<%if item.city!=""%>
+						<div class="text">
+						   <span class="address"><%item.city%><%item.district%></span>
+						</div>
+						<%/if%>                   
+						<%if item.address!=""%>
+						<div class="text">
+							地址: <span class="address"><%item.address%></span><%if item.starttime!=""%>&nbsp;<%item.starttime%>~<%item.endtime%><%/if%>
+						</div>
+						<%/if%>
+					<div class="text">
+							电话: <span class="address"><%item.telphone%></span>
+						</div>
+				</a>
+				<div class="fui-list-angle">
+					<%if item.telphone!=""%>
+					<a href="tel:<%item.telphone%>"><i class="icon icon-caller" style="color:#ff6600;"></i></a>
+					<%/if%>
+				</div>
+			</div>
+		</div>
+        <%/each%>
+	</script>
+
+	<script language="javascript">       							
+		wx.ready(function () {
+			wx.getLocation({
+				type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+				success: function (res) {
+					var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+					var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+					require(['telphone/index'],function(modal){
+						modal.init({cate: '', keyword: '',lat:latitude,lng:longitude});
+					});		
+				}
+			});  
+		});
+
+		function countHit(obj,pid,rid,bannerid,link,wxappid,wxapppage,bgimage){	
+		 core.json('service/bannerhit', {
+				pid:pid,rid:rid,bannerid:bannerid
+			}, function(ret) {
+				if (ret.status == 1) {
+					wx.miniProgram.getEnv(function(res){
+						if(res.miniprogram){
+							if(wxappid !==''){
+								var path = '/pages/index/navto?wxappid=' + wxappid +'&wxapppage=' + wxapppage +'&bgimage=' + bgimage;
+								wx.miniProgram.navigateTo({
+									url: path
+								}); 							
+							}
+							else{
+								 location.href = link;
+							}
+							return
+						}
+						else{
+							location.href = link;
+							return
+						}
+					});			   
+				}				
+			},false, true)
+		}
+    </script>
+</div>
+{template $this->mytpl('_footer')}

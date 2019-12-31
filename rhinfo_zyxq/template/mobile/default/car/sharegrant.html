@@ -1,0 +1,114 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-list-group:not(.fui-list-group-o):before {	
+	border-top:0px;	
+}
+.fui-list-group:not(.fui-list-group-o):after {
+	border-top:0px;	
+}
+.verify-pop {
+    position: fixed;
+}
+
+.verify-pop .qrcode {
+    width: 250px;
+    margin-left: -125px;
+    border-radius: 0.3rem;
+    height: auto;
+    overflow: hidden;
+}
+
+.verify-pop.pop .qrcode {
+    width: 90%;
+    margin-left: -45%;
+    overflow: hidden;
+    display: block;
+}
+
+.verify-pop.pop .qrcode .popbtn {
+   	position: relative;
+	margin:0 auto;
+	width:100%;
+	text-align:center;
+}
+.verify-pop.pop .qrcode .popbtn a{
+	margin:0.8rem;
+}
+</style>
+	<div class="fui-page fui-page-current page-commission-index ">
+	<div class="fui-header">
+		<div class="fui-header-left">			
+		</div>
+		<div class="title">车位共享</div>
+		<div class="fui-header-right">			
+		</div>
+	</div>
+	
+	<div class='fui-content navbar' >		
+		<div class="fui-list-group address-item" style='margin-top:5px;'>
+			<div  class="fui-list" >
+				<div class="fui-list-inner">
+					<div class="title"><span class='realname'>{$region['title']}-{$item['title']}</span> </div>
+					
+				</div>				
+			</div>	
+			<div  class="fui-list" >
+				<div class="fui-list-inner">
+					<div class="title text-center"><i class="icon icon-yaoshi"></i>邀请朋友扫一扫</div>		
+					<div id="barcode" style="margin:1.5em 0 1.5em auto;clear:both;text-align:center;" ></div> 
+					<div class='bar' >
+					<span class='pull-left'>
+						<a class="external" id ='btn-payshare'>
+						<i class='icon icon-friends'></i> 共享车位
+						</a>			   
+					</span>
+					<span class='pull-right'>
+						<a class="external" id ='btn-share'>
+						<i class='icon icon-share'></i> 授权给朋友
+						</a>			   
+					</span>
+					</div>
+				</div>
+			</div>
+		</div> 
+		 </div>
+		<div id='cover'>
+			<div class='fui-mask-m visible'></div>
+			<div class='arrow'></div>
+			<div class='content'>请点击右上角<br/>通过【发送给朋友】<br/>授权车位给朋友</div>
+		</div>
+		<div class="pop-parkshare-hidden" style="display:none;">
+			<div class='fui-mask-m visible'></div>
+			<div class="verify-pop pop">
+				<div class="qrcode">
+					<div  class="fui-title">请输入共享价格及备注</div>
+					<div class='fui-cell-group'>	
+						<div class='fui-cell must'>
+							<div class='fui-cell-label'>价格</div>
+							<div class='fui-cell-info'><input type='number' class='fui-input' id="price" name="price" value=""></div>				
+							<div class="fui-cell-remark noremark"></div>
+						</div>		
+						 <div class='fui-cell'>
+							 <div class='fui-cell-label '>备注</div>
+							 <div class='fui-cell-info'><textarea rows="5" placeholder="内容 10-100个字" id='remark' name='remark'></textarea></div>
+						 </div>
+					</div>
+					<div class="popbtn">
+						<a class='btn btn-sm btn-default btn-close'>取消</a>
+						<a class='btn btn-sm btn-default btn-submit'>确定</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script language='javascript'>
+			require(['car/lock'], function (modal) {
+				modal.initGrant({parklockid:"{$subid}"});
+			});
+		</script>
+ </div> 
+<script type="text/javascript" src="{$_W['siteroot']}web/resource/js/lib/jquery.qrcode.min.js"></script>
+
+<script type="text/javascript">
+	$('#barcode').qrcode("{$qrcode_url}");
+</script>
+{template $this->mytpl('_footer')}

@@ -1,0 +1,101 @@
+﻿<style>
+.video-image{margin:10px;width:180px;height:180px;}
+.content i {margin-top:40% auto;font-size:60px;color:#ccc;}
+</style>
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<div class="panel-title">视频教程</div>
+	</div>
+	<div class="panel-body">
+		<div id="workarea">	
+			<div class="cut-list" style="margin-top:0;">
+				{loop $videos $v}
+				<div class="item module-list-item" >
+					<div class="content">
+						<img src="{php echo tomedia($v['image']);}" class="video-image" onerror="this.src='./resource/images/nopic-107.png'">
+					</div>	
+					<div class="version">					
+						<span>{$v['title']}</span>
+					</div>
+					<div class="mask">
+						<a href="javascript:;" data-href="{php echo tomedia($v['video']);}" data-title="{$v['title']}"  onclick="myplay(this)" class="entry">
+							<div style="font-size:16px;">我要播放 <i class="fa fa-play-circle"></i></div>
+						</a>
+						{if $_W['role'] == 'founder' || $_W['role']=='owner' || $_W['role']=='manager'}
+						<a href="javascript:;" onclick="mydel(this,{$v['id']})" style="position:absolute;right:5px;bottom:3px;z-index:99;font-size:25px;">
+							<div><i class="fa fa-trash-o text-danger"></i></div>
+						</a>
+						{/if}
+					</div>
+				</div>
+				{/loop}
+				{if $_W['role'] == 'founder' || $_W['role']=='owner' || $_W['role']=='manager'}				
+				<div class="item module-list-item" onclick="myadd()">
+					<div class="content" style="margin-top:60px;">
+						<i class="fa fa-plus"></i>
+						<div class="name text-over">添加操作视频</div>
+					</div>	
+					<div class="version">					
+						<span>视频格式为MP4格式</span>
+					</div>
+				</div>
+				{/if}
+			</div>		
+		</div>
+	</div>
+</div>
+<script type="text/javascript">	
+	function myplay(obj){
+		var href = $(obj).data("href");
+		var loadstr='<video width="100%" height="100%" id="myvideo" controls="controls" autobuffer="autobuffer"  autoplay="autoplay" controlslist="nodownload"><source src="'+href+'" type="video/mp4"></source>Your browser does not support the video tag.</video>';
+		var title = '<i class="fa fa-hand-o-right"></i> ' + $(obj).data("title");
+		var index = layer.open({
+		  type:1,
+		  title:title,		
+		  area: ['600px','600px'],
+		  maxmin: true,
+		  content: loadstr,
+		});
+		layer.full(index);
+		$("#myvideo").bind("contextmenu",function() { return false; });
+	}
+	function myadd(){
+		var url = "{php echo $this->createWeburl($mydo,array('op'=>'addvideo')).$mywe['direct'];}"; 
+		var title = '<i class="fa fa-hand-o-right"></i> 添加操作视频';
+		var index = layer.open({
+			type: 2,
+			title:title,
+			content: url,
+			area: ['600px','500px'],
+			fix: true, 
+			shade:0.4,
+			resize:false,
+			end: function() {
+				var index = layer.msg('正在加载...', {icon: 16});
+				var url = "{php echo mywurl($mydo,array('op'=>'manual')).$mywe['direct'];}"; 
+				$.get(url,{}, function(data){
+					layer.close(index);
+					$("#guide-output").html(data);
+				});		
+			}
+		});
+	}
+	function mydel(obj,id){
+		layer.confirm('确认要删除吗？',{icon: 3, title:'提示',resize:false},
+		function(index){
+			$.post("{php echo $this->createWeburl($mydo,array('op'=>'delvideo')).$mywe['direct'];}",
+				{id:id},
+				function(data,status){
+				 if (data=='ok'){
+					$(obj).parents(".module-list-item").remove();
+					layer.msg('删除成功',{icon:1});
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+				 }
+			});		
+			layer.close(index);
+		});
+	}
+	$("#workarea").height($(window).height()- 150);
+</script>

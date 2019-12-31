@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta charset="UTF-8">
+		<title>微擎</title>
+		<link rel="stylesheet" type="text/css" href="./resource/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="./resource/css/common.css">
+		<script src="./resource/js/lib/jquery-1.11.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="./resource/js/lib/jquery-1.11.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="./resource/js/lib/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+	<body>
+		<div class="we7-welcome">
+			<div class="head">
+				<div class="container">
+					<div class="logo">
+						<a class="logo-img" href="#"><img src="{php echo tomedia($logo)}" alt=""></a>
+					</div>
+					<div class="nav">
+						{loop $nav_list $nav}
+						<a href="{$nav['url']}">{$nav['title']}</a>
+						{/loop}
+						<!--<a href="#"><span class="fa fa-weibo"></span></a>-->
+						<!--<a href="#"><span class="fa fa-wechat"></span></a>-->
+					</div>
+					<div class="nav-right">
+						<a href="{php echo url('user/login')}">登录</a>
+						<a href="{php echo url('user/register')}">注册</a>
+					</div>
+				</div>
+			</div>
+			<div class="content">
+				<div class="banner">
+					<div class="carousel-banner">
+						<div class="hd">
+							<ul>
+								{loop $slide_list['picture'] $slide}
+								<li></li>
+								{/loop}
+							</ul>
+						</div>
+						<div class="bd">
+							<ul>
+								{loop $slide_list['picture'] $slide}
+								<li><a href="#" target="_blank" title="" style="background-image: url({php echo tomedia($slide)});"></a></li>
+								{/loop}
+							</ul>
+						</div>
+					</div>
+					<div class="banner-inner">
+						<img src="{php echo tomedia($logo)}" alt="" class="logo">
+						<div class="banner-state">
+							在小的品牌，也有自己的微擎
+						</div>
+						<div class="btns">
+							<a href="{php echo url('user/login')}">登录</a>
+							<a href="{php echo url('user/register')}">注册</a>
+						</div>
+					</div>
+				</div>
+				<div class="notice">
+					<div class="container we7-flex">
+						<div class="title">最新公告</div>
+						{loop $notice_list $notice}
+						<div class="notice-con">
+							<a href="{php echo url('article/notice-show/detail', array('id' => $notice['id']))}" target="_blank">
+								<span class="fa fa-bullseye"></span>
+								{$notice['title']}
+							</a>
+						</div>
+						{/loop}
+					</div>
+				</div>
+				<div class="introduction-system">
+					<div class="title">系统模块介绍</div>
+					<div class="container clearfix">
+						<div class="item" onclick="location.href='{php echo url('user/login')}'">
+							<div class="icon">
+								<span class="wi wi-mobile-device"></span>
+							</div>
+							<div class="name">
+								微网站、微场景
+							</div>
+							<div class="state">
+								将企业微网站植入微信公众平台,关注公众平台即可访问网站
+							</div>
+						</div >
+						<div class="item" onclick="location.href='{php echo url('user/login')}'">
+							<div class="icon">
+								<span class="wi wi-file-finished"></span>
+							</div>
+							<div class="name">
+								微信营销解决方案
+							</div>
+							<div class="state">
+								大转盘,刮刮卡,会员卡,客户互动很轻松
+							</div>
+						</div>
+						<div class="item" onclick="location.href='{php echo url('user/login')}'">
+							<div class="icon">
+								<span class="wi wi-divergence"></span>
+							</div>
+							<div class="name">
+								微信账号集中一站管理
+							</div>
+							<div class="state">
+								支持多个微信账号的添加与管理,节约运营成本
+							</div>
+						</div>
+						<div class="item" onclick="location.href='{php echo url('user/login')}'">
+							<div class="icon">
+								<span class="wi wi-management-platform"></span>
+							</div>
+							<div class="name">
+								强大的商家运营管理平台
+							</div>
+							<div class="state">
+								实现本地商家与微信用户直接的消费营销互动
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="introduction-function">
+					<div class="title">功能模块介绍</div>
+					<div class="container">
+						<div id="carousel-module" class="carousel slide" data-ride="carousel" data-interval="false">
+							<div class="carousel-inner" role="listbox">
+								<div class="item active">
+									<div class="module-list clearfix">
+										{loop $module_list $module}
+										<div class="module-item" onclick="location.href='{php echo url('user/login')}'">
+											<div class="info">
+												<img src="{php echo tomedia($module['picture'])}" alt="" class="icon">
+												<div class="name">{$module['title']}</div>
+											</div>
+											<div class="description">
+												<span class="name"><span>{$module['title']}</span></span>
+												<div class="state">
+													{$module['content']}
+												</div>
+											</div>
+										</div>
+										{/loop}
+								</div>
+							</div>
+							<a class="left carousel-control" href="#carousel-module" role="button" data-slide="prev">
+								<span class="wi wi-angle-left" aria-hidden="true"></span>
+								<span class="sr-only">Previous</span>
+							</a>
+							<a class="right carousel-control" href="#carousel-module" role="button" data-slide="next">
+								<span class="wi wi-angle-right" aria-hidden="true"></span>
+								<span class="sr-only">Next</span>
+							</a>
+						</div>
+					</div>
+				</div>
+					<div class="we7-trends">
+						<div class="title">微擎动态</div>
+						<div class="container">
+							<div id="carousel-trends" class="carousel slide" data-ride="carousel" data-interval="false">
+								<div class="carousel-inner" role="listbox">
+									<div class="item active">
+										<div class="trends-list clearfix">
+											{loop $system_list $system}
+											<div class="trends-item"><!--3个一组-->
+												<div class="name">
+													{$system['title']}
+												</div>
+												<div class="state">
+													{$system['content']}
+												</div>
+												<div class="date">2017/11/25</div>
+												<div class="btn-detail">
+													<a href="{php echo url('article/news-show/detail', array('id' => $system['id']))}" target="_blank">查看详情</a>
+												</div>
+											</div>
+											{/loop}
+										</div>
+									</div>
+								</div>
+								<a class="left carousel-control" href="#carousel-trends" role="button" data-slide="prev">
+									<span class="wi wi-angle-left" aria-hidden="true"></span>
+									<span class="sr-only">Previous</span>
+								</a>
+								<a class="right carousel-control" href="#carousel-trends" role="button" data-slide="next">
+									<span class="wi wi-angle-right" aria-hidden="true"></span>
+									<span class="sr-only">Next</span>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="contact">
+						<div class="title">联系我们</div>
+						<div class="container we7-flex">
+							<div class="map-img">
+								<div class="map" id="baidumap"></div>
+							</div>
+							<div class="info">
+								<div><span class="icon"><i class="wi wi-user"></i></span>联系人：{$contact['person']['content']}</div>
+								<div><span class="icon"><i class="wi wi-qq"></i></span>QQ：{$contact['qq']['content']}</div>
+								<div><span class="icon"><i class="wi wi-iphone"></i></span>手机：{$contact['mobile']['content']}</div>
+								<div><span class="icon"><i class="wi wi-setting"></i></span>公司：{$contact['company']['content']}</div>
+								<div><span class="icon"><i class="fa fa-map-marker"></i></span>地址：{$contact['address']['content']}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../addons/we7_systemwelcome/js/slide.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			$(function(){
+				$(".carousel-banner").slide({ mainCell:".bd ul",effect:"fold",autoPlay:true,delayTime:1000,interTime:4000 });
+			});
+		</script>
+	</body>
+</html>

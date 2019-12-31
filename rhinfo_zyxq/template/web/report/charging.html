@@ -1,0 +1,180 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+<style>
+	.nav-tabs li a { padding: 3px 10px;}
+	.account-stat-num > div{width:25%; float:left; font-size:16px; text-align:center;}
+	.account-stat-num > div span{display:block; font-size:30px; font-weight:bold;}
+</style>
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body">  
+	<ul class="nav nav-tabs" role="tablist" id="mytabs">		 		  
+		<li role="presentation" {if $_GPC['page']}class="active"{/if}><a href="#feebill" role="tab" data-toggle="tab">充电记录</a></li>		
+	   <li role="presentation" {if $_GPC['page']}{else}class="active"{/if}><a href="#feetotal" role="tab" data-toggle="tab">充电统计</a></li>		   
+	</ul>
+	<div class="panel-body">
+			<div class="account-stat-num row">
+				<div>今日充电金额<span class="text-warning">{php echo !empty($chargingfee['today'])?$chargingfee['today']:0;}</span></div>
+				<div>昨日充电金额<span class="text-info">{php echo !empty($chargingfee['yesterday'])?$chargingfee['yesterday']:0;}</span></div>				
+				<div>{php echo date('Y-m-d', $starttime);}~{php echo date('Y-m-d', $endtime1);}充电金额<span class="text-success">{php echo !empty($chargingfee['month'])?$chargingfee['month']:0;}</span></div>
+				<div>{php echo date('Y-m-d', strtotime('-1 year',$endtime));}~{php echo date('Y-m-d', $endtime1);}充电金额<span class="text-danger">{php echo !empty($chargingfee['total'])?$chargingfee['total']:0;}</span></div>
+			</div>
+	</div>
+    
+	<div class="panel panel-default">
+	    <div class="panel-heading" style="height:60px;">
+			<form action="./index.php" method="get" class="form-inline" role="form" id="form-search">
+				<input type="hidden" name="c" value="site" />
+				<input type="hidden" name="a" value="entry" />
+				<input type="hidden" name="m" value="rhinfo_zyxq" />
+				<input type="hidden" name="do" value="report" />
+				<input type="hidden" name="op" value="charging" />	
+				<input type="hidden" name="direct" value="1" />
+				
+					<div class="form-group">				
+						<select class="form-control" id="rid" name="rid" onchange="mybuildingselect(this)" style="width:200px;">
+							<option value="">请选择主体</option>
+							{loop $myregions $region}
+								<option value="{$region['id']}" {if $_GPC['rid']==$region['id']}selected{/if}>{$region['title']}</option>	
+							{/loop}
+						</select>
+					</div>
+				
+					<div class="form-group">				
+						<select class="form-control" id="bid" name="bid"  style="width:200px;">
+							<option value="">不限</option>
+							{loop $select_buildings $select_building}
+								<option value="{$select_building['id']}" {if (!empty($_GPC['bid']) && $_GPC['bid']==$select_building['id'])}selected{/if} >{$select_building['title']}</option>	
+							{/loop}
+						</select>
+					</div>
+				
+					<div class="form-group">				
+						{php echo tpl_form_field_daterange('billdate', array('starttime' => date('Y-m-d',$starttime),'endtime' => date('Y-m-d',$endtime1)));}
+					</div>
+				
+					<div class="form-group">				
+						<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>						
+					</div>
+				
+				<span class="pull-right" style="line-height:38px;">总共数据：<strong>{$total}</strong> 条</span> 
+			</form>
+	    </div>
+		
+		<div class="tab-content">
+			 <div role="tabpanel" class="tab-pane {if $_GPC['page']}active{/if}" id="feebill">			 
+				<div class="panel-body table-responsive">
+					<table class="table table-hover">
+						<thead class="navbar-inner">
+						<tr>					
+							<th width="60">ID</th>
+							<th>充电日期</th>			
+							<th>所属主体</th>
+							<th>充电桩</th>
+							<th>充电小时</th>
+							<th>充电金额</th>						
+							<th>充电人员</th>
+							{if $rights['delete'] == 1}
+							<th>操作</th>
+							{/if}
+						</tr>
+					</thead>
+					{loop $data $k $v}
+						<tr>
+							<td>{$v['id']}</td>					
+							<td>{php echo date('Y-m-d H:i',$v['ctime'])}</td>
+							<td>{$v['region']}</td>
+							<td>{$v['charging']}</td>
+							<td>{$v['hour']}</td>
+							<td>{$v['fee']}</td>	
+							<td>{if !empty($v['avatar'])}<img src="{media $v['avatar']}"  width="26" />{/if} {$v['realname']} {$v['address']}</td>	
+							{if $rights['delete'] == 1}
+							<td><a href="javascript:;" onclick="mydel(this,{$v['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="删除"><i class="fa fa-trash"></i> 删除</a></td>
+							{/if}
+						</tr>
+					{/loop}				
+				</table>
+				{$pager}
+			  </div> 
+			</div>
+			 <div role="tabpanel" class="tab-pane {if $_GPC['page']}{else}active{/if}" id="feetotal">
+				<div class="pull-left">
+					<div class="checkbox"><span class="text-warning">&nbsp;&nbsp;充电金额</span></div>
+				</div>				
+				<canvas id="myChart" width="1200" height="300"></canvas>
+			 </div>
+	</div>	
+  </div>
+  </div>
+ </div>
+
+{template 'web/_iframe_footer'}
+
+<script type="text/javascript">
+
+window._region = {php echo json_encode($myregions);};	
+window._building = {php echo json_encode($mybuildings);};
+function mybuildingselect(obj){
+	var index = obj.options[obj.selectedIndex].value;
+	require(['jquery', 'util'], function($, u){
+		var html = '<option value="">不限</option>';
+		for(var i=0; i< window['_building'][index].length; i++){			
+			html += '<option value="'+window['_building'][index][i]['id']+'">'+window['_building'][index][i]['title']+'</option>';
+		}    						
+		$("#bid").html(html);
+	});	
+	
+}
+
+require(['../addons/rhinfo_zyxq/static/lib/chart/chart.min.js'], function(c) {		
+	var chart = null;
+	var chartDatasets = null;
+	var templates = {$lable_tpl};	
+	
+	var url = location.href + '&#rhinfo';
+
+	$.post(url, function(data){
+		var data = $.parseJSON(data)
+		var datasets = data.datasets;
+		if(!chart) {				
+			var label = data.label;
+			var ds = $.extend(true, {}, templates);
+			
+			{php echo $ds_data_temp;}
+			
+			var lineChartData = {
+				labels : label,
+				datasets : [{php echo $ds_temp;}]
+			};
+			
+			var ctx = document.getElementById("myChart").getContext("2d");
+		
+			chart = new Chart(ctx).Line(lineChartData, {					
+				responsive: true
+			});
+			chartDatasets = $.extend(true, {}, chart.datasets);				
+		}
+	});	
+});
+
+function mydel(obj,id){
+	layer.confirm('将删除下属所有相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+			{op:"delcharging",id:id},
+			function(data,status){
+			 if (data=='ok'){
+				$(obj).parents("tr").remove();
+				var count = $("#count").html();
+				$("#count").html(count - 1);
+				layer.msg('删除成功!',{icon:1});
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+			 }
+		});		
+		layer.close(index);
+    });
+}
+</script>
+</body>
+</html>

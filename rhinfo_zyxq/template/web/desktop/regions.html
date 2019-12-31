@@ -1,0 +1,52 @@
+﻿{template 'web/_layer_header'}
+
+<div class="panel panel-cut">	
+	<div class="panel-body ">
+		<form action="./index.php" method="get" class="form-horizontal" role="form" id="form-search">
+		<input type="hidden" name="c" value="site" />
+		<input type="hidden" name="a" value="entry" />
+		<input type="hidden" name="m" value="rhinfo_zyxq" />
+		<input type="hidden" name="do" value="desktop" />
+		<input type="hidden" name="op" value="region" />	
+		<input type="hidden" name="direct" value="1" />
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+			<div class="col-sm-7 col-lg-8 col-xs-12">
+				<div class="input-group">
+					<input class="form-control" name="keyword" type="text" placeholder="请输入主体关键字" value="{$_GPC['keyword']}">
+					<span class="input-group-btn"><button class="btn btn-default"><i class="fa fa-search"></i></button></span>
+				</div>
+			</div>
+		</div>
+	</form>
+		<div class="cut-list">
+			{loop $myregions $rv}			
+			<div class="item module-list-item" >
+				<div class="content">
+					<img src="{php echo tomedia($rv['thumb']);}" class="icon" onerror="this.src='./resource/images/nopic-107.png'">
+					<div class="name text-over">{$rv['title']}</div>
+				</div>	
+				<div class="version">					
+					<span>{$rv['property']}</span>
+				</div>
+				<div class="mask">
+					<a href="javascript:;" data-href="{php echo $this->createWeburl('desktop',array('op'=>'index','rid'=>$rv['id'])).$mywe['direct'];}" data-title="{$rv['title']}桌面" title="{$rv['title']}桌面" onclick="myopen(this)" class="entry">
+						<div>进入桌面 <i class="wi wi-angle-right"></i></div>
+					</a>
+				</div>
+			</div>
+			{/loop}
+		</div>		
+	</div>
+</div>
+{template 'web/_layer_footer'}
+
+<script type="text/javascript">
+
+function myopen(obj){	
+	parent.myopen(obj);	
+}
+
+</script>
+</body>
+</html>

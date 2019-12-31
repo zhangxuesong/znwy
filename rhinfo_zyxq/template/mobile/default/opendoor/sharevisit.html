@@ -1,0 +1,68 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-list-group:not(.fui-list-group-o):before {	
+	border-top:0px;	
+}
+.fui-list-group:not(.fui-list-group-o):after {
+	border-top:0px;	
+}
+</style>
+	<div class="fui-page fui-page-current page-commission-index ">
+	<div class="fui-header">
+		<div class="fui-header-left">			
+		</div>
+		<div class="title">添加访客</div>
+		<div class="fui-header-right">			
+		</div>
+	</div>
+	
+	<div class='fui-content navbar' >		
+		<div class='content-empty' {if !empty($item)}style='display:none'{/if}>
+				<i class='icon icon-friend'></i>
+				<br/>您还没有任何访客信息
+			</div>
+
+		<div class="fui-list-group address-item" style='margin-top:5px;'>
+			<div  class="fui-list" >
+				<div class="fui-list-inner">
+					<div class="title"><span class='realname'>{$item['title']}</span> </div>
+					
+				</div>				
+			</div>	
+			<div  class="fui-list" >
+				<div class="fui-list-inner">
+					<div class="title text-center"><i class="icon icon-yaoshi"></i>邀请朋友扫一扫</div>		
+					<div id="barcode" style="margin:1.5em 0 1.5em auto;clear:both;text-align:center;" ></div> 
+					<div class='bar' >
+					<span class='pull-left'>
+						<a class="external" href="{php echo $this->createMobileurl('opendoor',array('op'=>'sharevisit','id'=>$item['id']));}">
+						<i class='icon icon-friends'></i> 再邀请一人
+						</a>			   
+					</span>
+					<span class='pull-right'>
+						<a class="external" id ='btn-share'>
+						<i class='icon icon-share'></i> 分享给朋友
+						</a>			   
+					</span>
+					</div>
+				</div>
+			</div>
+		</div> 
+		 </div>
+		<div id='cover'>
+			<div class='fui-mask-m visible'></div>
+			<div class='arrow'></div>
+			<div class='content'>请点击右上角<br/>通过【发送给朋友】<br/>授权朋友开门</div>
+		</div>
+		<script language='javascript'>
+		require(['opendoor/index'], function (modal) {
+			modal.initShare();
+		});
+		</script>
+ </div> 
+<script type="text/javascript" src="{$_W['siteroot']}web/resource/js/lib/jquery.qrcode.min.js"></script>
+
+<script type="text/javascript">
+	$('#barcode').qrcode("{$qrcode_url}");
+</script>
+{template $this->mytpl('_footer')}

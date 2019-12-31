@@ -1,0 +1,107 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" href="../addons/rhinfo_zyxq/static/mobile/css/task.css">
+<style type="text/css">
+    .task-head{
+        background: orange no-repeat;
+        background-size: 100%;
+		width:100%;
+		margin-bottom:2rem;
+    }
+	.icon-task {
+		display: block;
+		width:4rem;
+		height:4rem;
+		margin:0 auto;
+		margin-top:-1rem;
+		z-index:999;
+		-webkit-border-radius:4rem;
+		-moz-border-radius:4rem;
+		border-radius:4rem;
+		background-color:orange;
+		border:none;
+		text-align:center;
+	}
+	.icon-task .icon {
+		font-size:2rem;
+		line-height:5rem;
+		font-weight:bold;
+		color:#fff;
+	}
+	.icon-mytask {
+		display: block;
+		width:3rem;
+		height:3rem;
+		margin:0 auto;
+		margin-top:-1rem;
+		z-index:999;
+		-webkit-border-radius:3rem;
+		-moz-border-radius:3rem;
+		border-radius:3rem;
+		background-color:orange;
+		border:none;
+		text-align:center;
+	}
+	.icon-mytask .icon {
+		font-size:2rem;
+		line-height:3rem;
+		font-weight:bold;
+		color:#fff;
+	}
+</style>
+<div class="fui-page fui-page-current">
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">任务详情</div>
+        <div class="fui-header-right"><a href="{php echo $this->createMobileUrl('home');}"><i class="icon icon-home1" style="font-size:0.85rem;"></i></a>
+		</div>
+    </div>
+    <div class="fui-content">
+		 <div class="task-head">
+            <span class="task-font">{$item['title']}</span>
+            <span class="task-font-s">{php echo date('Y-m-d',$item['startdate']);}~{php echo date('Y-m-d',$item['enddate']);}</span>
+			<span class="icon-task"><i class="icon {if $item['rewardtype']==2}icon-money{elseif $item['rewardtype']==3}icon-redpacket{else}icon-jifen{/if}"></i></span>
+        </div>
+		{if $item['category']==1}
+			<div class="text-orange text-center" style="font-size:1rem;">邀请绑定房产</div>
+			<div style="margin:0.5rem;font-size:0.85rem;color:orange;">
+				邀请绑定房产{$item['persons']}人，可获得{if $item['rewardtype']==1}{$item['credit1']}积分{/if}
+				{if $item['rewardtype']==2}{$item['credit2']}元{/if}
+				{if $item['rewardtype']==3}随机红包{/if}，业主绑定房产成功有效。{$item['remark']}。
+			</div>
+		{/if}
+		{if $item['category']==2}
+			<div class="text-orange text-center" style="font-size:1rem;">邀请到店消费</div>
+			<div style="margin:0.5rem;font-size:0.85rem;color:orange;">
+				邀请到店消费{$item['persons']}人，可获得{if $item['rewardtype']==1}{$item['credit1']}积分{/if}
+				{if $item['rewardtype']==2}{$item['credit2']}元{/if}
+				{if $item['rewardtype']==3}随机红包{/if}，业主到店消费成功有效。{$item['remark']}。
+			</div>
+		{/if}
+		<br><br>
+        <div class="icon-mytask"><i class="icon icon-add"></i></div>
+		<br>
+		<div style='line-height:1rem;margin:0.5rem;display:block;color:#666;font-size:0.75rem;'>
+			备注：任务不可重复领取，领取任务后，通过个人中心-我的任务分享给朋友，邀请人数达到目标人数方可获得奖励，邀请人数越多奖励越多。
+		</div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $(".icon-mytask").click(function () {
+            var id = "{$item['id']}";
+			core.json('task/index',{id:id}, function(ret){
+				if (ret.status != 1) {
+					RhUI.toast.show(ret.result.message);
+					return
+				}
+				RhUI.alert(ret.result.message, '', function() {	
+					location.href = core.getUrl('task/mytask');
+				});
+			},false,true)
+        });
+    })
+</script>
+{template $this->mytpl('_footer')}

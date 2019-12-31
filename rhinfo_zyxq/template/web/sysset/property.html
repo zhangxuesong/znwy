@@ -1,0 +1,59 @@
+﻿<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>物业名称</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<input type="text" class="form-control" id="title" value="{$company['title']}" placeholder="输入物业公司名称" name="title">
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业看板密码</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" name="board_password" value="{$item['board_password']}" placeholder="输入看板密码" />					
+	</div>	
+</div>	
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业电话</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<input type="text" class="form-control" id="telphone" value="{$company['telphone']}" placeholder="输入物业电话" name="telphone">
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业LOGO</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		{php echo tpl_form_field_image('logo',$company['logo']);}
+		<span class="help-block">物业LOGO图片，建议尺寸100*100</span>
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业招牌</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		{php echo tpl_form_field_image('banner',$company['banner']);}
+		<span class="help-block">物业介绍头部图片，建议尺寸640*320</span>
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定注册</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		{php echo tpl_form_field_image('image',$company['image']);}
+		<span class="help-block">绑定注册头部图片，建议尺寸640*320，也可所属主体基础中设置</span>
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">网站地址</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<input type="text" class="form-control" id="website" value="{$company['website']}" placeholder="输入网站地址" name="website">
+		<span class="help-block">请输入网址 ,外部链接请包含http://</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">省/市/区</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		{php echo tpl_form_field_district('area', array('province' => $company['province'], 'city' => $company['city'], 'district' => $company['district'] ));}
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业介绍</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		{php echo tpl_ueditor('content', $company['content']);}
+	</div>	
+</div>

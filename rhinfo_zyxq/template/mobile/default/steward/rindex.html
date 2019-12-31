@@ -1,0 +1,292 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-remark{
+	content: " ";
+	display: inline-block;
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+	height: 0.5rem;
+	width: 0.5rem;
+	border-width: 2px 2px 0 0;
+	border-color: #C8C8CD;
+	border-style: solid;
+	position: relative;
+	top: -1px;
+	margin-left: .3em;
+	margin-right:.3rem;
+}
+.member-page .mytitle{text-align:center;width:100%;background:#ff8000;padding-top:0.3rem;color:#fff;font-size:0.75rem;}
+.member-page .headinfo {
+    padding-top: 0.5rem;
+ }
+
+.member-page .headinfo .child {
+    padding-bottom: 0.5rem;
+}
+.fui-stars .icon{color:orange;}
+
+.service-page .btn-service-post {
+    position: absolute;
+    bottom:{php echo $region['servicebottom']?$region['servicebottom']:4;}rem;
+    right:{php echo $region['serviceright']?$region['serviceright']:1;}rem;
+    width:2rem;
+    height:2rem;
+    -webkit-border-radius:2rem;
+    -moz-border-radius:2rem;
+    border-radius:2rem;
+    line-height:2rem;
+	background-color:{php echo !empty($region['servicethumb'])?'none':'#ff6600';};
+	border:{php echo !empty($region['servicethumb'])?'none':'#ff6600';};
+	opacity:0.8;
+	text-align:center;
+}
+
+.service-page .btn-service-post .icon {
+    font-size:1.2rem;
+    font-weight:bold;
+	color:#fff;
+}
+
+#gotop{ 
+	position: fixed;
+    bottom:{php echo $region['servicebottom']?$region['servicebottom']:3;}rem;
+    left:{php echo $region['serviceright']?$region['serviceright']:1;}rem;
+    width:2rem;
+    height:2rem;
+    -webkit-border-radius:2rem;
+    -moz-border-radius:2rem;
+    border-radius:2rem;
+    line-height:2rem;
+	background-color:#ff6600;
+	border:#ff6600;
+	opacity:0.8;
+	text-align:center;
+}
+#gotop .icon {
+    font-size:1.2rem;
+    font-weight:bold;
+	color:#fff;
+}
+
+.fui-cell-group:not(.fui-cell-group-o):before,.fui-cell-group .fui-cell:before{border-top:0px;}
+.fui-block-group,.fui-block-group .fui-block-child:after{border-bottom:0px;}
+.fui-block-group .fui-block-child{margin:0.3rem 0;}
+.fui-block-group .fui-block-child {padding:0;}
+.fui-block-group .fui-block-child .icon {padding-top:0.6rem;}
+.fui-block-group .fui-block-child .text {height: 0.5rem;}
+.fui-block-group .fui-block-child .title {line-height: 1rem;}
+.right-remark{position:absolute;right:0;z-index:999;top:2rem;}
+</style>
+{if !empty($this->syscfg['bgcolor'])}
+    <style>
+        .member-page .headinfo
+        {background: {php echo $this->syscfg['bgcolor'];};
+		 border-color:{php echo $this->syscfg['bgcolor'];};}
+		.member-page .mytitle{background:{php echo $this->syscfg['bgcolor'];};}
+    </style>
+{/if}
+<style>
+.headinfo .child .name{width:3rem;white-space: nowrap;
+text-overflow: ellipsis;
+overflow: hidden;margin:0 auto;}
+</style>
+<div class="fui-page fui-page-current page-commission-index sns-board-page service-page">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back" ></a>
+		</div>
+		<div class="title">物业管家</div>
+		<div class="fui-header-right"></div>
+	</div>   
+	<div class='fui-content member-page navbar'>
+		{if !empty($teams)}
+		<div class="mytitle">他们为您服务</div>
+		<div class="headinfo" >			
+				{loop $teams $i $item}						
+					<div class="child userinfo">						
+						<a href="{php echo $this->createMobileurl($mydo,array('op'=>'teamperson','id'=>$item['id']));}">
+							<div class="face"><img src="{$item['avatar']}" /></div>
+						</a>
+						<div class="name">{$item['nickname']}</div>
+						<div class="level"></div>					
+						{if $user['isbind'] || $user['isfollow']}
+							{if $i==4}
+								<span class="right-remark">
+									<a href="{php echo $this->createMobileurl($mydo,array('op'=>'team'));}">
+										<div class="fui-remark"></div>	
+									</a>	
+								</span>
+							{/if}
+						{/if}			
+					</div>					
+				{/loop}												
+		</div>
+		{/if}
+
+		 <div class="fui-cell-group" style="margin-top:0px;">  
+			 <div class='fui-cell-info'>
+				<a class="fui-cell external" {if $user['isbind'] || $user['isfollow']}href="{php echo $this->createMobileurl($mydo,array('op'=>'comment'));}"{else}style="opacity:0.3;"{/if}>
+					<div class="fui-cell-text">本月物业服务评价</div>
+					 <div class='fui-stars'>
+						{if $level>=1}<i class='icon icon-favorfill'></i>{else}<i class='icon icon-favor'></i>{/if}
+                        {if $level>=2}<i class='icon icon-favorfill'></i>{else}<i class='icon icon-favor'></i>{/if}
+                        {if $level>=3}<i class='icon icon-favorfill'></i>{else}<i class='icon icon-favor'></i>{/if}
+                        {if $level>=4}<i class='icon icon-favorfill'></i>{else}<i class='icon icon-favor'></i>{/if}
+                        {if $level>=5}<i class='icon icon-favorfill'></i>{else}<i class='icon icon-favor'></i>{/if}			 
+					 </div>
+				</a>			
+			</div>
+			
+		 </div>			
+		 
+		<div class="fui-block-group col-4" style='margin-top:0; overflow:hidden;'>
+			<a class="fui-block-child" {if $user['isbind'] || $user['isfollow']}href="{php echo $this->createMobileurl($mydo,array('op'=>'repair'));}"{else}style="opacity:0.3;"{/if}>
+				<div class="icon text-yellow"><i class="icon icon-repair"></i></div>
+				<div class="title">{if empty($this->syscfg['stetext1'])}报修{else}{php echo $this->syscfg['stetext1'];}{/if}</div>
+				<div class="text"></div>
+			</a>
+
+			<a class="fui-block-child" {if $user['isbind'] || $user['isfollow']}href="{php echo $this->createMobileurl($mydo,array('op'=>'teamhelp'));}"{else}style="opacity:0.3;"{/if}>
+				<div class="icon text-orange"><i class="icon icon-friends"></i></div>
+				<div class="title">{if empty($this->syscfg['stetext2'])}求助{else}{php echo$this->syscfg['stetext2'];}{/if}</div>
+				<div class="text"></div>
+			</a>
+			
+			<a class="fui-block-child" {if $user['isbind'] || $user['isfollow']}href="tel:{$user['telphone']}"{else}style="opacity:0.3;"{/if}>
+				<div class="icon text-yellow"><i class="icon icon-phone3"></i></div>
+				<div class="title">{if empty($this->syscfg['stetext3'])}呼叫{else}{php echo $this->syscfg['stetext3'];}{/if}</div>
+				<div class="text"></div>
+			</a>
+			<a class="fui-block-child" {if $user['isbind'] || $user['isfollow']}href="{php echo $this->createMobileurl($mydo,array('op'=>'suggest'));}"{else}style="opacity:0.3;"{/if}>
+				<div class="icon text-orange"><i class="icon icon-write"></i></div>
+				<div class="title">{if empty($this->syscfg['stetext4'])}建议{else}{php echo $this->syscfg['stetext4'];}{/if}</div>
+				<div class="text"></div>
+			</a>		
+		</div>
+
+		<div id="tab" class="fui-tab fui-tab-danger" style="margin-top:0.3rem;">
+		    {if $this->syscfg['stewarddisplay']==4}
+		    <a data-tab="tab1" class="external {if $_GPC['status']==1 || empty($_GPC['status'])}active{/if}"  data-status='1'>最新公告</a>
+			<a data-tab="tab2" class="external {if $_GPC['status']==2}active{/if}"  data-status='2'>报修工单</a>
+			<a data-tab="tab3" class="external {if $_GPC['status']==3}active{/if}"  data-status='3'>投诉建议</a>
+			{elseif $this->syscfg['stewarddisplay']==3}
+			<a data-tab="tab2" class="external {if $_GPC['status']==2 || empty($_GPC['status'])}active{/if}"  data-status='2'>报修工单</a>
+			<a data-tab="tab3" class="external {if $_GPC['status']==3}active{/if}"  data-status='3'>投诉建议</a>
+			{/if}
+		</div>
+		
+		 <div class='fui-content-inner' style="margin-top:-0.5rem;">	
+			<div class="container"></div>
+			<div class="content-empty" style="display:none;">
+			<i class="icon icon-comment"></i> <br/>没有任何内容</div>
+			<div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+         </div>
+	 </div>	
+	{if $region['servicepageste']}
+		{if $region['service']}
+			 <a class="btn-service-post" href="{$region['service']}" id="float_icon">
+			 {if $region['servicethumb']}
+				<i class="icon"><img src="{php echo tomedia($region['servicethumb']);}" width="45" /></i>
+			 {else}
+				{if $region['serviceicon']}
+					<i class="icon {$region['serviceicon']}"></i>
+				{else}
+					<i class="icon icon-chat"></i>
+				{/if}
+			{/if}</a>
+		 {else}
+			{if $property['service']}
+			 <a class="btn-service-post" href="{$property['service']}">{if $region['servicethumb']}<i class="icon"><img src="{php echo tomedia($region['servicethumb']);}" /></i>{else}{if $region['serviceicon']}<i class="icon {$region['serviceicon']}"></i>{else}<i class="icon icon-chat"></i>{/if}{/if}</a>
+			 {/if}
+		 {/if}
+	{/if}
+	<a id="gotop" style="display:none;">
+		<i class="icon icon-top1"></i>
+	</a>
+ </div> 
+<script language='javascript'>
+	require(['manage/steward'], function (modal) {
+		modal.init({
+		   pid:"{php echo empty($user['pid'])? 0:$user['pid']}",
+		   rid:"{php echo empty($user['rid'])? 0:$user['rid']}",
+		   bid:"{php echo empty($user['bid'])? 0:$user['bid']}",
+		   tid:"{php echo empty($user['tid'])? 0:$user['tid']}",
+		   status:"{$status}"				   
+		});
+	});
+    $(function () {  
+		 $(".fui-content").bind('scroll resize', function () {
+            var scrolltop = $(".fui-content").scrollTop();
+            if (scrolltop > "500") {
+                $("#gotop").fadeIn(100)
+            } else {
+                $("#gotop").fadeOut(100)
+            }
+        });
+        $("#gotop").unbind('click').click(function () {
+            $(".fui-content").animate({scrollTop: "0px"}, 1000)
+        });
+    });
+</script>
+<script type="text/html" id="tpl_repair_list">
+	<%each list as row%>
+	<div class="fui-card fui-card-full fui-card-list " style="overflow:hidden;">
+		<a class='fui-card-info'  data-nocache='true' href='<%row.url%>'>
+		<div class="text">                        
+			<div class="title <%row.css%>"><%row.title%><span class="pull-right text-default" style="font-size:0.6rem;margin-top:-5px;"><i class="icon icon-city"></i> <%row.address%></span></div>
+			<div class="subtitle"><font style="font-size:0.75rem;color:#333;"><%row.content%></font></div>
+			<div class="subtitle"><%row.ctime%></div>
+		</div>
+
+		</a>
+		<div class='fui-card-btns'>
+			<a data-nocache='true' href="<%row.url%>"><span class="<%row.bg%>"><%row.status%></span></a>          
+			<a data-nocache='true' href="<%row.url%>"><i class="icon icon-search <%row.css%>"></i><span class="<%row.css%>">详情</span></a>
+		</div>
+	</div>
+	<%/each%>
+</script>
+	
+<script type="text/html" id="tpl_suggest_list">
+	<%each list as row%>
+	<div class="fui-card fui-card-full fui-card-list " style="overflow:hidden;">
+		<a class='fui-card-info'  data-nocache='true' href='<%row.url%>'>
+		<div class="text">                        
+			<div class="title <%row.css%>"><%row.title%><span class="pull-right text-default" style="font-size:0.6rem;margin-top:-5px;"><i class="icon icon-city"></i> <%row.address%></span></div>
+			<div class="subtitle"><font style="font-size:0.75rem;color:#333;"><%row.content%></font></div>
+			<div class="subtitle"><%row.ctime%></div>
+		</div>
+
+		</a>
+		<div class='fui-card-btns'>
+			<a data-nocache='true' href="<%row.url%>"><span class="<%row.bg%>"><%row.status%></span></a>          
+			<a data-nocache='true' href="<%row.url%>"><i class="icon icon-search <%row.css%>"></i><span class="<%row.css%>">详情</span></a>
+		</div>
+	</div>
+	<%/each%>
+</script>
+	
+<script type="text/html" id="tpl_notice_list">
+	<%each list as row%>
+	<div class="fui-card fui-card-full fui-card-list " style="overflow:hidden;">
+		<a class='fui-card-info'  data-nocache='true' href='{php echo $this->createMobileurl('notice',array('op'=>'detail'))}&id=<%row.id%>'>
+		<div class="notice">
+			<table><tr><td>
+			<div class="week"><span class="<%row.css%>" style="font-size:1rem;margin-left:-8px;"><%row.week%></span><p class="subtitle">星期</p></div></td>
+			<td>
+			<div class="text">                        
+				<span class="title"><%row.title%></span>
+				<span class="subtitle">发布时间： <%row.ctime%>&nbsp;&nbsp;阅读：<%row.times%></span>
+			</div></td></tr></table>
+		</div>
+		</a>
+		<div class='fui-card-btns'>
+			<a data-nocache='true' href="{php echo $this->createMobileurl('notice',array('op'=>'detail'))}&id=<%row.id%>"><i class="icon icon-comment <%row.css%>"></i><span class="<%row.css%>"><%row.isread%></span></a>          
+			<a data-nocache='true' href="{php echo $this->createMobileurl('notice',array('op'=>'detail'))}&id=<%row.id%>"><i class="icon icon-search <%row.css%>"></i><span class="<%row.css%>">详情</span></a>
+		</div>
+	</div>
+	<%/each%>
+</script>
+{template $this->mytpl('_menu')}
+{template $this->mytpl('_footer')}

@@ -1,0 +1,222 @@
+﻿<div class="panel panel-default">
+	<div class="panel-heading">
+		<div class="panel-title">收费标准</div>
+	</div>
+	<div class="panel-body">
+		<div id="workarea">
+			{if $rights['query'] == 1}  
+			<div class="collapse" id="mycollapse">
+			<form action="" method="post" class="form-horizontal" role="form" enctype="multipart/form-data" id="myform">
+				<input type="hidden" name="mycon" id="mycon" value="1" />				
+				<div class="form-inline form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">类别</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+						<select class="form-control" name="category" style="width:35%">
+							<option value="">不限</option>
+							<option value="9">房屋收费项目(依楼宇)</option>
+							<option value="1">房屋收费项目(依楼宇分组)</option>
+							<option value="2">商铺收费项目</option>
+							<option value="3">储物间收费项目</option>
+							<option value="4">车库收费项目</option>
+						</select>
+						<input class="form-control" name="keyword"   type="text" value="{$_GPC['keyword']}" placeholder="请输入收费项目名称" style="width:45%"/>
+						<a href="javascript:;" class="btn btn-default" onclick="mysearch(this)"><i class="fa fa-search"></i> 搜索</a>		
+					</div>
+				</div>
+			</form>
+			</div>
+			{/if}
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					{if $rights['add'] == 1}
+					<div class="btn-group">
+					  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					  <i class="fa fa-plus"></i> 收费项目 <span class="caret"></span>
+					  </button>
+					  <ul class="dropdown-menu">
+							<li><a href="javascript:;" onclick="myadd(0)">房屋收费项目(依楼宇)</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a href="javascript:;" onclick="myadd(1)">房屋收费项目(依楼宇分组)</a></li>
+							<li role="separator" class="divider"></li>
+							<li> <a href="javascript:;" onclick="myadd(2)" >商铺收费项目</a></li>  
+							<li role="separator" class="divider"></li>
+							<li> <a href="javascript:;" onclick="myadd(3)" >储物间收费项目</a></li> 
+							<li role="separator" class="divider"></li>
+							<li> <a href="javascript:;" onclick="myadd(4)" >车库收费项目</a></li> 
+					  </ul>
+					</div>
+					{/if}					
+					{if $rights['query'] == 1}  			
+					<a class="btn btn-primary" onclick="mycondition(this)"  data-toggle="collapse" href="#mycollapse" aria-expanded="false" aria-controls="mycollapse">
+					<i class="fa fa-angle-double-down"></i> 筛选条件</a>
+					{/if}
+					<span class="pull-right" style="line-height:38px;">共有数据：<strong id="count">{$total}</strong> 条</span> 
+				</div>
+		  
+				<div class="panel-body table-responsive" style="min-height:500px;">
+					<table class="table table-bordered table-hover" id="mydatatable">
+						<thead class="navbar-inner">
+						<tr>
+							<th>ID</th>
+							<th>项目名称</th>
+							<th>项目类别</th>
+							<th>收费分组</th>
+							<th>计费方式</th>
+							<th>账单周期</th>
+							<th>状态</th>					
+							<th>备注</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					{loop $data $k $v}
+						<tr>
+							<td>{$v['id']}</td>					
+							<td>{$v['title']}</td>
+							<td>{if $v['category']=='1'}房屋收费项目{elseif $v['category']=='2'}商铺收费项目{elseif $v['category']=='3'}储物间收费项目{elseif $v['category']=='4'}车库收费项目{else}房屋收费项目{/if}</td>
+							<td>{$v['building']}</td>
+							<td>{$v['calmethod']}</td>
+							<td>{$v['paymonths']}个月</td>
+							<td class="td-status">
+							{if $v['status']=='1'}<span class="label label-success radius">启用</span>{else}<span class="label label-default radius">禁用</span>{/if}
+							</td>
+							<td>{$v['remark']}</td>	
+							<td>
+							{if $rights['edit'] == 1}	
+							<a href="javascript:;" onclick="myedit('{$_GPC['rid']}','{$v['id']}')" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="编辑" ><i class="fa fa-edit"></i></a>{/if}	
+							{if $rights['delete'] == 1}
+							<a href="javascript:;" onclick="mydel(this,'{$v['id']}')" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="删除"><i class="fa fa-trash"></i></a>{/if}		
+							</td>	
+						</tr>
+					{/loop}				
+				</table>
+			  </div>   
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$(function(){		
+	$("#mydatatable").dataTable({
+		language:{
+			"sProcessing": "处理中...",
+			"sLengthMenu": "显示 _MENU_ 项结果",
+			"sZeroRecords": "没有匹配结果",
+			"sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+			"sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+			"sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+			"sInfoPostFix": "",
+			"sSearch": "搜索:",
+			"sUrl": "",
+			"sEmptyTable": "表中数据为空",
+			"sLoadingRecords": "载入中...",
+			"sInfoThousands": ",",
+			"oPaginate": {
+				"sFirst": "首页",
+				"sPrevious": "上页",
+				"sNext": "下页",
+				"sLast": "末页"
+			},
+			"oAria": {
+				"sSortAscending": ": 以升序排列此列",
+				"sSortDescending": ": 以降序排列此列"
+			}
+		},
+		renderer: "bootstrap",
+		pagingType: "simple_numbers",
+		paging: true, 
+		ordering: true 
+	});	
+	
+});
+
+function mysearch(obj){
+	var index = layer.msg('正在加载...', {icon: 16});
+	$.ajax({  
+         type : "get",  
+          url : "{php echo $this->createWebUrl($mydo,array('op'=>'feeitem','rid'=>$_GPC['rid'])).$mywe['direct'];}",  
+          data : $("#myform").serializeObject(),   
+          async : false,  
+          success : function(data){  
+			 layer.close(index);
+			 $("#guide-output").html(data);
+          }  
+     }); 
+}	
+function myadd(category){
+	var url = "{php echo $this->createWeburl('guide',array('op'=>'additem','rid'=>$_GPC['rid'])).$mywe['direct'];}" + "&category=" + category;
+	var title = "添加收费项目";
+	var index = layer.open({
+		type: 2,
+		title:title,
+		content: url,
+		area: ['600px','600px'],
+		fix: true, 
+		shade:0.4,
+		resize:false,
+		end: function() {
+			var index = layer.msg('正在加载...', {icon: 16});
+			var url = "{php echo mywurl($mydo,array('op'=>'feeitem','rid'=>$_GPC['rid'])).$mywe['direct'];}"; 
+			$.get(url,{}, function(data){
+				layer.close(index);
+				$("#guide-output").html(data);
+			});		
+		}
+	});		
+}
+function myedit(rid,id){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'edititem','rid'=>$_GPC['rid'])).$mywe['direct'];}" + "&id=" + id;
+	var title = "修改收费项目";
+	var index = layer.open({
+		type: 2,
+		title:title,
+		content: url,
+		area: ['600px','600px'],
+		fix: true, 
+		shade:0.4,
+		resize:false,
+		end: function() {
+			var index = layer.msg('正在加载...', {icon: 16});
+			var url = "{php echo mywurl($mydo,array('op'=>'feeitem')).$mywe['direct'];}"; 
+			$.get(url,{rid:rid}, function(data){
+				layer.close(index);
+				$("#guide-output").html(data);
+			});		
+		}
+	});		
+}
+function mydel(obj,id){
+	layer.confirm('将删除下属所有相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl('feea').$mywe['direct'];}",
+			{op:"delitem",id:id},
+			function(data,status){
+			 if (data=='ok'){
+				$(obj).parents("tr").remove();
+				var count = $("#count").html();
+				$("#count").html(count - 1);
+				layer.msg('删除成功!',{icon:1});
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+			 }
+		});		
+		layer.close(index);
+    });
+}
+function mycondition(obj){    
+    var mycon = $("#mycon").val();
+	var html = '';
+	if (mycon==1){
+		html = '<i class="fa fa-angle-double-up"></i> 隐藏筛选';
+		$("#mycon").val("2");
+		$("#mycollapse").show("slow");
+	}
+	else {
+		html = '<i class="fa fa-angle-double-down"></i> 筛选条件';
+		$("#mycon").val("1");
+		$("#mycollapse").hide("slow");
+	}
+	$(obj).html(html);
+}
+	$("#workarea").height($(window).height()- 150);
+</script>

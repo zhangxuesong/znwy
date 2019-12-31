@@ -1,0 +1,193 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body">  
+		
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+		{if $rights['delete'] == 1}  
+			{if $_W['role'] == 'founder' || $_W['role']=='owner' || $_W['role']=='manager'}
+				<a href="javascript:;" onclick="mydeleteall({$pid},{$rid})" class="btn btn-danger"><i class="fa fa-trash-o"></i> 全部删除</a>
+			{/if}
+		{/if}
+		{if $rights['add'] == 1}
+		<div class="btn-group">
+		  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		  <i class="fa fa-plus"></i> 添加楼宇 <span class="caret"></span>
+		  </button>
+		  <ul class="dropdown-menu">
+			<li><a href="javascript:;" onclick="myadd({$pid},{$rid})" >单栋添加</a>			
+			{if $rights['other1'] == 1}<li role="separator" class="divider"></li><li>			
+			<a href="javascript:;" onclick="mybatchadd({$pid},{$rid})" >批量添加</a></li>{/if}
+			{if $rights['other1'] == 1}<li role="separator" class="divider"></li><li>
+			<a href="javascript:;" onclick="myimport({$pid},{$rid})" >EXCEL导入</a></li>{/if}    
+			{if $region['pc_type'] == 8}<li role="separator" class="divider"></li><li>
+			<a href="javascript:;" onclick="myyundoor({$pid},{$rid})" >同步门禁云端</a></li>{/if}  
+          </ul>
+		</div>
+		{/if}
+		{if $rights['add'] == 1} 
+		<div class="btn-group">
+		 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		  <i class="fa fa-plus"></i> 区域管理 <span class="caret"></span>
+		  </button>
+		  <ul class="dropdown-menu">
+		  <li><a href="javascript:;" onclick="myaddlocation({$pid},{$rid})">添加区域</a></li>
+		  <li role="separator" class="divider"></li><li>	
+		   <li><li><a href="javascript:;" onclick="mylocation({$pid},{$rid})">区域列表</a></li></li>
+		  </ul>
+		</div>
+		{/if}
+			<span class="pull-right" style="line-height:38px;">共有 <strong id="count">{php echo $total;}</strong> 栋</span> 
+	    </div>
+  
+		<div class="panel-body">	
+        {if $rights['query'] == 1}  		
+			{loop $data $k $v}				
+				<span class="pull-left" style="position:relative;padding-right:12px;" {if $rights['delete'] == 1} onmouseenter="myshow({$v['id']})" onmouseleave="myhide({$v['id']})" {/if}>				      
+				    <a href="javascript:;" onMouseOver="$(this).tooltip('show')" {if $rights['edit'] == 1} onclick="myroom({$v['id']},{$v['pid']},{$v['rid']})" {/if} class="btn btn-warning"   style="background:{$v['bg']};margin-bottom:10px;margin-right:5px;padding-top:20px;padding-bottom:20px;height:100px;width:100px;border:none;" data-toggle="tooltip" data-placement="bottom" title="单元数{$v['units']} 总楼层{$v['floors']} 房屋数{$v['rooms']}" ><i class="fa fa-building" style="font-size:40px;margin-bottom:5px;"></i><br>{$v['title']}</a>										
+					{if $rights['delete'] == 1}  
+					<a href="javascript:;" class="btn btn-sm" id ="delete{$v['id']}" title="删除" style="display:none;position:absolute;right:-5px;top:-15px;" onclick="mydelete(this,{$pid},{$rid},{$v['id']})"><i class="fa fa-close"></i></a>
+					{/if}
+					{if $rights['edit'] == 1}  
+					<a href="javascript:;" class="btn btn-sm" id ="edit{$v['id']}" title="编辑" style="display:none;position:absolute;right:-6px;bottom:5px;" onclick="myedit({$v['id']},{$v['pid']},{$v['rid']})"><i class="fa fa-pencil"></i></a>
+					{/if}
+				</span>	
+			{/loop}	
+		{/if}
+	    </div>  
+	</div>	
+  </div>
+</div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+
+var pid = {$pid};
+var rid = {$rid};
+
+function mydeleteall(pid,rid){ 
+	var count = parseInt($("#count").html());
+	if (count == 0){
+		return;
+	}
+	layer.confirm('将删除下属所有相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		layer.load(1);
+		layer.close(index);
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'deleteall')).$mywe['direct'];}",
+			{pid:pid,rid:rid},
+			function(data,status){
+				 if (data=='ok'){
+					layer.closeAll();
+					location.reload();
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+					return false;
+				 }
+			});		
+	});	
+}
+function mydelete(obj,pid,rid,id){  
+	
+	layer.confirm('将删除下属所有相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'delete')).$mywe['direct'];}",
+			{pid:pid,rid:rid,id:id},
+			function(data,status){
+				 if (data=='ok'){
+					$(obj).parents("span").remove();
+					var count = $("#count").html();
+					$("#count").html(count - 1);
+					layer.msg('删除成功!',{icon:1});
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+			 }
+			});	
+		layer.close(index);
+	});	
+}
+function myadd(pid,rid){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'add','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid;
+	window.location.href = url;
+}
+function mybatchadd(pid,rid){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'batchadd','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid; 
+	window.location.href = url;
+}
+function myimport(pid,rid){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'import','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid; 
+	window.location.href = url;
+}
+function myedit(id,pid,rid){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'edit','category'=>$category)).$mywe['direct'];}" + "&id=" + id + "&pid=" + pid + "&rid=" + rid;
+	window.location.href = url;
+}
+function myroom(id,pid,rid){
+	var url = "{php echo $this->createWeburl('unit',array('op'=>'list','category'=>$category)).$mywe['direct'];}" + "&bid=" + id + "&pid=" + pid + "&rid=" + rid;
+	window.location.href = url;
+}
+function myshow(id){
+	$("#delete"+id).show();
+	$("#edit"+id).show();
+}
+function myhide(id){
+	$("#delete"+id).hide();
+	$("#edit"+id).hide();
+}
+function myyundoor(pid,rid){
+	layer.confirm('确认要同步吗？',{icon: 3, title:'提示'},
+	function(index){
+	    layer.load(2);
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'yundoor')).$mywe['direct'];}",
+			{pid:pid,rid:rid},
+			function(data,status){
+				 if (data=='ok'){
+					layer.msg('同步成功!',{icon:1});
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+			 }
+			});	
+		layer.closeAll();
+	});	
+}
+function myaddlocation(pid,rid){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'addlocation','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid;
+	window.location.href = url;
+}
+function mylocation(pid,rid){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'locationlist','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid;
+	window.location.href = url;
+}
+function mydellocation(obj,pid,rid,id){   	
+	layer.confirm('确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'dellocation')).$mywe['direct'];}",
+			{pid:pid,rid:rid,id:id},
+			function(data,status){
+				 if (data=='ok'){
+					layer.close(index);
+					location.reload();
+				 }
+				 else{
+					layer.msg('操作失败',{icon:0});
+					return;
+				 }
+			});		
+	});
+}
+
+function myreturn(){
+	var url = "{php echo $this->createWeburl('region',array('op'=>$rlist,'category'=>$category)).$mywe['direct'];}";	
+	window.location.href = url;
+}
+
+</script>
+</body>
+</html>

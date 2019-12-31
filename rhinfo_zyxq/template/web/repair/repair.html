@@ -1,0 +1,99 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+<link href="../addons/rhinfo_zyxq/static/lib/lightbox2.6/css/lightbox.css" rel="stylesheet"/>
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />	
+			<input type="hidden" name="id" id="id" value="{$item['id']}" />		
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">报修类别</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" value="{$cname}" readonly />
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">报修内容</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<textarea class="form-control" name="content" rows="6" autocomplete="off" readonly>{$item['content']}</textarea>				
+				</div>		
+			</div>	
+			{if !empty($images)}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">图片</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+				{loop $images $image}				
+					<a  href="{php echo tomedia($image);}" data-lightbox="image-set" ><img src="{php echo tomedia($image);}" class="img-responsive img-thumbnail"  width="100" /></a>
+				{/loop}
+				</div>
+			</div>	
+			{/if}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>报修处理</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<textarea class="form-control" name="content" id="content" autocomplete="off"></textarea>			
+				</div>		
+			</div>	
+			
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">维修人员</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<div class="input-group ">
+						<input type="hidden" class="form-control" id="uid" value="{$item['uid']}" name="uid">
+						<input type="hidden" class="form-control" id="openid" value="" readonly name="openid">
+						<input type="text" class="form-control" id="nickname1" value="" readonly name="nickname1">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" onclick="showFansDialog(this);">选择微信</button>
+						</span>
+					</div>
+				</div>	
+			</div>	
+			<script type="text/javascript">
+				function showFansDialog(elm) {
+					require(['util', 'jquery'], function(u, $){
+						var footer = '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>';
+						var modalobj = u.dialog('粉丝选择', ["{php echo $this->createWeburl('query',array('op'=>'fans')).$mywe['direct'];}"], footer, {containerName:'link-container'});
+						modalobj.find('.modal-body').css({'overflow-y':'auto' });
+						modalobj.modal('show');
+						});
+				}
+			</script>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>状态</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<select class="form-control" name="status" >
+						<option value="1">待处理</option>							
+						<option value="2">处理中</option>
+						<option value="3">已处理</option>
+						<option value="5">已回复</option>
+						<option value="8">已结案</option>						
+						<option value="9">不显示</option>
+					</select>			
+				</div>
+			</div>	
+			<br>
+		</form>			
+    </div>
+</div>
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+<script type="text/javascript">
+function mysubmit(obj){  	
+	var content = $.trim($("#content").val()); 
+		
+	if (content=='') {
+	   layer.msg("处理内容不能为空！",{icon:0});
+	   return;
+	}	
+	myprocess(obj);
+	$("#myform").submit();
+}
+function myreturn(){
+	 window.history.back();
+}
+
+</script> 
+
+</body>
+</html>

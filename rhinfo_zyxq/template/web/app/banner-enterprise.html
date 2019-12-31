@@ -1,0 +1,22 @@
+<!--banner-->
+<div class="carousel-banner">
+	<div class="hd">
+		<ul>
+			{loop $setting['slides'] $pic}
+			<li></li>
+			{/loop}
+		</ul>
+	</div>
+	<div class="bd">
+
+		<ul>
+			{loop $setting['slides'] $pic}
+			<li>
+				<a href="javascript:;" style="background-image: url({$_W['attachurl']}{$pic});"></a>
+			</li>
+
+			{/loop}
+		</ul>
+	</div>
+</div>
+<!--end banner-->

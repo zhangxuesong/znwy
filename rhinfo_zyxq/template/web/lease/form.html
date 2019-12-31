@@ -1,0 +1,238 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+	{if $_W['uid']} 
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"> <span class="text-danger">*</span>所属物业</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+				{if $operation=='add'}<option value="0">请选择</option>{/if}
+				{loop $myproperty $k $v}
+					<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>
+	{else}
+		<input type="hidden" class="form-control" id="pid" value="{$mywe['pid']}" name="pid" />
+	{/if}
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>所属主体</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="rid" name="rid" onchange="renderCategory(this,'lessee','lesseeid')">
+				{if $operation=='add'}	<option value="0">请选择</option>{/if}
+				{loop $eregions $i $r}
+					<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+				{/loop}
+				{if $_W['uid']} 
+				{else}
+					{if $operation=='add'}
+						{loop $regions $i $r}
+							<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+						{/loop}
+					{/if}
+				{/if}
+			</select>
+		</div>
+	</div>	
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>合同编号</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入合同编号" name="title">
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>承租人</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="lesseeid" name="lesseeid" >
+				<option value="0">请选择</option>
+				{loop $elessees $lessee}
+					<option value="{$lessee['id']}" {if $item['lesseeid'] == $lessee['id']} selected {/if} >{$lessee['title']}</option>
+				{/loop}	
+			</select>			
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>联系人</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="contact" value="{$item['contact']}" placeholder="输入联系人" name="contact">
+		</div>	
+	</div>	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>手机号码</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="mobile" value="{$item['mobile']}" placeholder="输入手机号码" name="mobile">
+		</div>	
+	</div>	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">选择租赁区域</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<!--效果html开始-->
+			<div class="selectbox">
+				<div class="select-bar">
+					<span class="text-warning">请选择</span>
+					<select multiple="multiple" id="select1" class="form-control">
+					{loop $data $value}
+						<option value="{$value['id']}">{$value['title']}</option>
+					{/loop}
+					</select>				
+				</div>
+
+				<div class="btn-bar">
+					<p><span id="add"><input type="button" class="btn" value=">" title="移动选择项到右侧"/></span></p>
+					<p><span id="add_all"><input type="button" class="btn" value=">>" title="全部移到右侧"/></span></p>
+					<p><span id="remove"><input type="button" class="btn" value="<" title="移动选择项到左侧"/></span></p>
+					<p><span id="remove_all"><input type="button" class="btn" value="<<" title="全部移到左侧"/></span></p>
+				</div>
+				<div class="select-bar">
+					<span class="text-success">已选择</span>
+					<select multiple="multiple" id="select2" class="form-control">							
+					{loop $locationarr $kk $vloca}
+					<option value="{$vloca}">{$locationame[$kk]}</option>				
+					{/loop}							
+					</select>				
+				</div>	
+			</div>
+			<!--效果html结束-->
+		</div>	
+	</div>
+	<input type="hidden" name="bids" id="bids" value="" />	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">开始日期</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_date('startdate',$item['startdate']);}
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">结束日期</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_date('enddate',$item['enddate']);}
+		</div>	
+	</div>
+	 <div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">租期</label>		
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="input-group ">				
+				<input type="number" class="form-control"  value="{php echo empty($item['leaseterm'])?1:$item['leaseterm'];}" name="leaseterm" />
+				<span class="input-group-addon">个月</span>					
+			</div>
+		</div>	
+	</div>	
+    <div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">租赁面积</label>		
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="input-group ">				
+				<input type="number" class="form-control"  value="{$item['area']}" name="area" />
+				<span class="input-group-addon">平方米</span>					
+			</div>
+		</div>	
+	</div>	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">合同租金</label>		
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="input-group ">				
+				<input type="number" class="form-control"  value="{$item['totalfee']}" name="totalfee" />
+				<span class="input-group-addon">元</span>					
+			</div>
+		</div>	
+	</div>	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">保证金</label>		
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="input-group ">				
+				<input type="number" class="form-control"  value="{$item['deposit']}" name="deposit" />
+				<span class="input-group-addon">元</span>					
+			</div>
+		</div>	
+	</div>	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">保证金说明</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="depositdesc" value="{$item['depositdesc']}" placeholder="输入保证金说明" name="depositdesc" />
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>缴纳方式</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="paymethod" name="paymethod" >
+				<option value="">请选择</option>	
+				{loop $paymethod $m $t}
+					<option value="{$t['id']}" {if $item['paymethod'] == $t['id']} selected {/if} >{$t['title']}</option>
+				{/loop}				
+			</select>
+		</div>
+	</div>	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">签订日期</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_date('signdate',$item['signdate']);}
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">附加图片</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_multi_image('attachment',$item['attachment'],array('multiple'=>true,'direct'=>true));}
+			<span class="help-block"></span>
+		</div>	
+	</div>	
+	<div class="form-group">
+	   <label class="col-xs-12 col-sm-2 col-md-2 control-label">状态</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">                   				
+			<label class='radio-inline'>
+				<input type='radio' name='status' value='0' {if empty($item['status']) || $item['status']==0 }checked{/if} /> 未生效
+			</label>
+			<label class='radio-inline'>
+				<input type='radio' name='status' value='1' {if $item['status']==1}checked{/if} /> 已生效
+			</label>
+			<label class='radio-inline'>
+				<input type='radio' name='status' value='2' {if $item['status']==2}checked{/if} /> 终止
+			</label>
+		</div>
+	</div>
+		
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">备注</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="remark" value="{$item['remark']}" placeholder="输入备注" name="remark" />
+		</div>	
+	</div>	
+</form>	
+<script type="text/javascript">
+	window._region = {php echo json_encode($myregion);};				
+	window._lessee = {php echo json_encode($mylessee);};
+	window._location = {php echo json_encode($mylocation);};
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){			
+			$selectChild = $("#"+ id);			
+			var html = '<option value="0">请选择</option>';	
+			if (id=='rid'){
+				$("#lesseeid").html(html);
+				$("#select1").html('');
+				$("#select2").html('');
+			}
+			if(id=='lesseeid'){
+				$("#select1").html('');
+				$("#select2").html('');
+			}
+			
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+			if(id=='lesseeid'){
+				html1 = '';
+				for(var i=0; i< window['_location'][index].length; i++){
+					html1 += '<option value="'+window['_location'][index][i]['id']+'">'+window['_location'][index][i]['title']+'</option>';
+				}
+				$("#select1").html(html1);
+			}
+		});
+	}
+</script>

@@ -1,0 +1,249 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body"> 
+   {if $rights['query'] == 1}
+	<div class="collapse" id="mycollapse">
+	<form action="./index.php" method="get" class="form-horizontal" role="form" id="form-search">
+		<input type="hidden" name="c" value="site" />
+		<input type="hidden" name="a" value="entry" />
+		<input type="hidden" name="m" value="rhinfo_zyxq" />
+		<input type="hidden" name="do" value="sysnav" />
+		<input type="hidden" name="op" value="search" />	
+		<input type="hidden" name="mycon" id="mycon" value="1" />
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">标题</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<input class="form-control" name="keyword" type="text" value="{$_GPC['keyword']}" placeholder="请输入标题">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+			<div class="col-sm-4 col-xs-12">
+				<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>				
+			</div>
+		</div>
+	</form>
+	</div>
+	{/if}
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+			{if $rights['delete'] == 1}
+			{if $_W['role'] == 'founder' || $_W['role']=='owner' || $_W['role']=='manager'}
+			<a href="javascript:;" onclick="mydelselect()" class="btn btn-danger"><i class="fa fa-trash-o"></i> 批量删除</a> {/if}
+			{/if}
+			{if $rights['add'] == 1}
+			<a href="javascript:;" onclick="myadd()" class="btn btn-info">
+			<i class="fa fa-plus"></i> 添加导航</a></span>{/if}
+			{if $rights['query'] == 1}  
+			<a class="btn btn-primary" onclick="mycondition(this)"  data-toggle="collapse" href="#mycollapse" aria-expanded="false" aria-controls="mycollapse">
+			<i class="fa fa-angle-double-down"></i> 筛选条件</a>
+			{/if}
+			<span class="pull-right" style="line-height:38px;">共有数据：<strong id="count">{$total}</strong> 条</span> 
+	    </div>
+  
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+				<tr>
+					<th width="25"><input type="checkbox" name="selectall" id="selectall" value="" onClick="myallselect(this)"></th>
+					<th width="40">ID</th>
+					<th>图片</th>
+					<th>类别</th>	
+					<th>标题</th>				
+					<th>状态</th>
+					<th width="360">操作</th>
+				</tr>
+			</thead>
+			{loop $data $k $v}
+				<tr>
+					<td><input type="checkbox" value="{$v['id']}" name="myselect" id="myselect_{$k}"  ></td>
+					<td>{$v['id']}</td>
+					<td><img width="40" src="{php echo tomedia($v['thumb'])}"/></td>
+					<td>{$v['category']}</td>
+					<td>{$v['title']}</td>
+					<td class="td-status"><span class="label {if $v['status']=='启用'}label-success{else}label-default{/if} radius">{$v['status']}</span></td>
+					<td class="td-manage">					
+					{if $rights['enabled'] == 1}
+						{if $v['status']=='启用'}
+							<a onClick="mydisabled(this,{$v['id']})" href="javascript:;" class="btn btn-default btn-sm" title="禁用" ><i class="fa fa-minus-circle"></i> 禁用</a>
+						{else}
+							<a onClick="myenabled(this,{$v['id']})" href="javascript:;" class="btn btn-default btn-sm" title="启用" ><i class="fa fa-check-circle"></i> 启用</a>								
+						{/if}
+					{/if}
+					{if $rights['edit'] == 1}
+					<a  href="javascript:;" onclick="myedit({$v['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="编辑" ><i class="fa fa-edit"></i> 编辑</a> 
+					{/if}
+					{if $rights['delete'] == 1}
+					<a  href="javascript:;" onclick="mydel(this,{$v['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="删除"><i class="fa fa-trash"></i> 删除</a>
+					{/if}
+					</td>
+				</tr>
+			{/loop}			
+		</table>
+	  </div>    	  
+	</div>	
+  </div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+
+/*全选*/
+function myallselect(select){ 
+
+	var obj = document.getElementsByName('myselect'); 
+	var tempsta = select.checked; 
+	
+	for(var k in obj){ 
+		if (obj[k].checked != tempsta) {      
+		     $("#myselect_"+k).prop("checked", tempsta);  
+		}
+	}	
+}	
+/*删除所选*/
+function mydelselect(){
+
+	var count = parseInt($("#count").html());
+	if (count == 0){
+		return;
+	}
+
+    $.ajaxSetup({   
+		async : false  
+    }); 
+    
+	var obj = document.getElementsByName('myselect'); //选择所有name="myselect" id="myselect_{$k}" 的对象，返回数组 
+	var i = 0;
+	for(var j in obj){ 
+		if (obj[j].checked) {//如果选中,则删除   
+			i++;
+		}
+	}	
+	if (i==0){
+	   layer.msg('请选择要删除的对象.',{icon:0});
+	   return ;
+	}
+	layer.confirm('将删除下属所有相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		//取到对象数组后，循环检测它是不是被选中 
+		layer.load(1);
+		layer.close(index);
+			for(var k in obj){ 
+				if (obj[k].checked) {//如果选中,则删除                
+					$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+					{op:"delete",id:obj[k].value},
+					function(data,status){
+						 if (data=='ok'){							
+						 }
+						 else{
+							layer.msg(data,{icon:0});
+							return false;
+						 }
+					});		
+				}
+			}
+			setTimeout(function(){
+			 layer.closeAll();
+			 location.reload();
+		  },5000);	
+	});
+}
+/*添加*/
+function myadd(){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'add')).$mywe['direct'];}";
+	window.location.href = url;
+}
+/*删除*/
+function mydel(obj,id){
+	layer.confirm('将删除下属所有相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+			$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+				{op:"delete",id:id},
+				function(data,status){
+				 if (data=='ok'){
+					$(obj).parents("tr").remove();
+					var count = $("#count").html();
+					$("#count").html(count - 1);
+					layer.msg('删除成功!',{icon:1});
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+				 }
+			});		
+		layer.close(index);
+    });
+}
+
+/*禁用*/
+function mydisabled(obj,id){
+    var html = '<a onClick="myenabled(this,' + id + ')" href="javascript:;" title="启用" class="btn btn-default btn-sm"><i class="fa fa-check-circle"></i> 启用</a>';
+	layer.confirm('确认要禁用吗？',{icon: 3, title:'提示'},
+	function(index){
+			$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+				{op:"status",id:id,status:0},
+				function(data,status){
+				 if (data=='ok'){
+					$(obj).parents("tr").find(".td-manage").prepend(html);
+					$(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">禁用</span>');
+					$(obj).remove();
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+				 }
+			});				
+		layer.close(index);
+	});
+}
+
+/*启用*/
+function myenabled(obj,id){
+	var html = '<a onClick="mydisabled(this,' + id + ')" href="javascript:;" title="禁用" class="btn btn-default btn-sm"><i class="fa fa-minus-circle"></i> 禁用</a>';
+	layer.confirm('确认要启用吗？',{icon: 3, title:'提示'},
+	function(index){
+			//此处请求后台程序
+			$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+				{op:"status",id:id,status:1},
+				function(data,status){
+				 if (data=='ok'){
+					$(obj).parents("tr").find(".td-manage").prepend(html);
+					$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">启用</span>');
+					$(obj).remove();
+				 }
+				 else{
+					layer.msg('操作失败',{icon:0});
+				 }
+			});				
+		layer.close(index);
+	});
+}
+/*编辑*/
+function myedit(id){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'edit')).$mywe['direct'];}" + "&id=" + id ; 
+	window.location.href = url;
+}
+function myreturn(){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'list')).$mywe['direct'];}" ;	
+	window.location.href = url;
+}
+function mycondition(obj){
+    var mycon = $("#mycon").val();
+	var html = '';
+	if (mycon==1){
+		html = '<i class="fa fa-angle-double-up"></i> 隐藏筛选';
+		$("#mycon").val("2");
+		$("#mycollapse").show("slow");
+	}
+	else {
+		html = '<i class="fa fa-angle-double-down"></i> 筛选条件';
+		$("#mycon").val("1");
+		$("#mycollapse").hide("slow");
+	}
+	$(obj).html(html);
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" href="../addons/rhinfo_zyxq/static/mobile/css/task.css">
+<style type="text/css">
+    .task-head{
+        background: orange no-repeat;
+        background-size: 100%;
+		width:100%;
+		margin-bottom:2rem;
+    }
+	.icon-task {
+		display: block;
+		width:4rem;
+		height:4rem;
+		margin:0 auto;
+		margin-top:-1rem;
+		z-index:999;
+		-webkit-border-radius:4rem;
+		-moz-border-radius:4rem;
+		border-radius:4rem;
+		background-color:orange;
+		border:none;
+		text-align:center;
+	}
+
+	.icon-task .icon {
+		font-size:2rem;
+		line-height:5rem;
+		font-weight:bold;
+		color:#fff;
+	}
+</style>
+<div class="fui-page fui-page-current">
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">任务中心</div>
+        <div class="fui-header-right"><a href="{php echo $this->createMobileUrl($mydo,array('op'=>'mytask'));}"><i class="icon icon-person2"></i></a></div>
+    </div>
+    <div class="fui-content">
+        <div class="task-head">
+            <span class="task-font">做任务 获奖励</span>
+            <span class="task-font-s">红包积分 惊喜不断</span>
+			<span class="icon-task"><i class="icon icon-present"></i></span>
+        </div>
+		{if empty($tasks)}
+		<div class='fui-content-inner'>
+            <div class='content-empty'>
+                <div class="empty-bg"><i class='icon icon-gifts'></i></div>
+				<p>还没有发布任务</p>	
+            </div>           
+        </div>
+		{/if}
+	     <div class="task-list task-list1">
+            {loop $tasks $k $v}
+                <div class="task-item" data-id="{$v['id']}">
+                    <div class="task-item-logo"
+                         onclick="location.href='{php echo $this->createMobileUrl($mydo,array('op'=>'detail','id'=>$v['id']));}'">
+                        <img src="{php echo tomedia($v['thumb']);}" width="100%" height="100%">
+                    </div>
+                    <div class="task-item-right">
+                        <div class="task-item-top">
+                            <div class="task-item-title"
+                                 onclick="location.href='{php echo $this->createMobileUrl($mydo,array('op'=>'detail','id'=>$v['id']));}'">{$v['title']}
+                            </div>
+                            <div class="task-item-pickup" data-id="{$v['id']}">领取任务</div>
+                         </div>
+                        <div class="task-item-desc"
+                             onclick="location.href='{php echo $this->createMobileUrl($mydo,array('op'=>'detail','id'=>$v['id']));}'">{$v['remark']}
+                        </div>
+                    </div>
+                </div>
+            {/loop}
+        </div>
+        <div class="task-footer"></div>
+    </div>
+</div>
+<script>
+    $(function (){
+        $(".task-item-pickup").click(function () {
+            var id = $(this).attr('data-id');
+            if (id == '0') return;
+			core.json('task/index',{id:id}, function(ret){
+					if (ret.status != 1) {
+					    RhUI.toast.show(ret.result.message);
+						return
+					}
+					RhUI.alert(ret.result.message, '', function() {	
+					    location.href = core.getUrl('task/mytask');
+					});
+				},false,true);
+        });
+    })
+</script>
+{template $this->mytpl('_footer')}

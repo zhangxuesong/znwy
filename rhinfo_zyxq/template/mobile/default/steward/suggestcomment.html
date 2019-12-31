@@ -1,0 +1,45 @@
+{template $this->mytpl('_header')}
+
+<div class='fui-page  fui-page-current order-comment-page'>
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back" href="{php echo $this->createMobileurl($mydo);}"></a>
+	</div>
+	<div class="title">投诉建议处理评价</div> 
+	<div class="fui-header-right">&nbsp;</div>
+    </div>
+  <div class='fui-content margin navbar'>
+    
+	<div class="fui-title"><i class="icon icon-city"></i> {if $user['isbind']}{$user['address']}{else}{$user['rtitle']}{/if}</div>
+	
+	 <div class="fui-cell-group">
+		 <div class='fui-cell must'>
+			  <div class='fui-cell-label'>评分</div>
+			 <div class='fui-cell-info'>
+				 <div class='fui-stars warning' data-value='0'>
+					 <span class='stars'></span>
+				 </div>
+			 </div>
+		 </div>
+
+		 <div class='fui-cell must'>
+			 <div class='fui-cell-label '>评论</div>
+			 <div class='fui-cell-info'><textarea rows="3" placeholder="说点什么吧" id='comment'></textarea></div>
+		 </div>
+	 </div>
+
+	  
+  </div>  
+     <div class='fui-footer'>
+		<a class='btn btn-danger btn-submit block'>提交评价</a>
+	  </div>
+	  
+    <script language='javascript'>require(['steward/comment'], function (modal) {
+		modal.initRepair({
+			repairid: "{$_GPC['repairid']}"
+		}); 
+	});</script>
+	
+</div> 
+
+{template $this->mytpl('_footer')}

@@ -1,0 +1,145 @@
+<style>
+.fui-cell-group {
+	margin-top: 0.5rem;
+	background-color: #fff;
+	line-height: 1.4;
+	font-size: 0.8rem;
+	overflow: hidden;
+	position: relative;
+}
+
+.fui-cell-group .fui-cell {
+	position: relative;
+	padding: 0.5rem 0.5rem;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-moz-transition-duration: 300ms;
+	-webkit-transition-duration: 300ms;
+	transition-duration: 300ms;
+	-webkit-transition-property: background-color;
+	transition-property: background-color;
+}
+
+.fui-cell-title {
+	color: red;
+	font-size: 1rem;
+	padding: 0.5rem 0.7rem;
+
+}
+.fui-cell-tip {
+	color: #999;
+	font-size: 0.75rem;
+	padding: 0.3rem 0.7rem;
+}
+
+.fui-cell-group .fui-cell .fui-cell-text {
+	-webkit-box-flex: 1;
+	-webkit-flex: 1;
+	-ms-flex: 1;
+	flex: 1;
+	color: red;
+	font-size: 1rem;
+
+}
+
+.fui-cell-group .fui-cell .fui-cell-remark {
+	color: #888;
+	text-align: right;
+	font-size: 1rem;
+	margin-right: .2rem;
+}
+
+.verify-pop {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 1001
+}
+
+.verify-pop .close {
+    z-index: 1002;
+    position: absolute;
+    top: 0px;
+    right: 5px
+}
+
+.verify-pop .close span {
+    font-size: 0.85rem;
+    color: red;
+}
+
+.verify-pop .fui-mask {
+    background: rgba(0, 0, 0, .9)
+}
+
+.verify-pop .bind {
+    width: 280px;
+	padding:0 10px 10px 10px;
+    position: absolute;
+    top: 100px;
+    z-index: 1001;
+	background:#ffa64d;	
+    opacity:0.9;
+    left: 50%;
+    margin-left: -140px;
+	border-radius:6px;
+}
+.verify-pop .bind .fui-cell-group{
+	border-radius:6px;
+	background:#fff;	
+}
+.verify-pop .bind .title{
+	text-align:center;
+	padding-top:5px;
+	color:#fff;
+}
+.pop-region-hidden{
+	font-size:1rem !important;
+}
+.fui-mask-m{
+	position: fixed;
+	background: rgba(0, 0, 0, 0.8) none repeat scroll 0 0;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	opacity: 0;
+	top: 0;
+	z-index: 1000;
+	-moz-transition-duration: 400ms;
+	-webkit-transition-duration: 400ms;
+	transition-duration: 400ms;
+}
+.fui-mask-m.visible {
+	opacity: 1;
+}
+</style>
+ <div class="pop-region-hidden">
+	<div class='fui-mask-m visible'></div>
+	<div class="verify-pop pop">		
+			<div class="bind">
+				<div class="title">欢迎访问，请绑定房产<div class="close"><span>X</span></div></div>
+				<div class="fui-cell-group fui-cell-click external">
+					<a class="fui-cell"  href="{$url}">
+						<div class="fui-cell-text">绑定房产</div>													
+						<div class="fui-cell-remark"></div>
+					</a>					
+					<div class="fui-cell-tip">通过手机号码自动绑定房产信息</div>
+				</div>	
+				<div class="fui-cell-group fui-cell-click external">
+					<div style="text-align:center;"><img src="{$_GPC['qrcode']}" width="150px;"/></div>
+				</div>			
+			</div>
+	</div>
+</div>
+<script language="javascript">
+	$(".close").click(function(){
+	  $(".pop-region-hidden").hide();
+	});
+</script>

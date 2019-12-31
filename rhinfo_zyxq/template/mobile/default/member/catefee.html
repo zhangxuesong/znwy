@@ -1,0 +1,22 @@
+{if $this->syscfg['isshowfeebill']==1}
+	{if $user['rid'] && count($items)>0 && $this->syscfg['isshowfeebill']}
+	<div class="fui-cell-group fui-cell-click">
+		<a class="fui-cell external" href="{if $user['feeshowtype']==1}{php echo $this->createMobileurl('fee',array('op'=>'yearbill','pid'=>$user['pid'],'rid'=>$user['rid'],'bid'=>$user['bid'],'tid'=>$user['tid'],'hid'=>$user['hid']));}{else}{php echo $this->createMobileurl('fee',array('op'=>'myfeebill','pid'=>$user['pid'],'rid'=>$user['rid'],'bid'=>$user['bid'],'tid'=>$user['tid'],'hid'=>$user['hid']));}{/if}">
+			<div class="fui-cell-icon"><i class="icon icon-money" style="color:{if !empty($this->syscfg['bgcolor'])}{php echo $this->syscfg['bgcolor']}{else}#ff6600{/if};"></i></div>
+			<div class="fui-cell-text">当前房产账单</div>
+			<div class="fui-cell-remark">全部账单</div>
+		</a>			
+		<div class="fui-icon-group">
+		{loop $items $i $v}			
+			<a class="fui-icon-col external" href="{$v['url']}">
+				{if $v['total']}
+				<div class="badge">{$v['total']}</div>
+				{/if}
+				<div class="icon icon-green radius">{if !empty($v['thumb'])}<img src="{php echo tomedia($v['thumb']);}" />{else}<i class="icon {$v['icon']}" {if !empty($v['color'])}style="color:{$v['color']};"{/if}></i>{/if}</div>
+				<div class="text">{$v['title']}</div>
+			</a>			
+		{/loop}
+		</div>
+	</div>
+	{/if}
+{/if}

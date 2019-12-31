@@ -1,0 +1,101 @@
+﻿{template 'web/_iframe_header'}
+{if $_GPC['from']=='2'}
+{template 'web/_navtitle1'}
+{else}
+{template 'web/_navtitle'}
+{/if}
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body"> 		
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<a href="javascript:;" onclick="mydelall()" class="btn btn-danger"><i class="fa fa-trash-o"></i> 全部删除</a>
+			<span class="pull-right" style="line-height:38px;">共有数据：<strong id="count">{$total}</strong> 条</span> 
+		</div>  
+		<div class="panel-body"> 			
+			<div style="margin:15px 10px -10px 10px;">
+			<button class="btn btn-success btn-sm" style="margin-bottom:10px;margin-right:5px;" >服务团队</button>										
+			{loop $data $r}
+				<span  style="position:relative;padding-right:12px;" onmouseenter="myshow({$r['id']})" onmouseleave="myhide({$r['id']})">
+					<a href="javascript:;" onclick="myedit({$r['id']},{$r['pid']})" class="btn btn-default btn-sm" style="margin-bottom:10px;margin-right:5px;" >{$r['title']}</a>
+					<a href="javascript:;" class="btn btn-sm" id ="delete{$r['id']}" style="display:none;position:absolute;right:-2px;top:-25px;" onclick="mydelete(this,{$r['pid']},{$r['id']})"><i class="fa fa-close"></i></a>
+				</span>					
+			{/loop}
+			<a href="javascript:;"  onclick="myadd({$_GPC['pid']})" class="btn btn-default btn-sm" style="margin-bottom:10px;margin-right:5px;" data-toggle="tooltip" data-placement="bottom" title="添加" ><i class="fa fa-plus"> 添加</i></a>
+			</div>
+		</div>			
+	</div>
+   </div>	
+  </div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+var pid = {$_GPC['pid']};
+var comefrom = {$_GPC['from']};
+/*添加类别*/
+function myadd(pid){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'grantadd','from'=>$_GPC['from'])).$mywe['direct'];}" + "&pid=" + pid;
+	window.location.href = url;
+}
+function mydelall(){
+	layer.confirm('确认要删除所有分类数据吗？',{icon: 3, title:'提示'},
+	function(index){		
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'grantdelall')).$mywe['direct'];}",
+			{pid:pid},
+			function(data,status){
+				 if (data=='ok'){
+					location.reload();					
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+					return;
+				 }
+			});				
+		layer.close(index);
+	});
+}
+
+/*删除*/
+function mydelete(obj,pid,id){   	
+	layer.confirm('确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){		
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'grantdelete')).$mywe['direct'];}",
+			{pid:pid,id:id},
+			function(data,status){
+				 if (data=='ok'){
+					$(obj).parents("span").remove();	
+					var count = $("#count").html();
+					$("#count").html(count - 1);
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+					return;
+				 }
+			});		
+		layer.close(index);
+	});
+}
+
+/*编辑类别*/
+function myedit(id,pid){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'grantedit','from'=>$_GPC['from'])).$mywe['direct'];}" + "&id=" + id + "&pid=" + pid ; 
+	window.location.href = url;
+}
+function myreturn(){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'list')).$mywe['direct'];}";	
+	if (comefrom==2){
+	   url = "{php echo $this->createWeburl('sysset',array('op'=>'index')).$mywe['direct'];}";
+	}
+	window.location.href = url;
+}
+function myshow(id){
+	$("#delete"+id).show();
+}
+function myhide(id){
+	$("#delete"+id).hide();
+}
+
+</script>
+</body>
+</html>

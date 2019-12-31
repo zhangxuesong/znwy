@@ -1,0 +1,88 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title">微信绑定统计</h3>
+		<span class="count">总共数据：<strong>{$total}</strong> 条</span>
+	</div>
+	<div class="panel-body">
+		<div class="chart" id="chartBind"></div>
+	</div>
+</div>
+<script type="text/javascript">
+	var chartBind = echarts.init(document.getElementById('chartBind'));
+	option_bind = {			
+		tooltip : {
+			trigger: 'axis'
+		},
+		legend: {
+			data:['业主','成员','租户'],
+			textStyle:{
+				color:'#fff',
+			}
+		},
+		toolbox: {
+			show : true,
+			feature : {
+				magicType : {show: true, type: ['line', 'bar']},
+				restore : {show: true},
+				saveAsImage : {show: true}
+			},
+			
+		},
+		calculable : true,
+		dataZoom : {
+			show : true,
+			realtime : true,
+			start : 20,
+			end : 80
+		},
+		xAxis : [
+			{
+				type : 'category',
+				boundaryGap : false,
+				data : function (){
+					var list = [];
+					for (var i = 14; i >=0; i--) {
+						list.push(getDay(-i));
+					}
+					return list;
+				}(),
+				axisLabel: {
+                    textStyle: {
+                        color: '#fff',//坐标值得具体的颜色
+                    }
+                }
+			}
+		],
+		yAxis : [
+			{
+				type : 'value',
+				axisLabel: {
+                    textStyle: {
+                        color: '#fff',//坐标值得具体的颜色
+                    }
+                }
+			}
+		],
+		series : [
+			{
+				name:'业主',
+				type:'line',
+				data:[{php echo $binddata[0];}]
+			},
+			{
+				name:'成员',
+				type:'line',
+				data:[{php echo $binddata[1];}]
+			},
+			{
+				name:'租户',
+				type:'line',
+				data:[{php echo $binddata[2];}]
+			}
+		]
+	};
+	chartBind.setOption(option_bind);
+	window.onresize = function() {
+		chartBind.resize();
+	};
+</script>

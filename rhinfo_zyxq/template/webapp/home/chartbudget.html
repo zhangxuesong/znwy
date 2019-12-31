@@ -1,0 +1,94 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+			<h3 class="panel-title">日常收支统计</h3>
+			<span class="count">总收入：<strong>{$intotal}</strong> 元&nbsp;&nbsp;总支出：<strong>{$outtotal}</strong> 元</span>
+	</div>
+	<div class="panel-body">
+		<div class="chart" id="chartBudget"></div>
+	</div>
+</div>
+<script type="text/javascript">
+	var chartBudget = echarts.init(document.getElementById('chartBudget'));
+	option_budget = {
+		tooltip : {
+			trigger: 'axis',
+			axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+				type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+			}
+		},
+		legend: {
+			data:['收入', '支出','收益'],
+			textStyle:{
+				color:'#fff',
+			}
+		},
+		toolbox: {
+			show : true,
+			feature : {
+				magicType : {show: true, type: ['line', 'bar']},
+				restore : {show: true},
+				saveAsImage : {show: true}
+			}
+		},
+		calculable : true,
+		xAxis : [
+			{
+				type : 'value',
+				axisLabel: {
+                    textStyle: {
+                        color: '#fff',//坐标值得具体的颜色
+                    }
+                }
+			}
+		],
+		yAxis : [
+			{
+				type : 'category',
+				axisTick : {show: false},
+				data : function (){
+					var list = [];
+					for (var i = 14; i >=0; i--) {
+						list.push(getDay(-i));
+					}
+					return list;
+				}(),
+				axisLabel: {
+                    textStyle: {
+                        color: '#fff',//坐标值得具体的颜色
+                    }
+                }
+			}
+		],
+		series : [
+			{
+				name:'收入',
+				type:'bar',
+				stack: '总量',
+				barWidth : 15,
+				itemStyle: {normal: {
+					label : {show: true}
+				}},
+				data:[{$money_data[0]}]
+			},
+			{
+				name:'支出',
+				type:'bar',
+				stack: '总量',
+				itemStyle: {normal: {
+					label : {show: true, position: 'left'}
+				}},
+				data:[{$money_data[1]}]
+			},
+			{
+				name:'收益',
+				type:'bar',
+				itemStyle : { normal: {label : {show: true, position: 'inside'}}},
+				data:[{$money_data[2]}]
+			},
+		]
+	};
+	chartBudget.setOption(option_budget);
+	window.onresize = function() {
+		chartBudget.resize();
+	};
+</script>

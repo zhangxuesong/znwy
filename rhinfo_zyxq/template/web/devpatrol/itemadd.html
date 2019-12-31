@@ -1,0 +1,180 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />	
+			<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>分类名称</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" disabled value="{$region}-{$item['title']}" />	
+				</div>
+			</div>	
+			<div id="myitem">	
+			{if empty($cateitems)}							
+				<div class="form-group">
+					<input type="hidden" class="form-control" value=""  name="cateid[]">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">巡检标准</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+						<div class="input-group">
+							<span class="input-group-addon">名称</span>								
+							<input type="text" class="form-control"  value="" name="title[]">						
+							<span class="input-group-addon">标准</span>
+							<input type="text" class="form-control"  value="" name="desc[]" style="min-width:400px;">			
+							<span class="input-group-addon">顺序</span>
+							<input type="text" class="form-control"  value="0" name="displayorder[]">
+							<span class="input-group-btn"><button class="btn btn-warning" type="button" onclick="removeitem(this)" ><i class="fa fa-close"></i></button></span>
+						</div>	
+						<div class="input-group">							
+							<span class="input-group-addon">表单</span>		
+							<select name="itemtype[]" class="form-control" onchange="selectChange(this)">
+								<option value="text">字符串(text)</option>
+								<option value="number">数字(number)</option>
+								<option value="textarea">文本(textarea)</option>
+								<option value="radio">单选(radio)</option>
+								<option value="checkbox">多选(checkbox)</option>
+								<option value="select">下拉框(select)</option>								
+								<option value="image">上传图片(image)</option>
+							</select>					
+							<span class="input-group-addon">内容</span>
+							<input type="text" class="form-control"  value="" name="value[]" style="min-width:480px;">
+							<span class="input-group-btn selectimage" style="display:none;"><button class="btn btn-info" type="button" onclick="showImageDialog(this)" ><i class="fa fa-photo"></i></button></span>
+						</div>
+						<span class="help-block">单选、多选、下拉框请输入内容，多值请用“ | ”隔开，如：上 | 中 | 下，其它则为空或选择参考图片</span>
+					</div>
+				</div>	
+			{else}			
+				{loop $cateitems $cateitem}
+				<div class="form-group">
+					<input type="hidden" class="form-control" value="{$cateitem['id']}"  name="cateid[]">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">巡检标准</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+						<div class="input-group">
+							<span class="input-group-addon">名称</span>								
+							<input type="text" class="form-control"  value="{$cateitem['title']}" name="title[]">						
+							<span class="input-group-addon">标准</span>
+							<input type="text" class="form-control"  value="{$cateitem['desc']}" name="desc[]" style="min-width:400px;">			
+							<span class="input-group-addon">顺序</span>
+							<input type="text" class="form-control"  value="{$cateitem['displayorder']}" name="displayorder[]">
+							<span class="input-group-btn"><button class="btn btn-warning" type="button" onclick="delitem(this,{$cateitem['id']})" ><i class="fa fa-close"></i></button></span>
+						</div>	
+						<div class="input-group">							
+							<span class="input-group-addon">表单</span>		
+							<select name="itemtype[]" class="form-control" onchange="selectChange(this)" >
+								<option value="text" {if $cateitem['itemtype']=='text'}selected{/if}>字符串(text)</option>
+								<option value="number" {if $cateitem['itemtype']=='number'}selected{/if}>数字(number)</option>
+								<option value="textarea" {if $cateitem['itemtype']=='textarea'}selected{/if}>文本(textarea)</option>
+								<option value="radio" {if $cateitem['itemtype']=='radio'}selected{/if}>单选(radio)</option>
+								<option value="checkbox" {if $cateitem['itemtype']=='checkbox'}selected{/if}>多选(checkbox)</option>
+								<option value="select" {if $cateitem['itemtype']=='select'}selected{/if}>下拉框(select)</option>								
+								<option value="image" {if $cateitem['itemtype']=='image'}selected{/if}>上传图片(image)</option>
+							</select>					
+							<span class="input-group-addon">内容</span>
+							<input type="text" class="form-control"  value="{$cateitem['value']}" name="value[]" style="min-width:480px;">
+							<span class="input-group-btn selectimage" {if $cateitem['itemtype']=='radio' || $cateitem['itemtype']=='checkbox' || $cateitem['itemtype']=='select'}style="display:none;"{/if}><button class="btn btn-info" type="button" onclick="showImageDialog(this)" ><i class="fa fa-photo"></i></button></span>
+						</div>
+						<span class="help-block">单选、多选、下拉框请输入内容，多值请用“ | ”隔开，如：上 | 中 | 下，其它则为空或选择参考图片</span>
+					</div>
+				</div>	
+				{/loop}			
+			{/if}
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label"></label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<button class="btn btn-success" type="button" onclick="myitem()"><i class="fa fa-plus"></i> 增加标准</button>
+				</div>
+			</div>				
+			<br>
+			<script type="text/javascript">
+				function showImageDialog(elm, opts, options) {
+					require(["util"], function(util){
+						var btn = $(elm);
+						var ipt = btn.parent().prev();
+						var val = ipt.val();
+						
+						options = {'global':false,'class_extra':'','direct':true,'multiple':false,'fileSizeLimit':5120000};
+						util.image(val, function(url){
+							if(url.url){
+								
+								ipt.val(url.attachment);
+								ipt.attr("filename",url.filename);
+								ipt.attr("url",url.url);
+							}
+							if(url.media_id){								
+								ipt.val(url.media_id);
+							}
+						}, options);
+					});
+				}
+				function selectChange(obj){
+					var value = obj.options[obj.selectedIndex].value;
+				   if(value=='radio' || value=='check' || value=='select'){
+						 $(obj).parent().find('.selectimage').hide();
+				   }
+				   else{
+						 $(obj).parent().find('.selectimage').show();
+				   }
+				   $(obj).parent().find("input").val("");
+				}
+		</script>
+		</form>	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){	
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'category')).$mywe['direct'];}";
+	window.scrollTo(0,0);		
+	myprocess(obj);
+	$.post("{php echo $this->createWebUrl($mydo,array('op'=>$_GPC['op'])).$mywe['direct'];}",
+		$("#myform").serializeObject(),
+		function(data,status){
+			 if (data=='ok'){
+				layer.msg('提交成功！',{icon:1});				
+				location.href = url;
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+				$(obj).html('<i class="fa fa-check"></i> 提交'); 
+				$(obj).removeAttr("disabled"); 
+			 }
+		});  
+}
+ 
+function myitem() {
+	$.ajax({
+		url: "{php echo $this->createWeburl($mydo,array('op'=>'itemtpl')).$mywe['direct'];}",
+		cache: false
+	}).done(function (html) {
+		$("#myitem").append(html); 
+	});
+}
+
+function removeitem(obj) {
+	$(obj).parents(".form-group").remove();
+}
+
+function delitem(obj,id) {	
+	 $.post("{php echo $this->createWeburl($mydo,array('op'=>'itemdel')).$mywe['direct'];}", {cateid:id}, function (ret){
+		if(ret=='ok'){
+			$(obj).parents(".form-group").remove();
+		}
+	 });
+}
+
+function myreturn(){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'category')).$mywe['direct'];}";
+	location.href = url;
+}
+
+</script> 
+
+</body>
+</html>

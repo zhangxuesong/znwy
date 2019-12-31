@@ -1,0 +1,79 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" name="myform" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />
+			<input type="hidden" name="pid" value="{$pid}" >
+			<input type="hidden" name="rid" value="{$rid}" >
+			<div class="form-group">				
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">导入方法</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					 <div class="alert alert-danger" role="alert"> 
+						请先导出模板格式，并对应栏位填充内容后再导入，导出模板中ID请勿改动，账单日期务必使用文本格式。
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">导入模板数据</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="file" id="upfile" class="form-control" title="请选择EXCEL文件" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" name="upfile">
+				</div>	
+			</div>
+		   <div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<img src="../addons/rhinfo_zyxq/static/web/images/three.jpg" class="img-responsive"/>
+				</div>	
+			</div>
+		</form>	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	var url = "{php echo $this->createWebUrl($mydo,array('op'=>'three')).$mywe['direct'];}";
+	var filename = document.myform.upfile.value;	
+    if (filename=='') {
+	   layer.msg("没有选择任何文件！",{icon:0});
+	   return;
+	}
+	
+	var formData = new FormData();
+	formData.append('upfile', $('#upfile')[0].files[0]);
+	myprocess(obj);
+	$.ajax({
+		url: "{php echo $this->createWebUrl($mydo,array('op'=>'importthree')).$mywe['direct'];}",
+		type: 'POST',
+		cache: false,
+		data: formData,
+		processData: false,
+		contentType: false,
+		success:function(data){ 			
+			 if (data=='ok'){		
+				layer.msg('导入成功!',{icon:1});
+				location.href = url;		
+			 }
+			 else{
+				var html = '<i class="fa fa-check"></i> 提交';
+				$(obj).html(html);  
+				$(obj).attr("disabled", false); 
+				layer.msg(data,{icon:0});
+			 }
+		} 
+	});
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'three')).$mywe['direct'];}";
+	 location.href = url;
+}
+</script> 
+
+</body>
+</html>

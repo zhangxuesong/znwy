@@ -1,0 +1,196 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+	<input type="hidden" class="form-control" value="{$pid}" name="pid" />
+	<input type="hidden" class="form-control" value="{$rid}" name="rid" />
+	<input type="hidden" class="form-control" value="{$itemid}" name="itemid" />
+	<input type="hidden" class="form-control" value="{$_GPC['bid']}" name="flid" />
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>楼宇</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="bid" name="bid" onchange="renderCategory(this,'unit','tid')">
+				<option value="0">请选择楼宇</option>	
+				{loop $buildings $building}
+					<option value="{$building['id']}" {if $item['bid'] == $building['id']} selected {/if} >{$building['title']}</option>
+				{/loop}			
+			</select>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>单元</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="tid" name="tid" onchange="renderCategory(this,'room','hid')">
+				<option value="0">请选择单元</option>	
+				{loop $eunits $unit}
+					<option value="{$unit['id']}" {if $item['tid'] == $unit['id']} selected {/if} >{$unit['title']}</option>
+				{/loop}				
+			</select>
+		</div>
+	</div>
+	<input type="hidden" id="mhid" value=""  name="mhid" />
+	{if $item['id']}
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>房产</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="hid" name="hid" >
+				<option value="0">请选择房产</option>	
+				{loop $erooms $room}
+					<option value="{$room['id']}" {if $item['hid'] == $room['id']} selected {/if} >{$room['title']}</option>
+				{/loop}				
+			</select>
+		</div>
+	</div>
+	{else}
+	<div class="form-group">		
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>房产</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select multiple="true" class="form-control" id="hid" name="hid" style="height:200px !important;">
+				<option value="0">请选择房产</option>	
+				{loop $erooms $room}
+					<option value="{$room['id']}" >{$room['title']}</option>
+				{/loop}				
+			</select>
+			<span class="help-block">可按shift或ctrl点击多选</span>
+		</div>
+	</div>
+	{/if}
+    <div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>价格</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="input-group">
+				<input type="text" class="form-control" id="price" value="{$item['price']}" placeholder="输入单价" name="price" />
+				 <span class="input-group-addon">元</span>
+			 </div>
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2  control-label">享受折扣</label>	
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+		<input type="text" class="form-control" id="isdiscount" value="{$item['isdiscount']}" placeholder="输入折扣" name="isdiscount">
+		<span class="help-block">请输入折扣1~10这间的数值，为空为不折扣</span>	
+		</div>
+	</div>
+	
+	<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2  control-label">开始日期</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		{php echo tpl_form_field_date('startdate',$item['startdate']);}	
+	</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2  control-label">终止日期</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_date('enddate',$item['enddate']);}	
+		</div>
+	</div>	
+
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>状态</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<label class='radio-inline'><input type="radio" name="status" value="1" {if $item['status'] == 1 || empty($item['status'])} checked="true" {/if} >启用</label>
+			<label class='radio-inline'><input type="radio" name="status" value="2" {if $item['status'] == 2} checked="true" {/if} >禁用</label>										
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">备注</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="remark" value="{$item['remark']}" placeholder="输入备注" name="remark" />
+		</div>	
+	</div>	
+</form>	
+
+<script type="text/javascript">	
+	window._unit = {php echo json_encode($myunit);};
+	window._room = {php echo json_encode($myroom);};
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择</option>';
+			if (id=='bid'){
+				$("#tid").html(html);
+				$("#hid").html(html);
+			}
+			else if(id=='tid'){				
+				$("#hid").html(html);
+			}			
+
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		});
+	}
+</script>
+	</div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+var pid="{$pid}";
+var rid="{$rid}";
+var bid="{$_GPC['bid']}";
+var itemid="{$itemid}";
+var category="{$category}";
+
+function mysubmit(obj){
+	var id = $.trim($("#id").val());
+
+	var bid = $("#bid").find("option:selected").val(); 
+	var tid = $("#tid").find("option:selected").val(); 
+	var hid = $("#hid").find("option:selected").val(); 
+    
+	if (bid=='0') {
+	   layer.msg("楼宇不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (tid=='0') {
+	   layer.msg("单元不能为空！",{icon:0});
+	   return;
+	}
+	if (hid=='0') {
+	   layer.msg("房产不能为空！",{icon:0});
+	   return;
+	}
+	
+	var mhid = getmselect();	
+	$("#mhid").val(mhid);
+		
+	myprocess(obj);
+	$("#myform").submit();	
+}
+function getmselect(){
+	var select = document.getElementById("hid");
+	var str = [];
+	for(i=0;i<select.length;i++){
+		if(select.options[i].selected){
+			str.push(select[i].value);
+		}
+	}
+	return str;
+}
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'roompricelist')).$mywe['direct'];}" + '&pid=' + pid + '&rid=' + rid + '&bid=' + bid + '&itemid=' + itemid + '&category=' + category ;
+	 location.href = url;
+}
+
+</script> 
+
+</body>
+</html>

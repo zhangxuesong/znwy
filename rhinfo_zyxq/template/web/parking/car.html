@@ -1,0 +1,158 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body">  
+		
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+		{if $rights['delete'] == 1}  
+		{if $_W['role'] == 'founder'}
+			<a href="javascript:;" onclick="mydeleteall({$pid},{$rid})" class="btn btn-danger"><i class="fa fa-trash-o"></i> 全部删除</a> {/if}
+		{/if}
+		{if $rights['other1'] == 1}  
+			<a href="javascript:;" onclick="mybatchadd({$pid},{$rid})" class="btn btn-info">
+			<i class="fa fa-plus"></i> 批量添加</a>{/if}
+		{if $rights['add'] == 1}  
+			<a href="javascript:;" onclick="myaddlocation({$pid},{$rid})" class="btn btn-primary">
+			<i class="fa fa-plus"></i> 添加区域</a>{/if}
+			<span class="pull-right" style="line-height:38px;">共有数据：<strong id="count">{$total}</strong> 条</span> 
+	    </div>
+  
+		<div class="panel-body">	
+			{if $rights['query'] == 1}  		
+			{loop $data $k $v}	
+			<div style="margin:15px 10px -10px 10px;">
+				{if $k > 0}<hr>{/if}
+				<span style="position:relative;padding-right:12px;" onmouseenter="myshow({$v['id']})" onmouseleave="myhide({$v['id']})">
+				<a href="javascript:;" {if $rights['edit'] == 1} onclick="myeditlocation({$v['id']},{$v['pid']},{$v['rid']})" {/if} class="btn btn-success btn-sm" style="margin-bottom:10px;margin-right:5px;" data-toggle="tooltip" data-placement="bottom" title="" >{$v['title']}</a>										
+				{if $rights['delete'] == 1}  
+				<a href="javascript:;" class="btn btn-sm" id ="delete{$v['id']}" style="display:none;position:absolute;right:-2px;top:-25px;" onclick="mydellocation(this,{$pid},{$rid},{$v['id']})"><i class="fa fa-close"></i></a>
+				{/if}
+				
+				</span>
+				{loop $v['parkings'] $i $r}
+					<span  style="position:relative;padding-right:12px;" onmouseenter="myrshow({$r['id']})" onmouseleave="myrhide({$r['id']})">
+						<a href="javascript:;" {if $rights['edit'] == 1} onclick="myedit({$r['id']},{$r['pid']},{$r['rid']},{$v['id']})" {/if} class="btn btn-default btn-sm" style="margin-bottom:10px;margin-right:5px;" data-toggle="tooltip" data-placement="bottom" title="" >{$r['title']}</a>
+						{if $rights['delete'] == 1}  
+						<a href="javascript:;" class="btn btn-sm" id ="rdelete{$r['id']}" style="display:none;position:absolute;right:-2px;top:-25px;" onclick="mydelete(this,{$pid},{$rid},{$r['id']})"><i class="fa fa-close"></i></a>
+						{/if}
+
+					</span>					
+				{/loop}
+				
+				<a href="javascript:;" {if $rights['other1'] == 1} {else} disabled {/if} onclick="myadd({$v['pid']},{$v['rid']},{$v['id']})" class="btn btn-default btn-sm" style="margin-bottom:10px;margin-right:5px;" data-toggle="tooltip" data-placement="bottom" title="添加车位" ><i class="fa fa-plus"> 添加车位</i></a>
+				
+			</div>			
+		   {/loop}	
+		{/if}			 
+		</div>
+	</div>
+  </div>
+</div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+var pid = {$pid};
+var rid = {$rid};
+
+function mydeleteall(pid,rid){ 
+	var count = parseInt($("#count").html());
+	if (count == 0){
+		return;
+	}
+	layer.confirm('确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+			$.post("{php echo $this->createWebUrl($mydo,array('op'=>'deleteall')).$mywe['direct'];}",
+				{pid:pid,rid:rid},
+				function(data,status){
+					 if (data=='ok'){
+						layer.closeAll();
+						location.reload();
+					 }
+					 else{
+						layer.msg(data,{icon:0});
+						setTimeout("layer.closeAll();",2000);
+						return false;
+					 }
+				});					
+	});
+}
+function mydelete(obj,pid,rid,id){   	
+	layer.confirm('确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'delete')).$mywe['direct'];}",
+			{pid:pid,rid:rid,id:id},
+			function(data,status){
+				 if (data=='ok'){
+					$(obj).parents("span").remove();
+				 }
+				 else{
+					layer.msg('操作失败',{icon:0});
+					return;
+				 }
+			});		
+		layer.close(index);
+	});
+}
+function myadd(pid,rid,lid){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'add','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid + "&lid=" + lid;
+	window.location.href = url;
+}
+function mybatchadd(pid,rid){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'batchadd','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid; 
+	window.location.href = url;
+}
+
+function myedit(id,pid,rid,lid){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'edit','category'=>$category)).$mywe['direct'];}" + "&id=" + id + "&pid=" + pid + "&rid=" + rid + "&lid=" + lid ;
+	window.location.href = url;
+}
+function myaddlocation(pid,rid){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'addlocation','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid;
+	window.location.href = url;
+}
+function myeditlocation(id,pid,rid){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'editlocation','category'=>$category)).$mywe['direct'];}" + "&id=" + id + "&pid=" + pid + "&rid=" + rid;
+	window.location.href = url;
+}
+function mydellocation(obj,pid,rid,id){   	
+	layer.confirm('确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'dellocation')).$mywe['direct'];}",
+			{pid:pid,rid:rid,id:id},
+			function(data,status){
+				 if (data=='ok'){
+				//	$(obj).parents("span").remove();
+				 }
+				 else{
+					layer.msg('操作失败',{icon:0});
+					return;
+				 }
+			});		
+		layer.close(index);
+		location.reload();		
+	});
+}
+
+function myshow(id){
+	$("#delete"+id).show();
+}
+function myhide(id){
+	$("#delete"+id).hide();
+}
+function myrshow(id){
+	$("#rdelete"+id).show();
+}
+function myrhide(id){
+	$("#rdelete"+id).hide();
+}
+function myreturn(){
+	 var url = "{php echo $this->createWeburl('region',array('op'=>$list,'category'=>$category)).$mywe['direct'];}" + "&pid=" + pid;
+	 window.location.href = url;
+}
+</script>
+</body>
+</html>

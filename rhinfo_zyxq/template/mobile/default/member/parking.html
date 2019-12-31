@@ -1,0 +1,63 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-list-group:not(.fui-list-group-o):before,.fui-list-group:not(.fui-list-group-o):after {border-top: 0px;}
+</style>
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">我的车位</div> 
+		<div class="fui-header-right">&nbsp;</div>
+	</div>
+	<div class='fui-content navbar' >
+		<div class='content-empty' {if !empty($list)}style='display:none;'{/if}>
+			<div class="empty-bg"><i class='icon icon-location'></i></div>
+			<p>您还没有任何车位信息</p>
+		</div>
+	
+	{loop $list $item}
+	<div class="fui-list-group address-item" style='margin-top:5px;'  data-addressid="{$item['id']}">
+	    <div  class="fui-list" >
+		<div class="fui-list-inner">
+		<a href="{$item['url']}">
+		<div class="title"><span class='realname'>{$item['address']}</span> </div>
+				<div class="text">
+					<span class='address'>绑定时间：{php echo date('Y-m-d',$item['ctime']);}&nbsp;&nbsp;绑定车辆：{$item['parking']['carno']}</span>
+					<span class="remark pull-right"></span>
+				</div>				
+			</a>
+		    <div class='bar' >
+			{if $item['parking']['category']==1}
+			<span class="pull-left">有产权{if !empty($item['fee'])}&nbsp;&nbsp;欠费:<font class="text-danger">{$item['fee']}</font>{/if}</span>
+			{else}
+			<span class="pull-left">租期:{php echo date('Y-m-d',$item['parking']['startdate']).'~'.date('Y-m-d',$item['parking']['enddate']);} {if !empty($item['fee'])}&nbsp;&nbsp;待续费:<font class="text-danger">{$item['fee']}</font>{/if}</span>
+			{/if}
+			<span class='pull-right'>
+				 <a data-toggle='delete' class='external'><i class='icon icon-delete text-danger'></i> 删除</a>
+				{if !empty($item['parklock'])}
+					&nbsp;&nbsp;
+					<a data-toggle='control' class='external' data-parkid="{$item['parking']['id']}" data-online="{$item['parklock']['onlineState']}" data-updown="{$item['parklock']['updownState']}">
+						<i class="icon icon-lock {if $item['parklock']['onlineState']==1}text-warning{/if}"></i> {if $item['parklock']['updownState']==1}上升{else}下降{/if}			
+					</a>
+				{/if}
+			</span>			
+		    </div>
+		</div>
+	    </div>
+	</div> 
+	{/loop}   	
+	 </div>
+	 
+    <div class='fui-navbar'>
+	     <a href="{$url}" class='nav-item btn btn-warning external' data-nocache="true"><i class="icon icon-add"></i> 添加车位</a>
+		  <a href="{php echo $this->createMobileurl('car',array('op'=>'parking'));}" class='nav-item btn btn-danger external' data-nocache="true"><i class="icon icon-money"></i> 租赁车位</a>
+    </div>
+    <script language='javascript'>
+		require(['member/parking'], function (modal) {
+				modal.initList();
+		});
+	</script>	
+</div> 
+
+{template $this->mytpl('_footer')}

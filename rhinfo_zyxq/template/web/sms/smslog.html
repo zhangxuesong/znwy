@@ -1,0 +1,31 @@
+﻿{template 'web/_iframe_header'}
+<div class="panel panel-default" >
+  <div class="panel-body">  
+	<div class="panel panel-default">	
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+				<tr>					
+					<th width="60">ID</th>
+					<th width="80">标题</th>
+					<th width="100">手机号码</th>		
+					<th width="100">发送时间</th>
+				</tr>
+			</thead>
+			{loop $data $k $v}
+				<tr>				
+					<td>{$v['id']}</td>										
+					<td><span class="{if $v['io']==1}text-danger{else}text-success{/if}">{$v['title']}</span></td>
+					<td><a style="color:#000;" href="javascript:;" title="{$v['mobile']}">{php echo !empty($v['mobile']) ? substr_replace($v['mobile'],'****',3,4):'';}</a></td>
+					<td>{php echo date('Y-m-d H:i:s', $v['ctime'])}</td>						
+				</tr>
+			{/loop}				
+		</table>
+	  </div>    	  
+	</div>	
+  </div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+</body>
+</html>

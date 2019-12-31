@@ -1,0 +1,208 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+<style>
+	.nav-tabs li a { padding: 3px 10px;}
+	.account-stat-num > div{width:25%; float:left; font-size:16px; text-align:center;}
+	.account-stat-num > div span{display:block; font-size:30px; font-weight:bold;}
+</style>
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body">  
+	<ul class="nav nav-tabs" role="tablist" id="mytabs">		 		  
+		<li role="presentation" {if $_GPC['page']}class="active"{/if}><a href="#feebill" role="tab" data-toggle="tab">缴费记录</a></li>		
+	   <li role="presentation" {if $_GPC['page']}{else}class="active"{/if}><a href="#feetotal" role="tab" data-toggle="tab">缴费统计</a></li>		   
+	</ul>
+	<div class="panel-body">
+			<div class="account-stat-num row">
+				<div>今日缴费金额<span class="text-warning">{php echo !empty($carpayfee['today'])?$carpayfee['today']:0;}</span></div>
+				<div>昨日缴费金额<span class="text-info">{php echo !empty($carpayfee['yesterday'])?$carpayfee['yesterday']:0;}</span></div>				
+				<div>{php echo date('Y-m-d', $starttime);}~{php echo date('Y-m-d', $endtime1);}缴费金额<span class="text-success">{php echo !empty($carpayfee['month'])?$carpayfee['month']:0;}</span></div>
+				<div>{php echo date('Y-m-d', strtotime('-1 year',$endtime));}~{php echo date('Y-m-d', $endtime1);}缴费金额<span class="text-danger">{php echo !empty($carpayfee['total'])?$carpayfee['total']:0;}</span></div>
+			</div>
+	</div>
+    
+	<div class="panel panel-default">
+	    <div class="panel-heading" style="height:60px;">
+			<form action="./index.php" method="get" class="form-inline" role="form" id="form-search">
+				<input type="hidden" name="c" value="site" />
+				<input type="hidden" name="a" value="entry" />
+				<input type="hidden" name="m" value="rhinfo_zyxq" />
+				<input type="hidden" name="do" value="report" />
+				<input type="hidden" name="op" value="carpay" />	
+				<input type="hidden" name="direct" value="1" />
+				
+					<div class="form-group">				
+						<select class="form-control" id="rid" name="rid" onchange="mybuildingselect(this)" style="width:200px;">
+							<option value="">请选择主体</option>
+							{loop $myregions $region}
+								<option value="{$region['id']}" {if $_GPC['rid']==$region['id']}selected{/if}>{$region['title']}</option>	
+							{/loop}
+						</select>
+					</div>
+				
+					<div class="form-group">				
+						<select class="form-control" id="bid" name="bid"  style="width:200px;">
+							<option value="">不限</option>
+							{loop $select_buildings $select_building}
+								<option value="{$select_building['id']}" {if (!empty($_GPC['bid']) && $_GPC['bid']==$select_building['id'])}selected{/if} >{$select_building['title']}</option>	
+							{/loop}
+						</select>
+					</div>
+				
+					<div class="form-group">				
+						{php echo tpl_form_field_daterange('billdate', array('starttime' => date('Y-m-d',$starttime),'endtime' => date('Y-m-d',$endtime1)));}
+					</div>
+				
+					<div class="form-group">				
+						<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>						
+					</div>
+				
+				<span class="pull-right" style="line-height:38px;">总共数据：<strong>{$total}</strong> 条</span> 
+			</form>
+	    </div>
+		
+		<div class="tab-content">
+			 <div role="tabpanel" class="tab-pane {if $_GPC['page']}active{/if}" id="feebill">			 
+				<div class="panel-body table-responsive">
+					<table class="table table-hover">
+						<thead class="navbar-inner">
+						<tr>					
+							<th width="60">ID</th>
+							<th>缴费日期</th>			
+							<th>所属主体</th>
+							<th>停车场</th>
+							<th>缴费类别</th>
+							<th>车牌号码</th>
+							<th>缴费金额</th>						
+							<th>缴费人员</th>
+							<th>备注</th>
+						</tr>
+					</thead>
+					{loop $data $k $v}
+						<tr>
+							<td>{$v['id']}</td>					
+							<td>{php echo date('Y-m-d H:i',$v['ctime'])}</td>
+							<td>{$v['region']}</td>
+							<td>{$v['parklot']}</td>
+							<td>
+								{if $v['category']==1}
+									<span class="label label-success radius">临时缴费</span>
+								{elseif $v['category']==2}
+									<span class="label label-info radius">办理月卡</span>
+								{elseif $v['category']==3}
+									<span class="label label-warning radius">门禁控制</span>
+								{/if}
+							</td>
+							<td>{$v['carno']}</td>
+							<td>{$v['fee']}</td>	
+							<td>{if !empty($v['avatar'])}<img src="{media $v['avatar']}"  width="26" />{/if} {$v['realname']} {$v['address']}</td>	
+							<td>
+								{if $v['category']==1}
+									进出场时间：{php echo !empty($v['starttime']) && !empty($v['endtime'])?$v['starttime'].'~'.$v['endtime']:'';}
+								{elseif $v['category']==2}
+									月卡有效期：{php echo !empty($v['starttime']) && !empty($v['endtime'])?$v['starttime'].'~'.$v['endtime']:'';}
+								{elseif $v['category']==3}
+									进出场时间：{php echo !empty($v['starttime']) && !empty($v['endtime'])?$v['starttime'].'~'.$v['endtime']:'';}
+								{/if}
+							</td>
+						</tr>
+					{/loop}				
+				</table>
+				{$pager}
+			  </div> 
+			</div>
+			 <div role="tabpanel" class="tab-pane {if $_GPC['page']}{else}active{/if}" id="feetotal">
+				<div class="pull-left">
+					<div class="checkbox"><span class="text-warning">&nbsp;&nbsp;缴费金额</span></div>
+				</div>
+				<div class="pull-right">
+					<div class="checkbox">
+						<label style="color:{$color[0]}1)"> <input checked type="checkbox"> 临时缴费</label>&nbsp;
+						<label style="color:{$color[1]}1)"> <input checked type="checkbox"> 办理月卡</label>&nbsp;
+						<label style="color:{$color[2]}1)"> <input checked type="checkbox"> 门禁控制</label>&nbsp;
+					</div>
+				</div>
+				<canvas id="myChart" width="1200" height="300"></canvas>
+			 </div>
+	</div>	
+  </div>
+  </div>
+ </div>
+
+{template 'web/_iframe_footer'}
+
+<script type="text/javascript">
+
+window._region = {php echo json_encode($myregions);};	
+window._building = {php echo json_encode($mybuildings);};
+function mybuildingselect(obj){
+	var index = obj.options[obj.selectedIndex].value;
+	require(['jquery', 'util'], function($, u){
+		var html = '<option value="">不限</option>';
+		for(var i=0; i< window['_building'][index].length; i++){			
+			html += '<option value="'+window['_building'][index][i]['id']+'">'+window['_building'][index][i]['title']+'</option>';
+		}    						
+		$("#bid").html(html);
+	});	
+	
+}
+
+require(['../addons/rhinfo_zyxq/static/lib/chart/chart.min.js'], function(c) {		
+	var chart = null;
+	var chartDatasets = null;
+	var templates = {$lable_tpl};
+	
+	var url = location.href + '&#rhinfo';
+	
+	function refreshData() {		
+		if(!chart || !chartDatasets) {
+			return;
+		}
+		
+		var visables = [];
+		var i = 0;
+		$('.checkbox input[type="checkbox"]').each(function(){
+			if($(this).attr('checked')) {
+				visables.push(i);
+			}
+			i++;
+		});
+		var ds = [];
+		$.each(visables, function(){
+			var o = chartDatasets[this];
+			ds.push(o);
+		});
+		chart.datasets = ds;
+		chart.update();		
+	}
+
+	$.post(url, function(data){
+		var data = $.parseJSON(data)
+		var datasets = data.datasets;
+		if(!chart) {				
+			var label = data.label;
+			var ds = $.extend(true, {}, templates);
+			
+			{php echo $ds_data_temp;}
+			
+			var lineChartData = {
+				labels : label,
+				datasets : [{php echo $ds_temp;}]
+			};
+			
+			var ctx = document.getElementById("myChart").getContext("2d");
+		
+			chart = new Chart(ctx).Line(lineChartData, {					
+				responsive: true
+			});
+			chartDatasets = $.extend(true, {}, chart.datasets);				
+		}
+	});
+	$('.checkbox input[type="checkbox"]').on('click', function(){
+		$(this).attr('checked', !$(this).attr('checked'));
+		refreshData();
+	});
+});
+
+</script>
+</body>
+</html>

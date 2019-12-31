@@ -1,0 +1,81 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />
+			<input type="hidden" name="pid" value="{$pid}" />
+			<input type="hidden" name="rid" value="{$rid}" />
+			<input type="hidden" name="bid" value="{$bid}" />		
+			
+		<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">前缀名称</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="prefix" value="" placeholder="如:A或B-，可不填写" name="prefix">
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>起始编号</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="startnum" value="" placeholder="储物间起始编号" name="startnum" />
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>结束编号</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="endnum" value="" placeholder="储物间结束编号" name="endnum" />
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">编号统一位数</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="digit" value="" placeholder="储物间编号统一位数，可不设定" name="digit" />
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">后缀名称</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="suffix" value="" placeholder="如无后缀，可不填写" name="suffix" />
+				</div>	
+			</div>			
+		</form>	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+var pid = "{$pid}";
+var rid = "{$rid}";
+var bid = "{$bid}";
+
+function mysubmit(obj){
+
+	var startnum = $.trim($("#startnum").val());
+	var endnum = $.trim($("#endnum").val());
+	
+    if (startnum=='') {
+	   layer.msg("起始编号不能为空！",{icon:0});
+	   return;
+	}	
+	if (endnum=='') {
+	   layer.msg("结束编号不能为空！",{icon:0});
+	   return;
+	}	
+	
+    myprocess(obj);
+	$("#myform").submit();
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl('unit',array('op'=>'list','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid + "&bid=" + bid;
+	 location.href = url;
+}
+
+</script> 
+
+</body>
+</html>

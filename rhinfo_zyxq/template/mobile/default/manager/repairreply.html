@@ -1,0 +1,206 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170801">
+<style>
+.verify-pop {
+    position: fixed;
+}
+
+.verify-pop .qrcode {
+    width: 250px;
+    margin-left: -125px;
+    border-radius: 0.3rem;
+    height: auto;
+    overflow: hidden;
+}
+
+.verify-pop.pop .qrcode {
+    width: 90%;
+    margin-left: -45%;
+    overflow: hidden;
+    display: block;
+}
+
+.verify-pop.pop .qrcode .inner .title {
+    text-align: center;
+    font-size: 0.75rem;
+    height: 1.5rem;
+	margin-top:0.5rem;
+
+.fui-cell-group .fui-cell .fui-cell-icon {
+	width:2rem;
+}
+</style>
+<div class='fui-page  fui-page-current order-comment-page'>
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back" ></a>
+	</div>
+	<div class="title">工单处理</div> 
+	<div class="fui-header-right">
+	{if $region['repairpnotice']==1 && $repair['status']<2 && $repairmethod==1}
+		{if $repair['getuid']>0}
+			<a style="color:#666;">已抢</a>
+		{else}
+			<span id="btnSend" class="btn btn-success btn-sm"> 抢单</span>	
+		{/if}
+	{/if}
+	{if $region['repairpnotice']==2 && $repair['status']<2 && $repairmethod==2}
+		{if $repair['getuid']>0}
+			<a style="color:#666;">已派</a>
+		{else}
+			<span id="btnTake" class="btn btn-success btn-sm"> 派单</span>
+		{/if}	
+	{/if}
+	{if $region['repairpnotice']==3 && $repair['status']<2 && $repairmethod==2}
+		{if !empty($repair['getmutiuid'])}
+			<a style="color:#666;">已派</a>
+		{else}
+			<span id="btnTake" class="btn btn-success btn-sm"> 派单</span>
+		{/if}
+	{/if}
+	</div>
+    </div>
+  <div class='fui-content margin navbar'>
+    
+	<div class="fui-title"><i class="icon icon-city"></i> {$housename}</div>
+		  
+	 <div class="fui-cell-group">
+		<div class="goods-label-list">
+			<div class="goods-label-style3">
+				{loop $cate $item}
+					{if $item['id']==$repair['cid']}
+						<span class="cl-3 cl-4 cl-2" ><strong>{$item['title']}</strong></span>
+					{/if}
+				{/loop}			
+			</div>
+			<div class="pull-right">
+				<span><strong class="{$repair['css']}">{$repair['statustext']}</strong></span>			
+			</div>
+			<div style="clear:both;"></div>
+		</div>	    
+		
+		 <div class='fui-cell'>			
+			 <div class='fui-cell-text'>{$repair['content']}</div>
+		 </div> 
+         		 
+	     {if !empty($images)}
+		 <div class='fui-cell'>
+			 <div class='fui-cell-info myrepairimg'>			 
+				 <div class="fui-images fui-images-md image repair-images" >
+				 {loop $images $image}				    
+					<img src="{php echo tomedia($image);}" align="top" onload="if (this.height> 100) {this.style.marginTop = (100 - this.height)/2 + 'px';}"/>					
+				  {/loop}
+				 </div>			
+			 </div>
+		 </div>
+		 {/if}
+	</div>
+  {if !empty($repair_records)}
+	<div class="fui-title">工单流程</div>
+	{loop $repair_records $repair_record}
+	 <div class="fui-cell-group">
+		 <div class='fui-cell'>
+			 <div class='fui-cell-label'>
+			 <img class="round" data-lazy="{$repair_record['headimgurl']}" style="width:35px;"/>
+			  <br>
+			  <span style="color: #999;font-size: 0.5rem;">{$repair_record['ctime']}</span>
+			 </div>
+			 <div class='fui-cell-text'>{$repair_record['content']}</div>
+		 </div>  
+          {if !empty($repair_record['images'])}  		 
+		 <div class='fui-cell'>
+			 <div class='fui-cell-info myreplyimg'>			 
+				 <div class="fui-images fui-images-md image repair-images" >
+				 {loop $repair_record['images'] $reply_image}				    
+					<img src="{php echo tomedia($reply_image);}" align='top' onload="if (this.height> 100) {this.style.marginTop = (100 - this.height)/2 + 'px';}" />					
+				  {/loop}
+				 </div>			
+			 </div>
+		 </div>	
+		{/if}
+	</div>
+	 {/loop}
+	 {/if}
+	 {if $repair['status'] !=='8'}
+	 <div class="fui-cell-group">
+		<input type="hidden" id="repair_id" name="repair_id" value="{$repair['id']}">	
+		<input type="hidden" id="category_type" name="category_type" value="">			
+		<div class="category-type">
+			<p>请您选择工单状态：</p>
+			 <span class="fui-lg-1 fui-md-2 fui-sm-3 fui-xs-4"><a href="javascript:void(0);" data-type="1">待处理</a></span>
+			 <span class="fui-lg-1 fui-md-2 fui-sm-3 fui-xs-4"><a href="javascript:void(0);" data-type="2">处理中</a></span>
+			 <span class="fui-lg-1 fui-md-2 fui-sm-3 fui-xs-4"><a href="javascript:void(0);" data-type="3">已处理</a></span>
+			 <span class="fui-lg-1 fui-md-2 fui-sm-3 fui-xs-4"><a href="javascript:void(0);" data-type="5">已回复</a></span>
+			  <span class="fui-lg-1 fui-md-2 fui-sm-3 fui-xs-4"><a href="javascript:void(0);" data-type="8">已结案</a></span>
+			<div style="clear:both;"></div>
+		</div>	 
+	 
+		 <div class='fui-cell must'>
+			 <div class='fui-cell-label '>内容</div>
+			 <div class='fui-cell-info'><textarea rows="6" placeholder="内容 10-100个字" id='content' name='content'></textarea></div>
+			{if $this->rhinfo_isweixin}<div class='fui-cell-icon'><i class="icon icon-record text-success" style="font-size:1.5rem;"></i></div>{/if}
+		 </div>	
+	 
+	 <div class='fui-cell'>
+		 <div class='fui-cell-label'>晒图</div>
+		 <div class='fui-cell-info'>			 
+			 <ul class="fui-images fui-images-md" id="images"></ul>
+			 <div class="fui-uploader fui-uploader-md"
+				 data-max="3" 
+				 data-count="0"> 				
+			 </div>
+		 </div>
+	 </div>
+	</div>
+	{/if}
+  </div> 
+	{if $repair['status'] !=='8'}
+     <div class='fui-footer'>
+		<a class='btn btn-success btn-submit block'>提交</a>
+	  </div>	    
+	{/if}
+
+		<div class="pop-repair-hidden" style="display: none;">
+		<div class='fui-mask-m visible'></div>
+			<div class="verify-pop pop">
+			 <div class="close"><i class="icon icon-roundclose"></i></div>
+				<div class="qrcode">
+					<div class="inner">
+						<div class="title">请选择服务人员</div>
+					</div>
+					<div class="fui-icon-group noborder">
+						{if $repairmethod==2}
+							{if $region['repairpnotice']==2}
+								{loop $repairusers $user}
+									<a class="fui-icon-col takeuid" href="javascript:;" data-teamid="{$user['id']}" >
+										<div class="icon">{if !empty($user['avatar'])}<img src="{php echo tomedia($user['avatar'])}" class="circle" />{else}<img src="../addons/rhinfo_zyxq/static/mobile/images/head.jpg" class="circle" />{/if}</div>
+										<div class="text">{$user['realname']}</div>
+									</a>
+								{/loop}
+							{/if}
+							{if $region['repairpnotice']==3}
+								{loop $repairusers $user}
+									<a class="fui-icon-col" href="javascript:;" data-teamid="{$user['id']}" >
+										<div class="icon">{if !empty($user['avatar'])}<img src="{php echo tomedia($user['avatar'])}" class="circle" />{else}<img src="../addons/rhinfo_zyxq/static/mobile/images/head.jpg" class="circle" />{/if}</div>
+										<div class="text">{$user['realname']}</div>
+										<div class="text"><input type="checkbox" name="checkbox" class="fui-radio fui-radio-success check-item" /></div>
+									</a>
+								{/loop}								
+							{/if}
+						{/if}
+					</div>	
+					{if $region['repairpnotice']==3 && $repairmethod==2 }
+					<a id="btnSubmit" class="btn btn-success btn-submit block">一键派单</a>
+				   {/if}
+				</div>
+			</div>
+		</div>
+
+	 <script language='javascript'>
+		require(['manager/repair'], function (modal) {
+			modal.initReply({id:"{$repair['id']}",rid: "{$myrid}"}); 
+		});
+	</script>	
+</div> 
+
+{template $this->mytpl('_footer')}

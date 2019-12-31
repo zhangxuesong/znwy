@@ -1,0 +1,52 @@
+{template $this->mytpl('_header')}
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back" ></a>
+		</div>
+		<div class="title">公告列表</div>
+		<div class="fui-header-right"></div>
+	</div>
+
+	<div class='fui-content navbar'>
+		<div class="container"></div>
+		<div class="content-empty" style="display:none;">
+		<i class="icon {php echo empty($this->syscfg['icon2'])?'icon-mark1':$this->syscfg['icon2'];}"></i>
+		<br/>暂时没有任何公告</div>
+        <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+	</div>
+  
+	<script type="text/html" id="tpl_notice_list">
+    <%each list as row%>
+    <div class="fui-card fui-card-list " style="overflow:hidden;">
+        <a class='fui-card-info'  data-nocache='true' href='{php echo $this->createMobileurl('notice',array('op'=>'detail'))}&id=<%row.id%>'>
+			<div class="img" style="margin-top:-0.2rem;">
+				<div class="<%row.css%>" style="font-size:0.85rem;">周<%row.week%></div>
+				<div class="subtitle"> <%row.cdate%></div>
+			</div>
+			<div class="text">                        
+				<span class="title <%row.css%>"><%row.title%></span>
+				<span class="subtitle">发布时间： <%row.ctime%>&nbsp;&nbsp;阅读：<%row.times%></span>
+			</div>
+        </a>
+        <div class='fui-card-btns'>
+            <a data-nocache='true' href="{php echo $this->createMobileurl('notice',array('op'=>'detail'))}&id=<%row.id%>"><i class="icon icon-comment <%row.css%>"></i><span class="<%row.css%>"><%row.isread%></span></a>          
+            <a data-nocache='true' href="{php echo $this->createMobileurl('notice',array('op'=>'detail'))}&id=<%row.id%>"><i class="icon icon-search <%row.css%>"></i><span class="<%row.css%>">详情</span></a>
+        </div>
+    </div>
+    <%/each%>
+	</script>
+	<script language='javascript'>
+		require(['notice/board'], function (modal) {
+			modal.init({
+			   pid:"{php echo empty($user['pid'])? 0:$user['pid']}",
+			   rid:"{php echo empty($user['rid'])? 0:$user['rid']}",
+			   bid:"{php echo empty($user['bid'])? 0:$user['bid']}",
+			   tid:"{php echo empty($user['tid'])? 0:$user['tid']}"
+			});
+		});
+	</script>
+ </div>
+
+{template $this->mytpl('_menu')}
+{template $this->mytpl('_footer')}

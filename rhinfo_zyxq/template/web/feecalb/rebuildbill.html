@@ -1,0 +1,192 @@
+{template 'web/_layer_header'}
+<style>
+html { overflow-x:hidden; }
+</style>
+<nav class="navbar navbar-fixed-top" style="margin-top:5px;margin-right:20px;">
+<span class="pull-right"><a href="javascript:;" class="btn btn-success"  onclick="mysubmit(this)"><i class="fa fa-plus"></i> 开始生成</a></span>   
+</nav> 
+<div class="panel panel-default" style="width:580px;">
+    <div class="panel-body">    
+	<div class="alert alert-success mymsg" role="alert" style="display:none;"></div>
+	
+	<form action="" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />		
+	<input type="hidden" class="form-control" id="pid" value="{$_GPC['pid']}" name="pid" />
+	<input type="hidden" class="form-control" id="rid" value="{$_GPC['rid']}" name="rid" />
+	<input type="hidden" class="form-control" id="bid" value="{$_GPC['bid']}" name="bid" />
+	<input type="hidden" class="form-control" id="category" value="{$_GPC['category']}" name="category" />
+	
+	<div class="form-group">
+			<label class="control-label"><span class="text-danger">*</span>收费项目</label>
+			
+			<!--效果html开始-->
+			<div class="selectbox">
+			<div class="select-bar">
+				<span class="text-warning">请选择收费项目</span>
+				<select multiple="multiple" id="select1" class="form-control">
+					{loop $list_feeitems $feeitem}
+					<option value="{$feeitem['id']}">{if $isbfeeitem==1}{$feeitem['feeitemtitle']}{else}{$feeitem['title']}{/if}</option>
+					{/loop}
+				</select>				
+			</div>
+
+			<div class="btn-bar">
+				<p><span id="add"><input type="button" class="btn" value=">" title="移动选择项到右侧"/></span></p>
+				<p><span id="add_all"><input type="button" class="btn" value=">>" title="全部移到右侧"/></span></p>
+				<p><span id="remove"><input type="button" class="btn" value="<" title="移动选择项到左侧"/></span></p>
+				<p><span id="remove_all"><input type="button" class="btn" value="<<" title="全部移到左侧"/></span></p>
+			</div>
+			<div class="select-bar">
+				<span class="text-success">已选择收费项目</span>
+				<select multiple="multiple" id="select2" class="form-control">					
+				</select>				
+			</div>	
+			</div>
+			<!--效果html结束-->			
+			</div>	
+	
+	
+	<div class="form-group" style="display:none;">
+		<label class="control-label">开始日期</label>
+			{php echo tpl_form_field_date('nextenddate',strtotime(date('Y',time()).'-01-01'));}
+			<span class="help-block">账单生成开始日期，注意开始日期不可任意输入，根据你想重新生成的账单日期来定</span>			
+
+	</div>	
+	
+	<div class="form-group" style="display:none;">
+		<label class="control-label">生成期数</label>
+			<input type="text" class="form-control" id="paymonths" value="1" placeholder="输入期数" name="paymonths" readonly />
+			<span class="help-block">仅生成1期，不可修改</span>
+	</div>	
+	
+	
+	<div class="form-group">
+		<label class="control-label">备注</label>
+			<input type="text" class="form-control" id="remark" value="" placeholder="输入备注" name="remark" />
+	</div>	
+	
+</form>	
+	<script type="text/javascript">	
+	 $(function(){	
+		//移到右边
+		$('#add').click(function(){
+			//先判断是否有选中
+			if(!$("#select1 option").is(":selected")){			
+				layer.msg("请选择需要移动的选项",{icon:0})
+			}
+			//获取选中的选项，删除并追加给对方
+			else{
+				$('#select1 option:selected').appendTo('#select2');
+			}	
+		});
+		
+		//移到左边
+		$('#remove').click(function(){
+			//先判断是否有选中
+			if(!$("#select2 option").is(":selected")){			
+				layer.msg("请选择需要移动的选项",{icon:0})
+			}
+			else{
+				$('#select2 option:selected').appendTo('#select1');
+			}
+		});
+		
+		//全部移到右边
+		$('#add_all').click(function(){
+			//获取全部的选项,删除并追加给对方
+			$('#select1 option').appendTo('#select2');
+		});
+		
+		//全部移到左边
+		$('#remove_all').click(function(){
+			$('#select2 option').appendTo('#select1');
+		});
+		
+		//双击选项
+		$('#select1').dblclick(function(){ //绑定双击事件
+			//获取全部的选项,删除并追加给对方
+			$("option:selected",this).appendTo('#select2'); //追加给对方
+		});
+		
+		//双击选项
+		$('#select2').dblclick(function(){
+			$("option:selected",this).appendTo('#select1');
+		});
+		
+	});
+	</script>
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	var feeitemstr='';	
+	$('#select2 option').each(function () {
+		var $option = $(this);
+		feeitemstr += $option.val() + '_';		
+	});
+	    
+	feeitemstr = feeitemstr.substring(0,feeitemstr.length - 1);	
+	var nextenddate = $.trim($("input[name='nextenddate']").val());
+	var remark = $.trim($("#remark").val());
+	var paymonths = $.trim($("#paymonths").val());
+	var ret;
+	
+	if (feeitemstr=='') {
+	   layer.msg("收费项目还未选择！",{icon:0});
+	   return;
+	}
+	
+	myprocess(obj);	
+	$(".mymsg").append('正在准备创建账单.....<br>');
+	$(".mymsg").show();
+	setTimeout(function(){	
+		$(".mymsg").show();		
+		ret = createbill(1,feeitemstr,nextenddate,remark);
+		if(ret>0){
+		   $(".mymsg").append('创建' + ret + '个账单！<br>');
+		}
+		else{
+			$(".mymsg").append('<span class="text-danger">请点击房号检查是否符合账单收费项目日期</span><br>');
+		}		
+		$(".mymsg").append('创建账单完成.');
+		myreset(obj)
+		layer.msg('创建账单完成!',{icon:1});	
+		setTimeout("myclose()",4000);
+	},0);				
+}
+
+function createbill(paymonths,feeitemstr,nextenddate,remark){
+	var loadindex = layer.load(2);
+	var result = 0;
+	$.ajax({  
+         type : "post",  
+          url : "{php echo $this->createWebUrl($mydo,array('op'=>'rebuildbill','pid'=>$_GPC['pid'],'rid'=>$_GPC['rid'],'bid'=>$_GPC['bid'],'tid'=>$_GPC['tid'],'hid'=>$_GPC['hid'],'isbfeeitem'=>$isbfeeitem)).$mywe['direct'];}",  
+          data : {paymonths:paymonths,feeitems:feeitemstr,nextenddate:nextenddate,remark:remark},   
+          async : false,  
+          success : function(data){  
+			  layer.close(loadindex);
+			  result = data;
+          }  
+     }); 
+	 return result;
+}
+
+function myprocess(obj){
+	var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/> 处理中...';
+	$(obj).html(html);  
+	$(obj).attr("disabled", "disabled"); 
+}
+function myreset(obj){
+	var html = '<i class="fa fa-plus"></i> 创建完成';
+	$(obj).html(html);  
+//	$(obj).removeAttr("disabled"); 
+}
+
+</script> 
+
+</body>
+</html>

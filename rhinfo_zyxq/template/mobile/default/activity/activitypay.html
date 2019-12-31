@@ -1,0 +1,73 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/activity.css?v={TIMESTAMP}">
+<div class="fui-page fui-page-current">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">参加活动</div>
+		<div class="fui-header-right"></div>
+	</div>
+	<div class="fui-content navbar">
+		<div class="activity-info">
+			<h3>{$item['title']}</h3>
+			<span class="range"><i class="icon icon-clock"></i>起止日期:&nbsp;&nbsp;<font>{php echo date('Y-m-d',$item['startdate']).'~'.date('Y-m-d',$item['enddate']);}</font></span>
+			{if !empty($item['signmoney'])}<span class="cost"><i class="icon icon-recharge"></i>活动费用:&nbsp;&nbsp;<font>{$item['signmoney']}元/{php echo $item['signmeas']==1?'户':'人';}</font></span>{/if}
+		</div>
+		<div class="table-view"> 
+			<div class="table-view-cell">
+				<div class="navigate-right" href="#">
+					活动成员
+					<button type="button" onclick="window.location.href='add.html'">添加成员</button>
+				</div>
+				<ul class="member-view">
+					<li class="member-cell">
+						<div class="del-toggle"><span></span></div>
+						<div class="member">
+							<span>王长贵</span>
+							<span>18556832398</span>
+						</div>
+						<button type="button" class="btnDelete">删除</button>
+					</li>
+					<li class="member-cell">
+						<div class="del-toggle"><span></span></div>
+						<div class="member">
+							<span>王长贵</span>
+							<span>18556832398</span>
+						</div>
+						<button type="button" class="btnDelete">删除</button>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="fui-footer">
+		<div class="checkInfo">
+			<font>&yen;22元</font>(共1人)
+		</div>
+		<button type="button" class="toPay">去付款</button>
+	</div>
+</div>
+<script type="text/javascript">
+	$(".del-toggle").click(function(){
+		var $this=$(this);
+		var $btnDelete=$this.closest(".member-cell").find(".btnDelete");
+		if(!$this.hasClass("active")){
+			$this.animate({},function(){
+				$this.css({'transform':'rotate(90deg)'})
+			});
+		}
+		else{
+			$this.animate({},function(){
+				$this.css({'transform':'rotate(0)'})
+			});
+		}
+		$this.toggleClass("active");
+		$btnDelete.toggle()
+	})
+	
+	$(".btnDelete").click(function(){
+		$(this).closest(".member-cell").remove();
+	})
+</script>
+{template $this->mytpl('_footer')}

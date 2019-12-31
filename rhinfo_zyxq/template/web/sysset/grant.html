@@ -1,0 +1,203 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">   
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+		<input type="hidden" name="token" value="{$_W['token']}" />	
+		<input type="hidden" name="id" id="id" value="{$item['id']}" />			
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label"> <span class="text-danger">*</span>选择公众号</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<select class="form-control"  name="weid" id="weid" {if $operation=='edit'}disabled{/if}>
+					{if $operation=='add'}<option value="0">请选择</option>{/if}
+					{loop $account $k $v}
+						<option value="{$v['uniacid']}" {if $item['weid'] == $v['uniacid']} selected {/if} >{$v['name']}</option>
+					{/loop}
+				</select>				
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">限制主体数量</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<input type="number" class="form-control" id="limitqty" value="{$item['limitqty']}" placeholder="输入可建立主体数量" name="limitqty">		
+				<span class="help-block">为0则不限制，默认为0，允许该公众号下建立主体数量</span>		
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">限制充电桩数量</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<input type="number" class="form-control" id="chargingqty" value="{$item['chargingqty']}" placeholder="输入可建立充电桩数量" name="chargingqty">		
+				<span class="help-block">为0则不限制，默认为0，允许该公众号下建立主充电桩数量</span>		
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">限制相关支付设置</label>
+			<div class="col-sm-7 col-lg-8 col-xs-12">
+				<label class="radio-inline">
+					<input type="radio" name="ispayset" value="0" {if empty($item['ispayset']) || $item['ispayset']==0 } checked{/if} /> 不限制</label>
+				<label  class="radio-inline">
+					<input type="radio" name="ispayset" value="1" {if $item['ispayset']==1 } checked{/if} /> 限制</label>
+				<span class="help-block">用于限制系统配置中的支付、WAP、小程序参数权限</span>			
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">限制系统平台设置</label>
+			<div class="col-sm-7 col-lg-8 col-xs-12">
+				<label class="radio-inline">
+					<input type="radio" name="issysset" value="0" {if empty($item['issysset']) || $item['issysset']==0 } checked{/if} /> 不限制</label>
+				<label  class="radio-inline">
+					<input type="radio" name="issysset" value="1" {if $item['issysset']==1 } checked{/if} /> 限制</label>
+				<span class="help-block">用于限制系统配置中的平台设置及API接口设置</span>			
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>状态</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<label class='radio-inline'><input type="radio" name="status" value="1" {if $item['status'] == 1 || empty($item['status'])} checked {/if} >启用</label>
+				<label class='radio-inline'><input type="radio" name="status" value="2" {if $item['status'] == 2} checked="true" {/if} >禁用</label>										
+			</div>
+		</div>
+		<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">菜单权限</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+			{loop $mymenus $i $m}
+			<div class="panel panel-default" style="margin-top:-15px">
+				<div class="panel-heading">
+					<label class="checkbox-inline">
+						<input type="checkbox" name="menus" class='perm-all' value="{$m['id']}" data-group="{$m['id']}" {if $m['sys']==1} checked {/if}><b>{$m['title']}</b>
+					</label>
+				</div>
+				<table class="table">
+				 <tr>
+					<td>
+					{loop $m['submenus'] $k $v}						
+						<label class="checkbox-inline">
+						&nbsp;&nbsp;<input type="checkbox" class="perm-sub" name="prgs" value="{$v['sid']}.{$v['id']}" data-group="{$v['sid']}" data-child="{$v['id']}" {if $v['prg']==1} checked {/if}>{$v['title']}</label>												
+					{/loop}
+					</td>
+				</tr>
+				</table>
+			</div>
+			{/loop}
+			</div>
+		</div>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+ $(function(){
+	$('.perm-all').click(function(){
+		var checked = $(this).get(0).checked;			
+		var group = $(this).data('group');
+		$(".perm-item[data-group='" + group + "']").each(function(){
+			$(this).get(0).checked = checked;
+		})
+		$(".perm-sub[data-group=" + group + "]").each(function(){
+			$(this).get(0).checked = checked;
+		})
+	})
+	
+	$('.perm-sub').click(function(){
+		var checked = $(this).get(0).checked;
+		var group = $(this).data('group');			
+		var child = $(this).data('child');
+		var check = false;
+		$(".perm-item[data-child='" + child + "']").each(function(){
+			$(this).get(0).checked = checked;
+		})
+		
+		$(".perm-sub[data-group='" +group + "']").each(function(){
+			if($(this).get(0).checked){
+				 check = true;
+				 return false;
+			}
+		})			
+		$(".perm-all[data-group=" + group + "]").get(0).checked = check;
+	})
+	
+	$('.perm-item').click(function(){
+		var checked = $(this).get(0).checked;
+		var group = $(this).data('group'); 
+		var child = $(this).data('child');			
+		var check = false;
+
+		$(".perm-item[data-child='" + child + "']").each(function(){
+		  if($(this).get(0).checked){
+			   check = true;
+			   return false;
+			}
+		});
+	   $(".perm-sub[data-child=" + child + "]").get(0).checked = check;
+	   
+	   $(".perm-sub[data-group='" + group + "']").each(function(){
+		  if($(this).get(0).checked){
+			   check = true;
+			   return false;
+			}
+		});
+	   $(".perm-all[data-group=" + group + "]").get(0).checked = check;
+		
+	});
+ });
+	
+</script> 
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+<script type="text/javascript">
+var uniacid = "{$mywe['weid']}";
+function mysubmit(obj){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'account')).$mywe['direct'];}";
+	var title = $.trim($("#title").val());
+	var status = $("input[name=status]:checked").val();
+	var issysset = $("input[name=issysset]:checked").val();
+	var ispayset = $("input[name=ispayset]:checked").val();
+    var weid = $("#weid").find("option:selected").val();
+	var limitqty = $.trim($("#limitqty").val());
+	var chargingqty = $.trim($("#chargingqty").val());
+	var id = $("#id").val(); 	
+	var remark = $("#remark").val(); 
+	var perms = [],menus = [],prgs = []; 
+	    
+	$('input[name="menus"]:checked').each(function(){ 
+		menus.push($(this).val()); 
+	});
+	$('input[name="prgs"]:checked').each(function(){ 
+		prgs.push($(this).val()); 
+	});
+	$('input[name="perms"]:checked').each(function(){ 
+		perms.push($(this).val()); 
+	});
+
+	myprocess(obj);
+
+	$.post("{php echo $this->createWebUrl($mydo,array('op'=>$operation)).$mywe['direct'];}",
+	{weid:weid,id:id,limitqty:limitqty,ispayset:ispayset,issysset:issysset,status:status,menus:menus,prgs:prgs,perms:perms,chargingqty:chargingqty},
+	function(data,status){
+		 if (data=='ok'){
+			layer.msg('保存成功！',{icon:1});
+			if(uniacid==weid){
+				parent.location.reload();
+			}
+			else{
+				location.href = url;
+			}
+		 }
+		 else{
+			layer.msg(data,{icon:0});
+			$(obj).html("提交");  
+			$(obj).attr("disabled", ""); 
+		 }
+	});
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'account')).$mywe['direct'];}";
+	 location.href = url;
+}
+</script> 
+
+</body>
+</html>

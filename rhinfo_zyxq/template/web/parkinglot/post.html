@@ -1,0 +1,59 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:30px;" >
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/form'}	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'list')).$mywe['direct'];}";
+	var id = $.trim($("#id").val());
+	var title = $.trim($("#title").val());
+	var pid = $("#pid").find("option:selected").val();
+	var rid = $("#rid").find("option:selected").val(); 
+
+	if (pid=='0') {
+	   layer.msg("所属物业不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (rid=='0') {
+	   layer.msg("所属主体不能为空！",{icon:0});
+	   return;
+	}
+
+	if (title=='') {
+	   layer.msg("停车场名称不能为空！",{icon:0});
+	   return;
+	}
+	myprocess(obj);
+	$.post("{php echo $this->createWebUrl($mydo,array('op'=>$_GPC['op'])).$mywe['direct'];}" + '&' + $("#myform").serialize(),
+		{},
+		function(data,status){
+			 if (data=='ok'){
+				layer.msg('操作成功！',{icon:1});				
+				location.href = url;
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+				$(obj).html('<i class="fa fa-check"></i> 提交'); 
+				$(obj).removeAttr("disabled"); 
+			 }
+		});   	
+}
+
+function myreturn(){
+	window.history.back();
+}
+
+</script> 
+
+</body>
+</html>

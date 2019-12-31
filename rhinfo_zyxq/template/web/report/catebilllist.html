@@ -1,0 +1,195 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+<style>
+	.nav-tabs li a { padding: 3px 10px;}
+	.account-stat-num > div{width:25%; float:left; font-size:16px; text-align:center;}
+	.account-stat-num > div span{display:block; font-size:30px; font-weight:bold;}
+</style>
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body">  
+	<ul class="nav nav-tabs" role="tablist" id="mytabs">		 		  
+		<li role="presentation" {if ($_GPC['page'] && empty($_GPC['isroom']))}class="active"{/if}><a href="#feebill" role="tab" data-toggle="tab">账单记录</a></li>		
+	   <li role="presentation" {if ($_GPC['page'] && empty($_GPC['isroom']))}{else}class="active"{/if}><a href="#feetotal" role="tab" data-toggle="tab">统计分析</a></li>		   
+	</ul>
+	<div class="panel-body">
+			<div class="account-stat-num row">
+				<div>滞纳60天金额<span class="text-warning">{php echo !empty($paybill['today'])?$paybill['today']:0;}</span></div>
+				<div>滞纳120天金额<span class="text-warning">{php echo !empty($paybill['yesterday'])?$paybill['yesterday']:0;}</span></div>				
+				<div>滞纳360天金额<span class="text-warning">{php echo !empty($paybill['month'])?$paybill['month']:0;}</span></div>
+				<div>待缴费总额<span class="text-danger">{php echo !empty($paybill['nopay'])?$paybill['nopay']:0;}</span></div>
+			</div>
+	</div>
+    
+	<div class="panel panel-default">
+	    <div class="panel-heading" style="height:60px;">
+			<form action="./index.php" method="get" class="form-inline" role="form" id="form-search">
+				<input type="hidden" name="c" value="site" />
+				<input type="hidden" name="a" value="entry" />
+				<input type="hidden" name="m" value="rhinfo_zyxq" />
+				<input type="hidden" name="do" value="report" />
+				<input type="hidden" name="op" value="billlist" />	
+				<input type="hidden" name="direct" value="1" />
+			
+				<div class="form-group">				
+					<select class="form-control" id="rid" name="rid" style="width:200px;">
+						{loop $myregions $region}
+							<option value="{$region['id']}" {if $_GPC['rid']==$region['id']}selected{/if}>{$region['title']}</option>	
+						{/loop}
+					</select>
+				</div>
+			
+				<div class="form-group">				
+					<select class="form-control" id="category" name="category" style="width:200px;">
+						<option value="1" {if $_GPC['category']==1}selected{/if} >房屋</option>
+						<option value="2" {if $_GPC['category']==2}selected{/if}>商铺</option>
+						<option value="3" {if $_GPC['category']==3}selected{/if}>储物间</option>
+						<option value="4" {if $_GPC['category']==4}selected{/if}>车位</option>			
+					</select>
+				</div>
+			
+				<div class="form-group">				
+					{php echo tpl_form_field_date('billdate', $starttime);}
+				</div>
+			
+				<div class="form-group">						
+					&nbsp;<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>								
+				</div>
+				
+				<span class="pull-right" style="line-height:38px;">总共数据：<strong>{$total}</strong> 条</span> 
+			</form>
+	    </div>
+		
+		<div class="tab-content">
+			 <div role="tabpanel" class="tab-pane {if $_GPC['page'] && empty($_GPC['isroom'])}active{/if}" id="feebill" >			 
+				<div class="panel-body table-responsive">
+					<table class="table table-hover">
+						<thead class="navbar-inner">
+						<tr>					
+							<th width="60">ID</th>
+							<th>收费项目</th>			
+							<th>所属主体</th>
+							<th>楼宇或区</th>
+							<th>房屋或商铺</th>
+							<th width="200">账单日期</th>							
+							<th>费用</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					{loop $data $k $v}
+						<tr>
+							<td>{$v['id']}</td>					
+							<td>{$v['title']}</td>
+							<td>{$v['region']}</td>
+							<td>{$v['building']}</td>
+							<td>{$v['address']}</td>
+							<td>{$v['daterange']}</td>							
+							<td><span class="label label-warning">{$v['fee']}</span></td>	
+							<td>
+							<a  href="javascript:;" onclick="mybill({$v['rid']},{$v['hid']},{$v['category']},'{$v['address']}')" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="账单明细"><i class="fa fa-file-pdf-o"></i> 查看账单</a>
+							</td>	
+						</tr>
+					{/loop}				
+				</table>
+				{$pager}
+			  </div> 
+			</div>
+			 <div role="tabpanel" class="tab-pane {if $_GPC['page'] && empty($_GPC['isroom'])}{else}active{/if}" id="feetotal">
+				<div class="pull-left">
+					<div class="checkbox"><span class="text-warning">&nbsp;&nbsp;金额</span></div>
+				</div>
+				<div class="pull-right">
+					<div class="checkbox">
+						{loop $chartitems $i $chartitem}
+						<label style="color:{$chartitem['color']}1)"><input checked type="checkbox"> {$chartitem['title']}</label>&nbsp;
+						{/loop}
+					</div>
+				</div>
+				<canvas id="myChart" width="1200" height="300" ></canvas>
+			 </div>
+	</div>	
+  </div>
+  </div>
+ </div>
+</div>
+
+{template 'web/_iframe_footer'}
+
+<script type="text/javascript">
+
+require(['../addons/rhinfo_zyxq/static/lib/chart/chart.min.js'], function(c) {		
+	var chart = null;
+	var chartDatasets = null;
+	var templates = {$feeitem_tpl};
+	
+	function refreshData() {		
+		if(!chart || !chartDatasets) {
+			return;
+		}
+		
+		var visables = [];
+		var i = 0;
+		$('.checkbox input[type="checkbox"]').each(function(){
+			if($(this).attr('checked')) {
+				visables.push(i);
+			}
+			i++;
+		});
+		var ds = [];
+		$.each(visables, function(){
+			var o = chartDatasets[this];
+			ds.push(o);
+		});
+		chart.datasets = ds;
+		chart.update();		
+	}
+
+	var url = location.href + '&#rhinfo';
+
+	$.post(url, function(data){
+		var data = $.parseJSON(data)
+		var datasets = data.datasets;
+		if(!chart) {				
+			var label = data.label;
+			var ds = $.extend(true, {}, templates);
+			
+			{php echo $ds_data_temp;}
+			
+			var lineChartData = {
+				labels : label,
+				datasets : [{php echo $ds_temp;}]
+			};
+			
+			var ctx = document.getElementById("myChart").getContext("2d");
+		
+			chart = new Chart(ctx).Line(lineChartData, {					
+				responsive: true
+			});
+			chartDatasets = $.extend(true, {}, chart.datasets);				
+		}
+	//	refreshData();
+	});
+
+	$('.checkbox input[type="checkbox"]').on('click', function(){
+	//	$('.checkbox').find('input[type=checkbox]').not(this).attr("checked", false);
+		$(this).attr('checked', !$(this).attr('checked'));
+		refreshData();
+	});
+});
+
+function mybill(rid,hid,category,address){
+	var url= "{php echo $this->createWeburl($mydo,array('op'=>'mybill','status'=>1)).$mywe['direct']}"+'&rid=' + rid +'&hid=' + hid + '&category=' + category;
+	var title = '<i class="fa fa-hand-o-right"></i> {$navtitle}&nbsp;&gt;&nbsp;{$current}-'+address;	
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url,
+		area: ['600px','480px'],
+		fix: false, 
+		shade:0.4
+	});
+	layer.full(index);
+}
+
+</script>
+</body>
+</html>

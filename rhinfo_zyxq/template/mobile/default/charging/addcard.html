@@ -1,0 +1,47 @@
+{template $this->mytpl('_header')}
+{if !empty($this->syscfg['btncolor'])}
+    <style>
+		#btnSubmit {
+			background-color:{php echo $this->syscfg['btncolor']};
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+		}
+		#btnSubmit:active,
+		#btnSubmit.disabled {
+			background: {php echo $this->syscfg['btncolor']};			
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+			opacity:0.5;
+		}
+    </style>
+{/if}
+<style>
+	.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+	.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+</style>
+<div class='fui-page fui-page-current'>
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back" ></a>
+		</div>
+		<div class="title">绑定卡号</div>
+		<div class="fui-header-right">&nbsp;</div>
+	</div>
+	
+	<div class='fui-content'>
+		<div class="fui-cell-group">			
+			<div class="fui-cell">
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input' style="height:2rem;font-size:1rem;" id='cardno' name='cardno' placeholder="输入卡片号码"  value="" />
+				</div>
+			</div>
+		</div>
+
+		<a href='#' id='btnSubmit' class='btn btn-success block'>提交</a>
+	</div>
+	<script language='javascript'>
+		require(['charging/charging'], function (modal) {
+		  	modal.initAddcard();
+		});	
+</script>
+</div>
+{template $this->mytpl('_footer')}
+

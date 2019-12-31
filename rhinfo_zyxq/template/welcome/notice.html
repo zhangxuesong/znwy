@@ -1,0 +1,23 @@
+{template 'common/header'}
+<div class="notice-show">
+	<div class="we7-padding">
+		<ol class="breadcrumb we7-breadcrumb">
+			<a href="{url 'account/welcome'}"><i class="wi wi-back-circle"></i></a>
+			<li class="active"><a href="{php echo url('article/notice-show/list');}">公告列表</a></li>
+			<li class="active">{$notice['title']}</li>
+		</ol>
+		<div class="panel we7-panel news-detail">
+			<div class="panel-heading text-center">
+				<h3 class="text-center">{$notice['title']}</h3>
+				<div class="small text-center text-muted">
+					<span>{php echo date('Y-m-d H:i', $notice['createtime']);}</span>
+					<span>阅读：{$notice['click']}次</span>
+				</div>
+			</div>
+			<div class="panel-body we7-padding">
+				{php echo html_entity_decode($notice['content'], ENT_QUOTES)}
+			</div>
+		</div>
+	</div>
+</div>
+{template 'common/footer'}

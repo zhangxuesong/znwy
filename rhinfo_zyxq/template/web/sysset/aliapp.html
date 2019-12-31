@@ -1,0 +1,103 @@
+﻿	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">应用网关URL</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" value="{$_W['siteroot']}aliapi.php?i={$_W['uniacid']}" disabled />
+			<span class="help-block">请复制链接填写至蚂蚁金服开放平台开发配置</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">生活号(原服务窗)APPID</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="alipay_life_appid" value="{$item['alipay_life_appid']}" placeholder="输入APPID" name="alipay_life_appid">
+			<span class="help-block">蚂蚁服务开平台获取.</span>
+		</div>		
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">支付宝公钥PUBLIC_KEY</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<textarea class="form-control" name="alipay_life_key[ali_public]" rows="6" autocomplete="off">{$item['alipay_life_key']['ali_public']}</textarea>	
+			<span class="help-block">蚂蚁服务开平台获取</span>
+		</div>	
+	</div>	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">应用公钥PUBLIC_KEY</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<textarea class="form-control" name="alipay_life_key[public]" rows="6" autocomplete="off">{$item['alipay_life_key']['public']}</textarea>	
+			<span class="help-block">蚂蚁服务开平台获取</span>
+		</div>	
+	</div>	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">应用私钥PRIVATE_KEY</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<textarea class="form-control" name="alipay_life_key[private]" rows="6" autocomplete="off">{$item['alipay_life_key']['private']}</textarea>	
+			<span class="help-block">蚂蚁服务开平台获取</span>
+		</div>	
+	</div>	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">小程序应用APPID</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="alipay_app_appid" value="{$item['alipay_app_appid']}" placeholder="输入APPID" name="alipay_app_appid">
+			<span class="help-block">蚂蚁服务开平台获取.</span>
+		</div>		
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">支付宝公钥PUBLIC_KEY</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<textarea class="form-control" name="alipay_app_key[ali_public]" rows="6" autocomplete="off">{$item['alipay_app_key']['ali_public']}</textarea>	
+			<span class="help-block">蚂蚁服务开平台获取</span>
+		</div>	
+	</div>	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">应用公钥PUBLIC_KEY</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<textarea class="form-control" name="alipay_app_key[public]" rows="6" autocomplete="off">{$item['alipay_app_key']['public']}</textarea>	
+			<span class="help-block">蚂蚁服务开平台获取</span>
+		</div>	
+	</div>	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">应用私钥PRIVATE_KEY</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<textarea class="form-control" name="alipay_app_key[private]" rows="6" autocomplete="off">{$item['alipay_app_key']['private']}</textarea>	
+			<span class="help-block">蚂蚁服务开平台获取</span>
+		</div>	
+	</div>	
+	 <div class="form-group" >
+		<label class="col-xs-12 col-sm-3 col-md-2 control-label">小程序标题</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">		
+			<input type="text" name="alipay_app_title" id="alipay_app_title" class="form-control" value="{$item['alipay_app_title']}" placeholder="输入小程序标题"  autocomplete="off"/>
+			<span class="help-block">用于打包小程序进入页面的标题</span>
+		</div>
+	</div>
+	<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">小程序URL</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<div class="input-group">	
+		   <input type="text" name="alipay_app_url" id="alipay_app_url" class="form-control" placeholder="输入URL" value="{$item['alipay_app_url']}" />
+		   <div class="input-group-btn">	
+				<button class="btn btn-success" type="button" onclick="mydownload_aliapp(this);" {if $_W['isfounder']}{else}disabled{/if} >打包下载</button>
+			</div>
+	   </div>
+	   <span class="help-block">必须支持https，且已通过域名验证，输入时请包含https，且以/结尾，打包下载后请用支付宝小程序开发工具上传.</span>
+	</div>	
+</div>
+<script type="text/javascript">
+	function mydownload_aliapp(){	
+		var aliappurl = $("#alipay_app_url").val();
+		var aliminititle = $("#alipay_app_title").val();
+		if(aliappurl == ''){
+		   layer.msg('小程序URL不可为空',{icon:0});
+		   return
+		}
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'aliapp')).$mywe['direct'];}",
+		{aliappurl:aliappurl,aliminititle:aliminititle},
+		function(data,status){	
+			 var ret = data.replace(/(^\s*)|(\s*$)/g, "");  
+			 if(ret=='ok'){				
+				window.open("{php echo $_W['siteroot'].'addons/rhinfo_zyxq/data/aliapp.zip';}", '_self');		
+			 }
+			 else{				
+				layer.msg(data,{icon:0});
+			 }
+		});
+	}
+</script>

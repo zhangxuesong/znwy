@@ -1,0 +1,67 @@
+{template $this->mytpl('_bheader')}
+{if !empty($this->syscfg['btncolor'])}
+    <style>
+		#btnSubmit {
+			background-color:{php echo $this->syscfg['btncolor']};
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+		}
+		#btnSubmit:active,
+		#btnSubmit.disabled {
+			background: {php echo $this->syscfg['btncolor']};			
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+			opacity:0.5;
+		}
+    </style>
+{/if}
+
+<div class='fui-page fui-page-current'>
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">登记车辆</div>
+		<div class="fui-header-right">&nbsp;</div>
+	</div>
+	
+	<div class='fui-content'>
+		<div class="fui-title"><i class="icon icon-taxi"> 车牌号码</i></div>
+		<div class="fui-cell-group">
+			<input type="hidden" id="carid" value="{$item['id']}" />
+			<div class="fui-cell">
+				<div class="car_input" data-pai="{$item['carno']}">
+					<ul class="clearfix ul_input"><li class="input_pro hasPro"><span>{$plate[0]}</span></li><li class="input_pp input_zim ppHas"><span>{$plate[1]}</span></li><li class="input_pp ppHas"><span>{$plate[2]}</span></li><li class="input_pp ppHas"><span>{$plate[3]}</span></li><li class="input_pp ppHas"><span>{$plate[4]}</span></li><li class="input_pp ppHas"><span>{$plate[5]}</span></li><li class="input_pp ppHas"><span>{$plate[6]}</span></li><li class="input_pp"><span style="background:#04ab02;color:#fff;">{$plate[7]}</span></li></ul>
+				</div>					 
+			</div>
+			<div class="fui-cell-tip" >	绿色栏位为新能源牌照填写</div>
+			<div id="jp_pro"></div>	
+			
+			<div class="fui-cell">
+				<div class="fui-cell-label">年审日期</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input' id='checkdate' name='checkdate' placeholder="输入年审日期" readonly value="{$item['checkdate']}" />
+				</div>
+			</div>
+			<div class="fui-cell">
+				<div class="fui-cell-label">保险单号</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input' id='safeno' name='safeno' placeholder="输入保险单号"  value="{$item['safeno']}" />
+				</div>
+			</div>
+			<div class="fui-cell">
+				<div class="fui-cell-label">备注</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input' id='remark' name='remark' placeholder="输入备注"  value="{$item['remark']}" />
+				</div>
+			</div>
+		</div>
+
+		<a href='#' id='btnSubmit' class='btn btn-success block'>提交</a>
+	</div>
+	<script language='javascript'>
+		require(['service/car'], function (modal) {
+		  	modal.init({post:'editcar'});
+		});	
+</script>
+</div>
+{template $this->mytpl('_footer')}
+

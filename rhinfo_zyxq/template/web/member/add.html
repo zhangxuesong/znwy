@@ -1,0 +1,59 @@
+{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:30px;">
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/form'}	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	var realname = $.trim($("#realname").val());
+	var nickname = $.trim($("#nickname").val());
+	var pid = $("#pid").find("option:selected").val();
+	var rid = $("#rid").find("option:selected").val(); 
+    
+	if (pid=='0') {
+	   layer.msg("所属物业不能为空！");
+	   return;
+	}
+	
+	if (rid=='0') {
+	   layer.msg("所属主体不能为空！");
+	   return;
+	}
+	if (realname=='') {
+	   layer.msg("姓名不能为空！");
+	   return;
+	}
+	if (nickname=='') {
+	   layer.msg("昵称不能为空！");
+	   return;
+	}
+	$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+	{ post:'add',op:"check",realname:realname},
+	function(data,status){
+	 if (data=='ok'){		
+		myprocess(obj);
+		$("#myform").submit();
+	 }
+	 else{
+		layer.msg(data);
+		return ;
+	 }
+	});	
+}
+
+function myreturn(){
+	 window.history.back();
+}
+
+</script> 
+
+</body>
+</html>

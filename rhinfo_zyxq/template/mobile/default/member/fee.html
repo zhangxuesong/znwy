@@ -1,0 +1,41 @@
+{template $this->mytpl('_header')}
+
+<div class='fui-page  fui-page-current member-cart-page'>
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back"></a>
+	</div>
+	<div class="title">我的账单</div> 
+	<div class="fui-header-right" ></div>
+    </div>
+
+    <div class='fui-content ' >
+    {if empty($list)}
+		<div class='content-empty'>
+			 <i class='icon icon-money'></i><br/>您还没有任何账单<br/>			
+		</div>
+	{else}
+		{loop $list $item}
+	    <div class="fui-list goods-item align-start" >
+			<div class="fui-list-media editmode">
+			   <input type="checkbox" name="checkbox" class="fui-radio fui-radio-danger edit-item"/>
+			</div> 			
+			<div class="fui-list-media image-media">
+				{if !empty($item['thumb'])}
+				<a href="{$item['url']}">
+				<img src="{php echo tomedia($item['thumb']);}" class="round">
+				</a>
+				{/if}
+			</div>
+			<div class="fui-list-inner">		 
+				<a href="{$item['url']}">
+				<div class="title"> {$item['address']}</div>
+				<div class="text">{if !empty($item['fee'])}累计欠费:<span class="text-danger">￥{$item['fee']}</span>{else}暂无欠费{/if}</div>	
+				</a>
+			</div>			
+	    </div>
+		{/loop}
+	 {/if}
+    </div>
+</div>
+{template $this->mytpl('_footer')}

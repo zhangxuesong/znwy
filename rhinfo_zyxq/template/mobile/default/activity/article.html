@@ -1,0 +1,35 @@
+{loop $articles $article}
+	{if $article['images']}
+	<li>
+		<a class="act_link" href="{php echo $this->createMobileurl('article',array('op'=>'detail','id'=>$article['id']))}">
+		<h3>{if $article['isrecommand']==1}<span class="tag_bg">荐</span>{/if}{$article[title]}</h3>	
+		<div class="list_image">
+		<ul class="clearfix">
+		{loop $article['images'] $image}
+		<li class="list_img_holder_pic"><img src="{php echo tomedia($image);}"></li>
+		{/loop}
+		</ul>
+		</div>
+		<div class="item_info_pic">
+		<span class="src space">{php echo date('Y-m-d H:i:s',$article['ctime'])}</span>
+		<span class="cmt space">阅读&nbsp;{$article['times']}</span>
+		</div>		
+		</a>
+	</li>
+	{else}
+	<li>
+		<a class="act_link" href="{php echo $this->createMobileurl('article',array('op'=>'detail','id'=>$article['id']))}">
+		<div class="desc">		
+		<h3>{if $article['isrecommand']==1}<span class="tag_bg">荐</span>{/if}{$article[title]}</h3>		
+		<div class="item_info">		
+		<span class="src space">{php echo date('Y-m-d H:i:s',$article['ctime'])}</span>
+		<span class="cmt space">阅读&nbsp;{$article['times']}</span>
+		</div>
+		</div>
+		<div class="list_img_holder">
+			{if !empty($article[thumb])}<img src="{php echo tomedia($article[thumb]);}">{/if}
+		</div>
+		</a>
+	</li>
+	{/if}
+{/loop}

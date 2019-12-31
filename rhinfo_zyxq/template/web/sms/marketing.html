@@ -1,0 +1,168 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<style type="text/css">
+.nav-tabs li a { padding: 3px 10px;}
+</style>
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body"> 
+	<ul class="nav nav-tabs">		 		  
+		  <li><a href="{php echo $this->createWeburl('category',array('op'=>'list','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >分类设置</a></li>		
+		   <li><a href="{php echo $this->createWeburl('sms',array('op'=>'base','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >基本设置</a></li>
+		   <li><a href="{php echo $this->createWeburl('sms',array('op'=>'fee','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >账单设置</a></li>
+		  {if !empty($_W['uid'])}<li class="active"><a href="{php echo $this->createWeburl('sms',array('op'=>'market','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >策略设置</a></li>{/if}
+		   <li><a href="{php echo $this->createWeburl('printer',array('op'=>'list','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >云打印机</a></li>
+		   <li><a href="{php echo $this->createWeburl('sms',array('op'=>'index','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >短信设置</a></li>
+		    {if !empty($_W['uid'])}<li><a href="{php echo $this->createWeburl('sms',array('op'=>'intelligence','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >智慧设置</a></li>{/if}
+		   <li><a href="{php echo $this->createWeburl('sms',array('op'=>'door','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >其他设置</a></li>
+	</ul>
+	<br>
+	<div class="tab-content">			
+		<div class="panel panel-default">	
+			<div class="panel-body ">
+				<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >		
+					<input type="hidden" name="token" value="{$_W['token']}" />			
+					<input type="hidden" name="pid" value="{$pid}" />		
+					<input type="hidden" name="rid" value="{$rid}" />				
+					<div class="form-group" >
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定送积分</label>
+						<div class="col-sm-8 col-lg-9 col-xs-12">
+							<div class="input-group">
+							   <input type="number" name="bindcredit" class="form-control" value="{$item['bindcredit']}" />
+							   <span class="input-group-addon">积分</span>
+						   </div>							
+						</div>
+					</div>						
+		<div class="form-group" >
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">积分抵扣费用</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<div class="input-group">
+					<span class="input-group-addon">积分</span>
+				   <input type="text" name="paycredit" class="form-control" value="{$item['paycredit']}" />
+				   <span class="input-group-addon">抵扣</span>
+				   <input type="text" name="paycost" class="form-control" value="{$item['paycost']}" />
+				   <span class="input-group-addon">元，最多抵扣</span>
+				   <input type="text" name="payrate" class="form-control" value="{$item['payrate']}" />	
+					 <span class="input-group-addon">%</span>
+			   </div>
+			   <span class="help-block">积分低于设定则抵扣.</span>
+			</div>			
+		</div>
+		<div class="form-group" >
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">缴费送积分</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<div class="input-group">
+					 <span class="input-group-addon">缴费</span>
+				   <input type="text" name="cost" class="form-control" value="{$item['cost']}" />
+				   <span class="input-group-addon">元 ，赠送</span>
+				   <input type="text" name="credit" class="form-control" value="{$item['credit']}" />
+				   <span class="input-group-addon">积分</span>
+				</div>
+				<span class="help-block">缴费金额低于设定则不送.</span>
+			</div>	
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定成功跳转</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+			{if !empty($_W['uid'])}
+				<div class="input-group ">
+					<input type="text" class="form-control" id="bindsuccessurl" value="{$item['bindsuccessurl']}" placeholder="输入链接地址" name="bindsuccessurl">
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="button" onclick="showLinkDialog(this);">系统链接</button>
+					</span>
+				</div>
+			{else}
+				<input type="text" class="form-control" id="bindsuccessurl" value="{$item['bindsuccessurl']}" placeholder="输入链接地址" name="bindsuccessurl">
+			{/if}
+				<span class="help-block">外部链接请包含http://或https://</span>
+			</div>	
+		</div>	
+		<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">支付成功跳转</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+				{if !empty($_W['uid'])}
+					<div class="input-group ">
+						<input type="text" class="form-control" id="paysuccessurl" value="{$item['paysuccessurl']}" placeholder="输入跳转地址" name="paysuccessurl">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" onclick="showLinkDialog(this);">系统链接</button>
+						</span>
+					</div>
+				{else}
+					<input type="text" class="form-control" id="paysuccessurl" value="{$item['paysuccessurl']}" placeholder="输入跳转地址" name="paysuccessurl">
+				{/if}	
+					<span class="help-block">请输入网址 ,外部链接请包含http://或https://</span>
+				</div>		
+			</div>			
+		<script>
+			function showLinkDialog(elm) {
+				var ipt = $(elm).parent().prev();
+				util.linkBrowser(function(href){		
+					ipt.val(href);			
+				});
+			}
+		</script>
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">绑定红包策略</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<select class="form-control"  name="bindstrategyid"  >
+					<option value="0">无</option>
+					{loop $redpackets $red}
+						<option value="{$red['id']}" {if $item['bindstrategyid'] == $red['id']} selected {/if} >{$red['title']}</option>
+					{/loop}
+				</select>
+				<span class="help-block">绑定注册房产，送红包策略</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">缴费红包策略</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<select class="form-control"  name="feestrategyid"  >
+					<option value="0">无</option>
+					{loop $redpackets $red}
+						<option value="{$red['id']}" {if $item['feestrategyid'] == $red['id']} selected {/if} >{$red['title']}</option>
+					{/loop}
+				</select>	
+				<span class="help-block">在线缴费，送红包策略</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">邀请红包策略</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<select class="form-control"  name="invitestrategyid"  >
+					<option value="0">无</option>
+					{loop $redpackets $red}
+						<option value="{$red['id']}" {if $item['invitestrategyid'] == $red['id']} selected {/if} >{$red['title']}</option>
+					{/loop}
+				</select>	
+				<span class="help-block">邀请绑定注册房产，送红包策略</span>
+			</div>
+		</div>
+
+			<div class="col-lg-9 col-xs-12 col-sm-offset-2" style="margin-top:8px;">   
+				<button  class="btn btn-primary" ><i class="fa fa-save"></i> 保存</button>
+				<a href="javascript:;" class="btn btn-default"  onclick="myreturn()"><i class="fa fa-reply"></i> 返回<a/>
+			</div>
+		</form>
+				
+		</div> 
+	</div>  
+	</div>
+	</div>	
+  </div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+var pid = {$pid};
+var rid = {$rid};
+
+function myreturn(){
+	var url = "{php echo $this->createWeburl('region',array('op'=>$rlist,'category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid;	
+	window.location.href = url;
+}
+
+</script>
+</body>
+</html>

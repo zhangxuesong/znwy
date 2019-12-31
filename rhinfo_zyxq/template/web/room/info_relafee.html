@@ -1,0 +1,39 @@
+﻿<div class="panel panel-default" >
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>					
+					<th width="60">ID</th>
+					<th width="100">收费项目</th>
+					<th width="150">账单日期</th>
+					<th width="80">状态</th>
+					<th width="80">费用</th>
+					<th width="80">实付</th>
+					<th width="70">支付方式</th>
+					<th width="100">付款时间</th>
+					<th width="120">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			{loop $relafeebill $fee_rela}
+				<tr>					
+					<td>{$fee_rela['id']}</td>					
+					<td>{$fee_rela['title']}</td>					
+					<td>{$fee_rela['daterange']}</td>
+					<td class="td-status">
+					{if $fee_rela['status']=='1'}<span class="label label-danger radius">未支付</span>{elseif $fee_rela['status']=='2'}<span class="label label-success radius">已支付</span>{else}<span class="label label-warning radius">免单</span>{/if}
+					</td>
+					<td>{$fee_rela['fee']}</td>
+					<td>{$fee_rela['payfee']}</td>					
+					<td>{$fee_rela['paytype']}</td>
+					<td>{$fee_rela['paydate']}</td>	
+					<td>
+					<a href="javascript:;" data-href="{php echo $this->createWeburl('fee',array('op'=>'mybill','hid'=>$fee_rela['hid'],'category'=>$fee_rela['category'])).$mywe['direct'];}" data-title="{$fee_rela['address']}房产&账单"  onclick="parent.myopen(this)" class="btn btn-default btn-sm"><i class="fa fa-money"></i> 综合收款</a>
+					<a href="javascript:;" data-href="{php echo $this->createWeburl('fee',array('op'=>'mytbill','hid'=>$fee_rela['hid'],'id'=>$fee_rela['id'])).$mywe['direct'];}" data-title="{$fee_rela['address']}房产&账单"  onclick="parent.myopen(this)" class="btn btn-default btn-sm"><i class="fa fa-money"></i> 合并收款</a>										
+					</td>
+				</tr>
+			{/loop}	
+			</tbody>
+		</table> 		
+	</div>	
+</div>

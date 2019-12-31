@@ -1,0 +1,83 @@
+﻿<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">API访问</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="isopenapi" value="1" {if $item['isopenapi']==1 } checked{/if} /> 开启</label>
+		<label  class="radio-inline">
+			<input type="radio" name="isopenapi" value="0" {if empty($item['isopenapi']) || $item['isopenapi']==0 } checked{/if} /> 关闭</label>
+		<span class="help-block">关闭状态API接口，APP、小程序及第三调用都不可访问</span>			
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-sm-2 col-md-2 col-xs-12 control-label">访问密钥</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<div class="input-group">
+			<input type="text" name="api_token" class="form-control" value="{$item['api_token']}" />
+			<span class="input-group-addon" style="cursor:pointer" onclick="tokenGen();">生成新的</span>
+		</div>
+		<span class="help-block">第三方系统访问密钥，访问地址：<a href="{php echo $_W['siteroot'].'addons/rhinfo_zyxq/zywyapi.php';}?i={$_W['uniacid']}" target="_blank">{php echo $_W['siteroot'].'addons/rhinfo_zyxq/zywyapi.php';}?i={$_W['uniacid']}</a></span>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-sm-2 col-md-2 col-xs-12 control-label">示例代码</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+<figure class="highlight">
+<pre>
+<code class="language-html" data-lang="html">
+/*php示例代码*/
+
+header("Content-type: text/html; charset=utf-8"); 
+
+//访问密钥
+$token="{$item['api_token']}"; 
+
+//提交参数
+$post_data = array(
+	'op'=>'region',  
+	'city'=>'苏州市',
+	'page'=>1,
+	'psize'=>20
+);
+
+//生成签名
+$package = $post_data;
+ksort($package);
+$string1 = '';
+foreach($package as $key => $v) {
+	if (empty($v)) {
+		continue;
+	}
+	$string1 .= $key.'='.$v.'&';
+}
+$string1 .= "token=".$token;
+$sign = strtoupper(md5($string1));
+
+//提交参数附上签名
+$post_data['sign']=$sign;
+
+//访问地址
+$url = "{php echo $_W['siteroot'].'addons/rhinfo_zyxq/zywyapi.php';}?i={$_W['uniacid']}";
+
+//提交到服务器
+$curl = curl_init();
+curl_setopt($curl, CURLOPT_URL, $url);
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+curl_setopt($curl, CURLOPT_POST, 1);
+curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
+
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+$rs = curl_exec($curl);
+curl_close($curl);
+
+//返回数据
+$rs	= json_decode($rs,1);	
+print_r($rs);
+exit;
+</code>
+</pre>
+</figure>
+		<span class="help-block"><a href="../addons/rhinfo_zyxq/upfile/apidoc.doc">下载说明文档</a></div>
+	</div>
+</div>

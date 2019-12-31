@@ -1,0 +1,43 @@
+{template $this->mytpl('_pheader')}
+<div class="fui-page shop-index-page page-merch-list">
+    <div class="fui-header">
+      <div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">城市</div>
+		<div class="fui-header-right"></div>
+    </div>
+    <div class="fui-content">
+        <div class='fui-content-inner'>			
+			<div class='content-empty' style='display:none;'>
+                <i class='icon icon-lights'></i><br/>抱歉，还没有任何小区
+            </div>
+            <div class='container'></div>    
+			 <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+        </div>
+    </div>   	
+</div>
+<script type="application/javascript">
+    wx.ready(function () {
+         wx.getLocation({
+            type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+            success: function (res) {
+                var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                var speed = res.speed; // 速度，以米/每秒计
+                var accuracy = res.accuracy; // 位置精度
+				core.html('home/listcity',{lat:latitude,lng:longitude,fromop:"{$fromop}"}, function(html){
+					if (html=='') {			
+						$('.content-empty').show();													
+					} 
+					else {				
+						$('.content-empty').hide();			
+						$('.container').html(html);				
+					}
+					$('.fui-content').infinite('stop');
+				},false,true);			  			
+            }
+        });       
+    }); 
+</script>		
+{template $this->mytpl('_footer')}

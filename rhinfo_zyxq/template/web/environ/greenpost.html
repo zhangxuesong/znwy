@@ -1,0 +1,108 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle'}
+
+<div class="panel panel-default" style="padding-top:30px;">
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/greenform'}	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	var vegeid = $("#vegeid").val();
+	var vegename = $("#vegename").val();
+	var kind = $("#kind").val();
+	var treeage = $("#treeage").val();
+	var num = $("#num").val();
+	var pid = $("#pid").find("option:selected").val(); 
+	var rid = $("#rid").find("option:selected").val();  
+	var lid = $("#lid").find("option:selected").val();  
+	var bid = $("#bid").find("option:selected").val();  
+	var tid = $("#tid").find("option:selected").val();  
+	var hid = $("#hid").find("option:selected").val();  
+
+	if (pid == '0') {
+	   layer.msg("所属物业不能为空！",{icon:0});
+	   return;
+	}
+	if (rid == '0') {
+	   layer.msg("所属主体不能为空！",{icon:0});
+	   return;
+	}
+
+	if (lid == '0') {
+	   layer.msg("所属区域不能为空！",{icon:0});
+	   return;
+	}
+
+	if (bid == '0') {
+	   layer.msg("所属楼宇不能为空！",{icon:0});
+	   return;
+	}
+
+	if (tid == '0') {
+	   layer.msg("所属单元不能为空！",{icon:0});
+	   return;
+	}
+
+	if (hid == '0') {
+	   layer.msg("负责人不能为空！",{icon:0});
+	   return;
+	}
+
+	if (vegeid =='') {
+	   layer.msg("请填写植被编号！",{icon:0});
+	   return;
+	}
+
+	if (vegename =='') {
+	   layer.msg("请填写植被名称！",{icon:0});
+	   return;
+	}
+
+	if (kind =='') {
+	   layer.msg("请填写种类！",{icon:0});
+	   return;
+	}
+
+	if (treeage =='') {
+	   layer.msg("请填写树龄！",{icon:0});
+	   return;
+	}
+
+	if (num =='') {
+	   layer.msg("请填写数量！",{icon:0});
+	   return;
+	}
+
+	var loadindex = layer.load(2);
+	myprocess(obj);
+	$.ajax({
+		url: "{php echo $this->createWeburl($mydo,array('op'=>$_GPC['op'])).$mywe['direct'];}",
+		type: 'POST',
+		cache: false, 
+		data: $("#myform").serializeObject(),	
+		success:function(data){
+			layer.close(loadindex);
+			layer.msg("成功!",{icon:1});
+			setTimeout(function(){
+				var url = "{php echo $this->createWeburl($mydo,array('op'=>'green')).$mywe['direct'];}";
+	 			location.href = url;
+			},1500);
+		} 
+	});
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'green')).$mywe['direct'];}";
+	 location.href = url;
+}
+
+</script> 
+
+</body>
+</html>

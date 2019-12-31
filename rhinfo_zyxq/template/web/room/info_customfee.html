@@ -1,0 +1,62 @@
+﻿<div class="panel panel-default" >
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>					
+					<th width="60">ID</th>
+					<th width="80">收费项目</th>
+					<th width="80">计算方式</th>
+					<th width="60">周期</th>
+					<th width="60">数量</th>
+					<th width="80">单位</th>
+					<th width="60">价格</th>
+					<th width="100">账单日期</th>
+					<th width="80">备注</th>							
+					<th width="120">操作&nbsp;&nbsp;<a href="javascript:;" class="text-danger" onclick="myaddcustom()"><i class="fa fa-plus"></i></a></th>
+				</tr>
+			</thead>
+			<tbody>
+			{loop $room_feeitems $rfv}
+				<tr>					
+					<td>{$rfv['id']}</td>	
+					<td>{$rfv['title']}</td>	
+					<td>{$rfv['calmethod']}</td>	
+					<td>{$rfv['paymonths']}</td>						
+					<td>{$rfv['qty']}</td>
+					<td>{$rfv['measure']}</td>
+					<td>{$rfv['price']}</td>
+					<td>{php echo date('Y-m-d',$rfv['billdate']);}</td>
+					<td>{$rfv['remark']}</td>
+					<td>
+					{if $rights['edit'] == 1}
+					<a href="javascript:;" onclick="myeditcustom({$rfv['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="修改自定收费"><i class="fa fa-edit"></i> 修改</a>{/if}			
+					
+					{if $rights['delete'] == 1}
+					<a href="javascript:;" onclick="mydelcustom(this,{$rfv['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="删除自定收费"><i class="fa fa-trash"></i> 删除</a>{/if}			
+					
+					</td>												
+				</tr>
+			{/loop}	
+			</tbody>
+		</table> 
+	</div>	
+</div>
+<script type="text/javascript">
+function mydelcustom(obj,id){
+	layer.confirm('确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl('room').$mywe['direct'];}",
+			{op:"delcustom",id:id},
+			function(data,status){
+			 if (data=='ok'){
+				$(obj).parents("tr").remove();
+				layer.msg('删除成功!',{icon:1});
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+			 }
+		});		
+		layer.close(index);
+    });
+}
+</script>

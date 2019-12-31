@@ -1,0 +1,100 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/rhui/css/mui.picker.css">
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/rhui/css/mui.poppicker.css">
+
+<style>
+.mui-btn-blue,.mui-btn-primary{
+	color: #fff;
+	border: 1px solid #04ab02;
+	background-color: #04ab02;
+}
+.mui-btn{
+	border:none;
+	background-color:none;
+}
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+</style>
+<div class='fui-page fui-page-current'>	
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">自助缴费</div> 
+		<div class="fui-header-right" >&nbsp;</div>
+	</div>
+	<div class='fui-content'>	
+		<form action="{php echo $this->createMobileUrl($mydo,array('op'=>'prefeebill'));}" method="post" id="myform">						
+			<div class="fui-cell-group">				
+				<div class="fui-cell must">
+					<div class="fui-cell-label">我的房产</div>
+					<div class="fui-cell-info">
+						<input type="text" class='fui-input' id='myhouse' name='myhouse' readonly placeholder="请选择"  value="{$member['address']}" />
+						<input id="hid" type="hidden" name="hid" value="{$member['id']}" />
+					</div>
+				</div>
+						
+				<div class="fui-cell must">
+					<div class="fui-cell-label">收费项目</div>
+					<div class="fui-cell-info">
+						<input type="text" class='fui-input' id='myfeeitem' name='myfeeitem' readonly placeholder="请选择"  value="" />
+						<input id="feeitemid" type="hidden" name="feeitemid" value="" />
+					</div>
+				</div>
+			</div>
+		</form>
+        <div class="btn btn-success block" id="btnSubmit">下一步</div>      
+	</div>
+</div>
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.min.js"></script>		
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.picker.js"></script>			
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.poppicker.js"></script>	
+<script>
+	var myhouses = {php echo json_encode($houses);};	
+	var myfeeitems = {php echo json_encode($feeitems);};
+	(function($, doc){
+		$.init();
+		$.ready(function() {
+			var myhousePicker = new $.PopPicker();
+			var myfeeitemPicker = new $.PopPicker();
+			
+			myhousePicker.setData(myhouses);		
+			var housePickerButton = doc.getElementById('myhouse');
+			var hidResult = doc.getElementById('hid');
+			
+			myfeeitemPicker.setData(myfeeitems);
+			var feeitemPickerButton = doc.getElementById('myfeeitem');
+			var feeitemidResult = doc.getElementById('feeitemid');
+			
+			housePickerButton.addEventListener('tap', function(event) {
+				myhousePicker.show(function(items) {			
+					hidResult.value=items[0].value;
+					housePickerButton.value=items[0].text;
+					core.json('fee/prepayfee',{mid:items[0].value}, function (json) {
+						myfeeitemPicker.setData(json.result.list);
+						feeitemPickerButton.value = "";
+						feeitemidResult.value = "";
+						
+					}, true, true);				
+					//return false;
+				});
+			}, false);			
+			
+			feeitemPickerButton.addEventListener('tap', function(event) {
+				myfeeitemPicker.show(function(items) {
+					if(items[0].value == null) { 
+					}
+					else{
+						feeitemPickerButton.value=items[0].text;				
+						feeitemidResult.value=items[0].value;
+					}				
+					//return false;
+				});
+			}, false);
+		});
+	})(mui, document);
+	require(['fee/prepay'], function (modal) {
+		modal.init();
+	});
+	</script>
+{template $this->mytpl('_footer')}

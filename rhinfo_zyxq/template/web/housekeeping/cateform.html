@@ -1,0 +1,46 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+	<input type="hidden" name="parentid" id="parentid" value="{php echo !empty($item['parentid'])?$item['parentid']:$_GPC['parentid'];}" />	
+	{if !empty($_GPC['parenttitle'])}
+	 <div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">上级分类</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" disabled value="{$_GPC['parenttitle']}">
+		</div>
+	</div>	
+	{/if}
+	
+	 <div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">排序</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" placeholder="数字越大，排名越靠前" name="displayorder" value="{$item['displayorder']}">
+		</div>
+	</div>	
+	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>分类名称</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入分类名称" name="title" />
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">分类图标</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_image(thumb,$item['thumb']);}
+			<span class="help-block">建议尺寸60*60</span>
+		</div>	
+	</div>
+
+	<div class="form-group">
+	<label class="col-sm-2 col-md-2 col-xs-12 control-label">是否显示</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="enabled" value="1" {if $item['enabled']==1 } checked{/if} />显示</label>
+		<label  class="radio-inline">
+			<input type="radio" name="enabled" value="2" {if empty($item['enabled']) || $item['enabled']==2 } checked{/if} /> 不显示</label>				
+	</div>
+	</div>
+	<br>
+</form>	

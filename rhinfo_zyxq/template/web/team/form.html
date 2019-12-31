@@ -1,0 +1,168 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+    
+	{if $_W['uid']} 
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"> <span class="text-danger">*</span>所属物业</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+				<option value="0">请选择所属物业</option>
+				{loop $myproperty $k $v}
+					<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>
+	{else}
+		<input type="hidden" class="form-control" id="pid" value="{$mywe['pid']}" name="pid" />
+	{/if}
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>所属主体</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="rid" name="rid" onchange="renderCategory(this,'cate','cid')">
+				<option value="0">请选择所属主体</option>	
+				{loop $eregions $i $r}
+					<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+				{/loop}
+				{if $_W['uid']} 
+				{else}
+					{if $operation=='add'}
+						{loop $regions $i $r}
+							<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+						{/loop}
+					{/if}
+				{/if}
+			</select>
+		</div>
+	</div>		
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>人员类别</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="cid" name="cid" >
+				<option value="0">请选择类别</option>	
+				{loop $ecategorys $category}
+					<option value="{$category['id']}" {if $item['cid'] == $category['id']} selected {/if} >{$category['title']}</option>
+				{/loop}			
+			</select>
+			<span class="help-block">所属主体管理->基础设置->分类设置</span>
+		</div>
+	</div>	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">排序</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" placeholder="数字越大，排名越靠前" name="displayorder" value="{$item['displayorder']}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>姓名</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="realname" value="{$item['realname']}" placeholder="输入姓名" name="realname" />
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>昵称</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="nickname" value="{$item['nickname']}" placeholder="输入昵称" name="nickname" />
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">图像</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_image('avatar',$item['avatar']);}
+			<span class="help-block">建议尺寸100*100，可不设定，直接使用绑定微信图像</span>
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">手机号码</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="mobile" value="{$item['mobile']}" placeholder="输入手机号码" name="mobile" />
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">工作内容</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<textarea type="text" class="form-control" id="content"  autocomplete="off" rows="3" name="content" />{$item['content']}</textarea>
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">工作年限</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="number" class="form-control" id="workyears" value="{$item['workyears']}" name="workyears" />
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">入职日期</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_date('entrydate',$item['entrydate']);}
+		</div>	
+	</div>
+	<div class="form-group">
+	   <label class="col-xs-12 col-sm-2 col-md-2 control-label">状态</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">                   				
+			<label class='radio-inline'>
+				<input type='radio' name='status' value='1' {if empty($item['status']) || $item['status']==1 }checked{/if} /> 在职
+			</label>
+			<label class='radio-inline'>
+				<input type='radio' name='status' value='2' {if $item['status']==2}checked{/if} /> 离职
+			</label>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定微信</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="input-group ">
+				<input type="hidden" class="form-control" id="uid" value="{$item['uid']}" name="uid">
+				<input type="hidden" class="form-control" id="openid" value="{$item['openid']}" name="openid">
+				<input type="text" class="form-control" id="nickname1" value="{$item['nickname1']}" readonly name="nickname1">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" onclick="showFansDialog(this);">选择微信</button>
+				</span>
+			</div>
+		</div>	
+	</div>	
+	<script type="text/javascript">
+		function showFansDialog(elm) {
+			require(['util', 'jquery'], function(u, $){
+				var footer = '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>';
+				var modalobj = u.dialog('粉丝选择', ["{php echo $this->createWeburl('query',array('op'=>'fans')).$mywe['direct'];}"], footer, {containerName:'link-container'});
+				modalobj.find('.modal-body').css({'overflow-y':'auto' });
+				modalobj.modal('show');
+				});
+		}
+	</script>
+		
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">备注</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="remark" value="{$item['remark']}" placeholder="输入备注" name="remark" />
+		</div>	
+	</div>	
+</form>	
+
+<script type="text/javascript">
+	window._region = {php echo json_encode($myregion);};				
+	window._cate = {php echo json_encode($mycate);};
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择</option>';
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		});
+	}
+</script>

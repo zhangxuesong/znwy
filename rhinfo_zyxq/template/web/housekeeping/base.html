@@ -1,0 +1,196 @@
+﻿<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">运营类型</label>
+	<div class="col-sm-7 col-lg-8 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="isoneregion" value="0" {if empty($item['isoneregion']) || $item['isoneregion']==1 } checked{/if} /> 多小区</label>
+		<label  class="radio-inline">
+			<input type="radio" name="isoneregion" value="1" {if $item['isoneregion']==1 } checked{/if} /> 独立小区</label>
+		<span class="help-block">独立小区，只显示一个小区.</span>			
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">小区列表</label>
+	<div class="col-sm-7 col-lg-8 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="listtype" value="0" {if empty($item['listtype']) || $item['listtype']==1 } checked{/if} /> 按距离显示</label>
+		<label  class="radio-inline">
+			<input type="radio" name="listtype" value="1" {if $item['listtype']==1 } checked{/if} /> 按城市显示</label>
+		<span class="help-block">多小区，小区显示方式.</span>			
+	</div>
+</div>
+
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定验证</label>
+	<div class="col-sm-7 col-lg-8 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="bindverify" value="1" {if empty($item['bindverify']) || $item['bindverify']==1 } checked{/if} /> 验证</label>
+		<label  class="radio-inline">
+			<input type="radio" name="bindverify" value="2" {if $item['bindverify']==2 } checked{/if} /> 不验证</label>
+		<span class="help-block">验证为手机短信验证，请设置短信验证码模板.</span>			
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">邀请验证</label>
+	<div class="col-sm-7 col-lg-8 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="shareverify" value="1" {if empty($item['shareverify']) || $item['shareverify']==1 } checked{/if} /> 验证</label>
+		<label  class="radio-inline">
+			<input type="radio" name="shareverify" value="2" {if $item['shareverify']==2 } checked{/if} /> 不验证</label>
+		<span class="help-block">验证为手机短信验证，请设置短信验证码模板.</span>			
+	</div>
+</div>
+
+{if pdo_tableexists('rhinfo_zycj_platform_credit')}
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">平台积分</label>
+	<div class="col-sm-7 col-lg-8 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="isplatformcredit" value="1" {if $item['isplatformcredit']==1 } checked{/if} /> 启用</label>
+		<label  class="radio-inline">
+			<input type="radio" name="isplatformcredit" value="0" {if empty($item['isplatformcredit']) || $item['isplatformcredit']==0 } checked{/if} /> 不启用</label>
+		<span class="help-block">启用平台积分后，平台积分账户有余额积分相关操作才有效.</span>			
+	</div>
+</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">充值积分</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<div class="input-group">
+			   <input type="number" name="cost" class="form-control" value="{$item['cost']}" />
+			   <span class="input-group-addon">元 等于</span>
+		   	   <input type="number" name="credit" class="form-control" value="{$item['credit']}" />
+			   <span class="input-group-addon">积分</span>
+			</div>
+			<span class="help-block">充多少元等于多少积分</span>
+	   </div>
+	</div>	
+{/if}
+
+ <div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">会员及地址</label>
+	<div class="col-sm-7 col-lg-8 col-xs-12">
+		<input type="checkbox" value="1" {if $item['iswegroup']==1}checked="checked"{/if} name="iswegroup" id="iswegroup" /> 依小区自动建立微擎会员组&nbsp;&nbsp;
+		<input type="checkbox" value="1" {if $item['memberfield']==1}checked="checked"{/if} name="memberfield" id="memberfield"/> 会员扩展信息&nbsp;&nbsp;
+		<input type="checkbox" value="1" {if $item['isweaddress']==1}checked="checked"{/if} name="isweaddress" id="isweaddress"/> 微擎地址&nbsp;&nbsp;
+		<input type="checkbox" value="1" {if $item['isrraddress']==1}checked="checked"{/if} name="isrraddress" id="isrraddress" /> 人人地址
+		
+		<span class="help-block">绑定房产时，自动建立微擎会员组和房产地址，会员扩展信息为业主中心个人设置信息，<a href="{php echo url('mc/fields');}" target="_blank"><font class="text-primary">可至微擎会员字段设置</font></a>.</span>
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">物业后台超时</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<div class="input-group">
+		   <input type="text" name="outtime" class="form-control" placeholder="输入超时分钟" value="{php echo $item['outtime']?$item['outtime']:5;}" />
+		   <span class="input-group-addon">分钟</span>		   
+	   </div>
+	   <span class="help-block">物业后台无操作超过超时时间自动退出.</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定域名</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+	   <input type="text" name="binddomain" class="form-control" placeholder="输入已解析域名" value="{$item['binddomain']}" />
+	   <span class="help-block">此域名可用来区分物业独立后台，绑定前需先做好解析.</span>
+	</div>	
+</div>
+
+<input type="hidden" class="form-control" id="doortype" value="{$item['doortype']}" name="doortype">
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">门禁密钥</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="apikey" value="{$item['apikey']}" placeholder="输入门禁密钥" name="apikey">
+		<span class="help-block">请填写智能门禁密钥，需要购买硬件模块.</span>
+	</div>	
+</div>
+
+{if $item['doortype']=='3'}
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">密钥ID</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="apiid" value="{$item['apiid']}" placeholder="输入门禁密钥ID" name="apiid">
+		<span class="help-block">请填写智能门禁密钥ID，需要购买硬件模块.</span>
+	</div>	
+</div>
+{/if}
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">定位开门</label>
+	<div class="col-sm-7 col-lg-8 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="locationdoor" value="1" {if empty($item['locationdoor']) || $item['locationdoor']==1 } checked{/if} /> 不启用</label>
+		<label  class="radio-inline">
+			<input type="radio" name="locationdoor" value="2" {if $item['locationdoor']==2 } checked{/if} /> 启用</label>
+		<span class="help-block">开启定位后，门禁需要添加经纬度.</span>			
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">小区搜索</label>
+	<div class="col-sm-7 col-lg-8 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="bindlocation" value="1" {if empty($item['bindlocation']) || $item['bindlocation']==1 } checked{/if} /> 定位</label>
+		<label  class="radio-inline">
+			<input type="radio" name="bindlocation" value="2" {if $item['bindlocation']==2 } checked{/if} /> 不定位</label>
+		<span class="help-block">搜索小区是否根据经纬度显示距离.</span>			
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">搜索范围</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<div class="input-group">
+		   <input type="number" name="regionrange" class="form-control" placeholder="输入距离" value="{$item['regionrange']}" />
+		   <span class="input-group-addon">千米</span>		   
+	   </div>
+	   <span class="help-block">绑定小区或商圈搜索范围，默认为10千米.</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">开门范围</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<div class="input-group">
+		   <input type="number" name="doorrange" class="form-control" placeholder="输入距离" value="{$item['doorrange']}" />
+		   <span class="input-group-addon">米</span>		   
+	   </div>
+	   <span class="help-block">开门定位范围，需开启定位开门，默认为10米.</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">图片压缩尺寸</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<div class="input-group">
+		   <input type="number" name="imagesize" class="form-control" placeholder="输入尺寸" value="{$item['imagesize']}" />
+		   <span class="input-group-addon">px</span>		   
+	   </div>
+	   <span class="help-block">输入图片压缩宽度，可开启远程附件，<a href="{php echo url('system/attachment/remote');}" target="_blank"><font class="text-primary">远程附件参数配置</font></a>.</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">分页记录数量</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<div class="input-group">
+		   <input type="number" name="pagesize" class="form-control" placeholder="输入分页记录数量" value="{$item['pagesize']}" />
+		   <span class="input-group-addon">条</span>		   
+	   </div>
+	   <span class="help-block">列表数据分页时，每页显示的最大数量，默认为10.</span>
+	</div>	
+</div>
+
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">单号前缀</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		   <input type="text" name="paynopre" class="form-control" placeholder="输入单号前缀" value="{php echo !empty($item['paynopre'])?$item['paynopre']:'Property';}" />
+	   <span class="help-block">收银台单号前置字符定义，不能超过10个字符.</span>
+	</div>	
+</div>

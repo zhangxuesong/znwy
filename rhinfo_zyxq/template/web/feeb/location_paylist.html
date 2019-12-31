@@ -1,0 +1,339 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+<style>
+	.nav-tabs li a { padding: 3px 10px;}
+	.account-stat-num > div{width:25%; float:left; font-size:16px; text-align:center;}
+	.account-stat-num > div span{display:block; font-size:30px; font-weight:bold;}
+	
+</style>
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body"> 
+
+    <ul class="nav nav-tabs" role="tablist" id="mytabs">		 		  
+		<li role="presentation" {if $_GPC['keyword'] || $_GPC['page']}{else}class="active"{/if}><a href="#feetotal" role="tab" data-toggle="tab">商铺列表</a></li>		
+	   <li role="presentation" {if $_GPC['keyword'] || $_GPC['page']}class="active"{/if}><a href="#feebill" role="tab" data-toggle="tab">账单明细</a></li>		   
+	</ul>
+	<br>
+	<div class="tab-content">	
+	 <div role="tabpanel" class="tab-pane {if $_GPC['keyword'] || $_GPC['page']}{else}active{/if}" id="feetotal">
+			<ul class="desktop_room">	
+			{loop $list $i $r}
+			<li>
+				<div class="panel {if $r['totalfee']>0}panel-danger{else}panel-info{/if}" >
+					<div class="panel-heading">
+						<h3 class="panel-title" style="width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><i class="fa fa-university"><span class="small text-overflow"> {$r['title']}{$r['shopname']}</span></i></h3>						
+					</div>
+					<div class="panel-body" style="width:150px;height:100px;">
+						{if empty($r['member'])}
+							{if empty($r['mobile'])}
+								<p class="text-center">未登记业主信息</p>
+								<p class="text-center"><a href="javascript:;" {if $shoprights['other1']==1} onclick="myadd({$r['id']})" class="text-danger" {else} style="color:#ccc;"{/if} title="登记业主信息">登记</a></p>
+							{else}
+							<p class="text-warning"><i class="fa fa-user"></i> {$r['ownername']}&nbsp;<a href="javascript:;" onclick="mymember({$r['id']})" title="登记成员信息"><i class="fa fa-users"></i></a></p>
+							{loop $r['shop_mps'] $shop_mp}
+								<span class="{if $shop_mp['otype']==1}text-info{else}text-cancel{/if}"><i class="fa fa-user"></i> {$shop_mp['ownername']}</span>
+							{/loop}
+							{/if}
+						{else}
+							{loop $r['member'] $i $member}
+								{if $member['isowner']}
+									<p>{if $member['avatar']}<img src="{media $member['avatar']}" width="20"/>{else}<i class="fa fa-user"></i>{/if}{$member['realname']}&nbsp;{if $i==0}<a href="javascript:;" onclick="mymember({$r['id']})" title="登记成员信息"><i class="fa fa-users"></i></a>{/if}</p>
+								{else}
+									{if $i==0 && $shoprights['other1']==1}<p><a href="javascript:;" onclick="mymember({$r['id']})" title="登记成员信息"><i class="fa fa-users"></i></a></p>{/if}
+									<span><img src="{media $member['avatar']}" width="20"/></span>								
+								{/if}
+							{/loop}
+							{loop $r['shop_mps'] $shop_mp1}
+								<span class="{if $shop_mp1['otype']==1}text-info{else}text-cancel{/if}"><i class="fa fa-user"></i> {$shop_mp1['ownername']}</span>
+							{/loop}
+						{/if}
+					</div>
+					<div class="panel-footer">
+					{if $r['totalfee']>0}账单： <a href="javascript:;" onclick="mybill({$r['rid']},{$r['id']},2)" style="color:#ff3300;">{$r['totalfee']}</a>
+					<span class="pull-right">						
+						{if $r['mobile'] && $frights['other2']==1}
+							<a href="javascript:;" onclick="mysend({$r['pid']},{$r['rid']},{$r['lid']},{$r['id']},2)" class="text-danger"><i class="fa fa-mobile"></i></a>
+						{/if}
+						{if $r['member'] && $frights['other2']==1}
+							<a href="javascript:;" onclick="mysend({$r['pid']},{$r['rid']},{$r['lid']},{$r['id']},1)" class="text-danger"><i class="fa fa-comment-o"></i></a>
+					</span>
+						{/if}
+					{else}
+						{if $r['isfree']=='2'}
+						<span class="text-warning">空房闲置</span>
+						{else}
+						暂无欠费
+						{/if}
+					{/if}
+					</div>
+				</div>
+			</li>							
+			{/loop}
+			</ul>
+	</div>	
+	 <div role="tabpanel" class="tab-pane {if $_GPC['keyword'] || $_GPC['page']}active{/if}" id="feebill">	
+	<div class="panel panel-default"> 
+		<div class="panel-heading" style="height:60px;">
+		{if $rights['query'] == 1} 
+			<form action="./index.php" method="get" class="form-inline" role="form" id="form-search">
+				<input type="hidden" name="c" value="site" />
+				<input type="hidden" name="a" value="entry" />
+				<input type="hidden" name="m" value="rhinfo_zyxq" />
+				<input type="hidden" name="do" value="feeb" />
+				<input type="hidden" name="op" value="fromlocation" />	
+				<input type="hidden" name="direct" value="1" />	
+				<input type="hidden" name="pid" value="{$_GPC['pid']}" />	
+				<input type="hidden" name="rid" value="{$_GPC['rid']}" />	
+				<input type="hidden" name="lid" value="{$_GPC['lid']}" />	
+		
+			
+				<div class="form-group">
+					<input class="form-control" name="keyword"   type="text" value="{$_GPC['keyword']}" placeholder="请输入商铺编号或收费项目" style="width:300px;" />
+				</div>
+			
+				<div class="form-group">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>					
+				</div>
+						
+				<span class="pull-right" style="line-height:38px;">共有数据：<strong id="count">{$total}</strong> 条</span> 
+			</form>
+		{/if}			
+	    </div>
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+				<tr>				
+					<th width="60">ID</th>
+					<th width="100">收费项目</th>			
+					<th width="150">所属主体</th>
+					<th width="80">区域</th>
+					<th width="60">商铺</th>
+					<th width="200">账单日期</th>
+					<th width="80">状态</th>
+					<th width="60">费用</th>
+					<th width="150">操作</th>
+				</tr>
+			</thead>
+			{loop $data $k $v}
+				<tr>
+					<td>{php echo $k + 1;}</td>					
+					<td>{$v['title']}</td>
+					<td>{$v['region']}</td>
+					<td>{$v['building']}</td>
+					<td>{$v['address']}</td>
+					<td>{$v['daterange']}</td>
+					<td class="td-status">
+					{if $v['status']=='1'}<span class="label label-danger radius">未支付</span>{else}<span class="label label-success radius">已支付</span>{/if}
+					</td>
+					<td>{$v['fee']}</td>
+					<td class="td-manage">
+					{if $rights['enabled'] == 1}
+						{if $v['status']=='1'}
+							<a onClick="mydisabled(this,{$v['id']})" href="javascript:;" class="btn btn-success btn-sm" title="已支付" ><i class="fa fa-minus-circle"></i> 已支付</a>
+						{else}
+							<a onClick="myenabled(this,{$v['id']})" href="javascript:;" class="btn btn-danger btn-sm" title="未支付" ><i class="fa fa-check-circle"></i> 未支付</a>								
+						{/if}
+					{/if}
+					{if $rights['other1'] == 1}	
+					<a href="javascript:;" onclick="myedit({$v['id']},{$v['category']})"  class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="单笔收款" ><i class="fa fa-money"></i> 单笔收款</a>
+					<a href="javascript:;" onclick="mybill({$v['hid']},{$v['category']},'{$v['address']}')"  class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="综合收款" ><i class="fa fa-money"></i> 综合收款</a> {/if}
+					
+					</td>					
+				</tr>
+			{/loop}				
+		</table>
+		{$pager}
+	  </div>    	  
+	</div>	
+	</div>	
+	</div>
+  </div>
+
+{template 'web/_iframe_footer'}
+
+<script type="text/javascript">			
+function myedit(id,category){
+	var url = "{php echo $this->createWeburl('fee',array('op'=>'pay')).$mywe['direct'];}" + "&id=" + id + "&category=" + category;
+	window.location.href = url;
+}
+function mybill(rid,hid,category){
+	var url = "{php echo $this->createWeburl('fee',array('op'=>'mybill')).$mywe['direct'];}" + "&rid=" + rid + "&hid=" + hid + "&category=" + category;
+	var index = layer.open({
+		type: 2,
+		title:'<i class="fa fa-hand-o-right"></i> 收银台 > 综合收款',
+		content: url,
+		area: ['600px','600px'],
+		fix: false, 
+		shade:0.4,
+		resize:false,
+		maxmin: false,
+		end: function () {
+			location.reload();
+		}
+	});
+	layer.full(index);
+}
+function myadd(sid){
+	var url = "{php echo $this->createWeburl('member',array('op'=>'shop_enter')).$mywe['direct'];}" + "&id=" + sid;	
+	var title = "业主登记";
+	var index = layer.open({
+   	    type: 2,
+		title:title,
+		content: url,
+		area: ['600px','600px'],
+		fix: true, 
+		shade:0.4,
+		resize:false,
+		end: function() {
+			location.reload();
+		}
+	});		
+}
+function mymember(sid){
+	var url = "{php echo $this->createWeburl('member',array('op'=>'building_shop')).$mywe['direct'];}" + "&id=" + sid;	
+	var title = "业主登记";
+	var index = layer.open({
+   	    type: 2,
+		title:title,
+		content: url,
+		area: ['600px','600px'],
+		fix: true, 
+		shade:0.4,
+		resize:false,
+	});		
+}
+function myparking(pid,rid,mobile,address){
+	var url = "{php echo $this->createWeburl('car',array('op'=>'myparking')).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid + "&mobile=" + mobile;	
+	var title = "<i class='fa fa-hand-o-right'></i> 车位管理&nbsp;&gt;&nbsp;" + address;
+	var index = layer.open({
+   	    type: 2,
+		title:title,
+		content: url,
+		area: ['600px','600px'],
+		fix: true, 
+		shade:0.4,
+		resize:false,
+	});	
+	layer.full(index);
+}
+function mysend(pid,rid,lid,sid,sendtype){
+layer.confirm('确认发送吗？',{icon: 3, title:'提示'},
+	function(index){
+		//此处请求后台程序		
+		layer.close(index);
+		var loadindex = layer.load(2);
+		$.post("{php echo $this->createWebUrl('fee').$mywe['direct'];}",
+			{op:"sendsinglemsg_shop",pid:pid,rid:rid,lid:lid,sid:sid,sendtype:sendtype},
+			function(data,status){
+			 layer.close(loadindex);
+			 if (data=='ok'){				
+				layer.msg('发送成功!',{icon:1});
+			 }
+			 else{				
+				layer.msg(data,{icon:0});
+			 }
+		});				
+	});	
+}
+function myaddfeeitem(pid,rid,bid){
+	var url = "{php echo $this->createWeburl('feea',array('op'=>'building_feeitem')).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid + "&bid=" + bid;	
+	var title = "收费项目";
+	var index = layer.open({
+   	    type: 2,
+		title:title,
+		content: url,
+		area: ['600px','500px'],
+		fix: true, 
+		shade:0.4,
+		resize:false,
+	});		
+}
+function myeditfeeitem(id){
+	var url = "{php echo $this->createWeburl('feea',array('op'=>'editbuilding_feeitem')).$mywe['direct'];}" + "&id=" + id;	
+	var title = "收费项目";
+	var index = layer.open({
+   	    type: 2,
+		title:title,
+		content: url,
+		area: ['600px','500px'],
+		fix: true, 
+		shade:0.4,
+		resize:false,
+	});		
+}
+/*删除*/
+function mydelfeeitem(obj,id,flid){
+	layer.confirm('将删除所有相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl('feea').$mywe['direct'];}",
+			{op:"delbuilding_feeitem",id:id,flid:flid},
+			function(data,status){
+			 if (data=='ok'){
+				$(obj).parents("li").remove();				
+				layer.msg('删除成功!',{icon:1});
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+			 }
+		});		
+		layer.close(index);
+    });
+}
+function mycreatebill(id,billtype){
+	var msg = "";
+	if(billtype==1){
+		msg="确认生成本期账单吗？";
+	}
+	else{
+		msg="确认生成下期账单吗？";
+	}
+	
+	layer.confirm(msg,{icon: 3, title:'提示'},
+	function(index){
+		layer.close(index);
+		var loadindex = layer.load(2);
+		$.post("{php echo $this->createWebUrl('feea').$mywe['direct'];}",
+			{op:"createbill",id:id,billtype:billtype},
+			function(data,status){
+			 layer.close(loadindex);
+			 if (data=='ok'){								
+				layer.msg('创建账单成功!',{icon:1});
+				window.location.reload();
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+			 }
+		});		
+		layer.close(index);		
+    });
+}
+
+function myimportbill(pid,rid,bid,itemid){
+	var url = "{php echo $this->createWeburl('feea',array('op'=>'importbill')).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid + "&bid=" + bid + "&itemid=" + itemid;	
+	var title = "收费项目";
+	var index = layer.open({
+   	    type: 2,
+		title:title,
+		content: url,
+		area: ['600px','500px'],
+		fix: true, 
+		shade:0.4,
+		resize:false,
+	});		
+}
+function myonecreatebill(pid,rid,bid,category){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'onecreatebill')).$mywe['direct'];}" + "&pid=" + pid +  "&rid=" + rid +  "&bid=" + bid + "&category=" + category;	
+	var title = "生成账单";
+	var index = layer.open({
+   	    type: 2,
+		title:title,
+		content: url,
+		area: ['600px','600px'],
+		fix: true, 
+		shade:0.4,
+		resize:false,
+	});		
+}
+</script>
+</body>
+</html>

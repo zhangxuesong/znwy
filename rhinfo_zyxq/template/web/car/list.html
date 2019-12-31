@@ -1,0 +1,146 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body"> 
+    {if $rights['query'] == 1}
+	<div class="collapse" id="mycollapse">
+	<form action="./index.php" method="get" class="form-horizontal" role="form" id="form-search">
+		<input type="hidden" name="c" value="site" />
+		<input type="hidden" name="a" value="entry" />
+		<input type="hidden" name="m" value="rhinfo_zyxq" />
+		<input type="hidden" name="do" value="car" />
+		<input type="hidden" name="op" value="list" />
+		<input type="hidden" name="direct" value="1" />
+		<input type="hidden" name="mycon" id="mycon" value="1" />
+		<input type="hidden" name="lid" value="{$_GPC['lid']}" />
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">省/市/区</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				{php echo tpl_form_field_district('area', array('province' => '', 'city' => '', 'district' => '' ));}
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">所属主体</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<input class="form-control" name="regionname"   type="text" value="{$_GPC['regionname']}" placeholder="请输入所属主体名称" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">关键字</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<input class="form-control" name="keyword"   type="text" value="{$_GPC['keyword']}" placeholder="请输入车位或车牌或手机" />
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-4 col-xs-12 col-sm-offset-2">
+				<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+				{if $rights['export'] == 1}
+				<button name="export" value="export" class="btn btn-default"><i class="fa fa-download"></i> 导出数据</button>
+				{/if}
+			</div>
+		</div>
+	</form>
+</div>
+	{/if}
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+			
+			{if $rights['query'] == 1}  
+			<a class="btn btn-primary" onclick="mycondition(this)"  data-toggle="collapse" href="#mycollapse" aria-expanded="false" aria-controls="mycollapse">
+			<i class="fa fa-angle-double-down"></i> 筛选条件</a>
+			{/if}
+			<span class="pull-right" style="line-height:38px;">共有数据：<strong id="count">{$total}</strong> 条</span> 
+	    </div>
+  
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+				<tr>
+				<!--	<th width="25"><input type="checkbox" name="selectall" id="selectall" value="" onClick="myallselect(this)"></th>-->
+					<th width="40">ID</th>					
+					<th width="150">所属主体</th>
+					<th width="120">车位名称</th>
+					<th width="80">车牌</th>
+					<th width="80">状态</th>
+					<th width="100">业主姓名</th>
+					<th width="100">手机号码</th>
+					<th width="100">开始日期</th>
+					<th width="100">结束日期</th>
+					<th width="200">操作</th>
+				</tr>
+			</thead>
+			{loop $data $k $v}
+				<tr>
+					<!--<td><input type="checkbox" value="{$v['id']}" name="myselect" id="myselect_{$k}"  ></td>-->
+					<td>{$v['id']}</td>
+					<td>{$v['region']}</td>
+					<td>{$v['title']}</td>
+					<td>{$v['carno']}</td>
+					<td class="td-status"><span class="label {if $v['status']=='1'}label-success{elseif $v['status']=='2'}label-danger{else}label-default{/if} radius">{if $v['status']=='1'}已租{elseif $v['status']=='2'}到期{else}空闲{/if}</span></td>
+					<td>{$v['ownername']}</td>
+					<td><a style="color:#000;" href="javascript:;" title="{$v['mobile']}">{php echo !empty($v['mobile']) ? substr_replace($v['mobile'],'****',3,4):'';}</a></td>
+					<td>{if !empty($v['startdate'])}{php echo date('Y-m-d',$v['startdate']);}{/if}</td>
+					<td>{if !empty($v['enddate'])}{php echo date('Y-m-d',$v['enddate']);}{/if}</td>
+					<td>
+					{if $rights['other1'] == 1}
+					<a  href="javascript:;" onclick="myedit({$v['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="租赁" ><i class="fa fa-edit"></i> 租赁</a> 
+					{/if}
+					{if $rights['other2'] == 1}
+					<a  href="javascript:;" onclick="mylease({$v['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="租赁记录"><i class="fa fa-retweet"></i> 租赁记录</a>
+					{/if}
+					{if $rights['other3'] == 1 && $v['pc_type']>0}
+					<a  href="javascript:;" onclick="mymonth({$v['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="月卡"><i class="fa fa-taxi"></i> 月卡</a>{/if}
+					</td>
+				</tr>
+			{/loop}			
+		</table>
+	  </div>    	  
+	</div>	
+  </div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+
+/*租赁记录*/
+function mylease(id){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'leaselog')).$mywe['direct'];}" + "&id=" + id;
+	window.location.href = url;
+}
+
+/*编辑*/
+function myedit(id){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'lease')).$mywe['direct'];}" + "&id=" + id;
+	window.location.href = url;
+}
+function mymonth(id){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'monthcard','cfrom'=>1)).$mywe['direct'];}" + "&parkid=" + id;	
+	var title = "月卡登记";
+	var index = layer.open({
+   	    type: 2,
+		title:title,
+		content: url,
+		area: ['600px','600px'],
+		fix: true, 
+		shade:0.4
+	});		
+}
+function mycondition(obj){
+    var mycon = $("#mycon").val();
+	var html = '';
+	if (mycon==1){
+		html = '<i class="fa fa-angle-double-up"></i> 隐藏筛选';
+		$("#mycon").val("2");
+		$("#mycollapse").show("slow");
+	}
+	else {
+		html = '<i class="fa fa-angle-double-down"></i> 筛选条件';
+		$("#mycon").val("1");
+		$("#mycollapse").hide("slow");
+	}
+	$(obj).html(html);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{if $user['rid']}
+<div class="fui-cell-group fui-cell-click">
+	<a class="fui-cell external" href="{php echo $this->createMobileurl($mydo,array('op'=>'myfee'));}">
+		<div class="fui-cell-icon"><i class="icon icon-list"></i></div>
+		<div class="fui-cell-text">当前房产账单</div>
+		<div class="fui-cell-remark" style="font-size: 0.6rem;">查看全部账单</div>
+	</a>			
+	
+	{loop $items $i $v}
+	{if $i==0 || $i%4 == 0}<div class="fui-icon-group selecter">{/if}
+		<a class="fui-icon-col external" href="{$v['url']}">
+		    {if $v['total']}
+			<div class="badge">{$v['total']}</div>
+			{/if}
+			<div class="icon icon-green radius"><i class="icon {$v['icon']}" {if !empty($v['color'])}style="color:{$v['color']};"{/if}></i></div>
+			<div class="text">{$v['title']}</div>
+		</a>
+	{if ($i + 1)%4 == 0}</div>{/if}
+	{/loop}
+	{if count($items)%4 == 0}{else}</div>{/if}	
+</div>
+{/if}

@@ -1,0 +1,53 @@
+{template $this->mytpl('_header')}
+
+<div class='fui-page  fui-page-current order-comment-page'>
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back" ></a>
+	</div>
+	<div class="title">商家评价</div> 
+	<div class="fui-header-right">&nbsp;</div>
+    </div>
+  <div class='fui-content margin navbar'>
+    
+	  <div class="fui-list-group">  
+		  <div class="fui-list-group-title"><i class="icon icon-store"></i> {$item['title']}</div>		  
+		</div>
+	  <div class="fui-title"></div>
+	 <div class="fui-cell-group">
+		 <div class='fui-cell must'>
+			  <div class='fui-cell-label'>评分</div>
+			 <div class='fui-cell-info'>
+				 <div class='fui-stars warning' data-value='0'>
+					 <span class='stars'></span>
+				 </div>
+			 </div>
+		 </div>
+
+		 <div class='fui-cell must'>
+			 <div class='fui-cell-label '>评论</div>
+			 <div class='fui-cell-info'><textarea rows="3" placeholder="说点什么吧" id='comment'></textarea></div>
+		 </div>
+		  <div class='fui-cell'>
+			 <div class='fui-cell-label '>匿名</div>
+			  <div class="fui-cell-info">
+			  <input type="checkbox" class="fui-switch fui-switch-small fui-switch-warning pull-right" name="noname" id="noname"/>
+			  </div>
+		 </div>
+	 </div>
+
+	  
+  </div>  
+     <div class='fui-footer'>
+		<a class='btn btn-warning btn-submit block'>提交评价</a>
+	  </div>
+	  
+    <script language='javascript'>require(['business/comment'], function (modal) {
+		modal.init({
+			id: "{$_GPC['id']}"
+		}); 
+	});</script>
+	
+</div> 
+
+{template $this->mytpl('_footer')}

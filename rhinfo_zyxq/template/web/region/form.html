@@ -1,0 +1,193 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>{if $category==1}小区名称{elseif $category==2}商圈名称{elseif $category==3}园区名称{elseif $category==4}市场名称{elseif $category==5}公寓名称{/if}</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入名称" name="title">
+		</div>	
+	</div>
+	{if !empty($_W['uid'])}
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>所属物业</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="pid" id="pid" {if $operation=='edit' && $item['pid']>0}disabled{/if}>
+				<option value="">请选择所属物业</option>
+				{loop $property $k $v}
+					<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>
+	{else}
+	<div class="form-group" style="display:none">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>所属物业</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="pid" id="pid" readonly>
+				{loop $property $k $v}
+					<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>
+	{/if}
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>联系人</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="contact" value="{$item['contact']}" placeholder="输入联系人" name="contact">
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>联系电话</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="telphone" value="{$item['telphone']}" placeholder="输入联系电话" name="telphone">
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">缩略图标</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_image('thumb',$item['thumb']);}
+			<span class="help-block">建议尺寸60*60</span>
+		</div>	
+	</div>
+				
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>省/市/区</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_district('area', array('province' => $item['province'], 'city' => $item['city'], 'district' => $item['district'] ));}
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>详细地址</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="address" value="{$item['address']}" placeholder="输入详细地址" name="address">
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-3 col-md-2 control-label">经纬度坐标</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="input-group">
+				<span class="input-group-addon">经度</span>
+				<input type="number" class="form-control" name="lng" id="lng" value="{$item['lng']}" />
+				<span class="input-group-addon">纬度</span>
+				<input type="number" class="form-control" name="lat" id="lat" value="{$item['lat']}" />
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" id="positioning" onclick="showMapDialog(this)">选择坐标</button>
+				</span>
+			</div> 
+			<span class="help-block">输入地址后点击地图获取坐标</span>
+		</div> 
+	</div>
+	<div class="form-group" style="display:none;">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">客服链接</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="service" value="{$item['service']}" placeholder="输入客服链接地址" name="service">
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">外部链接</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+		{if !empty($_W['uid'])}
+			<div class="input-group ">
+				<input type="text" class="form-control" id="url" value="{$item['url']}" placeholder="输入链接地址" name="url">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" onclick="showLinkDialog(this);">系统链接</button>
+				</span>
+			</div>
+		{else}
+			<input type="text" class="form-control" id="url" value="{$item['url']}" placeholder="输入链接地址" name="url">
+		{/if}
+			<span class="help-block">注：<font class="text-danger">设定外链后将直接使用外链</font>，可为空，外部链接请包含http://</span>
+		</div>	
+	</div>	
+</form>	
+<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key={$sysconifg['qq_lbskey']}"></script>
+<script>
+	var lbskey = "{$sysconifg['qq_lbskey']}";
+	function showLinkDialog(elm) {
+		var ipt = $(elm).parent().prev();
+		util.linkBrowser(function(href){		
+			ipt.val(href);			
+		});
+	}
+	function showMapDialog(elm) {
+		var province = $(".tpl-province").find("option:selected").val();
+		var city = $(".tpl-city").find("option:selected").val();
+		var district = $(".tpl-district").find("option:selected").val();		
+		require(["util","jquery"], function(u, $){		
+			var content =
+					'<div class="form-group">' +
+						'<div class="input-group">' +
+							'<input type="text" class="form-control" id="seachaddress" placeholder="请输入地址来直接查找相关位置">' +
+							'<div class="input-group-btn">' +
+								'<button class="btn btn-default" id="btnSearch"><i class="fa fa-search"></i> 搜索</button>' +
+							'</div>' +
+						'</div>' +
+					'</div>' +
+					'<div id="map-container" style="height:400px;"></div>';
+				var footer =
+					'<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>';
+				modalobj = util.dialog('请选择坐标', content, footer, {containerName : 'map-dialog'});
+				modalobj.find('.modal-dialog').css('width', '80%');
+				modalobj.modal({'keyboard': false});
+				
+				var container = "#map-container";
+				var map = new qq.maps.Map('map-container', {
+							zoom: 10
+						}),
+					label = new qq.maps.Label({
+						 map: map,
+						 offset: new qq.maps.Size(15,-12),
+						 draggable: false,
+						 clickable: false
+					});
+				if(city !=''){
+					var address = $("#address").val();
+					if(address =='') address = city + district;
+					var url = encodeURI("https://apis.map.qq.com/ws/geocoder/v1/?region=" + city + "&address=" + address + "&key=" + lbskey + "&output=jsonp&&callback=?");
+					$.getJSON(url, function (result) {
+						map.setCenter(new qq.maps.LatLng(result.result.location.lat, result.result.location.lng));
+						map.setZoom(15);
+					});
+				}
+				else{
+				  var cityservice = new qq.maps.CityService({
+						complete: function (result) {
+							map.setCenter(result.detail.latLng);
+						}
+					});
+					cityservice.searchLocalCity();
+				}
+				map.setOptions({
+					draggableCursor: "crosshair"
+				});
+				$(container).mouseenter(function () {
+					label.setMap(map);
+				});
+				$(container).mouseleave(function () {
+					label.setMap(null);
+				});
+				qq.maps.event.addListener(map, "mousemove", function (e) {
+					var latlng = e.latLng;
+					label.setPosition(latlng);
+					label.setContent(latlng.getLat().toFixed(6) + "," + latlng.getLng().toFixed(6));
+				});
+				qq.maps.event.addListener(map, "click", function (e) {					
+					$("#lat").val(e.latLng.getLat().toFixed(6));
+					$("#lng").val(e.latLng.getLng().toFixed(6));
+					modalobj.modal('hide');
+				});				
+				modalobj.modal('show');
+				$("#seachaddress").val(district + $("#address").val());
+				var btnSearch = btnSearch = document.getElementById("btnSearch");
+				qq.maps.event.addDomListener(btnSearch, 'click', function () {
+					var value = city + district + $("#seachaddress").val();					
+					var url = encodeURI("https://apis.map.qq.com/ws/geocoder/v1/?region=" + city + "&address=" + value + "&key=" + lbskey + "&output=jsonp&&callback=?");
+					$.getJSON(url, function (result) {
+						map.setCenter(new qq.maps.LatLng(result.result.location.lat, result.result.location.lng));
+						map.setZoom(15);
+					});
+				});
+		});
+	}
+</script>

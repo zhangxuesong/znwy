@@ -1,0 +1,90 @@
+{template $this->mytpl('_pheader')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170802">
+<style>
+.fui-card .fui-card-info img {
+	width: 0.8rem;
+	height: 0.8rem;
+}
+
+</style>
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">快件查询</div>
+		<div class="fui-header-right"></div>
+	</div>
+
+	<div class='fui-content'>		
+		<div id="tab" class="fui-tab fui-tab-success">
+			<a data-tab="tab2" class="external {if $_GPC['cate']==2}active{/if}">取件</a>
+			<a data-tab="tab1" class="external {if $_GPC['cate']==1}active{/if}">寄件</a>
+		</div>
+		<form action="{php echo $this->createMobileUrl($mydo,array('op'=>$_GPC['op'],'sid'=>$sid));}" method="post" id="myform">
+			<div class="fui-searchbar bar">
+				<div class="searchbar center">				
+					<input type="submit" class="searchbar-cancel searchbtn" value="搜索">
+					<input type="hidden" value="{$_GPC['cate']}" name="cate" id="cate" />	
+					<input type="hidden" value="{$_GPC['compid']}" name="compid" id="compid" />
+					<div class="search-input">
+						<input type="text" placeholder="请输入单号、手机或取件码" class="search" value="{$_GPC['keyword']}" name="keyword" id="keyword" />						
+						<i class="icon icon-scan"></i>
+					</div>
+				</div>
+			</div>
+		</form>
+		
+		<div class="container"></div>
+		<div class="content-empty" style="display:none;">
+		<i class="icon icon-information"></i> <br/>暂时没有任何内容</div>
+        <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+	</div>  
+	<script type="text/html" id="tpl_express_take_list">
+	 <%each list as row%>
+		<div class="fui-card fui-card-list " style="overflow:hidden;">
+			<div class='fui-card-info' style="padding-bottom:0.5rem;">
+				<div class="text">                        
+					<div class="title text-orange"><%row.expresssn%><span class="pull-right"><%if row.thumb!=""%><img src="<%row.thumb%>"/><%/if%> <%row.comptitle%></span></div>
+					<div class="subtitle">入库时间：<%row.ctime%><% if row.status==1%><span class="text-default pull-right">已取件</span><%/if%><% if row.status==0%><span class="text-danger pull-right">待取件</span><%/if%></div>					
+					<%if row.taketime !="" %><div class="subtitle">取件时间：<%row.taketime%></div><%/if%>
+					<%if row.realname !="" %><div class="subtitle">业主：<%row.realname%> <%row.address%></div><%/if%>
+					<%if row.local !="" || row.label !="" %><div class="subtitle">存放位置：<%row.local%> <%row.label%></div><%/if%>
+					<%if row.remark !="" %><div class="subtitle">备注：<%row.remark%></div><%/if%>
+				</div>	
+			</div>
+		</div>
+    <%/each%>
+	</script>
+	<script type="text/html" id="tpl_express_send_list">
+	 <%each list as row%>
+		<div class="fui-card fui-card-list " style="overflow:hidden;">
+			 <div class='fui-card-info' style="padding-bottom:0.5rem;">
+				<a class="text" href="<%row.url%>">                        
+					<div class="title text-orange"><%row.fromcity%> - <%row.city%> 
+					<span class="pull-right"><%if row.thumb!=""%><img src="<%row.thumb%>"/><%/if%> <%row.comptitle%></span>
+					</div>
+					<div class="subtitle">下单时间：<%row.ctime%></div>
+					<div class="subtitle">物品类别：<%row.title%>*<%row.qty%> 重量(kg)：<%row.weight%><% if row.status==1%><% if row.paytype==1 && row.paystatus==0%><span class="text-success pull-right">待支付</span><%else%><span class="text-default pull-right">已取件</span><%/if%><%/if%><% if row.status==0%><span class="text-danger pull-right">待派件</span><%/if%></div>
+					<%if row.taketime !="" %><span class="subtitle">取件时间：<%row.taketime%></span><%/if%>
+					<%if row.remark !="" %><div class="subtitle">备注：<%row.remark%></div><%/if%>
+				</a>	
+			</div>
+		</div>
+    <%/each%>
+	</script>
+	<script language='javascript'>
+		require(['express/express'], function (modal) {
+			modal.initTab({
+			   sid:"{$sid}",
+			   cate:"{$_GPC['cate']}",
+			   ctime:"{$_GPC['ctime']}",
+			   keyword:"{$_GPC['keyword']}",
+			   compid:"{$_GPC['compid']}",
+			   today:"{$_GPC['today']}",
+			   cfrom:"{$res['from']}"
+			});
+		});
+	</script>
+ </div>
+{template $this->mytpl('_footer')}

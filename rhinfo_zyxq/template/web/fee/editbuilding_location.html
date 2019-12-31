@@ -1,0 +1,157 @@
+﻿{template 'web/_iframe_header'}
+<style>
+html { overflow-x:hidden; }
+</style>
+<nav class="navbar navbar-fixed-top" style="margin-top:5px;margin-right:15px;">
+<span class="pull-right"><a href="javascript:;" class="btn btn-success"  onclick="mysubmit(this)"><i class="fa fa-save"></i> 保存</a></span>   
+</nav> 
+<div class="panel panel-default" style="width:580px;">
+    <div class="panel-body">    
+		<form action="" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />	
+			<input type="hidden" value="{$item['id']}" id="id" name="id" />
+			<input type="hidden" name="pid" value="{$_GPC['pid']}" >
+			<input type="hidden" name="rid" value="{$_GPC['rid']}" >
+			<input type="hidden" name="bid" value="{$_GPC['bid']}" >
+			<input type="hidden" name="flid" value="{$item['flid']}" >			
+			<div class="form-group">
+				<label class="control-label"><span class="text-danger">*</span>收费项目</label>				
+				<select class="form-control" name="itemid" id="itemid" >
+				<option value="0">请选择收费项目</option>
+				{loop $feeitems $feeitem}
+					<option value="{$feeitem['id']}" {if $item['itemid']==$feeitem['id']}selected{/if}>{$feeitem['title']}</option>
+				{/loop}
+				</select>
+			</div>
+			<div class="form-group">
+			<label class="control-label"><span class="text-danger">*</span>单价</label>	
+				<div class="input-group">
+					<input type="text" class="form-control" id="price" value="{$item['price']}" placeholder="输入单价" name="price" />
+					 <span class="input-group-addon">元</span>
+				 </div>
+				 <span class="help-block">如为空，直接取收费项目单价</span>
+			 </div>
+			<div class="form-group">
+				<label class="control-label">备注</label>
+				<input type="text" class="form-control" id="remark" value="{$item['remark']}" placeholder="输入备注" name="remark" />			
+			</div>
+			<div class="form-group">
+				<label class="control-label">计算规则&nbsp;&nbsp;</label>
+
+					<label class="radio-inline">
+						<input type="radio" name="pricerule" id="pricerule1"  value="0" {if empty($item['pricerule']) || $item['pricerule']==0 } checked{/if} /> 不启用</label>
+					<label  class="radio-inline">
+						<input type="radio" name="pricerule" id="pricerule2" value="1" {if $item['pricerule']==1 } checked{/if} /> 启用</label>					
+					<label  class="radio-inline">
+					<button class="btn btn-success" type="button" id="addpricerule" onclick="mypricerule()" style="display:none;"><i class="fa fa-plus"></i> 增加规则</button>
+					</label>			
+					<span class="help-block">启用计算规则后，收费项目将应用此规则</span>			
+
+			</div>
+			
+			<div id="pricerule" style="display:none;">
+				{loop $pricerules $pricerule}
+				<div class="form-group">
+					<input type="hidden" class="form-control" value="{$pricerule['id']}"  name="ruleid[]">
+					<div class="input-group">
+							<span class="input-group-addon">从</span>		
+							<input type="number" class="form-control"  value="{$pricerule['floorstart']}" placeholder="楼层" name="floorstart[]">
+							<span class="input-group-addon">到</span>
+							<input type="number" class="form-control"  value="{$pricerule['floorend']}" placeholder="楼层" name="floorend[]">
+							<span class="input-group-addon">单价</span>		
+							<input type="text" class="form-control"  value="{$pricerule['price']}" name="price1[]">
+							<span class="input-group-addon">元</span>
+							<span class="input-group-addon"><a href="javascript:;" onclick="delpricerule(this,'{$pricerule['id']}')" ><i class="fa fa-close"></i></a></span>						
+					</div>
+				</div>
+				{/loop}
+			</div>
+		</form>		
+    </div>
+</div>
+
+{template 'web/_iframe_footer'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	var pid = $("#itemid").find("option:selected").val();
+	var price = $.trim($("#price").val());
+	
+	if (pid=='') {
+	   layer.msg("请选择收费项目！",{icon:0});
+	   return;
+	}
+	
+	myprocess(obj);
+	var loadindex = layer.load(2);
+			
+	$.ajax({  
+         type : "post",  
+          url : "{php echo $this->createWebUrl($mydo,array('op'=>'editbuilding_feeitem')).$mywe['direct'];}",  
+          data : $("#myform").serializeObject(),   
+          async : false,  
+          success : function(data){  
+			  layer.close(loadindex);
+			  layer.msg('处理成功!',{icon:1});	
+			  setTimeout(function(){
+				  var index = parent.layer.getFrameIndex(window.name); 
+				  parent.layer.close(index);	
+				  window.parent.location.reload();
+			  },2000);			  
+          }  
+     }); 
+}
+
+var pricerule = "{$item['pricerule']}";
+if(pricerule=='1'){
+	 $("#addpricerule").show();
+	 $("#pricerule").show();
+}
+
+ $("input[name=pricerule]").click(function(){
+	  switch($("input[name=pricerule]:checked").attr("id")){
+	  case "pricerule1":			   
+		    $("#addpricerule").hide();
+			$("#pricerule").hide();
+		   break;
+	  case "pricerule2":			
+		    $("#addpricerule").show();
+			$("#pricerule").show();
+		   break;
+	  default:
+		    $("#addpricerule").hide();
+			$("#pricerule").hide();	
+		   break;
+		}
+ });
+ 
+function mypricerule() {
+	$.ajax({
+		url: "{php echo $this->createWeburl($mydo,array('op'=>'pricetpl1')).$mywe['direct'];}",
+		cache: false
+	}).done(function (html) {
+		$("#pricerule").append(html);          
+	});
+}
+
+function removepricerule(obj) {
+	$(obj).parents(".form-group").remove();
+}
+
+function delpricerule(obj,id) {	
+	 $.post("{php echo $this->createWeburl($mydo,array('op'=>'delpricerule')).$mywe['direct'];}", {ruleid:id}, function (ret){
+		if(ret=='ok'){
+			$(obj).parents(".form-group").remove();
+		}
+	 });
+}
+function myprocess(obj){
+	var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/> 处理中...';
+	$(obj).html(html);  
+	$(obj).attr("disabled", "disabled"); 
+}
+</script> 
+
+</body>
+</html>

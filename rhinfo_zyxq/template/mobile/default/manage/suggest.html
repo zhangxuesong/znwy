@@ -1,0 +1,48 @@
+{template $this->mytpl('_header')}
+
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back" ></a>
+		</div>
+		<div class="title">投诉建议</div>
+		<div class="fui-header-right"></div>
+	</div>
+
+	<div class='fui-content' style="bottom: 2.4rem">
+		<div class="container"></div>
+		<div class="board-list-empty" style="display:none;color:#999;font-size:.75rem;margin:.5rem;text-align: center;">
+		<i class="icon icon-write" style="font-size:4rem;color:#ccc;"></i> <br/>暂时没有任何投诉建议</div>
+        <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+	</div>
+  
+	<script type="text/html" id="tpl_suggest_list">
+    <%each list as row%>
+    <div class="fui-card fui-card-list " style="overflow:hidden;">
+        <a class='fui-card-info'  data-nocache='true' href='<%row.url%>'>
+		<div class="text">                        
+			<div class="title"><%row.title%><span class="pull-right text-default" style="font-size:0.6rem;margin-top:-5px;"><i class="icon icon-city"></i> <%row.address%></span></div>
+			<div class="subtitle" ><font style="font-size:0.75rem;color:#333;"><%row.content%></font></div>
+			<div class="subtitle"><%row.ctime%></div>
+		</div>
+
+        </a>
+        <div class='fui-card-btns'>
+            <a data-nocache='true' href="<%row.url%>"><span class="<%row.bg%>"><%row.status%></span></a>          
+            <a data-nocache='true' href="<%row.url%>"><i class="icon icon-search <%row.css%>"></i><span class="<%row.css%>">详情</span></a>
+        </div>
+    </div>
+    <%/each%>
+	</script>
+	<script language='javascript'>
+		require(['manage/suggest'], function (modal) {
+			modal.init({
+			   pid:"{php echo empty($user['pid'])? 0:$user['pid']}",
+			   rid:"{php echo empty($user['rid'])? 0:$user['rid']}"
+			});
+		});
+	</script>
+ </div>
+
+{template $this->mytpl('_menu')}
+{template $this->mytpl('_footer')}

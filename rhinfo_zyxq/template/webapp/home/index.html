@@ -1,0 +1,122 @@
+{php include $this->template('_header');}
+<link href="../addons/rhinfo_zyxq/static/web/css/chart.css?v={TIMESTAMP}" rel="stylesheet"/>
+<div class="container-fluid">
+	<ul class="chart-block">
+		<!--主体统计-->
+		<li class="chart-item" id="chartPop-output">		
+		</li>
+		<!--微信绑定-->
+		<li class="chart-item middle" id="chartBind-output">
+		</li>
+		<!--收支统计-->
+		<li class="chart-item y-middle" id="chartBudget-output">
+		</li>
+		<!--已缴费统计-->
+		<li class="chart-item middle" id="chartPay-output">
+		</li>
+		<!--未缴统计-->
+		<li class="chart-item middle" id="chartNoPay-output">
+		</li>
+		<!--工单统计-->
+		<li class="chart-item large" id="chartFix-output">
+		</li>
+		<!--自助缴费统计-->
+		<li class="chart-item large" id="chartSelf-output">
+		</li>
+	</ul>
+</div>
+<script type="text/javascript">	
+	var url = location.href + '&#rhinfo';	
+	$(function() {
+		{if !empty($region['board_password'])}
+			GetPassword();
+		{else}
+			tick();
+		{/if}
+	});
+	function chartpop(){
+		$.get(url, {op:'region'}, function(data){
+			$('#chartPop-output').html(data);
+		});	
+	}
+	function chartbind(){
+		$.get(url, {op:'bind'}, function(data){
+			$('#chartBind-output').html(data);
+		});	
+	}
+	function chartpay(){
+		$.get(url, {op:'payfee'}, function(data){
+			$('#chartPay-output').html(data);
+		});	
+	}
+	function chartnopay(){
+		$.get(url, {op:'nopayfee'}, function(data){
+			$('#chartNoPay-output').html(data);
+		});	
+	}
+	function chartbudget(){
+		$.get(url, {op:'cost'}, function(data){
+			$('#chartBudget-output').html(data);
+		});	
+	}
+	function chartfix(){
+		$.get(url, {op:'fix'}, function(data){
+			$('#chartFix-output').html(data);
+		});	
+	}
+	function chartself(){
+		$.get(url, {op:'self'}, function(data){
+			$('#chartSelf-output').html(data);
+		});	
+	}
+	function getDay(day){ 
+		var today = new Date(); 
+		var targetday_milliseconds=today.getTime() + 1000*60*60*24*day;
+		today.setTime(targetday_milliseconds); 
+		var tYear = today.getFullYear(); 
+		var tMonth = today.getMonth();  
+		var tDate = today.getDate();   
+		tMonth = doHandleMonth(tMonth + 1); 
+		tDate = doHandleMonth(tDate);  
+	   return tMonth+"-"+tDate;
+	 }
+	function doHandleMonth(month){  
+		var m = month; 
+		if(month.toString().length == 1){ 
+			m = "0" + month;   
+		}    
+		return m;
+	} 
+	function GetPassword(){
+		layer.prompt({title: '输入密码',area: ['300px', '30px'], formType: 1}, function(pwd, index){
+			var loadindex = layer.load(2);
+			$.post(url,	{op:'check_pwd',password:pwd},
+				function(data,status){
+				 layer.close(loadindex);
+				 if (data=='ok'){
+					layer.closeAll();
+					tick();
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+				 }
+			});	
+		  });	  
+	}
+	function initChart(){
+		chartpop();
+		chartbind();
+		chartbudget();
+		chartpay();
+		chartnopay();
+		chartfix();
+		chartself();		
+	}
+	 function tick() { 
+		initChart(); 
+		window.setTimeout("tick()", 1000*60*10); 
+	 }	 
+</script>
+<script src="../addons/rhinfo_zyxq/static/lib/echarts/echarts-all.js"></script>	
+</body>
+</html>

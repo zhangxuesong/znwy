@@ -1,0 +1,101 @@
+<span class="echart-title">收支对比</span>
+<span class="echart-count">单位：元</span>
+<div id="chartCost"></div>
+<script type="text/javascript">
+	var chartCost = echarts.init(document.getElementById('chartCost'),'shine');
+	option_cost = {
+		legend: {
+			data:['收入','支出','利润'],
+			textStyle:{
+				color: "#ffffff"
+			}
+		},
+		grid:{
+			x:40,
+			y:25,
+			x2:25,
+			y2:20,
+			top:'5%',
+			left:'1%',
+			right:'2%',
+			containLabel:true
+		},
+		calculable : true,
+		xAxis : [
+			{
+				type : 'category',
+				data : ['本月','总金额'],
+				axisLabel:{
+					textStyle:{
+						color: "#ffffff"
+					}
+				},
+				axisLine:{
+					lineStyle:{
+						color: "#ffffff"
+					}
+				},
+			}
+		],
+		yAxis : [
+			{
+				type : 'value',
+				boundaryGap : [0, 0.01],
+				axisLabel:{
+					textStyle:{
+						color: "#ffffff"
+					}
+				},
+				axisLine:{
+					lineStyle:{
+						color: "#ffffff"
+					}
+				},
+			},
+			{
+				type: 'value',
+				name: '利润',
+				axisLabel: {
+					formatter: '{value} '
+				},
+				splitLine:{
+					show:false
+				},
+				axisLabel:{
+					textStyle:{
+						color: "#ffffff"
+					}
+				},
+				axisLine:{
+					lineStyle:{
+						color: "#ffffff"
+					}
+				},
+			}
+		],
+		series : [
+			{
+				name:'收入',
+				type:'bar',
+				data:[{$money_array[2]},{$money_array[0]}]
+			},
+			{
+				name:'支出',
+				type:'bar',
+				data:[{$money_array[3]},{$money_array[1]}]
+			},
+			{
+				name:'利润',
+				type:'line',
+				yAxisIndex: 1,
+				data:[{php echo $money_array[2]-$money_array[3];},{php echo $money_array[0]-$money_array[1];}]
+			}
+		]
+	};
+	
+	chartCost.setOption(option_cost);
+	autoPlay(chartCost,option_cost);
+	window.onresize = function() {
+		chartCost.resize();
+	};	
+</script>

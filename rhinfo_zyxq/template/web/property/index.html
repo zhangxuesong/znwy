@@ -1,0 +1,92 @@
+﻿{template 'web/_header'}
+{template 'web/_menu'}
+<section class="Hui-article-box">
+	<div id="Hui-tabNav" class="Hui-tabNav hidden-xs">
+		<div class="Hui-tabNav-wp">
+			<ul id="min_title_list" class="acrossTab cl">
+				<li class="active"><span title="我的桌面" data-href="welcome.html">我的桌面</span><em></em></li>
+			</ul>
+		</div>
+		<div class="Hui-tabNav-more btn-group"><a id="js-tabNav-prev" class="btn radius btn-default size-S" href="javascript:;"><i class="Hui-iconfont">&#xe6d4;</i></a><a id="js-tabNav-next" class="btn radius btn-default size-S" href="javascript:;"><i class="Hui-iconfont">&#xe6d7;</i></a></div>
+	</div>
+	<div id="iframe_box" class="Hui-article">
+		<div class="show_iframe">
+			<iframe scrolling="yes" frameborder="0" src="{php echo mywurl('desktop/index',array('direct'=>1));}"></iframe>
+		</div>
+	</div>
+</section>
+
+<div class="contextMenu" id="Huiadminmenu">
+	<ul>
+		<li id="closethis">关闭当前 </li>
+	<!--<li id="closeleft">关闭当前左边 </li>
+		<li id="closeright">关闭当前右边 </li>
+		<li id="closenothis">关闭非当前 </li>-->
+		<li id="closeall">关闭全部 </li>
+	</ul>
+</div>
+
+{template 'web/_footer'} 
+
+<script type="text/javascript">
+	var isexpire="{$isexpire}";
+	function mypwd(){
+	   	var url = "{php echo $this->createWebUrl('property',array('op'=>'password'));}";
+		var title = "{php echo '修改'.$user['username'].'的密码';}";
+		var index = layer.open({
+			type: 2,
+			title: title,
+			content: url,
+			area: ['600px','480px'],
+			fix: false, 
+			shade:0.4
+		});		
+	}
+	
+	function myrecharge(){	
+		layer.open({
+		  type: 1,
+		  title:'微信扫一扫续年费，完成请刷新',
+		  skin: 'layui-layer-molv', //样式类名
+		  offset: '100px',
+		  closeBtn: 0, //不显示关闭按钮
+		  anim: 2,
+		  shadeClose: false, //开启遮罩关闭
+		  content: '<h3 style="color:red;text-align:center;">服务已到期{php echo date("Y-m-d",$property["enddate"]);}</h3><img src="{$recharge_qrcode}" width="300" style="text-align:center;"/>'
+		});
+	}
+	if(isexpire==1){
+		myrecharge();
+	}
+	{if !empty($_W['setting']['site']['key']) && $company['isworkersound']==1}
+	
+		var uid = "{php echo 'property_'.$_W['setting']['site']['key'].$mywe['weid'].$mywe['uid'];}";
+		$(document).ready(function () {
+			// 连接服务端
+			var socket = io("{$company['workermanurl']}:2120");
+			// 连接后登录
+			socket.on('connect', function(){
+				socket.emit('login', uid);
+			});
+			// 后端推送来消息时
+			socket.on('new_msg', function(msg){
+				 var audio = new Audio("../addons/rhinfo_zyxq/static/mobile/sound/web_send.mp3");
+				 audio.play();
+				 layer.open({
+					  title:'新消息',
+					  offset: 'rb',
+					  content: msg,
+					  time:10000,
+					  skin: 'layui-layer-molv', //样式类名
+					  closeBtn: 0, //不显示关闭按钮
+					  shade:false,
+					  btn:[]
+				});
+			});
+		});
+	
+	{/if}	
+</script>
+
+</body>
+</html>

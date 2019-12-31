@@ -1,0 +1,88 @@
+{template $this->mytpl('_header')}
+<div class="fui-page">
+    <div class="fui-header">
+	 <div class="fui-header-left"><a class="back"></a> </div>
+        <div class="title">
+			智能充电站	
+		</div>
+    </div>
+	<div class="fui-header-right">
+		<a href="{php echo $this->createMobileUrl('business',array('op'=>'register'))}">入驻</a>
+	</div>
+    <div class="fui-content">
+        <div class='fui-content-inner'>
+            <div class='content-empty' style='display:none;'>
+				<div class="empty-bg"><i class='icon icon-lights'></i></div>
+				<p>附近没有充电站</p>	               
+            </div>
+            <div class='container'></div>
+            <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+        </div>
+    </div>		
+</div>
+<script charset="utf-8" src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js"></script>
+	<script type="application/javascript">
+		$(function() {
+		   var geolocation = new qq.maps.Geolocation("{$sysconifg['qq_lbskey']}", "myapp");
+	　　　　var options = {timeout: 1000};//设置定位超时
+	　　　　var positionNum = 0;　　　　
+			geolocation.getLocation(showPosition,null,options);
+			
+		});
+		function showPosition(position){      		
+			var latitude = position.lat; // 纬度，浮点数，范围为90 ~ -90
+			var longitude = position.lng; // 经度，浮点数，范围为180 ~ -180。
+			require(['charging/list'], function (modal) {
+				modal.init({
+				range:'500',
+				lat:latitude,
+				lng:longitude
+				});
+			});
+		}
+</script>
+<script id='tpl_charging_list' type='text/html'>
+	<%each list as value%>
+		<div  class="fui-list store-item"  data-lng="<%value.lng%>"  data-lat="<%value.lat%>" >
+			<div class="fui-list-inner store-inner">
+				<a href="<%value.chargingurl%>" data-nocache="true">
+				<div class="title"> <span class="storename"><%value.title%></span><%if value.online=="0"%><span class="pull-right" style="font-size:0.65rem;color:red;margin-right:10px;">离线</span><%else%><span class="pull-right" style="font-size:0.65rem;color:green;margin-right:10px;">在线</span><%/if%></div>
+				<div class="subtitle">设备编号:<%value.devicesn%>&nbsp;&nbsp;<%if value.useports>0%>可用端口:<%value.useports%>个<%else%>端口数量:<%value.ports%>个<%/if%></div>
+				<%if value.address!=""%>
+				<div class="text">
+					地址: <span class='realname'><%value.address%></span>
+				</div>
+				<%/if%>
+
+				<div class="text location" style="color:green;">
+					<%if value.distance<100000%>
+					距离您:<%value.distance%>km
+				   <%/if%>
+				</div>
+				</a>
+			</div>
+			<div class="fui-list-angle ">
+				 <%if value.category =="1"%>
+					 <%if value.online==0%>
+					 <span class='external'><i class='icon icon-electrical' style='color:#ccc'></i></span>
+					 <%else%>
+					 <span class='external'><i class='icon icon-electrical' style='color:green'></i></span>
+					 <%/if%>
+				  <%else%>
+				   <%if value.online==0%>
+				   <span class='external'><i class='icon icon-taxi' style='color:#ccc'></i></span>
+					<%else%>
+					<span class='external'><i class='icon icon-taxi' style='color:green'></i></span>
+					 <%/if%>
+				  <%/if%>
+				  <%if value.online==0%>
+				  <a href="<%value.mapurl%>" class='external' ><i class='icon icon-location' style='color:#ccc'></i></a>
+				  <%else%>
+					<a href="<%value.mapurl%>" class='external' ><i class='icon icon-location' style='color:#f90'></i></a>
+				<%/if%>
+			</div>
+		</div>
+	<%/each%>		
+</script>	
+
+{template $this->mytpl('_footer')}

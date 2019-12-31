@@ -1,0 +1,38 @@
+{if count($navs)>8}
+	<div class="swiper swiper-nav" data-element=".swiper-nav" data-view="1">
+		<div class="swiper-container fui-icon-group noborder col-4" style="height:9.3rem;">
+			<div class="swiper-wrapper" style="background:none;">			
+					<div class="swiper-slide">
+						{loop $menu1 $nav1}
+							<div class="fui-icon-col" {if !empty($nav1['link'])} onclick="navtourl('{$nav1['link']}{php echo $_GPC['rid']?'&rid='.$_GPC['rid']:'';}','{$nav1['wxappid']}','{$nav1['wxapppage']}','{php echo !empty($nav1['bgimage'])?tomedia($nav1['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if}>
+								<div class="icon"><img src="{php echo tomedia($nav1['thumb'])}" /></div>
+								<div class="text">{$nav1['title']}</div>
+							</div>
+						{/loop}
+					</div>
+					{if !empty($menu2)}
+						<div class="swiper-slide">
+							{loop $menu2 $nav2}
+								<div class="fui-icon-col" {if !empty($nav2['link'])} onclick="navtourl('{$nav2['link']}{php echo $_GPC['rid']?'&rid='.$_GPC['rid']:'';}','{$nav2['wxappid']}','{$nav2['wxapppage']}','{php echo !empty($nav2['bgimage'])?tomedia($nav2['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if}>
+									<div class="icon"><img src="{php echo tomedia($nav2['thumb'])}" /></div>
+									<div class="text">{$nav2['title']}</div>
+								</div>
+							{/loop}
+						</div>	
+					{/if}				
+			</div>		
+			<div class="swiper-pagination"></div>		
+		</div>
+	</div>
+{else} 
+	{if !empty($navs)}
+		<div class="fui-icon-group noborder">
+			{loop $navs $nav}
+				<div class="fui-icon-col" {if !empty($nav['link'])} onclick="navtourl('{$nav['link']}{php echo $_GPC['rid']?'&rid='.$_GPC['rid']:'';}','{$nav['wxappid']}','{$nav['wxapppage']}','{php echo !empty($nav['bgimage'])?tomedia($nav['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if}>
+					<div class="icon"><img src="{php echo tomedia($nav['thumb']);}" /></div>
+					<div class="text">{$nav['title']}</div>
+				</div>
+			{/loop}
+		</div>
+	{/if}	 
+{/if}

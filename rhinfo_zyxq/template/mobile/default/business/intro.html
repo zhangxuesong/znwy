@@ -1,0 +1,43 @@
+<div class="fui-cell-group fui-cell-click">
+	{if !empty($item['starttime']) && !empty($item['endtime'])}
+	<div class="fui-cell">
+		<div class="fui-cell-icon"><i class="icon icon-time"></i></div>
+		<div class="fui-cell-text">营业时间：{$item['starttime']}-{$item['endtime']}</div>
+	</div>
+	{else}
+	<div class="fui-cell">
+		<div class="fui-cell-icon"><i class="icon icon-time"></i></div>
+		<div class="fui-cell-text">营业时间：24小时营业</div>
+	</div>
+	{/if}
+	{if !empty($item['contact'])}
+	<div class="fui-cell">
+		<div class="fui-cell-icon"><i class="icon icon-account"></i></div>
+		<div class="fui-cell-text"> 联系人：{$item['contact']}</div>
+	</div>
+	{/if}
+	{if !empty($item['telphone'])}
+	<a class="fui-cell" href="tel:{$item['telphone']}">
+		<div class="fui-cell-icon"><i class="icon icon-ring"></i></div>
+		<div class="fui-cell-text"> 联系电话：{$item['telphone']}</div>
+		<div class="fui-cell-remark"></div>
+	</a>
+	{/if}
+	{if !empty($item['mobile'])}
+	<a class="fui-cell" href="tel:{$item['mobile']}">
+		<div class="fui-cell-icon"><i class="icon icon-mobile"></i></div>
+		<div class="fui-cell-text"> 手机号码：{$item['mobile']}</div>
+		<div class="fui-cell-remark"></div>
+	</a>
+	{/if}
+	{if !empty($item['address'])}
+	<a class="fui-cell" href="{php echo $this->createMobileurl($mydo, array('op'=>'map','id' => $item['id']))}">
+		<div class="fui-cell-icon"><i class="icon icon-location"></i></div>
+		<div class="fui-cell-text"> 商家地址：{$item['city']}{$item['district']}{$item['address']}</div>
+		<div class="fui-cell-remark"></div>
+	</a>
+	{/if}
+</div>
+<div class='content' style="margin-top:0.5rem;">
+	{$content}
+</div>

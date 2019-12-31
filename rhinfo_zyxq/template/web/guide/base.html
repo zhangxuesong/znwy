@@ -1,0 +1,100 @@
+﻿<div class="panel panel-default">
+	<div class="panel-heading">
+		<div class="panel-title">基础设置</div>
+	</div>
+	<div class="panel-body">
+		<div id="workarea">
+			{if $rights['query'] == 1}  		
+			{loop $data $k $v}	
+				<div style="margin:15px 10px -10px 10px;">
+					{if $k > 0}<hr>{/if}
+					<button class="btn btn-success btn-sm" style="margin-bottom:10px;margin-right:5px;" >{$v['title']}</button>										
+					</span>
+					{loop $v['cate'] $i $r}
+						<span  style="position:relative;padding-right:12px;" onmouseenter="myshow({$r['id']})" onmouseleave="myhide({$r['id']})">
+							<a href="javascript:;" {if $rights['edit'] == 1} onclick="myedit({$r['id']},{$r['rid']})" {/if} class="btn btn-default btn-sm" style="margin-bottom:10px;margin-right:5px;" >{$r['title']}</a>
+							{if $rights['delete'] == 1}  
+							<a href="javascript:;" class="btn btn-sm" id ="delete{$r['id']}" style="display:none;position:absolute;right:-2px;top:-25px;" onclick="mydelete(this,{$_GPC['rid']},{$r['id']})"><i class="fa fa-close"></i></a>
+							{/if}
+
+						</span>					
+					{/loop}
+
+					<a href="javascript:;" {if $rights['add'] == 1} {else} disabled {/if} onclick="myadd('{$_GPC['rid']}','{$v['id']}')" class="btn btn-default btn-sm" style="margin-bottom:10px;margin-right:5px;" data-toggle="tooltip" data-placement="bottom" title="添加" ><i class="fa fa-plus"> 添加</i></a>
+					
+				</div>			
+			{/loop}	
+			{/if}
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	function myadd(rid,type){
+		var url = "{php echo $this->createWeburl('category',array('op'=>'guideadd','category'=>$category)).$mywe['direct'];}" + "&rid=" + rid + "&type=" + type;
+		var title = "基础设置";
+		var index = layer.open({
+			type: 2,
+			title:title,
+			content: url,
+			area: ['600px','500px'],
+			fix: true, 
+			shade:0.4,
+			resize:false,
+			end: function() {
+				var index = layer.msg('正在加载...', {icon: 16});
+				var url = "{php echo mywurl($mydo,array('op'=>'base')).$mywe['direct'];}"; 
+				$.get(url, {rid:rid}, function(data){
+					layer.close(index);
+					$("#guide-output").html(data);
+				});		
+			}
+		});		
+	}
+	function myedit(id,rid){
+		var url = "{php echo $this->createWeburl('category',array('op'=>'guideedit')).$mywe['direct'];}" + "&id=" + id + "&rid=" + rid; 
+		var title = "基础设置";
+		var index = layer.open({
+			type: 2,
+			title:title,
+			content: url,
+			area: ['600px','500px'],
+			fix: true, 
+			shade:0.4,
+			resize:false,
+			end: function() {
+				var index = layer.msg('正在加载...', {icon: 16});
+				var url = "{php echo mywurl($mydo,array('op'=>'base')).$mywe['direct'];}"; 
+				$.get(url, {rid:rid}, function(data){
+					layer.close(index);
+					$("#guide-output").html(data);
+				});		
+			}
+		});		
+	}
+	function mydelete(obj,rid,id){   	
+		layer.confirm('确认要删除吗？',{icon: 3, title:'提示'},
+		function(index){		
+			$.post("{php echo $this->createWebUrl('category',array('op'=>'delete')).$mywe['direct'];}",
+				{rid:rid,id:id},
+				function(data,status){
+					 if (data=='ok'){
+						$(obj).parents("span").remove();	
+						var count = $("#count").html();
+						$("#count").html(count - 1);
+					 }
+					 else{
+						layer.msg(data,{icon:0});
+						return;
+					 }
+				});		
+			layer.close(index);
+		});
+	}
+	function myshow(id){
+		$("#delete"+id).show();
+	}
+	function myhide(id){
+		$("#delete"+id).hide();
+	}
+	$("#workarea").height($(window).height()- 150);
+</script>

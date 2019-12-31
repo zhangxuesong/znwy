@@ -1,0 +1,201 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body">  
+	<div class="panel panel-default">
+	    <div class="panel-heading" style="height:60px;">
+		{if $rights['query'] == 1} 
+			<form action="./index.php" method="get" class="form-inline" role="form" id="form-search">
+				<input type="hidden" name="c" value="site" />
+				<input type="hidden" name="a" value="entry" />
+				<input type="hidden" name="m" value="rhinfo_zyxq" />
+				<input type="hidden" name="do" value="feecal" />
+				<input type="hidden" name="op" value="report" />	
+				<input type="hidden" name="direct" value="1" />						
+		
+				<div class="form-group">
+					<select class="form-control" id="rid" name="rid" onchange="renderCategory(this,'building','bid')" style="width:160px;">	
+						{if empty($regions)}<option value="">请选择所属主体</option>{/if}
+						{loop $regions $regionv}
+							<option value="{$regionv['id']}" {if $regionv['id'] == $_GPC['rid']} selected {/if} >{$regionv['title']}</option>
+						{/loop}
+					</select>
+				</div>
+			
+				<div class="form-group" >
+					<select class="form-control" id="bid" name="bid" style="width:180px;">
+						<option value="">请选择楼宇</option>						
+						{loop $defaultbuildings $buildingv}
+							<option value="{$buildingv['id']}" {if $buildingv['id']==$_GPC['bid']} selected {/if} >{$buildingv['title']}</option>
+						{/loop}			
+					</select>
+				</div>
+				<div class="form-group">
+					<input class="form-control" name="keyword" type="text" value="{$_GPC['keyword']}" placeholder="请输入房屋或收费项目" style="width:180px;"/>
+				</div>								
+				<div class="form-group">				
+					{php echo tpl_form_field_daterange('paydate', array('starttime' => date('Y-m-d',$starttime),'endtime' => date('Y-m-d',$endtime)));}
+				</div>
+				<div class="form-group">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>					
+					{if $rights['export'] == 1}
+						<button name="export" value="export" class="btn btn-default"><i class="fa fa-download"></i> 导出数据</button>
+					{/if}
+				</div>
+				<span class="pull-right" style="line-height:38px;">总金额：<strong class="text-success">{php echo $totalfee?$totalfee:0}</strong>&nbsp;&nbsp;</strong>共有数据：<strong id="count">{$total}</strong> 条</span> 
+			</form>
+		{/if}			
+	    </div>
+  
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+				<tr>
+					<th width="60">ID</th>
+					<th width="120">收费项目</th>			
+					<th width="120">所属主体</th>
+					<th width="100">楼宇或区域</th>
+					<th width="60">单元</th>
+					<th width="60">房产</th>
+					<th width="120">账单日期</th>
+					<th width="60">状态</th>
+					<th width="60">费用</th>
+					<th width="60">实付</th>
+					<th width="80">收款方式</th>
+					<th width="120">收款时间</th>
+					<th width="120">操作</th>
+				</tr>
+				</thead>
+			{loop $data $k $v}
+				<tr>
+					<td>{$v['id']}</td>					
+					<td>{$v['title']}</td>
+					<td>{$v['region']}</td>
+					<td>{$v['building']}</td>
+					<td>{php echo empty($v['unit'])?'无':$v['unit'];}</td>
+					<td>{$v['address']}</td>
+					<td>{$v['daterange']}</td>
+					<td class="td-status">
+					{if $v['status']=='1'}<span class="label label-danger radius">未支付</span>{elseif $v['status']=='2'}<span class="label label-success radius">已支付</span>{else}<span class="label label-warning radius">免单</span>{/if}
+					</td>
+					<td>{$v['fee']}</td>
+					<td>{$v['payfee']}</td>					
+					<td>{$v['paytype']}</td>
+					<td>{$v['paydate']}</td>
+					<td class="td-manage">					
+					{if $rights['edit'] == 1}	
+					<a href="javascript:;" onclick="myedit({$v['id']},{$v['category']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="{if $v['status']=='1'}编辑{else}查看{/if}" ><i class="fa fa-edit"></i> {if $v['status']=='1'}编辑{else}查看{/if}</a> {/if}
+					{if $rights['delete'] == 1}
+					<a href="javascript:;" onclick="mydel(this,{$v['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="撤销"><i class="fa fa-reply"></i> 撤销</a>{/if}
+					</td>					
+				</tr>
+			{/loop}				
+		</table>
+	  </div>    	  
+	</div>	
+  </div>
+</div>
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">			
+	window._building = {php echo json_encode($mybuilding);};
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择楼宇或区域</option>';
+			$("#bid").html(html);
+			
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		});
+	}
+
+function myallselect(select){ 
+
+	var obj = document.getElementsByName('myselect'); 
+	var tempsta = select.checked; 
+	
+	for(var k in obj){ 
+		if (obj[k].checked != tempsta) {      
+		     $("#myselect_"+k).prop("checked", tempsta);  
+		}
+	}	
+}	
+
+function mydelselect(){   
+	var count = parseInt($("#count").html());
+	if (count == 0){
+		return;
+	}
+
+	var obj = document.getElementsByName('myselect'); //选择所有name="myselect" id="myselect_{$k}" 的对象，返回数组 
+	var i = 0;
+	for(var j in obj){ 
+		if (obj[j].checked) {//如果选中,则删除   
+			i++;
+		}
+	}
+	
+	if (i==0){
+		layer.msg('请选择要删除的对象.',{icon:0});
+	   return ;
+	}
+	layer.confirm('将删除下属所有相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		//取到对象数组后，循环检测它是不是被选中 
+		layer.load(1);
+		layer.close(index);
+		for(var k in obj){ 
+			if (obj[k].checked) {//如果选中,则删除                
+				$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+				{op:"deletebill",id:obj[k].value},
+				function(data,status){
+					 if (data=='ok'){
+					 }
+					 else{
+						layer.msg(data,{icon:0});
+						return false;
+					 }
+				});		
+			}
+		}
+		layer.closeAll();
+		location.reload();
+	});
+}
+function mydel(obj,id){
+	layer.confirm('将删除下属所有相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+			{op:"deletebill",id:id},
+			function(data,status){
+			 if (data=='ok'){
+				$(obj).parents("tr").remove();
+				var count = $("#count").html();
+				$("#count").html(count - 1);
+				layer.msg('删除成功!',{icon:1});
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+			 }
+		});
+		layer.close(index);
+    });
+}
+
+function myedit(id,category){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'editbill')).$mywe['direct'];}" + "&id=" + id + "&category=" + category;
+	window.location.href = url;
+}
+</script>
+</body>
+</html>

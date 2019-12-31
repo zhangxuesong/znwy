@@ -1,0 +1,119 @@
+{if !empty($sysset['menucolor'])}
+    <style>
+		.fui-navbar .nav-item.active,
+		.fui-navbar .nav-item:active {
+			color: {$sysset['menucolor']};
+		}
+		.fui-navbar .nav-item .mybulge {
+			background-color:{$sysset['menucolor']};
+		}
+    </style>
+{else}
+	<style>
+		.fui-navbar .nav-item.active,
+		.fui-navbar .nav-item:active {
+			color: #ff6600;
+		}
+		.fui-navbar .nav-item .mybulge {
+			background-color:#ff6600;
+		}
+    </style>
+{/if}
+<style>
+ #service{
+    display:table-cell;
+	height:2.5rem;
+	text-align:left;
+	vertical-align: middle;
+	width:1%;
+	color:#999;}
+.fui-navbar .nav-item .mybulge {		
+	position: absolute;	
+	bottom:0.5rem;
+	right:0;
+	left:15%;;
+	margin-left:0;
+	margin-right:0;	
+	text-align:center;
+	vertical-align:middle;
+	width:2.5rem;
+	height:2.5rem;
+	padding: 0;
+	-webkit-border-radius:2.5rem;
+	-moz-border-radius:2.5rem;	
+	border-radius:2.5rem;
+	border:1px solid #ccc;
+	opacity:0.8;
+	box-shadow:0 0 3px 3px rgba(204,204,204,0.5);
+	z-index:999;
+	}
+	@-webkit-keyframes scaleout {
+		0% { -webkit-transform: scale(1.0) }
+		100% {
+			-webkit-transform: scale(1.1);
+			opacity: 0;
+		}
+	}
+	@keyframes scaleout {
+		0% {
+			transform: scale(1.0);
+			-webkit-transform: scale(1.0);
+		} 100% {
+			  transform: scale(1.1);
+			  -webkit-transform: scale(1.1);
+			  opacity: 0;
+		  }
+
+	}
+
+.fui-navbar .nav-item.active .mybulge{
+	opacity:1;
+}
+</style>
+<div class="fui-navbar">
+	{if $sysset['menu1url']=='#'}
+	{else}
+    <a href="{php echo empty($sysset['menu1url'])? $this->createMobileUrl('home'):$sysset['menu1url'];}" class="external nav-item {if $curr=='home'}active{/if}">
+        <span class="icon {php echo empty($sysset['icon1'])?'icon-home':$sysset['icon1'];}"></span>
+        <span class="label">{if empty($sysset['menu1'])}社区{else}{$sysset['menu1']}{/if}</span>
+    </a>
+	{/if}
+    {if $sysset['menu2url']=='#'}
+	{else}
+    <a href="{php echo empty($sysset['menu2url'])?$this->createMobileUrl('notice'):$sysset['menu2url'];}" class="nav-item {if $curr=='notice'}active{/if}" >
+        <span class="icon {php echo empty($sysset['icon2'])?'icon-mark1':$sysset['icon2'];}"></span>
+        <span class="label">{if empty($sysset['menu2'])}通知{else}{$sysset['menu2']}{/if}</span>
+		{if !empty($user['unreadnotice'])}
+			<span class="badge">{$user['unreadnotice']}</span>
+		{/if}
+    </a>
+    {/if}
+	{if $sysset['servicedisplay']==1}	
+    <a href="{php echo empty($sysset['menu3url'])?$this->createMobileUrl('service'):$sysset['menu3url'];}" class="nav-item {if $curr=='service'}active{/if}">		
+		<span class="icon {php echo empty($sysset['icon3'])?'icon-like1':$sysset['icon3'];}"></span>
+        <span class="label">{if empty($sysset['menu3'])}服务{else}{$sysset['menu3']}{/if}</span>	
+    </a>     	
+    {/if}
+	{if $sysset['servicedisplay']==2}	
+    <a href="{php echo empty($sysset['menu3url'])?$this->createMobileUrl('service'):$sysset['menu3url'];}" class="nav-item {if $curr=='service'}active{/if}" id="service">						
+		<span class="mybulge">
+			<p style="line-height:0.1rem;">&nbsp;</p>
+			<span class="icon {php echo empty($sysset['icon3'])?'icon-like1':$sysset['icon3'];}" style="font-size:1.45rem;color:#fff;"></span>
+		</span>								
+    </a>     	
+    {/if}
+	{if $sysset['menu1ur4']=='#'}
+	{else}
+    <a href="{php echo empty($sysset['menu4url'])?$this->createMobileUrl('steward'):$sysset['menu4url'];}" class="nav-item {if $curr=='steward'}active{/if}">
+        <span class="icon {php echo empty($sysset['icon4'])?'icon-lights':$sysset['icon4'];}"></span>
+        <span class="label">{if empty($sysset['menu4'])}管家{else}{$sysset['menu4']}{/if}</span>
+    </a>
+	{/if}
+	{if $sysset['menu5url']=='#'}
+	{else}
+    <a href="{php echo empty($sysset['menu5url'])?$this->createMobileUrl('member'):$sysset['menu5url'];}" class="nav-item {if $curr=='member'}active{/if}">
+        <span class="icon {php echo empty($sysset['icon5'])?'icon-person2':$sysset['icon5'];}"></span>
+        <span class="label">{if empty($sysset['menu5'])}我的{else}{$sysset['menu5']}{/if}</span>
+    </a>
+	{/if}
+</div>

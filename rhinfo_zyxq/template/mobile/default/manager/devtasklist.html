@@ -1,0 +1,15 @@
+<div class="fui-list-group">  			
+	{loop $list $v}
+	<a class="fui-list external" data-nocache="true" href="{$v['url']}">
+		<div class="fui-list-media">
+			<img src="{$v['image']}" class="round">
+		</div>
+		<div class="fui-list-inner">
+			<div class="title">{$v['title']}</div>					
+			<div class='text'>{$v['devcycle']}</div>
+			<div class="text">{$v['remark']}</div>
+		</div>
+		<div class="angle"></div>
+	</a>
+	{/loop}
+</div>

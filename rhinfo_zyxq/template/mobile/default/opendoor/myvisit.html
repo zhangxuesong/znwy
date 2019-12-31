@@ -1,0 +1,59 @@
+{template $this->mytpl('_header')}
+
+<input type="hidden" id="mylat" name="mylat" value="0"/>
+<input type="hidden" id="mylng" name="mylng" value="0"/>
+
+<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key={$sysconifg['qq_lbskey']}"></script>
+<script type="application/javascript">
+    wx.ready(function () {
+        asd();        
+    });
+    function asd() {
+        wx.getLocation({
+            type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+            success: function (res) {
+                var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                var speed = res.speed; // 速度，以米/每秒计
+                var accuracy = res.accuracy; // 位置精度
+                $("#mylat").val(latitude); //OK
+				$("#mylng").val(longitude); //OK				
+            }
+        });
+    }
+
+</script>
+	
+	<div class="fui-page fui-page-current page-commission-index ">
+	<div class="fui-header">
+		<div class="fui-header-left">	
+			<a class="back"></a>		
+		</div>
+		<div class="title">访客开门</div>
+		<div class="fui-header-right">			
+		</div>
+	</div>
+	
+	<div class='fui-content member-page navbar'>	
+	{loop $visits $visit}
+		<div class="fui-card fui-card-list " style="overflow:hidden;">
+			<div class='fui-card-info'>
+				<div class="text">                        
+					<span class="title text-warning">{$visit['title']}</span>
+					<span class="subtitle">有效时间:{php echo date('Y-m-d H:i',$visit['effetime']);}&nbsp;可开门次数：<strong id="opentimes{$visit['id']}">{$visit['opentimes']}</strong> 次</span>									
+				</div>		
+			</div>
+			<div class='fui-card-btns'>
+				<a href="#"><i class="icon icon-city"></i> {$region['title']}</a>          
+				<a class="opendoor" data-doorid="{$visit['doorid']}" data-visitid="{$visit['id']}" data-qrcode="{$visit['qrcode']}">
+					<span class="text-warning"><i class="icon icon-lock"></i></span> 开门
+				</a>
+			</div>
+		</div>				 
+	{/loop} 
+	</div>
+ </div> 
+<script language='javascript'>
+	require(['opendoor/visit'], function (modal) {modal.initVisit({});});
+</script>	
+{template $this->mytpl('_footer')}

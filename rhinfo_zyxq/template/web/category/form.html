@@ -1,0 +1,240 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />
+	<input type="hidden" name="pid" value="{$pid}" />
+	<input type="hidden" name="rid" value="{$rid}" />
+	<input type="hidden" name="type" value="{$type}" />
+		
+	<div class="form-group" {if $type==1} style="display:none;" {/if}>
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>分类名称</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入分类名称" name="title" />
+			{if $type==4}
+			 <span class="help-block">服务团队人员分类，可以分管理人员、办公人员、服务人员等</span>
+			 {/if}
+		</div>			
+	</div>
+  {if $type==4} 
+	  <div class="form-group">
+	   <label class="col-xs-12 col-sm-2 col-md-2 control-label">是否显示 </label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">                   	
+			<label class='radio-inline'>
+				<input type='radio' name='tplid' value="1" {if $item['tplid']==1}checked{/if} /> 显示
+			</label>
+			<label class='radio-inline'>
+				<input type='radio' name='tplid' value="0" {if empty($item['tplid']) || $item['tplid']==0 }checked{/if} /> 不显示
+			</label>
+			 <span class="help-block">所属服务团队在手机端是否显示</span>
+		</div>
+	</div>	
+	 <div class="form-group">
+	   <label class="col-xs-12 col-sm-2 col-md-2 control-label">操作权限</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">报修处理</span><input type="checkbox" value="1" {if $item['right1']==1}checked="checked"{/if} name="rights[]"/></div></div>
+			<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">投诉建议</span><input type="checkbox" value="1" {if $item['right2']==1}checked="checked"{/if} name="rights[]"/></div></div>
+			<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">智能门禁</span><input type="checkbox" value="1" {if $item['right3']==1}checked="checked"{/if} name="rights[]"/></div></div>
+		</div>
+	</div>
+	 <div class="form-group">
+	   <label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">住户管理</span><input type="checkbox" value="1" {if $item['right4']==1}checked="checked"{/if} name="rights[]"/></div></div>			
+			<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">绑定审核</span><input type="checkbox" value="1" {if $item['right5']==1}checked="checked"{/if} name="rights[]"/></div></div>
+			<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">通知审核</span><input type="checkbox" value="1" {if $item['right6']==1}checked="checked"{/if} name="rights[]"/></div></div>			
+		</div>		 
+	</div>
+	 <div class="form-group">
+	   <label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">抄表录入</span><input type="checkbox" value="1" {if $item['right7']==1}checked="checked"{/if} name="rights[]"/></div></div>			
+			<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">安防巡更</span><input type="checkbox" value="1" {if $item['right8']==1}checked="checked"{/if} name="rights[]"/></div></div>
+			<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">环境维护</span><input type="checkbox" value="1" {if $item['right9']==1}checked="checked"{/if} name="rights[]"/></div></div>			
+		</div>		 
+	</div>	
+	<div class="form-group">
+	   <label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">物品登记</span><input type="checkbox" value="1" {if $item['right10']==1}checked="checked"{/if} name="rights[]"/></div></div>			
+			<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">派单权限</span><input type="checkbox" value="1" {if $item['right11']==1}checked="checked"{/if} name="rights[]"/></div></div>
+			<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">智能设备</span><input type="checkbox" value="1" {if $item['right12']==1}checked="checked"{/if} name="rights[]"/></div></div>			
+		</div>		 
+	</div>	
+	<div class="form-group">
+	   <label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">车位管理</span><input type="checkbox" value="1" {if $item['right13']==1}checked="checked"{/if} name="rights[]"/></div></div>			
+			<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">设备巡检</span><input type="checkbox" value="1" {if $item['right14']==1}checked="checked"{/if} name="rights[]"/></div></div>
+			<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">社区论坛</span><input type="checkbox" value="1" {if $item['right15']==1}checked="checked"{/if} name="rights[]"/></div></div>			
+		</div>		 
+	</div>
+	 <div class="form-group">
+	   <label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">费用管理</span><input type="checkbox" value="1" {if $item['right16']==1}checked="checked"{/if} name="rights[]"/></div></div>			
+			<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">统计分析</span><input type="checkbox" value="1" {if $item['right17']==1}checked="checked"{/if} name="rights[]"/></div></div>
+			<div class="col-sm-3 col-lg-3 col-xs-12">
+			<div class="input-group">
+			<span class="input-group-addon">工作监督</span><input type="checkbox" value="1" {if $item['right18']==1}checked="checked"{/if} name="rights[]"/></div></div>			
+		</div>		 
+	</div>	
+	 <div class="form-group">
+	   <label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<span class="help-block">操作权限用于手机端处理权限</span>		
+		</div>		 
+	</div>	
+	<script type="text/javascript">
+		require(['jquery.ui', 'bootstrap.switch'], function(){		
+			$(":checkbox[name='rights[]']").bootstrapSwitch();		
+		});
+		
+	</script>
+  {/if}
+  {if $type==1} 
+		<div class="form-group" >
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>通知类型</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<select name="tplid" id="tplid" class="form-control" onchange="change()">
+					<option value="">请选择通知类型</option>
+					<option value="tplid1" {if $item['tplid']=='tplid1'}selected{/if}>物业管理通知</option>
+					<option value="tplid6" {if $item['tplid']=='tplid6'}selected{/if}>停水通知</option>
+					<option value="tplid7" {if $item['tplid']=='tplid7'}selected{/if}>停燃气通知</option>
+					<option value="tplid8" {if $item['tplid']=='tplid8'}selected{/if}>停电通知</option>
+					<option value="tplid9" {if $item['tplid']=='tplid9'}selected{/if}>门禁到期通知</option>
+					<option value="tplid10" {if $item['tplid']=='tplid10'}selected{/if}>电梯中断通知</option>
+					<option value="tplid11" {if $item['tplid']=='tplid11'}selected{/if}>停车场停用通知</option>
+				<!--<option value="tplid12" {if $item['tplid']=='tplid12'}selected{/if}>物业缴费通知</option>-->
+				</select>	
+			</div>	
+		</div>		
+
+	{/if}
+	
+	{if $type==4}
+	{else}
+		 <div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">通知模板标题颜色</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+					  {php echo tpl_form_field_color('topcolor',$item['topcolor'])}
+					  <span class="help-block">通知模板颜色，可以为空。</span>
+					</div>
+		 </div>
+		 
+		  <div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">通知模板文本颜色</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+					  {php echo tpl_form_field_color('textcolor',$item['textcolor'])}
+					  <span class="help-block">通知模板文本颜色，可以为空。</span>
+					</div>
+		 </div>
+	 {/if}
+	 {if $type==2 || $type==3}
+	 <div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">绑定微信</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<div class="input-group ">
+				<input type="hidden" class="form-control" id="uid" value="{$item['uid']}" name="uid">
+				<input type="hidden" class="form-control" id="openid" value="{$item['openid']}" name="openid">
+				<input type="text" class="form-control"  id="nickname" value="{$item['nickname']}" readonly name="nickname">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" onclick="showFansDialog(this);">选择微信</button>
+				</span>
+			</div>
+			 <span class="help-block">接收新的报修和新的建议模板消息。</span>
+		</div>	
+	</div>		
+	<script type="text/javascript">
+		function showFansDialog(elm) {
+			require(['util', 'jquery'], function(u, $){
+				var footer = '<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>';
+				var modalobj = u.dialog('粉丝选择', ["{php echo $this->createWeburl('query',array('op'=>'mfans')).$mywe['direct'];}"], footer, {containerName:'link-container'});
+				modalobj.find('.modal-body').css({'overflow-y':'auto' });
+				modalobj.modal('show');
+				});
+		}
+	</script>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">向上级上报时间</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<div class="input-group">
+			   <input type="number" name="reporttime" class="form-control"  value="{$item['reporttime']}" />
+			   <span class="input-group-addon">小时</span>		   
+		   </div>
+		   <span class="help-block">报修和投诉未处理或未回复向上级上报时间，为0则不上报.</span>
+		</div>	
+	</div>
+	{/if}
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">备注</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="remark" value="{$item['remark']}" placeholder="输入备注" name="remark" />
+		</div>	
+	</div>	
+</form>	
+<script>
+function change(){
+   var tplid = $("#tplid").find("option:selected").val();
+   switch(tplid) {
+	   case 'tplid1':
+	   $("#title").val("管理通知");
+	   break;
+	   case 'tplid6':
+	    $("#title").val("停水通知");
+	   break;
+	   case 'tplid7':
+	   $("#title").val("停燃气通知");
+	   break;
+	   case 'tplid8':
+	   $("#title").val("停电通知");
+	   break;
+	   case 'tplid9':
+	   $("#title").val("门禁到期通知");
+	   break;
+	   case 'tplid10':
+	   $("#title").val("电梯中断通知");
+	   break;
+	   case 'tplid11':
+	   $("#title").val("停车场通知");
+	   break;
+	   case 'tplid12':
+	   $("#title").val("物业缴费通知");
+		break;
+	   default:
+		break;
+	}
+}
+</script>

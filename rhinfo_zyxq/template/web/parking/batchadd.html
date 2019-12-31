@@ -1,0 +1,101 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />
+			<input type="hidden" name="pid" value="{$pid}" />
+			<input type="hidden" name="rid" value="{$rid}" />
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>车位区域</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<select name="lid" id="lid" class="form-control">						
+						<option value="">请选择车位区域</option>
+						{loop $data $k $v}
+							<option value="{$v['id']}">{$v['title']}</option>
+						{/loop}
+					</select>
+					<span class="help-block">车位区域不能为空，如无车位区域，请返回添加区域.</span>
+				</div>	
+			</div>
+			<div class="form-group">
+			   <label class="col-xs-12 col-sm-2 col-md-2 control-label">车位类别</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">                   	
+					<label class='radio-inline'>
+						<input type='radio' name='category' value='0' checked /> 公共无产权
+					</label>
+					<label class='radio-inline'>
+						<input type='radio' name='category' value='1' /> 自购有产权
+					</label>					
+					 <span class="help-block">公共无产权是公共停车位，由物业租赁;</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">前缀名称</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="prefix" value="" placeholder="如:A或B-，可不填写" name="prefix" />
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>起始编号</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="startnum" value="" placeholder="车位起始编号" name="startnum" />
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">结束编号</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="endnum" value="" placeholder="车位结束编号" name="endnum" />
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">编号统一位数</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="digit" value="" placeholder="车位编号统一位数，可不设定" name="digit" />
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">后缀名称</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="suffix" value="" placeholder="如无后缀，可不填写" name="suffix" />
+				</div>	
+			</div>			
+		</form>	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+var pid = "{$pid}";
+var rid = "{$rid}";
+
+function mysubmit(obj){
+
+	var lid = $("#lid").find("option:selected").val(); 
+	if (lid=='') {
+	   layer.msg("车位区域不能为空！");
+	   return;
+	}
+
+	var startnum = $.trim($("#startnum").val());	
+    if (startnum=='') {
+	   layer.msg("车位起始编号不能为空！");
+	   return;
+	}		
+	myprocess(obj);
+	$("#myform").submit();
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'list','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid ;
+	 location.href = url;
+}
+
+</script> 
+
+</body>
+</html>

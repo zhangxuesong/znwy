@@ -1,0 +1,119 @@
+﻿
+<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+    
+	{if $_W['uid']} 
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"> <span class="text-danger">*</span>所属物业</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+				<option value="0">请选择所属物业</option>
+				{loop $myproperty $k $v}
+					<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>
+	{else}
+		<input type="hidden" class="form-control" id="pid" value="{$mywe['pid']}" name="pid" />
+	{/if}
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>小区或商圈</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="rid" name="rid" onchange="renderCategory(this,'building','bid')">
+				<option value="0">请选择小区或商圈</option>	
+				{if $_W['uid']} 
+				{else}
+					{loop $regions $r}
+						<option value="{$r['id']}" >{$r['title']}</option>
+					{/loop}
+				{/if}
+			</select>
+		</div>
+	</div>		
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">楼宇</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="bid" name="bid" onchange="renderCategory(this,'unit','tid')">
+				<option value="0">请选择楼宇</option>					
+			</select>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">单元</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="tid" name="tid" >
+				<option value="0">请选择单元</option>							
+			</select>
+		</div>
+	</div>	
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">账单开始日期</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_date('startdate',date('Y-m-d'));}			
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">账单结束日期</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_date('enddate',date("Y-m-d",strtotime("+1 month")));}			
+		</div>	
+	</div>
+		  
+   <div class="form-group">
+		<input type="hidden" id="feeitems" value=""  name="feeitems" />
+       <label class="col-xs-12 col-sm-2 col-md-2 control-label">收费项目</label>
+	   <div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="feeitem" name="feeitem" multiple="multiple">			   
+			</select>
+			<span class="help-block">可按shift或ctrl点击多选</span>
+		</div>
+    </div>	       
+	
+</form>	
+
+<script type="text/javascript">
+	window._region = {php echo json_encode($myregion);};				
+	window._building = {php echo json_encode($mybuilding);};
+	window._unit = {php echo json_encode($myunit);};
+	window._feeitem = {php echo json_encode($myfeeitem);};
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择</option>';
+			var html1 = '';
+			if (id=='rid'){
+				$("#bid").html(html);
+				$("#tid").html(html);
+				$("#feeitem").html(html1);
+			}
+			else if (id=='bid'){
+				$("#tid").html(html);
+				$("#feeitem").html(html1);
+			}
+
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			
+			if(id=='bid'){
+				for(var i=0; i< window['_feeitem'][index].length; i++){
+					html1 += '<option value="'+window['_feeitem'][index][i]['id']+'">'+window['_feeitem'][index][i]['title']+'</option>';			
+				}
+				$("#feeitem").html(html1);
+			}
+			
+			$selectChild.html(html);
+		});
+	}
+</script>

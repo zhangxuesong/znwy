@@ -1,0 +1,85 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:30px;">
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/form'}	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'list')).$mywe['direct'];}";
+	var userno =  $.trim($("#userno").val());
+	var username = $.trim($("#myuser").val());
+	var password = $.trim($("#mypass1").val());
+	var password2 = $.trim($("#mypass2").val());
+	var status = $("input[name=status]:checked").val(); 
+	var id = $("#id").val();
+	var uid = $("#uid").val();
+    var gid = $("#gid").find("option:selected").val();  	
+	var pid = $("#pid").find("option:selected").val();  
+	var rid = $("#rid").find("option:selected").val();  
+	var name = $("#name").val();
+	var mobilephone = $("#mobilephone").val();
+	var remark = $("#remark").val(); 
+	
+    if (userno=='') {
+	   layer.msg("用户代号不能为空！",{icon:0});
+	   return;
+	}	
+	
+	if (username=='') {
+	   layer.msg("用户名称不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (password != password2) {
+	   layer.msg("两次输入密码不一致！",{icon:0});
+	   return;
+	}
+	
+	if (password.length > 0 && password.length < 8 ){
+		 layer.msg("密码至少8个字符！",{icon:0});
+		return;
+	}
+    
+	if (gid=='') {
+	   layer.msg("用户角色不能为空！",{icon:0});
+	   return;
+	}
+	{if $_W['isfounder']}
+		var usergroup = $("#usergroup").find("option:selected").val(); 			
+	{else}
+		var usergroup = $("#usergroup").val();  		
+	{/if}
+	
+	
+	$.post("{php echo $this->createWebUrl($mydo,array('op'=>$_GPC['op'])).$mywe['direct'];}",
+	{id:id,uid:uid,userno:userno,username:username,password:password,gid:gid,pid:pid,rid:rid,usergroup:usergroup,status:status,name:name,mobilephone:mobilephone,remark:remark},
+	function(data,status){
+	 if (data=='ok'){
+		layer.msg('保存成功！',{icon:1})	
+		setTimeout(function(){
+			location.href = url;
+		  },500);					
+	 }
+	 else{
+		layer.msg(data,{icon:0});
+	 }
+	});
+}
+
+function myreturn(){
+	window.history.back();
+}
+
+</script> 
+
+
+</body>
+</html>

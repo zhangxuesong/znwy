@@ -1,0 +1,190 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+<style type="text/css">
+.nav-tabs li a { padding: 3px 10px;}
+</style>
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body">  
+  <ul class="nav nav-tabs">		 		  
+	  <li {if $category==1}class="active"{/if}><a href="{php echo $this->createWeburl($mydo,array('op'=>'userlist','category'=>1)).$mywe['direct'];}" >房屋成员</a></li>		
+	  <li {if $category==2}class="active"{/if}><a href="{php echo $this->createWeburl($mydo,array('op'=>'userlist','category'=>2)).$mywe['direct'];}" >商铺成员</a></li>		
+	</ul>	
+	<br>
+    {if $rights['query'] == 1}  
+	<div class="collapse" id="mycollapse">
+	<form action="./index.php" method="get" class="form-horizontal" role="form" id="form-search">
+		<input type="hidden" name="c" value="site" />
+		<input type="hidden" name="a" value="entry" />
+		<input type="hidden" name="m" value="rhinfo_zyxq" />
+		<input type="hidden" name="do" value="member" />
+		<input type="hidden" name="op" value="userlist" />
+		<input type="hidden" name="category" value="2" />	
+		<input type="hidden" name="direct" value="1" />
+		<input type="hidden" name="mycon" id="mycon" value="1" />
+		<div class="form-group">		
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">省/市/区</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				{php echo tpl_form_field_district('area', array('province' => $_GPC['area']['province'], 'city' => $_GPC['area']['city'], 'district' => $_GPC['area']['district'] ));}
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">所属主体</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<input class="form-control" name="regionname"   type="text" value="{$_GPC['regionname']}" placeholder="请输入所属主体名称" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-3 col-md-2 control-label">状态</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<select class="form-control" name="isfree">
+					<option value="">不限</option>
+					<option value="0">收费</option>
+					<option value="1">免费</option>
+					<option value="2">空置</option>
+					<option value="3">异常</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">关键字</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<input class="form-control" name="keyword"   type="text" value="{$_GPC['keyword']}" placeholder="请输入姓名或手机号或编号" />
+			</div>
+		</div>		
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+			<div class="col-sm-4 col-xs-12">
+				<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>				
+			</div>
+		</div>
+	</form>
+	</div>
+	{/if}
+	<div class="panel panel-default">	
+	    <div class="panel-heading">				
+			{if $rights['query'] == 1}  			
+			<a class="btn btn-primary" onclick="mycondition(this)"  data-toggle="collapse" href="#mycollapse" aria-expanded="false" aria-controls="mycollapse">
+			<i class="fa fa-angle-double-down"></i> 筛选条件</a>
+			{/if}
+			<span class="pull-right" style="line-height:38px;">共有数据：<strong id="count">{$total}</strong> 条</span> 
+	    </div>
+  
+		<div class="panel-body table-responsive">
+			<table class="table">
+				<thead class="navbar-inner">
+				<tr>
+					<th width="80">ID</th>
+					<th width="120">所属主体</th>
+					<th width="100">区域</th>
+					<th width="60">房产</th>
+					<th width="80">业主姓名</th>					
+					<th width="90">手机号</th>
+					<th width="60">类别</th>
+					<th width="100">参与缴费</th>
+				</tr>
+			</thead>
+			{loop $data $k $v}
+				<tr>
+					<td>
+					{if !empty($v['shop_mps'])}
+					<a role="button"  data-toggle="collapse" data-parent="#accordion" href="#collapse{$v['id']}" aria-expanded="{if $k==0}true{else}false{/if}" aria-controls="collapse{$v['id']}">
+			        <i class="fa fa-plus"></i></a> {$v['id']}
+					{else}
+					<i class="fa fa-circle-thin"></i> {$v['id']}
+					{/if}
+					</td>
+					<td>{$v['region']}</td>
+					<td>{$v['building']}</td>
+					<td>{$v['title']}</td>
+					<td>{$v['ownername']}</td>
+					<td><a style="color:#000;" href="javascript:;" title="{$v['mobile']}">{php echo !empty($v['mobile']) ? substr_replace($v['mobile'],'****',3,4):'';}</a></td>
+					<td class="td-status"><span class="label label-danger">业主</span></td>
+					<td class="td-status">					
+					<span class="label {if $v['isnotice']}label-warning{else}label-default{/if}">
+					<a href="javascript:;" style="color:#fff;" onclick="mychg(this,{$v['id']})" title="是否参与缴费" >{if $v['isnotice']}参与{else}不参与{/if}</span>							
+					</td>					
+				</tr>
+		
+					<tr><td colspan="8">
+					<div id="collapse{$v['id']}" class="panel-collapse collapse" role="tabpanel">
+					<table class="table table-hover" style="margin-top:-10px;">
+					{loop $v['shop_mps'] $i $mp}			
+						<tr>
+						<td width="80">{php echo $i + 1;}</td>
+						<td width="120">{$v['region']}</td>
+						<td width="100">{$v['building']}</td>
+						<td width="60">{$v['title']}</td>
+						<td width="80">{$mp['ownername']}</td>
+						<td width="90"><a style="color:#000;" href="javascript:;" title="{$mp['mobile']}">{php echo !empty($mp['mobile']) ? substr_replace($mp['mobile'],'****',3,4):'';}</a></td>
+						<td width="60" class="td-status"><span class="label {if $mp['otype']=='1'} label-success{else}label-default{/if} radius">
+						{if $mp['otype']=='1'}成员{else}租户{/if}</span></td>
+						<td width="100" class="td-status">					
+						<span class="label {if $mp['isnotice']}label-warning{else}label-default{/if}">
+						<a href="javascript:;" style="color:#fff;" onclick="mynotice(this,{$mp['id']})" title="是否参与缴费" >{if $mp['isnotice']}参与{else}不参与{/if}</span>							
+						</td>					
+					</tr>				
+					{/loop}
+					</table>
+					</div>
+					</td></tr>	
+			{/loop}				
+		</table>
+	  </div>    	  
+	</div>	
+  </div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+	
+function mynotice(obj,id){
+	var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/>';
+	$(obj).html(html);  
+	$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+		{ op:"sstatus",category:2,id:id},
+		function(ret){		
+		 if(ret.status==0){
+			layer.msg('操作失败',{icon:0});
+		 }
+		 else{
+			$(obj).html(ret.isnotice);
+			$(obj).parent().attr("class",ret.css);
+		 }
+	},"json");		
+}
+function mychg(obj,id){
+	var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/>';
+	$(obj).html(html);  
+	$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+		{ op:"sstatus",category:1,id:id},
+		function(ret){			
+		 if(ret.status==0){
+			layer.msg('操作失败',{icon:0});
+		 }
+		 else{
+			$(obj).html(ret.isnotice);
+			$(obj).parent().attr("class",ret.css);
+		 }
+	},"json");	
+}	
+function mycondition(obj){    
+    var mycon = $("#mycon").val();
+	var html = '';
+	if (mycon==1){
+		html = '<i class="fa fa-angle-double-up"></i> 隐藏筛选';
+		$("#mycon").val("2");
+		$("#mycollapse").show("slow");
+	}
+	else {
+		html = '<i class="fa fa-angle-double-down"></i> 筛选条件';
+		$("#mycon").val("1");
+		$("#mycollapse").hide("slow");
+	}
+	$(obj).html(html);
+	window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>

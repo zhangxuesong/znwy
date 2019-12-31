@@ -1,0 +1,135 @@
+{template $this->mytpl('_pheader')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/rhui/css/mui.picker.css">
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/rhui/css/mui.poppicker.css">
+
+<style>
+.mui-btn-blue,.mui-btn-primary{
+	color: #fff;
+	border: 1px solid #04ab02;
+	background-color: #04ab02;
+}
+.mui-btn{
+	border:none;
+	background-color:none;
+}
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+</style>
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back"></a>
+	</div>
+	<div class="title">租赁车位</div> 
+
+    </div>
+   	<div class='fui-content'>	
+		<form action="{php echo $this->createMobileUrl($mydo,array('op'=>'parklease'));}" method="post" id="myform">						
+			<div class="fui-cell-group">				
+				<div class="fui-cell must">
+					<div class="fui-cell-label">我的房产</div>
+					<div class="fui-cell-info">
+						<input type="text" class='fui-input' id='myhouse' name='myhouse' readonly placeholder="请选择"  value="{$member['address']}" />
+						<input id="rid" type="hidden" name="rid" value="{$member['rid']}" />
+					</div>
+				</div>
+				<div class="fui-cell must">
+					<div class="fui-cell-label">选择区域</div>
+					<div class="fui-cell-info">
+						<input type="text" class='fui-input' id='mylocation' name='mylocation' readonly placeholder="请选择"  value="" />
+						<input id="locationid" type="hidden" name="locationid" value="" />
+					</div>
+				</div>		
+				<div class="fui-cell must">
+					<div class="fui-cell-label">选择车位</div>
+					<div class="fui-cell-info">
+						<input type="text" class='fui-input' id='myparking' name='myparking' readonly placeholder="请选择"  value="" />
+						<input id="parkingid" type="hidden" name="parkingid" value="" />
+					</div>
+				</div>
+			</div>
+		</form>
+        <div class="btn btn-success block" id="btnSubmit">下一步</div>      
+	</div>
+</div>
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.min.js"></script>		
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.picker.js"></script>			
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.poppicker.js"></script>	
+<script>
+	var myhouses = {php echo json_encode($houses);};
+	var mylocations = {php echo json_encode($locations);};	
+	var mynull = [];	
+	var rid = "{$member['rid']}";
+	(function($, doc){
+		$.init();
+		$.ready(function() {
+			var myhousePicker = new $.PopPicker();
+			var mylocationPicker = new $.PopPicker();
+			var myparkingPicker = new $.PopPicker();
+			
+			myhousePicker.setData(myhouses);		
+			var housePickerButton = doc.getElementById('myhouse');
+			var ridResult = doc.getElementById('rid');
+			
+			mylocationPicker.setData(mylocations);
+			var locationPickerButton = doc.getElementById('mylocation');
+			var locationidResult = doc.getElementById('locationid');
+			
+			myparkingPicker.setData(mynull);
+			var parkingPickerButton = doc.getElementById('myparking');
+			var parkingidResult = doc.getElementById('parkingid');
+			
+			housePickerButton.addEventListener('tap', function(event) {
+				myhousePicker.show(function(items) {			
+					ridResult.value=items[0].value;
+					housePickerButton.value=items[0].text;
+					rid = items[0].value;
+					core.json('car/parking',{rid:items[0].value,cfrom:'rid'}, function (json) {
+						mylocationPicker.setData(json.result.list);
+						locationPickerButton.value = "";
+						locationidResult.value = "";
+						myparkingPicker.setData(mynull);
+						parkingPickerButton.value = "";
+						parkingidResult.value = "";
+						
+					}, true, true);				
+					//return false;
+				});
+			}, false);			
+			
+			locationPickerButton.addEventListener('tap', function(event) {
+				mylocationPicker.show(function(items) {
+					if(items[0].value == null) { 
+					}
+					else{
+						locationPickerButton.value = items[0].text;
+						locationidResult.value = items[0].value;
+						core.json('car/parking',{rid:rid,lid:items[0].value,cfrom:'lid'}, function (json) {
+							myparkingPicker.setData(json.result.list);
+							parkingPickerButton.value = "";
+							parkingidResult.value = "";
+							
+						}, true, true);				
+					}				
+					//return false;
+				});
+			}, false);
+			
+			parkingPickerButton.addEventListener('tap', function(event) {
+				myparkingPicker.show(function(items) {
+					if(items[0].value == null) { 
+					}
+					else{
+						parkingPickerButton.value=items[0].text;				
+						parkingidResult.value=items[0].value;
+					}				
+					//return false;
+				});
+			}, false);
+		});
+	})(mui, document);
+	require(['car/parking'], function (modal) {
+		modal.init();
+	});
+</script>
+{template $this->mytpl('_footer')}

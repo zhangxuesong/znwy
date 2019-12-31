@@ -1,0 +1,1 @@
+<web-view src="{{url}}&appfrom=aliapp" onMessage="test"></web-view>

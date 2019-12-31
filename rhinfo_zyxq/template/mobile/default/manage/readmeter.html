@@ -1,0 +1,91 @@
+{template $this->mytpl('_header')}
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.min.js"></script>  
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.picker.min.js"></script>  
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/rhui/css/mui.picker.min.css">
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170712">
+<style>
+.mui-btn-blue,.mui-btn-primary{
+	color: #fff;
+	border: 1px solid #1ab394;
+	background-color: #1ab394;
+}
+</style>
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">抄表录入</div>
+		<div class="fui-header-right"></div>
+	</div>
+	<div class='fui-content navbar'> 
+		<input type="hidden" value="{$_GPC['rid']}" name="rid" id="rid" />
+       	<input type="hidden" value="{$_GPC['room']}" name="room" id="room" />
+		<div class="fui-title"><i class="icon icon-city"></i> {$region['title']} {$_GPC['myroom']}</div>
+        <div class="fui-cell-group">
+			
+			<div class="fui-cell must">
+				<div class="fui-cell-label">收费项目</div>
+				<div class="fui-cell-info">					    
+					<select name="feeitem" id="feeitem">		
+					{loop $feeitems $feeitem}
+						<option value="{$feeitem['itemid']}" >{$feeitem['title']}</option>
+					{/loop}
+				</select>						
+				</div>				
+			</div>	
+			
+            <div class="fui-cell must">
+                <div class="fui-cell-label">起始月份</div>
+                <div class="fui-cell-info">
+                    <input type="text" placeholder="如：2018-05" class="fui-input" readonly value="" id="startdate" />
+                </div>
+            </div>
+			
+			<div class="fui-cell must">
+                <div class="fui-cell-label">结束月份</div>
+                <div class="fui-cell-info">
+                    <input type="text" placeholder="如：2018-06" class="fui-input" readonly value="" id="enddate" />
+                </div>
+            </div>
+
+            <div class="fui-cell must">
+                <div class="fui-cell-label">本期读数</div>
+                <div class="fui-cell-info">
+                    <input type="number" placeholder="请输入本期读数" class="fui-input" value="" id="endqty" />
+                </div>
+            </div>		
+        </div>
+
+        <div class="btn btn-success block" id="btn-submit">提交</div>
+      
+    </div>
+ </div>
+<script language='javascript'>		
+	require(['manage/readmeter'], function (modal) {
+		modal.initRead({rid:"{$myrid}"});
+	});
+	mui.init();	
+	$("#startdate").click(function (){
+		var picker1 = new mui.DtPicker({"type":"month"});
+		picker1.show(function(rs) {			
+			$("#startdate").val(rs.text);			
+			picker1.dispose();
+		});
+	});
+	$("#enddate").click(function (){
+		var picker2 = new mui.DtPicker({"type":"month"});
+		picker2.show(function(rs) {			
+			$("#enddate").val(rs.text);			
+			picker2.dispose();
+		});
+	});
+	jssdkconfig = {php echo json_encode($_W['account']['jssdkconfig']);} || { jsApiList:[] };
+	jssdkconfig.debug = false;
+	wx.config(jssdkconfig);	
+	wx.ready(function () {
+		wx.hideOptionMenu();
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body">  
+    {if $rights['query'] == 1}  
+	<div class="collapse" id="mycollapse">
+	<form action="./index.php" method="get" class="form-horizontal" role="form" id="form-search">
+		<input type="hidden" name="c" value="site" />
+		<input type="hidden" name="a" value="entry" />
+		<input type="hidden" name="m" value="rhinfo_zyxq" />
+		<input type="hidden" name="do" value="member" />
+		<input type="hidden" name="op" value="search1" />	
+		<input type="hidden" name="direct" value="1" />
+		<input type="hidden" name="mycon" id="mycon" value="1" />		
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">省/市/区</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				{php echo tpl_form_field_district('area', array('province' => $_GPC['area']['province'], 'city' => $_GPC['area']['city'], 'district' => $_GPC['area']['district'] ));}
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">所属主体</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<input class="form-control" name="regionname"   type="text" value="{$_GPC['regionname']}" placeholder="请输入所属主体名称" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-3 col-md-2 control-label">状态</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<select class="form-control" name="status">
+					<option value="">不限</option>
+					<option value="1">待审核</option>
+					<option value="2">审核不通过</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">关键字</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<input class="form-control" name="keyword"   type="text" value="{$_GPC['keyword']}" placeholder="请输入姓名或手机号或房屋号" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+			<div class="col-sm-4 col-xs-12">
+				<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+				{if $rights['export'] == 1}
+				<button name="export" value="export" class="btn btn-default"><i class="fa fa-download"></i> 导出数据</button>
+				{/if}
+			</div>
+		</div>
+	</form>
+	</div>
+	{/if}
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+		{if $rights['delete'] == 1}
+			{if $_W['role'] == 'founder' || $_W['role']=='owner' || $_W['role']=='manager'}
+				<a href="javascript:;" onclick="mydelselect()" class="btn btn-danger"><i class="fa fa-trash-o"></i> 批量删除</a> 
+			{/if}
+		{/if}
+		{if $rights['query'] == 1}  
+			<a class="btn btn-primary" onclick="mycondition(this)"  data-toggle="collapse" href="#mycollapse" aria-expanded="false" aria-controls="mycollapse">
+			<i class="fa fa-angle-double-down"></i> 筛选条件</a>
+			{/if}
+			<span class="pull-right" style="line-height:38px;">共有数据：<strong id="count">{$total}</strong> 条</span> 
+	    </div>
+  
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+				<tr>
+					<th width="25"><input type="checkbox" name="selectall" id="selectall" value="" onClick="myallselect(this)"></th>
+					<th width="50">ID</th>
+					<th>头像</th>
+					<th>昵称</th>		
+					<th width="300">房产名称</th>	
+					<th>业主姓名</th>													
+					<th>手机号</th>
+					<th>住户类别</th>
+					<th>绑定日期</th>					
+					<th>第三方验证</th>
+					<th>状态</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			{loop $data $k $v}
+				<tr>
+					<td><input type="checkbox" value="{$v['id']}" name="myselect" id="myselect_{$k}"  ></td>
+					<td>{$v['id']}</td>
+					<td>{if !empty($v['avatar'])}<img src="{$v['avatar']}" width="36" />&nbsp;{/if}</td>
+					<td>{$v['nickname']}</td>
+					<td>{$v['address']}</td>	
+					<td>{$v['realname']}&nbsp;<a href="javascript:;" onclick="myedit(this,'{$v['id']}','{$v['realname']}')"><i class="fa fa-edit"></i></a></td>					
+					<td><a style="color:#000;" href="javascript:;" title="{$v['mobile']}">{php echo !empty($v['mobile']) ? substr_replace($v['mobile'],'****',3,4):'';}</a></td>
+					<td class="td-status"><span class="label {if $v['otype']=='1'} label-success{elseif $v['otype']=='2'}label-default{else}label-danger{/if} radius">
+					{if $v['otype']=='1'}成员{elseif $v['otype']=='2'}<a href="javascript:;" onclick="mydoor(this,'{$v['id']}')">租户</a>{else}业主{/if}					
+					</span></td>
+					<td>{php echo date('Y-m-d H:m',$v['ctime']);}</td>
+					<td>{if $v['thirdauth']==1}<a style="color:#000;" href="javascript:;" title="{$v['bankcard']}">{php echo !empty($v['bankcard']) ? substr_replace($v['bankcard'],'********',7,8):'';}</a>{/if}</td>
+					<td class="td-status">{if $v['status']=='1'}<a href="javascript:;" onclick="myaudit(this,'{$v['id']}')"><span class="label label-warning radius">待审核</span></a>
+					{elseif $v['status']=='2'}<a href="javascript:;" title="{$v['reason']}"><span class="label label-danger radius">审核不通过</span></a>{else}<span class="label label-success radius">已审核</span>{/if}					
+					</td>
+					<td>
+					{if $rights['delete'] == 1}
+						<a href="javascript:;" onclick="mydel(this,{$v['id']})" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> 删除</a> 		
+					{/if}
+					</td>					
+				</tr>
+			{/loop}				
+		</table>
+	  </div>    	  
+	</div>	
+  </div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+/*全选*/
+function myallselect(select){ 
+
+	var obj = document.getElementsByName('myselect'); 
+	var tempsta = select.checked; 
+	
+	for(var k in obj){ 
+		if (obj[k].checked != tempsta) {      
+		     $("#myselect_"+k).prop("checked", tempsta);  
+		}
+	}	
+}	
+/*删除所选*/
+function mydelselect(){   
+	var count = parseInt($("#count").html());
+	if (count == 0){
+		return;
+	}
+
+	var obj = document.getElementsByName('myselect'); //选择所有name="myselect" id="myselect_{$k}" 的对象，返回数组 
+	var i = 0;
+	for(var j in obj){ 
+		if (obj[j].checked) {//如果选中,则删除   
+			i++;
+		}
+	}
+	
+	if (i==0){
+		layer.msg('请选择要删除的对象.',{icon:0});
+	   return ;
+	}
+	layer.confirm('将删除下属所有相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		layer.load(1);
+		layer.close(index);
+		for(var k in obj){ 
+			if (obj[k].checked) {//如果选中,则删除                
+				$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+				{op:"delete",id:obj[k].value},
+				function(data,status){
+					 if (data=='ok'){
+					 }
+					 else{
+						layer.msg('操作失败',{icon:0});
+						return false;
+					 }
+				});		
+			}
+		}
+		setTimeout(function(){
+			 layer.closeAll();
+			 location.reload();
+		  },5000);	
+	});
+}
+/*新增*/
+function myadd(){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'add')).$mywe['direct'];}";
+	window.location.href = url;
+}
+/*删除*/
+function mydel(obj,id){
+	layer.confirm('将删除下属所有相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+			{op:"delete",id:id},
+			function(data,status){
+			 if (data=='ok'){
+				$(obj).parents("tr").remove();
+				var count = $("#count").html();
+				$("#count").html(count - 1);
+				layer.msg('删除成功!',{icon:1});
+			 }
+			 else{
+				layer.msg('操作失败',{icon:0});
+			 }
+		});		
+		layer.close(index);
+    });
+}
+/*编辑*/
+function myedit(obj,id,realname){
+	
+	layer.prompt({title: '修改姓名',value:realname,area: ['300px', '40px'], formType: 2}, function(editname, index){
+		layer.close(index);	   
+	    var loadindex = layer.load(2);
+		$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+			{op:"wedit",id:id,realname:editname},
+			function(data,status){
+			 layer.close(loadindex);
+			 if (data=='ok'){								
+				$(obj).parent().html(editname + '&nbsp;<a href="javascript:;" onclick="myedit(this,' + id + ',' + realname +')"><i class="fa fa-edit"></i></a>');
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+			 }
+		});	
+	  });
+}
+/*变更记录*/
+function mychangelog(id){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'changelog')).$mywe['direct'];}" + "&id=" + id;
+	window.location.href = url;
+}
+function myaudit(obj,id){
+	layer.confirm('审核业主或住户信息吗？', {
+		  btn: ['审核通过','审核不通过'] //按钮
+		}, function(){	
+            		
+			$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+			{op:"bindaudit",id:id,status:0},
+			function(data,status){
+			    if (data=='ok'){								
+					location.reload();
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+				 }
+			});
+		}, function(){
+			$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+			{op:"bindaudit",id:id,status:2},
+			function(data,status){
+			    if (data=='ok'){								
+					layer.prompt({title: '审核不通过原因',area: ['300px', '80px'], formType: 2}, function(reason, index){								
+					layer.close(index);
+					$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+						{op:"reason",id:id,reason:reason},
+						function(data,status){				
+						 if (data=='ok'){																						
+							location.reload();
+						 }
+						 else{
+							layer.msg(data,{icon:0});
+						 }
+					});	
+				  });
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+				 }
+			});
+	});	
+}
+function mydoor(obj,id){
+	var enddate = "{php echo date('Y-m-d',strtotime('+2months'));}";
+	layer.prompt({title: '门禁延期(格式：2018-12-31)',value:enddate,area: ['300px', '40px'], formType: 2}, function(mydate, index){
+		layer.close(index);	   
+	    var loadindex = layer.load(2);
+		$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+			{op:"doordate",id:id,enddate:mydate},
+			function(data,status){
+			 layer.close(loadindex);
+			 if (data=='ok'){								
+				layer.msg('延期成功!',{icon:1});
+				window.location.reload();
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+			 }
+		});	
+	  });	  
+}
+function mycondition(obj){
+    var mycon = $("#mycon").val();
+	var html = '';
+	if (mycon==1){
+		html = '<i class="fa fa-angle-double-up"></i> 隐藏筛选';
+		$("#mycon").val("2");
+		$("#mycollapse").show("slow");
+	}
+	else {
+		html = '<i class="fa fa-angle-double-down"></i> 筛选条件';
+		$("#mycon").val("1");
+		$("#mycollapse").hide("slow");
+	}
+	$(obj).html(html);
+}
+</script>
+</body>
+</html>

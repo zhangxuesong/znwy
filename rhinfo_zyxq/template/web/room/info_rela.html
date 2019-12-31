@@ -1,0 +1,26 @@
+﻿<div class="panel panel-default" >
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>					
+					<th width="80">ID</th>
+					<th width="100">楼宇</th>
+					<th width="60">单元</th>
+					<th width="60">房产</th>
+					<th width="60">状态</th>
+				</tr>
+			</thead>
+			<tbody>
+				{loop $room_rela $rev}
+				<tr>					
+					<td>{$rev['id']}</td>
+					<td>{$rev['building']}</td>
+					<td>{$rev['unit']}</td>
+					<td>{$rev['title']}</td>	
+					<td>{$rev['statustxt']}</td>
+				</tr>
+			{/loop}	
+			</tbody>
+		</table>    	  
+	</div>	
+</div>

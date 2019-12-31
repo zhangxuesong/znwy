@@ -1,0 +1,95 @@
+﻿<div class="panel panel-default" >
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>					
+					<th width="60">ID</th>
+					<th width="100">收费项目</th>
+					<th width="150">账单日期</th>
+					<th width="80">状态</th>
+					<th width="80">费用</th>
+					<th width="120">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			{loop $feebill $fv}
+				<tr>					
+					<td>{$fv['id']}</td>					
+					<td>{$fv['title']}</td>					
+					<td>{$fv['daterange']}</td>
+					<td class="td-status">
+					{if $fv['status']=='1'}<span class="label label-danger radius">未支付</span>{elseif $fv['status']=='2'}<span class="label label-success radius">已支付</span>{else}<span class="label label-warning radius">免单</span>{/if}
+					</td>
+					<td>{$fv['fee']}</td>
+					<td>
+					{if $rights['other1'] == 1} 
+						{if $_GPC['from']=='desktop'}
+						<a href="javascript:;" data-href="{php echo $this->createWeburl('fee',array('op'=>'mybill','rid'=>$fv['rid'],'hid'=>$fv['hid'],'category'=>$fv['category'])).$mywe['direct'];}" data-title="{$fv['address']}房产&账单"  onclick="parent.myopen(this)" class="btn btn-default btn-sm"><i class="fa fa-money"></i> 综合收款</a>
+						<a href="javascript:;" data-href="{php echo $this->createWeburl('fee',array('op'=>'mytbill','rid'=>$fv['rid'],'hid'=>$fv['hid'],'id'=>$fv['id'])).$mywe['direct'];}" data-title="{$fv['address']}房产&账单"  onclick="parent.myopen(this)" class="btn btn-default btn-sm"><i class="fa fa-money"></i> 合并收款</a>
+						{else}
+						<a href="javascript:;" onclick="mybill({$fv['rid']},{$fv['hid']},{$fv['category']},'{$fv['address']}')"  class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="综合收款" ><i class="fa fa-money"></i> 综合收款</a> 
+						<a href="javascript:;" onclick="mytbill({$fv['rid']},{$fv['id']},{$fv['hid']},{$fv['category']})"  class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="合并收款" ><i class="fa fa-money"></i> 合并收款</a>                     						
+						{/if}
+					{/if}
+					{if $rights['delete'] == 1} 
+					 <a href="javascript:;" onclick="mydelfeebill(this,{$fv['id']})"  class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="删除账单" ><i class="fa fa-money"></i> 删除</a>
+					{/if}
+					</td>													
+				</tr>
+			{/loop}	
+			</tbody>
+		</table> 
+		{$pager}
+	</div>	
+</div>
+<script type="text/javascript">	
+function mybill(rid,hid,category,address){
+	var url = "{php echo $this->createWeburl('fee',array('op'=>'mybill')).$mywe['direct'];}" + "&rid=" + rid  + "&hid=" + hid + "&category=" + category;
+	var index = parent.layer.open({
+		type: 2,
+		title:'<i class="fa fa-hand-o-right"></i> 收银台 > 综合收款',
+		content: url,
+		area: ['600px','600px'],
+		fix: false, 
+		shade:0.4,
+		maxmin: false,
+		end: function () {
+			location.reload();
+		}
+	});
+	parent.layer.full(index);			
+}
+function mytbill(rid,id,hid,category){
+	var url = "{php echo $this->createWeburl('fee',array('op'=>'mytbill')).$mywe['direct'];}" + "&rid=" + rid + "&id=" + id + "&hid=" + hid + "&category=" + category;
+	var index = parent.layer.open({
+		type: 2,
+		title:'<i class="fa fa-hand-o-right"></i> 收银台 > 合并收款',
+		content: url,
+		area: ['600px','600px'],
+		fix: false, 
+		shade:0.4,
+		maxmin: false,
+		end: function () {
+			location.reload();
+		}
+	});
+	parent.layer.full(index);	
+}
+function mydelfeebill(obj,id){
+	layer.confirm('不可恢复，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl('fee').$mywe['direct'];}",
+			{op:"delete",id:id},
+			function(data,status){
+			 if (data=='ok'){
+				$(obj).parents("tr").remove();				
+				layer.msg('删除成功!',{icon:1});
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+			 }
+		});
+		layer.close(index);
+	});
+}
+</script>

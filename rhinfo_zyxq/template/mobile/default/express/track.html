@@ -1,0 +1,31 @@
+{template $this->mytpl('_header')}
+<div class='fui-page fui-page-current'>
+	<div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">快件跟踪</div>
+        <div class="fui-header-right">	
+		
+		</div>
+    </div>
+	<div class='fui-content'>		
+		{if empty($list)}
+		<div class="board-list-empty" style="color:#999;font-size:.75rem;margin:.5rem;text-align: center;">
+		<i class="icon icon-information" style="font-size:4rem;color:#ccc;"></i> <br/>暂无轨迹信息</div>
+		{else}
+		<div class="fui-list-group express-list">
+			{loop $list $k $ex}
+				<div class="fui-list {if $k==0}current{/if}">
+					<div class="fui-list-inner">
+					<div class="text step">{$ex['step']}</div>
+						<div class="text time">{$ex['time']}</div>
+					</div>
+				</div>
+			{/loop}
+	    </div>
+		{/if}
+	</div>
+</div>
+
+{template $this->mytpl('_footer')}

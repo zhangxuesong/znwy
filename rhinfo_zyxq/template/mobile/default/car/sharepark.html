@@ -1,0 +1,42 @@
+{template $this->mytpl('_header')}
+
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">车位共享</div>
+		<div class="fui-header-right">
+			&nbsp;
+		</div>
+	</div>
+	<div class='fui-content'> 	
+		<div class="fui-title"><i class="icon icon-city"></i> {$region['title']}-{$item['title']}</div>
+		<form action="{php echo $this->createMobileUrl($mydo,array('op'=>'sharepark','parklockid'=>$_GPC['parklockid']));}" method="post" id="myform">			
+			<div class="fui-cell-group">
+				<div class="fui-cell">
+					<div class="fui-cell-label">开始时间</div>
+					<div class="fui-cell-info">
+						<input type="text" class='fui-input' id='starttime' name='starttime' placeholder="请输入开始时间" readonly />
+					</div>				
+				</div>
+				<div class="fui-cell">
+					<div class="fui-cell-label">结束时间</div>
+					<div class="fui-cell-info">
+						<input type="text" class='fui-input' id='endtime' name='endtime' placeholder="请输入结束时间" readonly />
+					</div>				
+				</div>			
+								
+			</div>
+		<form>
+		<a href='#' id='btnSubmit' class='btn btn-success block'>下一步</a>
+    </div>
+	<script language='javascript'>
+		require(['car/lock'], function (modal) {
+		  	modal.initShare();
+		});
+	</script>
+ </div>
+ 
+{template $this->mytpl('_footer')}
+</html>

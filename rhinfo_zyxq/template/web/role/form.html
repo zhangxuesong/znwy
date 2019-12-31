@@ -1,0 +1,47 @@
+﻿<div class="form-horizontal form" >
+	<input type="hidden" value="{$item['id']}" id="id" name="id">		
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>角名名称</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入角色名称" name="title">
+				<span class="help-block">{if $_W['uid']}建立角色为平台用户角色{else}建立角色为物业用户角色{/if}</span>
+		</div>	
+	</div>
+							
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>状态</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<label class='radio-inline'><input type="radio" name="status" value="1" {if $item['status'] == 1 || empty($item['status'])} checked="true" {/if} >启用</label>
+			<label class='radio-inline'><input type="radio" name="status" value="2" {if $item['status'] == 2} checked="true" {/if} >禁用</label>										
+		</div>
+	</div>
+	
+	{if !empty($_W['uid'])}
+	<input type="hidden" value="{$item['pid']}" id="pid" name="pid">
+	{else}
+	<div class="form-group" style="display:none;">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"> <span class="text-danger">*</span>所属物业</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="pid" id="pid">
+				{loop $property $k $v}
+					<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>
+	{/if}
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">备注</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" name="remark" id="remark" value="{$item['remark']}" placeholder="输入备注内容">
+		</div>
+	</div>		     
+
+	 <div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">权限</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{template 'web/role/role'}
+		</div>
+	</div>	  			
+</div>

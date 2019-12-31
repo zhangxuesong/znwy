@@ -1,0 +1,77 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+</style>
+<div class="fui-page fui-page-current">
+    <div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back" ></a>
+		</div>
+        <div class="title">
+			物品详情
+		</div>
+		<div class="fui-header-right">&nbsp;</div>
+    </div>
+    <div class="fui-content">
+		<div class="fui-cell-group">
+			<div class="fui-cell must">
+				<div class="fui-cell-label">物品类别</div>
+				<div class="fui-cell-info">
+					<input type="text" class='fui-input' readonly value="{$item['category']}" />
+				</div>
+			</div>
+			<div class="fui-cell must">
+				<div class="fui-cell-label">物品名称</div>
+				<div class="fui-cell-info">
+					<input type="text" class='fui-input' readonly value="{$item['title']}" />
+				</div>
+			</div>
+			<div class="fui-cell">
+				<div class="fui-cell-label">规格型号</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input'  readonly value="{$item['spec']}" />
+				</div>
+			</div>
+			<div class="fui-cell">
+				<div class="fui-cell-label">厂商品牌</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input'  readonly value="{$item['brand']}" />
+				</div>
+			</div>
+			<div class="fui-cell">
+				<div class="fui-cell-label">安装位置</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input'  readonly value="{$item['position']}" />
+				</div>
+			</div>
+			<div class="fui-cell">
+				<div class="fui-cell-label">物品编号</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input'  readonly value="{$item['goodssn']}" />
+				</div>
+			</div>
+			<div class="fui-cell must">
+				<div class="fui-cell-label">保修日期</div>
+				<div class="fui-cell-info">
+				 
+				 {php echo !empty($item['startdate']) && !empty($item['enddate'])?date('Y-m-d',$item['startdate']).'~'.date('Y-m-d',$item['enddate']):'';}
+				</div>
+			</div>
+			<div class="fui-cell">
+				<div class="fui-cell-label">备注</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input'  value="{$item['remark']}" />
+				</div>
+			</div>
+			<div class="fui-cell">
+				<div class="fui-cell-label">安装日期</div>
+				<div class="fui-cell-info">
+				<input type="text" class='fui-input'  readonly value="{php echo date('Y-m-d H:i',$item['ctime']);}" />
+				</div>
+			</div>
+		</div>
+    </div>	
+</div>
+
+{template $this->mytpl('_footer')}

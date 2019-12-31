@@ -1,0 +1,105 @@
+﻿	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">应用APPID</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="wxminiappid" value="{$item['wxminiappid']}" placeholder="输入APPID" name="wxminiappid">
+			<span class="help-block">小程序的APPID.</span>
+		</div>		
+	</div>
+	 <div class="form-group" >
+		<label class="col-xs-12 col-sm-3 col-md-2 control-label">应用APPSECRET</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">		
+			<input type="text" name="wxminiappsecret" id="wxminiappsecret" class="form-control" value="{$item['wxminiappsecret']}" placeholder="输入APPSECRET"  autocomplete="off"/>
+			<span class="help-block">小程序的APPSECRET.</span>
+		</div>
+	</div>
+		
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">商户号</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="wxminimerchid" value="{$item['wxminimerchid']}" placeholder="输入商户号" name="wxminimerchid">
+			<span class="help-block">对应的商户号,如与公众号商户号相同可以不填写</span>
+		</div>		
+	</div>
+	 <div class="form-group" >
+		<label class="col-xs-12 col-sm-3 col-md-2 control-label">商户支付密钥</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<div class="input-group">
+				<input type="text" name="wxminimerchsecret" id="wxminimerchsecret" class="form-control" value="{$item['wxminimerchsecret']}" autocomplete="off"/>
+				<span onclick="tokenGen('wxminimerchsecret');" style="cursor:pointer" class="input-group-addon">生成新的</span>
+			</div>
+			<span class="help-block">对应商户号的支付秘钥,如与公众号商户号相同可以不填写</span>
+		</div>
+	</div>
+	 <div class="form-group" >
+		<label class="col-xs-12 col-sm-3 col-md-2 control-label">小程序标题</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">		
+			<input type="text" name="wxminititle" id="wxminititle" class="form-control" value="{$item['wxminititle']}" placeholder="输入小程序标题"  autocomplete="off"/>
+			<span class="help-block">用于打包小程序进入页面的标题</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">小程序跳转背景</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			{php echo tpl_form_field_image('wxminibgimage',$item['wxminibgimage']);}
+			<span class="help-block">小程序跳转背景图片，可以为空</span>
+		</div>	
+	</div>	
+	<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">小程序URL</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<div class="input-group">	
+		   <input type="text" name="wxminiappurl" id="wxminiappurl" class="form-control" placeholder="输入URL" value="{$item['wxminiappurl']}" />
+		   <div class="input-group-btn">	
+				<button class="btn btn-success" type="button" onclick="mydownload(this);" {if $_W['isfounder']}{else}disabled{/if} >打包下载</button>
+			</div>
+	   </div>
+	   <span class="help-block">必须支持https，且已通过域名验证，输入时请包含https，且以/结尾，打包下载后请用微信WEB开发工具上传.</span>
+	</div>	
+</div>
+	<!--
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">apiclient_cert.pem 证书</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="file" id="apiclient_cert" class="form-control" title="请选择证书文件" name="wap_apiclient_cert">
+			<span class="help-block">{if !empty($item['wap_apiclient_cert'])}<mark>已上传此证书，可重新上传</mark>{else}从商户平台上下载支付证书, 解压并取得其中的
+              <mark>apiclient_cert.pem</mark>上传此文件{/if}</span>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">apiclient_key.pem 证书</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="file" id="apiclient_key" class="form-control" title="请选择证书文件" name="wap_apiclient_key">
+			<span class="help-block">{if !empty($item['wap_apiclient_key'])}<mark>已上传此证书，可重新上传</mark>{else}从商户平台上下载支付证书, 解压并取得其中的
+              <mark>apiclient_key.pem</mark>上传此文件{/if}</span>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">rootca.pem 证书</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="file" id="rootca" class="form-control" title="请选择证书文件" name="wap_rootca">
+			<span class="help-block">{if !empty($item['wap_rootca'])}<mark>已上传此证书，可重新上传</mark>{else}从商户平台上下载支付证书, 解压并取得其中的
+              <mark>rootca.pem</mark>上传此文件{/if}</span>
+		</div>	
+	</div>
+    -->	
+<script type="text/javascript">
+	function mydownload(){	
+		var wxappurl = $("#wxminiappurl").val();
+		var wxminititle = $("#wxminititle").val();
+		if(wxappurl == ''){
+		   layer.msg('小程序URL不可为空',{icon:0});
+		   return
+		}
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>'wxapp')).$mywe['direct'];}",
+		{wxappurl:wxappurl,wxminititle:wxminititle},
+		function(data,status){	
+			 var ret = data.replace(/(^\s*)|(\s*$)/g, "");  
+			 if(ret=='ok'){				
+				window.open("{php echo $_W['siteroot'].'addons/rhinfo_zyxq/data/wxapp.zip';}", '_self');		
+			 }
+			 else{				
+				layer.msg(data,{icon:0});
+			 }
+		});
+	}
+</script>

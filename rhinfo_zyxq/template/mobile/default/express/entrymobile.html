@@ -1,0 +1,130 @@
+{template $this->mytpl('_header')}
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/rharea.min.js"></script>  
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/rhui/css/rharea.css">
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170712">
+
+<style>
+.verify-pop {
+    position: fixed;
+}
+
+.verify-pop .qrcode {
+    width: 250px;
+    margin-left: -125px;
+    border-radius: 0.3rem;
+    height: auto;
+    overflow: hidden;
+}
+
+.verify-pop.pop .qrcode {
+    width: 90%;
+    margin-left: -45%;
+    overflow: hidden;
+    display: block;
+}
+
+.verify-pop.pop .qrcode .popbtn {
+   	position: relative;
+	margin:0 auto;
+	width:100%;
+	text-align:center;
+}
+.verify-pop.pop .qrcode .popbtn a{
+	margin:0.8rem;
+}
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+.fui-cell-group .fui-cell .fui-cell-remark,.fui-cell-group .fui-cell .fui-cell-remark .icon {font-size: 1rem;}
+</style>
+<div class="fui-page fui-page-current">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">{$store['title']}</div>
+		<div class="fui-header-right">&nbsp;</div>
+	</div>	
+	<div class='fui-content'>		
+		<div class="fui-title">入库清单</div>
+		<div class='fui-cell-group' id="expresslist">
+		{loop $list $row}
+			<div class="fui-cell">
+				<div class="fui-cell-info expresssn" data-sn="{$row['expresssn']}">{$row['expresssn']}</div>				
+				<div class="fui-cell-remark noremark"><i class="icon icon-close text-danger" data-sn="{$row['expresssn']}"></i></div>
+			</div>
+		{/loop}
+		</div>
+	</div>	
+	<div class="pop-article-hidden" style="display:none;">
+		<div class='fui-mask-m visible'></div>
+		<div class="verify-pop pop">
+			<div class="qrcode">
+				<div class='fui-cell-group'>						
+					<div class='fui-cell must'>
+						<div class='fui-cell-label'>手机号码</div>
+						<div class='fui-cell-info'><input type='tel' class='fui-input' id='mobile' value=""></div>				
+						<div class="fui-cell-remark noremark"><i class="icon icon-record text-success"></i></div>
+					</div>							
+					<div class="fui-cell">
+						<div class="fui-cell-label">存放位置</div>
+						<div class="fui-cell-info">
+							<input type="text" class='fui-input' id='myloal' name='mylocal' readonly placeholder="请选择"  value="" />
+							<input id="cabstloca" type="hidden" name="cabstloca" value="" />
+						</div>
+					</div>
+					<div class='fui-cell'>
+						 <div class='fui-cell-label'>图片</div>
+						 <div class='fui-cell-info'>			 
+							 <ul class="fui-images fui-images-md" id="images"></ul>
+							 <div class="fui-uploader fui-uploader-md"
+								 data-max="1" 
+								 data-count="0"> 
+								 {if $this->rhinfo_isweixin == false}
+								  <input type="file" name='imgFile0' id='imgFile0' multiple="" accept="image/*" >
+								 {/if}
+							 </div>
+						 </div>
+					</div>
+					 <div class='fui-cell'>
+						 <div class='fui-cell-label '>备注</div>
+						 <div class='fui-cell-info'><textarea rows="5" placeholder="内容 10-100个字" id='remark' name='remark'></textarea></div>
+					 </div>
+				</div>
+				<div class="popbtn">
+					<a class='btn btn-sm btn-default btn-close'>取消</a>
+					<a class='btn btn-sm btn-default btn-submit'>确定</a>
+				</div>
+			</div>
+		</div>
+	</div>
+ </div>
+<script language='javascript'>
+	require(['express/mindex'], function (modal) {
+		modal.initMobile({
+			sid:"{$sid}"
+		});
+	});
+</script>
+<script language='javascript'>	
+	var cabs = {php echo json_encode($mycab);};	
+	var specs = {php echo json_encode($myspec);};
+	var locals = {php echo json_encode($mylocal);};
+	var myarea = new RHArea();
+	myarea.init({
+		'trigger': '#myloal',
+		'valueTo': '#cabstloca',
+		'keys': {
+			id: 'id',
+			name: 'title'
+		},
+		'type': 2,
+		'data': [cabs,specs,locals]
+	});
+	jssdkconfig = {php echo json_encode($_W['account']['jssdkconfig']);} || { jsApiList:[] };
+	jssdkconfig.debug = false;
+	wx.config(jssdkconfig);	
+	wx.ready(function () {
+		wx.hideOptionMenu();
+	});
+</script>
+{template $this->mytpl('_footer')}

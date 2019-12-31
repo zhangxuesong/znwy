@@ -1,0 +1,57 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+<link href="../addons/rhinfo_zyxq/static/lib/lightbox2.6/css/lightbox.css" rel="stylesheet"/>
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />	
+			<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">申请人</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<img src="{$fans['avatar']}" width="30"/>&nbsp;{$fans['nickname']}
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">车牌号码</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" value="{$item['title']}" readonly />
+				</div>	
+			</div>
+			{if !empty($images)}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">图片</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+				{loop $images $image}				
+					<a  href="{php echo tomedia($image);}" data-lightbox="image-set" ><img src="{php echo tomedia($image);}" class="img-responsive img-thumbnail"  width="100" /></a>
+				{/loop}
+				</div>
+			</div>	
+			{/if}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">备注</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" value="{$item['remark']}" readonly />				
+				</div>		
+			</div>	
+		</form>			
+		 <div class="col-lg-9 col-xs-12 col-sm-offset-2" style="margin-top:8px;">   		  
+		   <a href="javascript:;" class="btn btn-default"  onclick="myreturn()"><i class="fa fa-reply"></i> 返回列表<a/>
+		</div>
+
+    </div>
+</div>
+{template 'web/_layer_footer'}
+<script type="text/javascript" src="../addons/rhinfo_zyxq/static/lib/lightbox2.6/js/lightbox.min.js"></script>
+<script type="text/javascript">
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'movecar')).$mywe['direct'];}";
+	 location.href = url;
+}
+
+</script> 
+
+</body>
+</html>

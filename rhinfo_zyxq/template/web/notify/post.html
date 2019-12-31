@@ -1,0 +1,65 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:30px;">
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/form'}	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+  	var title = $.trim($("#title").val());
+	var id = $.trim($("#id").val());
+	var pid = $("#pid").find("option:selected").val();
+	var rid = $("#rid").find("option:selected").val(); 
+	var cid = $("#cid").find("option:selected").val(); 
+ 	
+    if (title=='') {
+	   layer.msg("通知主题不能为空！",{icon:0});
+	   return;
+	}	
+	
+	if (pid=='0') {
+	   layer.msg("所属物业不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (rid=='0') {
+	  layer.msg("所属主体不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (cid=='0') {
+	  layer.msg("通知类别不能为空！",{icon:0});
+	   return;
+	}
+	
+	var mbid = getmselect();
+	$("#mulbid").val(mbid);	
+
+	myprocess(obj);
+	$("#myform").submit();
+}
+function getmselect(){
+	var select = document.getElementById("mbid");
+	var str = [];
+	for(i=0;i<select.length;i++){
+		if(select.options[i].selected){
+			str.push(select[i].value);
+		}
+	}
+	return str;
+}
+function myreturn(){
+	window.history.back();
+}
+
+</script> 
+
+</body>
+</html>

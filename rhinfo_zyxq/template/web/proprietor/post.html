@@ -1,0 +1,68 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:30px;">
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/form'}	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	var pid = $("#pid").find("option:selected").val();
+	var rid = $("#rid").find("option:selected").val(); 
+    var roomqty = $.trim($("#roomqty").val());
+	var coveredarea = $.trim($("#coveredarea").val());
+	var buildarea = $.trim($("#buildarea").val());
+	
+    if (pid=='0') {
+	   layer.msg("所属物业不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (rid=='0') {
+	   layer.msg("所属主体不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (roomqty=='0' || roomqty=='') {
+	   layer.msg("总户数不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (coveredarea=='0' || coveredarea=='') {
+	   layer.msg("总占地面积不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (buildarea=='0' || buildarea=='') {
+	   layer.msg("建筑面积不能为空！",{icon:0});
+	   return;
+	}
+	
+	$.post("{php echo $this->createWebUrl($mydo,array('op'=>'check')).$mywe['direct'];}",
+		{post:"{$_GPC['op']}",lfrom:"{$_GPC['lfrom']}",rid:rid},
+		function(data,status){
+		 if (data=='ok'){		
+			myprocess(obj);
+			$("#myform").submit();
+		 }
+		 else{
+			layer.msg(data,{icon:0});
+			return ;
+		 }
+	});	
+}
+
+function myreturn(){
+	window.history.back();
+}
+
+</script> 
+
+</body>
+</html>

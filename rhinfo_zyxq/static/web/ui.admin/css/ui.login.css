@@ -1,0 +1,20 @@
+@charset "utf-8";
+html, body{ height:100%}
+body{font-size:14px}
+* {
+	-webkit-border-radius: 0 !important;
+	-moz-border-radius: 0 !important;
+	border-radius: 0 !important;
+ }
+
+.header,.footer{ position:fixed; left:0; right:0;width:100%; z-index:99}
+.header{top:0; height:60px; background:#426374 no-repeat 0 center}
+
+.loginWraper{position:relative;width:100%;height:100%;left:0; top:0; bottom:0; right:0; z-index:1; background:#3283AC url(../images/admin-login-bg.jpg) no-repeat center;}
+.loginBox{position:relative;max-width:530px;height:377px; background:#FFFFFF;box-shadow: 1px 1px 1px #666;border-radius:5px !important; margin:0 auto;top:20%;padding-top:5px;}
+
+.loginBox .row .form-label .Hui-iconfont{ font-size:24px}
+.footer{ height:50px; line-height:20px; bottom:0; text-align:center; color:#fff; font-size:12px; background-color:#426374}
+
+.regBox{position:relative;max-width:600px;height:470px; background:rgba(0,0,0,0.1);box-shadow: 1px 1px 1px #666;border-radius:5px !important; margin:0 auto;top:12%;padding-top:10px;}
+.regBox .row .form-label .Hui-iconfont{ font-size:24px}

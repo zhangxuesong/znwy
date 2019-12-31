@@ -1,0 +1,337 @@
+﻿{template 'web/_iframe_header'}
+
+<style type="text/css">
+.nav-tabs li a { padding: 3px 10px;}
+body .btn-class .layui-layer-btn .layui-layer-btn1{background:#5FB878;color:#fff}
+body .btn-class .layui-layer-btn .layui-layer-btn2{background:#FF5722;color:#fff}
+</style>
+
+<div class="col-xs-12 col-sm-3 col-lg-2">
+	<div class="panel panel-default" style="margin-top:15px;">
+		 <div class="panel-body" > 
+			<div class="text-center">
+			<img src="{if !empty($fans['avatar'])}{$fans['avatar']}{else}../addons/rhinfo_zyxq/static/mobile/images/head.jpg{/if}" class="img-circle" width="50">
+			<h5 class="text-warning">
+			{if !empty($item['id'])}
+			{$region['title']}{if !empty($building)}-{$building}-{$unit}-{$item['title']}{/if}&nbsp;
+			<a href="javascript:;" onclick="mymember({$item['id']})"><span class="fa fa-edit text-danger"></span></a>&nbsp;
+			<a href="javascript:;" onclick="myrebuildbill({$item['pid']},{$item['rid']},{$item['bid']},{$item['tid']},{$item['id']},1)"><span class="fa fa-bar-chart-o text-primary"></span></a>
+			{/if}			
+			</h5>
+			</div>
+			<p class="text-muted">楼层：{$item['floor']}</p>
+			<p class="text-muted">建筑面积：{$item['buildarea']}</p>
+			<p class="text-muted">使用面积：{$item['usearea']}</p>
+			<p class="text-muted">附加面积：{$item['addarea']}</p>
+			<p class="text-muted">业主姓名：{$item['ownername']}</p>
+			<p class="text-muted">手机号码：{$item['mobile']}</p>
+			<p class="text-muted">备用号码：{$item['mobile1']}</p>
+			<p class="text-muted">房屋状态：{$item['statustxt']}</p>			
+			<p class="text-muted">微信昵称：{$fans['nickname']}</p>
+			<p class="text-muted">绑定车牌：{$member['carno']}</p>
+			<p class="text-muted">绑定日期：{php echo !empty($member['ctime'])?date('Y-m-d',$member['ctime']):'';}</p>
+			<p class="text-muted">绑定人次：{$member_total}</p>
+			<p class="text-danger">装修保证金：<span id="deposit">{$item['deposit']}</span> <a class="pull-right" href="javascript:;" onclick="myaddcost(3,0)"><i class="fa fa-plus"></i></a></p>
+			<p class="text-danger">预收物业费：<span id="prepayment">{$item['prepayment']} </span><a class="pull-right" href="javascript:;" onclick="myaddcost(4,1)"><i class="fa fa-plus"></i></a></p>
+			<p class="text-danger">预收水费：<span id="prewater">{$item['prewater']} </span><a class="pull-right" href="javascript:;" onclick="myaddcost(4,3)"><i class="fa fa-plus"></i></a></p>
+			<p class="text-danger">预收电费：<span id="preelectric">{$item['preelectric']} </span><a class="pull-right" href="javascript:;" onclick="myaddcost(4,2)"><i class="fa fa-plus"></i></a></p>
+			<p class="text-danger">累计欠费：{$totalfee}</p>
+		 </div>
+	</div>
+</div>
+<div class="col-xs-12 col-sm-9 col-lg-10">
+	<div class="panel panel-default" style="margin-top:15px;">
+		 <div class="panel-heading">		
+			<form action="" method="post" class="form-inline" role="form" id="myform">
+				<input type="hidden" name="cate" value="" id="cate"/>			
+				<div class="form-group">
+					<select class="form-control" id="rid" name="rid" onchange="renderCategory(this,'building','bid')" style="width:180px;">						
+						<option value="0">请选择所属主体</option>	
+						{loop $regions $regionv}
+							<option value="{$regionv['id']}" {if $_GPC['rid']==$regionv['id']}selected{/if} >{$regionv['title']}</option>
+						{/loop}
+					</select>
+				</div>			
+				<div class="form-group" >
+					<select class="form-control" id="bid" name="bid" onchange="renderCategory(this,'unit','tid')" style="width:120px;">
+						<option value="0">请选择楼宇</option>	
+						{loop $select_buildings $buildingv}
+							<option value="{$buildingv['id']}" {if $_GPC['bid']==$buildingv['id']}selected{/if} >{$buildingv['title']}</option>
+						{/loop}
+					</select>
+				</div>
+				<div class="form-group" >
+					<select class="form-control" id="tid" name="tid" style="width:120px;">
+						<option value="0">请选择单元</option>	
+						{loop $select_units $unitv}
+							<option value="{$unitv['id']}" {if $_GPC['tid']==$unitv['id']}selected{/if} >{$unitv['title']}</option>
+						{/loop}
+					</select>
+				</div>
+				<div class="form-group">
+					<input class="form-control" id="keyword" name="keyword" type="text" value="" placeholder="请输入房屋编号或手机号或姓名" style="width:220px;"/>
+				</div>								
+				<div class="form-group">
+					<a href="javascript:;" class="btn btn-default" onclick="mysubmit(this)"><i class="fa fa-search"></i> 搜索</a>						
+				</div>
+				<span class="pull-right" style="line-height:38px;">累计欠费金额：<strong class="text-danger">{php echo $totalfee>0?$totalfee:0}</strong></span> 
+			</form>			
+		</div>
+		<div class="panel-body">    
+			<!-- Nav tabs -->		
+			<ul class="nav nav-tabs" role="tablist" id="mytabs">			 
+			  <li role="presentation" {if $cate=='fee' || empty($cate)}class="active"{/if}><a href="#fee" onclick="mytab('fee')" role="tab" data-toggle="tab">未缴账单</a></li>		  
+			  <li role="presentation" {if $cate=='payfee'}class="active"{/if}><a href="#payfee" onclick="mytab('payfee')" role="tab" data-toggle="tab">已缴账单</a></li>	
+			  <li role="presentation" {if $cate=='member'}class="active"{/if}><a href="#member" onclick="mytab('member')" role="tab" data-toggle="tab">房屋成员</a></li>
+			  <li role="presentation" {if $cate=='chg'}class="active"{/if}><a href="#chg" onclick="mytab('chg')" role="tab" data-toggle="tab">房屋变更</a></li>
+			  <li role="presentation" {if $cate=='abn'}class="active"{/if}><a href="#abn" onclick="mytab('abn')" role="tab" data-toggle="tab">房屋异常</a></li>
+			  <li role="presentation" {if $cate=='repair'}class="active"{/if}><a href="#repair" onclick="mytab('repair')" role="tab" data-toggle="tab">报修记录</a></li>
+			  <li role="presentation" {if $cate=='suggest'}class="active"{/if}><a href="#suggest" onclick="mytab('suggest')" role="tab" data-toggle="tab">投诉建议</a></li>
+			  <li role="presentation" {if $cate=='parking'}class="active"{/if}><a href="#parking" onclick="mytab('parking')" role="tab" data-toggle="tab">关联车位</a></li>
+			  <li role="presentation" {if $cate=='rela'}class="active"{/if}><a href="#rela" onclick="mytab('rela')" role="tab" data-toggle="tab">相关房产</a></li>
+			  <li role="presentation" {if $cate=='relafee'}class="active"{/if}><a href="#relafee" onclick="mytab('relafee')" role="tab" data-toggle="tab">相关费用</a></li>
+			  <li role="presentation" {if $cate=='lifepay'}class="active"{/if}><a href="#lifepay" onclick="mytab('lifepay')" role="tab" data-toggle="tab">生活缴费</a></li>
+			  <li role="presentation" {if $cate=='feeitem'}class="active"{/if}><a href="#feeitem" onclick="mytab('feeitem')" role="tab" data-toggle="tab">收费项目</a></li>
+			  <li role="presentation" {if $cate=='custom'}class="active"{/if}><a href="#custom" onclick="mytab('custom')" role="tab" data-toggle="tab">自定收费</a></li>
+			</ul>	
+	
+			<!-- Tab panes -->
+			<div class="tab-content">			  
+			  <div role="tabpanel" class="tab-pane {if $cate=='fee' || empty($cate)}active{/if}" id="fee">{template 'web/room/info_fee'}</div>
+			  <div role="tabpanel" class="tab-pane {if $cate=='payfee'}active{/if}" id="payfee">{template 'web/room/info_payfee'}</div>
+			  <div role="tabpanel" class="tab-pane {if $cate=='member'}active{/if}" id="member">{template 'web/room/info_member'}</div>
+			  <div role="tabpanel" class="tab-pane {if $cate=='chg'}active{/if}" id="chg">{template 'web/room/info_chg'}</div>
+			  <div role="tabpanel" class="tab-pane {if $cate=='abn'}active{/if}" id="abn">{template 'web/room/info_abn'}</div>
+			  <div role="tabpanel" class="tab-pane {if $cate=='repair'}active{/if}" id="repair">{template 'web/room/info_repair'}</div>
+			  <div role="tabpanel" class="tab-pane {if $cate=='suggest'}active{/if}" id="suggest">{template 'web/room/info_suggest'}</div>
+			  <div role="tabpanel" class="tab-pane {if $cate=='parking'}active{/if}" id="parking">{template 'web/room/info_parking'}</div>
+			  <div role="tabpanel" class="tab-pane {if $cate=='rela'}active{/if}" id="rela">{template 'web/room/info_rela'}</div>
+			  <div role="tabpanel" class="tab-pane {if $cate=='relafee'}active{/if}" id="relafee">{template 'web/room/info_relafee'}</div>
+			  <div role="tabpanel" class="tab-pane {if $cate=='lifepay'}active{/if}" id="lifepay">{template 'web/room/info_lifepay'}</div>
+			  <div role="tabpanel" class="tab-pane {if $cate=='feeitem'}active{/if}" id="feeitem">{template 'web/room/info_feeitem'}</div>
+			  <div role="tabpanel" class="tab-pane {if $cate=='custom'}active{/if}" id="custom">{template 'web/room/info_customfee'}</div>
+			</div>	
+
+		</div>
+	 </div>
+</div>
+{template 'web/_iframe_footer'}
+<script type="text/javascript">	
+	window._building = {php echo json_encode($mybuilding);};
+	window._unit = {php echo json_encode($myunit);};
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择楼宇</option>';
+			var html1 = '<option value="0">请选择单元</option>';
+			if (id=='bid'){
+				$("#bid").html(html);
+				$("#tid").html(html1);
+			}
+			if(id=='tid'){
+				$("#tid").html(html1);
+				html = html1;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		});
+	}
+	function mysubmit(obj){
+		var keyword = $.trim($("#keyword").val());
+		var rid = $("#rid").find("option:selected").val(); 
+		var bid = $("#bid").find("option:selected").val(); 
+
+		if (rid=='0') {
+		   layer.msg("请选择所属主体！",{icon:0});
+		   return
+		}
+		if (bid=='0') {
+		//   layer.msg("请选择楼宇！",{icon:0});
+		//   return	
+		}
+			
+		if (keyword=='') {
+		   layer.msg("关键字不能为空！",{icon:0});
+		   return
+		}
+		$("#myform").submit();
+	}
+	function mytab(obj){
+		$("#cate").val(obj);
+	}
+	function myaddcost(category,cate){
+		var url = "{php echo $this->createWeburl('room',array('op'=>'addcost','pid'=>$item['pid'],'rid'=>$item['rid'],'bid'=>$item['bid'],'tid'=>$item['tid'],'hid'=>$item['id'])).$mywe['direct'];}" + "&category=" + category + "&cate=" + cate;
+		var title = "<i class='fa fa-hand-o-right'></i> ";
+		if(category==3){
+			title = title + '装修保证金';
+		}
+		else{
+			if(cate==1){
+				title = title + '预收物业费';
+			}
+			else if(cate==3){
+				title = title + '预收水费';
+			}
+			else if(cate==2){
+				title = title + '预收电费';
+			}
+			else {
+				title = title + '预收款项';
+			}
+		}
+		var index = layer.open({
+			type: 2,
+			title:title,
+			content: url,
+			area: ['600px','500px'],
+			fix: true, 
+			shade:0.4,
+			resize:false,			
+		});				
+	}
+	function myaddcustom(){
+		var url = "{php echo $this->createWeburl('room',array('op'=>'addcustom','pid'=>$item['pid'],'rid'=>$item['rid'],'bid'=>$item['bid'],'tid'=>$item['tid'],'hid'=>$item['id'])).$mywe['direct'];}";
+		var title = "<i class='fa fa-hand-o-right'></i> ";
+		title = title + '自定义收费';
+		var index = layer.open({
+			type: 2,
+			title:title,
+			content: url,
+			area: ['600px','500px'],
+			fix: true, 
+			shade:0.4,
+			resize:false,			
+		});				
+	}
+	function myeditcustom(id){
+		var url = "{php echo $this->createWeburl('room',array('op'=>'editcustom','pid'=>$item['pid'],'rid'=>$item['rid'],'bid'=>$item['bid'],'tid'=>$item['tid'],'hid'=>$item['id'])).$mywe['direct'];}" + '&id=' + id;
+		var title = "<i class='fa fa-hand-o-right'></i> ";
+		title = title + '自定义收费';
+		var index = layer.open({
+			type: 2,
+			title:title,
+			content: url,
+			area: ['600px','500px'],
+			fix: true, 
+			shade:0.4,
+			resize:false,			
+		});				
+	}
+	function myaddparking(){
+		var url = "{php echo $this->createWeburl('room',array('op'=>'addparking','pid'=>$item['pid'],'rid'=>$item['rid'],'bid'=>$item['bid'],'tid'=>$item['tid'],'hid'=>$item['id'])).$mywe['direct'];}";
+		var title = "<i class='fa fa-hand-o-right'></i> ";
+		title = title + '关联车位';
+		var index = layer.open({
+			type: 2,
+			title:title,
+			content: url,
+			area: ['600px','500px'],
+			fix: true, 
+			shade:0.4,
+			resize:false,			
+		});				
+	}
+	function myeditparking(id){
+		var url = "{php echo $this->createWeburl('room',array('op'=>'editparking','pid'=>$item['pid'],'rid'=>$item['rid'],'bid'=>$item['bid'],'tid'=>$item['tid'],'hid'=>$item['id'])).$mywe['direct'];}" + '&id=' + id;
+		var title = "<i class='fa fa-hand-o-right'></i> ";
+		title = title + '关联车位';
+		var index = layer.open({
+			type: 2,
+			title:title,
+			content: url,
+			area: ['600px','500px'],
+			fix: true, 
+			shade:0.4,
+			resize:false,			
+		});				
+	}
+	function mymember(hid){
+		var url = "{php echo $this->createWeburl('member',array('op'=>'building_member')).$mywe['direct'];}" + "&id=" + hid;	
+		var title = "成员登记";
+		var index = layer.open({
+			type: 2,
+			title:title,
+			content: url,
+			area: ['600px','500px'],
+			fix: true, 
+			shade:0.4,
+			resize:false,
+		});	
+	}
+	function myrebuildbill(pid,rid,bid,tid,hid,category){
+		var confirmindex = layer.open({
+			  title: '<i class="fa fa-hand-o-right"></i> 请选择生成账单方式',
+			  shadeClose: true,
+			  area: ['600px'],
+			  btn: ['补生成历史账单','重新生成当前账单','创建下一期账单'],
+			  skin: 'btn-class',
+			  icon: 6,			 
+			  content:'请选择相应的生成账单方式',
+			  resize:false,
+			  btn1: function(index, layero){
+				var url = "{php echo $this->createWeburl('feeb',array('op'=>'appendbill')).$mywe['direct'];}" + "&pid=" + pid +  "&rid=" + rid +  "&bid=" + bid + "&tid=" + tid + "&hid=" + hid + "&category=" + category;	
+					var title = "重新生成账单";
+					var index = layer.open({
+						type: 2,
+						title:title,
+						content: url,
+						area: ['600px','500px'],
+						fix: true, 
+						shade:0.4,
+						resize:false,
+					});	
+					layer.close(confirmindex);
+			  },
+			  btn2: function(index, layero){
+				var url = "{php echo $this->createWeburl('feecalb',array('op'=>'rebuildbill')).$mywe['direct'];}" + "&pid=" + pid +  "&rid=" + rid +  "&bid=" + bid + "&tid=" + tid + "&hid=" + hid + "&category=" + category;	
+				var title = "重新生成账单";
+				var index = layer.open({
+					type: 2,
+					title:title,
+					content: url,
+					area: ['600px','500px'],
+					fix: true, 
+					shade:0.4,
+					resize:false,
+				});	
+				layer.close(confirmindex);       
+			  },
+			  btn3: function(index, layero){
+				var url = "{php echo $this->createWeburl('feecalb',array('op'=>'buildbill')).$mywe['direct'];}" + "&pid=" + pid +  "&rid=" + rid +  "&bid=" + bid + "&tid=" + tid + "&hid=" + hid + "&category=" + category;	
+				var title = "创建新的账单";
+				var index = layer.open({
+					type: 2,
+					title:title,
+					content: url,
+					area: ['600px','500px'],
+					fix: true, 
+					shade:0.4,
+					resize:false,
+				});	
+				layer.close(confirmindex);     
+			  },
+		  });
+	}
+	function myprintcost(data){		
+		var url = "{php echo $this->createWeburl('feecala',array('op'=>'costprint')).$mywe['direct'];}" + '&id=' + data;
+		var index = layer.open({
+			type: 2,
+			title: false,
+			content: url,
+			area: ['600px','500px'],
+			fix: false, 
+			shade:0.4,
+			maxmin: false,
+			closeBtn: 0,
+			end: function () {
+				location.reload();
+			}
+		});	
+		layer.full(index);
+	}
+</script> 
+</body>
+</html>

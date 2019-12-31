@@ -1,0 +1,311 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />	
+			<input type="hidden" name="id" id="id" value="{$item['id']}" />	   
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>停车场名称</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" disabled value="{$region}-{$item['title']}" />	
+				</div>
+			</div>				
+			 <div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">月卡价格</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<div class="input-group">
+					   <input type="number" name="monthcardprice" class="form-control" value="{php echo empty($item['monthcardprice'])?0:$item['monthcardprice'];}" />
+					   <span class="input-group-addon">元/月</span>
+					</div>
+					<span class="help-block">停车场月卡价格</span>
+			   </div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>月卡缴费方式</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<label class='radio-inline'><input type="radio" name="monthmethod" value="0" {if $item['monthmethod'] == 0 || empty($item['monthmethod'])} checked="true" {/if}>自由缴费(根据日期推算)</label>
+					<label class='radio-inline'><input type="radio" name="monthmethod" value="1" {if $item['monthmethod'] == 1} checked="true" {/if}>自由缴费(取月底为截止日期)</label>
+					<label class='radio-inline'><input type="radio" name="monthmethod" value="4" {if $item['monthmethod'] == 4} checked="true" {/if}>限一个月(根据日期推算)</label>
+					<label class='radio-inline'><input type="radio" name="monthmethod" value="2" {if $item['monthmethod'] == 2} checked="true" {/if}>当月缴费(全价)</label>	
+					<label class='radio-inline'><input type="radio" name="monthmethod" value="3" {if $item['monthmethod'] == 3} checked="true" {/if}>当月缴费(不足15天半月价)</label>	
+					<span class="help-block">自由缴费(取月底为截止日期)，大于等于15天取整月价格，小于15天取半月价格</span>
+				</div>
+			</div>	
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">月卡身份验证</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<label class='radio-inline'><input type="radio" name="authentication" value="0" {if $item['authentication'] == 0 || empty($item['authentication'])} checked="true" {/if}>不校验</label>
+					<label class='radio-inline'><input type="radio" name="authentication" value="1" {if $item['authentication'] == 1} checked="true" {/if}>需校验(身份证号录入及手机验证)</label>
+					<label class='radio-inline'><input type="radio" name="authentication" value="2" {if $item['authentication'] == 2} checked="true" {/if}>强校验(姓名和身份证必须一致及手机验证)</label>
+					<span class="help-block">强校验请配置极速数据接口，并申请身份证实名认证接口</span>
+				</div>
+			</div>	
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">月卡充值优惠</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<div class="input-group">
+					   <span class="input-group-addon">办理</span>
+					   <input type="number" name="rechargmonths" class="form-control" value="{$item['rechargmonths']}" />
+					   <span class="input-group-addon">月，赠送</span>
+					   <input type="number" name="givemonths" class="form-control" value="{$item['givemonths']}" />
+					   <span class="input-group-addon">个月</span>
+					</div>
+					<span class="help-block">为０则无优惠，低于办理月数则不赠送</span>
+			   </div>
+			</div>	
+			
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">收费时间</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<div class="input-group">
+						<span class="input-group-addon">开始时间</span>
+						<input type="text" class="form-control starttime" name="lstarttime" id="starttime" value="{$item['starttime']}" readonly />
+						<span class="input-group-addon">结束时间 </span>
+						<input type="text" class="form-control endtime" name="lendtime" id="endtime" value="{$item['endtime']}" readonly />							
+					</div>
+					<span class="help-block">为空则全天收费</span>
+				</div> 
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span class="text-danger">*</span>计费标准</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<div class="input-group">
+						<span class="input-group-addon">价格</span>
+						<input type="number" class="form-control" name="lprice" id="price" value="{$item['price']}" />
+						<span class="input-group-addon">元 / </span>
+						<input type="number" class="form-control" name="qty" id="qty" value="{$item['qty']}" />	
+						<span class="input-group-btn">
+							<select class="form-control" id="unit" name="unit" style="width:95px;" >
+								<option value="1" {if $item['unit']==1}selected{/if}>小时</option>
+								<option value="2" {if $item['unit']==2}selected{/if}>分钟</option>	
+							</select>
+						</span>
+					</div> 					
+				</div> 
+			</div>
+			
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">收费选项</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<div class="input-group">
+						<span class="input-group-addon">每日收费上限</span>
+						<input type="number" class="form-control" name="dayfee" id="dayfee" value="{$item['dayfee']}" />
+						<span class="input-group-addon">元，  前</span>
+						<input type="number" class="form-control" name="minute" id="minute" value="{$item['minute']}" />	
+						<span class="input-group-addon">分钟不收费</span>
+					</div> 					
+				</div> 
+			</div>
+			
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>计费取数</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<label class='radio-inline'><input type="radio" name="getfee" value="1" {if $item['getfee'] == 1 || empty($item['getfee'])} checked="true" {/if} >四舍五入</label>
+					<label class='radio-inline'><input type="radio" name="getfee" value="2" {if $item['getfee'] == 2} checked="true" {/if} >取整计费（不足一元按一元计）</label>										
+					<label class='radio-inline'><input type="radio" name="getfee" value="3" {if $item['getfee'] == 3} checked="true" {/if} >取整计费（不足一元不收费）</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">是否开启车场预约</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<label class='radio-inline'><input type="radio" name="isreserve" value="0" {if $item['isreserve'] == 0 || empty($item['isreserve'])} checked="true" {/if} >不开启</label>
+					<label class='radio-inline'><input type="radio" name="isreserve" value="1" {if $item['isreserve'] == 1} checked="true" {/if} >开启</label>										
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">云端临时缴费规则ID</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" id="cloudruleid" value="{$item['cloudruleid']}" placeholder="输入云停车场临时缴费规则ID" name="cloudruleid" />
+					<span class="help-block">根据厂家需求填写,可为空</span>
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">优惠券领取</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<div class="input-group">
+						<span class="input-group-addon">业主每年可领取</span>
+						<input type="number" class="form-control" name="year_coupon" value="{$item['year_coupon']}" />
+						<span class="input-group-addon">张，每月可领取</span>
+						<input type="number" class="form-control" name="month_coupon" value="{$item['month_coupon']}" />	
+						<span class="input-group-addon">张</span>
+					</div> 	
+					<span class="help-block">仅限业主且物业不欠费，为0则不可以领取</span>	
+				</div> 
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">优惠券限额</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<div class="input-group">
+						<span class="input-group-addon">最大金额</span>
+						<input type="number" class="form-control" name="maxmoney" value="{$item['maxmoney']}" />
+						<span class="input-group-addon">元，最大时长</span>
+						<input type="number" class="form-control" name="maxminutes" value="{$item['maxminutes']}" />	
+						<span class="input-group-addon">分钟</span>
+					</div> 	
+					<span class="help-block">为0则不限制</span>	
+				</div> 
+			</div>
+			<div class="form-group" >
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">支付方式</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<label class="radio-inline">
+						<input type="radio" name="paymethod"  value="0" {if empty($item['paymethod']) || $item['paymethod']==0 } checked{/if} /> 自动扣余额</label>
+					<label  class="radio-inline">
+						<input type="radio" name="paymethod"  value="1" {if $item['paymethod']==1 } checked{/if} /> 在线支付</label>							
+					<span class="help-block">此支付方式仅用于使用门禁控制出入口，与办理月卡和临时缴费无关</span>			
+				</div>
+			</div>
+			
+			<div class="form-group" >
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">特殊规则</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<label class="radio-inline">
+						<input type="radio" name="pricerule" id="pricerule1"  value="0" {if empty($item['pricerule']) || $item['pricerule']==0 } checked{/if} /> 无</label>
+					<label  class="radio-inline">
+						<input type="radio" name="pricerule" id="pricerule2" value="1" {if $item['pricerule']==1 } checked{/if} /> 依停车时段计费(单价)</label>	
+					<label  class="radio-inline">
+						<input type="radio" name="pricerule" id="pricerule4" value="3" {if $item['pricerule']==3 } checked{/if} /> 依停车时段计费(金额)</label>	
+					<label  class="radio-inline">
+						<input type="radio" name="pricerule" id="pricerule3" value="2" {if $item['pricerule']==2 } checked{/if} /> 依停车时长计费(单价)</label>	
+					<label  class="radio-inline">
+						<button class="btn btn-success" type="button" id="addpricerule" onclick="mypricerule()" style="display:none;"><i class="fa fa-plus"></i> 增加规则</button>
+					</label>			
+					<span class="help-block">启用此规则后，收费将应用此规则，时间段指24小时制时间点</span>			
+				</div>
+			</div>
+			
+			<div id="pricerule" style="display:none;">
+				{loop $pricerules $pricerule}
+				<div class="form-group">
+					<input type="hidden" class="form-control" value="{$pricerule['id']}"  name="ruleid[]">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">计费区间</label>
+					<div class="col-sm-6 col-lg-6 col-xs-12">
+						<div class="input-group">
+							<span class="input-group-addon">从</span>		
+							<input type="number" class="form-control"  value="{$pricerule['starttime']}" placeholder="时间" name="starttime[]">
+							<span class="input-group-addon">到</span>
+							<input type="number" class="form-control"  value="{$pricerule['endtime']}" placeholder="时间" name="endtime[]">
+							<span class="input-group-addon">点或小时，单价或金额</span>		
+							<input type="text" class="form-control"  value="{$pricerule['price']}" name="price[]">
+							<span class="input-group-addon">元</span>
+							<span class="input-group-btn">
+								<button class="btn btn-warning" type="button" onclick="delpricerule(this,'{$pricerule['id']}')" ><i class="fa fa-close"></i></button>
+							</span>
+						</div>		
+					</div>
+				</div>
+				{/loop}
+			</div>
+			<br>
+		</form>	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){	
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'list')).$mywe['direct'];}";
+	window.scrollTo(0,0);
+	var price = $.trim($("#price").val());	
+	var qty = $.trim($("#qty").val());
+		
+	if(price>0){
+	}
+	else{
+	    layer.msg('计价标准不为空',{icon:0});
+		return
+	}
+	if(qty>0){
+	}
+	else{
+	     layer.msg('计价标准不为空',{icon:0});
+		 return
+	}
+	
+	myprocess(obj);
+	$.post("{php echo $this->createWebUrl($mydo,array('op'=>$_GPC['op'])).$mywe['direct'];}",
+		$("#myform").serializeObject(),
+		function(data,status){
+			 if (data=='ok'){
+				layer.msg('提交成功！',{icon:1});				
+				location.href = url;
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+				$(obj).html('<i class="fa fa-check"></i> 提交'); 
+				$(obj).removeAttr("disabled"); 
+			 }
+		});  
+}
+
+require(['angular.sanitize','clockpicker'], function(angular, $, _){
+	$('.starttime').clockpicker({autoclose: true});
+	$('.endtime').clockpicker({autoclose: true});
+});
+
+var pricerule = "{$item['pricerule']}";
+if(pricerule=='1' || pricerule=='2' || pricerule=='3'){
+	 $("#addpricerule").show();
+	 $("#pricerule").show();
+}
+
+ $("input[name=pricerule]").click(function(){
+	  switch($("input[name=pricerule]:checked").attr("id")){
+	  case "pricerule1":			   
+		    $("#addpricerule").hide();
+			$("#pricerule").hide();
+		   break;
+	  case "pricerule2":			
+		    $("#addpricerule").show();
+			$("#pricerule").show();
+		   break;
+	  case "pricerule3":			
+		    $("#addpricerule").show();
+			$("#pricerule").show();
+		   break;
+	  case "pricerule4":			
+		    $("#addpricerule").show();
+			$("#pricerule").show();
+		   break;
+	  default:
+		    $("#addpricerule").hide();
+			$("#pricerule").hide();	
+		   break;
+		}
+ });
+ 
+function mypricerule() {
+	$.ajax({
+		url: "{php echo $this->createWeburl($mydo,array('op'=>'pricetpl')).$mywe['direct'];}",
+		cache: false
+	}).done(function (html) {
+		$("#pricerule").append(html); 
+	});
+}
+
+function removepricerule(obj) {
+	$(obj).parents(".form-group").remove();
+}
+
+function delpricerule(obj,id) {	
+	 $.post("{php echo $this->createWeburl($mydo,array('op'=>'delpricerule')).$mywe['direct'];}", {ruleid:id}, function (ret){
+		if(ret=='ok'){
+			$(obj).parents(".form-group").remove();
+		}
+	 });
+}
+
+function myreturn(){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'list')).$mywe['direct'];}";
+	location.href = url;
+}
+
+</script> 
+
+</body>
+</html>

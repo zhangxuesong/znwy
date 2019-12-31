@@ -1,0 +1,81 @@
+{template $this->mytpl('_header')}
+<div class="fui-page">
+    <div class="fui-header">
+	 <div class="fui-header-left"><a class="back"></a> </div>
+        <div class="title">
+			自助智能设备
+		</div>
+    </div>	
+    <div class="fui-content">
+        <div class='fui-content-inner'>
+            <div class='content-empty' style='display:none;'>
+				<div class="empty-bg"><i class='icon icon-lights'></i></div>
+				<p>附近没有智能设备</p>	               
+            </div>
+            <div class='container'></div>
+            <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+        </div>
+    </div>		
+</div>
+<script charset="utf-8" src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js"></script>
+	<script type="application/javascript">
+		$(function() {
+		   var geolocation = new qq.maps.Geolocation("{$sysconifg['qq_lbskey']}", "myapp");
+	　　　　var options = {timeout: 1000};//设置定位超时
+	　　　　var positionNum = 0;　　　　
+			geolocation.getLocation(showPosition,null,options);
+			
+		});
+		function showPosition(position){      		
+			var latitude = position.lat; // 纬度，浮点数，范围为90 ~ -90
+			var longitude = position.lng; // 经度，浮点数，范围为180 ~ -180。
+			require(['selfdevice/list'], function (modal) {
+				modal.init({
+				range:'500',
+				lat:latitude,
+				lng:longitude,
+				cateid:"{$cateid}"
+				});
+			});
+		}
+</script>
+<script id='tpl_selfdevice_list' type='text/html'>
+	<%each list as value%>
+		<div  class="fui-list store-item"
+			  data-lng="<%value.lng%>"
+			  data-lat="<%value.lat%>">
+
+			<div class="fui-list-inner store-inner">
+				<a data-price="<%value.price%>" data-selfid="<%value.id%>" class="btn-pay">
+				<div class="title"> <span class='storename'><%value.title%></span><%if value.online==0%><span class="pull-right" style="font-size:0.65rem;color:red;margin-right:10px;">离线</span><%else%><span class="pull-right" style="font-size:0.65rem;color:green;margin-right:10px;">在线</span><%/if%></div>
+				<div class="subtitle">设备编号:<%value.devicesn%><span class="pull-right" style="font-size:0.65rem;color:red;margin-right:10px;"><%value.price%>元/次</span></div>
+				<%if value.address!=""%>
+				<div class="text">
+					地址: <span class='realname'><%value.address%></span>
+				</div>
+				<%/if%>
+
+				<div class="text location" style="color:green;">
+					<%if value.distance<100000%>
+					距离您:<%value.distance%>km
+				   <%/if%>
+				</div>
+				</a>
+			</div>
+			<div class="fui-list-angle ">
+				 <%if value.online==0%>
+				 <span class='external'><a href="<%value.detailurl%>"><i class='icon icon-more' style='color:#ccc'></i></a></span>
+				 <%else%>
+				 <span class='external'><a href="<%value.detailurl%>"><i class='icon icon-more' style='color:green'></i></a></span>
+				 <%/if%>
+				  <%if value.online==0%>
+				  <a href="<%value.mapurl%>" class='external' ><i class='icon icon-location' style='color:#ccc'></i></a>
+				  <%else%>
+					<a href="<%value.mapurl%>" class='external' ><i class='icon icon-location' style='color:#f90'></i></a>
+				<%/if%>
+			</div>
+		</div>
+	<%/each%>		
+</script>	
+
+{template $this->mytpl('_footer')}

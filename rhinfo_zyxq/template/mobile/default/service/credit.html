@@ -1,0 +1,67 @@
+{template $this->mytpl('_header')}
+<style type="text/css">
+	.fui-navbar ~ .fui-content, .fui-content.navbar{padding:0;}
+	.fui-cell-group{margin-top:0;}
+</style>
+
+<div class='fui-page fui-page-current'>
+		<div class="fui-header">
+				<div class="fui-header-left">
+					<a class="back"></a>
+				</div>
+				<div class="title">{$credittitle}记录</div>
+				<div class="fui-header-right">
+				{if $_GPC['op']=='credit2'}
+				<a href="{php echo $this->createMobileUrl('service',array('op'=>'recharge'));}">充值</a>
+				{else}
+					{if $creditnum>=1}
+						<a href="{php echo $this->createMobileUrl('service',array('op'=>'give'));}">赠送</a>
+					{/if}
+				{/if}
+				</div>
+		</div>
+		
+		<div class='fui-content navbar'>
+			 <div class="fui-title"><i class="icon {if $_GPC['op']=='credit2'}icon-creditlevel{else}icon-jifen{/if}"></i> 我的{$credittitle}: {$creditnum}</div>					
+			 		 
+		 	<div class="fui-message fui-message-popup in content-empty" style="display: none; margin: 0; padding: 0; position: relative;">
+				<div class="icon ">
+					<i class="icon icon-information"></i>
+				</div>
+				<div class="content">未找到相关记录~</div>
+			</div>		
+			<div class="fui-list-group">
+				<div class="container"></div>
+				<div class='infinite-loading' style="text-align: center; color: #666;">
+					<span class='fui-preloader'></span>
+					<span class='text'> 正在加载...</span>
+				</div>	
+			</div>	    			
+		</div>		
+</div>
+
+<script id='tpl_creditlog_list' type='text/html'>
+	<%each list as item%>
+	  <div class="fui-list">
+		<div class="fui-list-inner">
+			<div class="subtitle"><%item.remark%></div>			
+			<div class="text"><%item.createtime%></div>			
+		</div>
+		<div class="fui-list-angle">
+		<%if item.num>0 %> 
+			<span class="text-success">+<%item.num%></span>
+		<%else%>
+			<span class="text-danger"><%item.num%></span>
+		<%/if%>
+		</div>
+	</div>
+	<%/each%>
+</script>
+<script language="javascript">
+	require(['member/credit'],function(modal){
+		modal.init({op:"{$_GPC['op']}"});
+	});
+</script>
+
+{template $this->mytpl('_menu')}
+{template $this->mytpl('_footer')}

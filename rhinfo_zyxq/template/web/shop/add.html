@@ -1,0 +1,48 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:30px;">
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/form'}	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+var pid = "{$pid}";
+var rid = "{$rid}";
+
+function mysubmit(obj){
+	var title = $.trim($("#title").val());
+	
+    if (title=='') {
+	   layer.msg("商铺名称不能为空！",{icon:0});
+	   return;
+	}	
+	
+    $.post("{php echo $this->createWebUrl($mydo);}",
+	{ op:"check",post:'add',title:title,pid:pid,rid:rid,direct:1},
+	 function(data,status){
+	 if (data=='ok'){		
+		myprocess(obj);
+		$("#myform").submit();
+	 }
+	 else{
+		layer.msg(data);
+		return ;
+	 }
+	});	
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'list','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid;
+	 location.href = url;
+}
+
+</script> 
+
+</body>
+</html>

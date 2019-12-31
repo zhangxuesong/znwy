@@ -1,0 +1,60 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"> <span class="text-danger">*</span>帮助栏目</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="sid" id="sid" onchange="renderCategory(this,'secprg','pid')" {if $operation=='edit'}disabled{/if}>
+				{if $operation=='add'}<option value="0">请选择</option>{/if}
+				{loop $secsys $k $v}
+					<option value="{$v['id']}" {if $item['sid'] == $v['id']} selected {/if} >{$v['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>帮助类别</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="pid" name="pid" {if $operation=='edit'}disabled{/if}>
+				{if $operation=='add'}	<option value="0">请选择</option>{/if}
+				{loop $esecprg $i $r}
+					<option value="{$r['id']}" {if $item['pid'] == $r['id']} selected {/if} >{$r['title']}</option>
+				{/loop}
+			</select>
+		</div>
+	</div>	
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>帮助主题</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入帮助主题" name="title">
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">帮助内容</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_ueditor('content', $item['content']);}
+		</div>	
+	</div>
+</form>	
+<script type="text/javascript">
+	window._secprg = {php echo json_encode($mysecprg);};					
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){			
+			$selectChild = $("#"+ id);			
+			var html = '<option value="0">请选择</option>';							
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		});
+	}
+</script>

@@ -1,0 +1,60 @@
+<ul class="stats-list">	
+	<li style="width: 15%;">
+		<div class="stats-item">
+			<i class="fa fa-sitemap text-primary"></i>
+			<div class="stats-title">
+				<span>小区</span>
+				<span>{php echo empty($stats_qty['region'])?0:$stats_qty['region'];}</span>
+			</div>
+		</div>
+	</li>
+	<li style="width: 15%;">
+		<div class="stats-item">
+			<i class="fa fa-shopping-cart text-danger"></i>
+			<div class="stats-title">
+				<span>商圈</span>
+				<span>{php echo empty($stats_qty['shop'])?0:$stats_qty['shop'];}</span>
+			</div>
+		</div>
+	</li>
+	<li style="width: 15%;">
+		<div class="stats-item">
+			<i class="fa fa-building text-warning"></i>
+			<div class="stats-title">
+				<span>楼宇</span>
+				<span>{php echo empty($stats_qty['building'])?0:$stats_qty['building'];}</span>
+			</div>
+		</div>
+	</li>
+	<li style="width:25%;">
+		<div class="platform-title">{if !empty($property['logo'])}<img src="{php echo tomedia($property['logo']);}" height="30px"/>{$property['title']}{else}<img src="{php echo $this->syscfg['logo'];}" height="30px"/> {php echo $this->syscfg['title'];}{/if}</div>
+		<div class="today" id="localtime"></div>
+	</li>
+	<li style="width: 15%;">
+		<div class="stats-item">
+			<i class="fa fa-home text-success"></i>
+			<div class="stats-title">
+				<span>房屋</span>
+				<span>{php echo empty($stats_qty['room'])?0:$stats_qty['room'];}</span>
+			</div>
+		</div>
+	</li>
+	<li style="width: 15%;">
+		<div class="stats-item">
+			<i class="fa fa-taxi text-info"></i>
+			<div class="stats-title">
+				<span>车位</span>
+				<span>{php echo empty($stats_qty['parking'])?0:$stats_qty['parking'];}</span>
+			</div>
+		</div>
+	</li>
+	<li style="width: 15%;">
+		<div class="stats-item">
+			<i class="fa fa-wrench text-warning"></i>
+			<div class="stats-title">
+				<span>设备</span>
+				<span>{php echo empty($stats_qty['device'])?0:$stats_qty['device'];}</span>
+			</div>
+		</div>
+	</li>
+</ul>

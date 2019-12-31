@@ -1,0 +1,50 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:30px;">
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/form'}	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+var pid = "{$pid}";
+var rid = "{$rid}";
+var bid = "{$bid}";
+
+function mysubmit(obj){
+	var title = $.trim($("#title").val());
+	var id = $.trim($("#id").val());
+	
+    if (title=='') {
+	   layer.msg("单元名称不能为空！",{icon:0});
+	   return;
+	}	
+	
+    $.post("{php echo $this->createWebUrl('unit').$mywe['direct'];}",
+	{ op:"check",post:"{$_GPC['op']}",title:title,pid:pid,rid:rid,bid:bid,id:id},
+	function(data,status){
+	 if (data=='ok'){		
+	    myprocess(obj);
+		$("#myform").submit();
+	 }
+	 else{
+		layer.msg(data,{icon:0});
+		return ;
+	 }
+	});	
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'list','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid + "&bid=" + bid;
+	 location.href = url;
+}
+
+</script> 
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+{template $this->mytpl('_header')}
+
+<style>
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+html{
+	color: #fff;
+	font-size: 14px;
+}
+.container{
+	text-align: center;
+	width: 100%;
+	margin: 0 auto;
+	background-color: rgba(0,0,0,0.1);
+	height: 100%;
+	position: absolute;
+}
+
+.topcontent{
+	height: 120px;
+	border: 1px solid #BD503A;
+	background-color: #BD503A;
+	border-radius: 0 0 50% 50% / 0 0 30% 30%;
+	box-shadow: 0px 2px 0px -1px rgba(0,0,0,0.2);
+}
+.topcontent h2{
+	margin: 15px 0;
+	color:#fff;
+}
+.text{
+	color: #999;
+}
+.description{
+	margin: 15px 0;
+	font-size: 16px;
+	font-weight: 600;
+}
+
+</style>
+<div class="fui-page fui-page-current">
+	<div class='fui-content'>
+		<div class="container" id="container">	
+			<div class="topcontent">
+				<h2>{$redpacket['title']}送红包</h2>
+			</div>
+			<div class="text-center lead" style="margin-top:-40px;margin-bottom:32px;">
+				<img src="{$_W['fans']['tag']['avatar']}" style="width:80px;border-radius: 50%;">
+				<h2>{$_W['fans']['nickname']}</h2>
+				<h4>收到{$redpacket['title']}红包</h4>
+				<h1 style="margin:18px auto;"><strong>{php echo $redmember['amount']/100;}元</strong></h1>
+				<h4 style="color:#5c6fba">已存入零钱，可直接提现</h4>
+			</div>	
+			<h4 style="margin-left:5px;text-align:left;">最近领取记录</h4>	
+			{loop $list $v}		
+				<div class="fui-list" style="text-align:left;">	
+					<div class="fui-list-media">		    
+						<img src="{$v['avatar']}" width="50" class="circle"/>						
+					</div>
+					<div class="fui-list-inner">
+						<div class="title">{$v['nickname']}</div>
+						<div class="subtitle">{php echo date('m-d H:i',$v['ctime']);}<span class="pull-right">{php echo $v['amount']/100;}元</span></div>						
+					</div>
+				</div>
+			{/loop}
+		</div>
+	</div>
+</div>
+{if $region['invitestrategyid']}
+	<script>
+	setTimeout(function(){
+		var url = "{php echo $this->createMobileUrl($mydo,array('op'=>'share','redid'=>$region['invitestrategyid'],'rid'=>$region['id']));}";
+		location.href = url;
+	},3000);
+	</script>
+{else}
+	<script>
+	setTimeout(function(){
+		var url = "{php echo $this->createMobileUrl('home',array('op'=>'index'));}";
+		location.href = url;
+	},3000);
+	</script>
+{/if}
+<script language="javascript">  
+ 	clearTimeout(window.interval);
+	window.interval = setTimeout(function () {    
+		jssdkconfig = {php echo json_encode($_W['account']['jssdkconfig']);} || { jsApiList:[] };
+		jssdkconfig.debug = false;
+		wx.ready(function () {
+			wx.hideOptionMenu();
+		});	
+	},500);
+</script>
+</body>
+</html>

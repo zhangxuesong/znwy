@@ -1,0 +1,65 @@
+﻿<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">关注引导链接</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<div class="input-group ">
+		<input type="text" class="form-control" id="followurl" value="{$item['followurl']}" placeholder="输入链接地址" name="followurl">
+		<span class="input-group-btn">
+			<button class="btn btn-default" type="button" onclick="showLinkDialog(this);">系统链接</button>
+		</span>	
+		</div>
+		<span class="help-block">用户未关注的引导页面，建议使用短链接</span>
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">未关注提醒文字</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="followtip"  name="followtip" value="{$item['followtip']}" placeholder="输入提醒文字">
+	</div>		
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">是否强制关注</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="forcefollow" value="0" {if empty($item['forcefollow']) || $item['forcefollow']==0 } checked{/if} />不强制</label>
+		<label  class="radio-inline">
+			<input type="radio" name="forcefollow" value="1" {if $item['forcefollow']==1 } checked{/if} />强制</label>	
+		<span class="help-block">进入小区首页是否强制关注</span>			
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">关注二维码</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		{php echo tpl_form_field_image('qrcode',$item['qrcode']);}
+		<span class="help-block">建议尺寸300*300</span>
+	</div>	
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">分享标题</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<input type="text" class="form-control" id="sharetitle"  name="sharetitle" value="{$item['sharetitle']}" placeholder="输入分享标题">
+		<span class="help-block">不填写默认公众号名称或主体名称</span>	
+	</div>		
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">分享图标</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		{php echo tpl_form_field_image('shareicon',$item['shareicon']);}
+		<span class="help-block">建议尺寸100*100</span>
+	</div>	
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">分享描述</label>
+	<div class="col-sm-6 col-lg-6 col-xs-12">
+		<textarea class="form-control" id="sharedesc"  name="sharedesc" autocomplete="off" rows="3">{$item['sharedesc']}</textarea>
+		<span class="help-block">分享出去的文字描述</span>	
+	</div>		
+</div>
+<script>
+	function showLinkDialog(elm) {
+		var ipt = $(elm).parent().prev();
+		util.linkBrowser(function(href){		
+			ipt.val(href);			
+		});
+	}
+</script>

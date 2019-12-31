@@ -1,0 +1,19 @@
+<input type="hidden" name="reply_id" value="{$replyrule['id']}" />
+<div class="panel panel-default">
+    <div class="panel-heading">
+        对应回复操作设置
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span> 对应回复操作</label>
+            <div class="col-sm-9 col-xs-12">
+                <select class="form-control" name="regionid" >
+				<option value="0" {if ($replyrule['rid']==0)} selected="selected" {/if} >智能门禁</option> 
+				{loop $regions $region}
+                 <option value="{$region['id']}" {if ($replyrule['rid']==$region[id])} selected="selected" {/if} >{$region['title']}</option>  
+				{/loop}
+             </select>
+            </div>
+        </div> 
+    </div>
+</div>

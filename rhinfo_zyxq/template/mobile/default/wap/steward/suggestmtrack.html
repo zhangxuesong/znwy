@@ -1,0 +1,48 @@
+{template $this->mytpl('_header')}
+
+<div class='fui-page  fui-page-current' >
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back"></a>
+	</div>
+	<div class="title">投诉建议</div> 
+	<div class="fui-header-right">&nbsp;</div>
+    </div>
+  <div class='fui-content margin navbar'>    
+	  <div class="fui-title"><i class="icon icon-city"></i> {$housename}</div>
+	  <div class="fui-title"></div>  
+	 <div class="fui-cell-group">
+		<input type="hidden" id="suggest_id" name="suggest_id" value="{$suggest['id']}">		 	 
+		 <div class='fui-cell must'>
+			 <div class='fui-cell-label '>内容</div>
+			 <div class='fui-cell-info'><textarea rows="6" placeholder="内容 10-100个字" id='content' name='content'></textarea></div>
+		 </div>	
+	 
+	 <div class='fui-cell'>
+		 <div class='fui-cell-label'>晒图</div>
+		 <div class='fui-cell-info'>			 
+			 <ul class="fui-images fui-images-md" id="images"></ul>
+			 <div class="fui-uploader fui-uploader-md"
+				 data-max="3" 
+				 data-count="0"> 
+				<input type="file" name='imgFile0' id='imgFile0' multiple="" accept="image/*" >
+			 </div>
+		 </div>
+	 </div>
+	</div>
+  </div>  
+     <div class='fui-footer'>
+		<a class='btn btn-warning btn-submit block'>提交</a>
+	  </div>
+	  
+    <script language='javascript'>
+		require(['suggest/suggestwap'], function (modal) {
+			modal.initMtrack({
+			rid: "{$user['rid']}"
+			}); 
+		});
+	</script>
+	
+</div> 
+
+{template $this->mytpl('_footer')}

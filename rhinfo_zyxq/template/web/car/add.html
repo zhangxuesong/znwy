@@ -1,0 +1,98 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle'}
+
+<div class="panel panel-default" style="padding-top:30px;">
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/form'}	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){	
+	window.scrollTo(0,0);
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'list')).$mywe['direct'];}";
+	var price = $.trim($("#price").val());
+	var paymonths = $.trim($("#paymonths").val());
+	var title = $.trim($("#title").val());
+	var pid = $("#pid").find("option:selected").val();
+	var rid = $("#rid").find("option:selected").val(); 
+	var carno = $.trim($("#carno").val());
+	var startdate = $('input[name="startdate"]').val();
+	var enddate = $('input[name="enddate"]').val();
+ 	
+    if (title=='') {
+	   layer.msg("车位名称不能为空！",{icon:0});
+	   return;
+	}	
+	
+	if (pid=='0') {
+	   layer.msg("所属物业不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (rid=='0') {
+	   layer.msg("所属主体不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (carno=='') {
+	   layer.msg("车牌号码不能为空！",{icon:0});
+	   return;
+	}	
+	
+	if(!check_carno(carno)){
+		layer.msg("车牌号码不正确！",{icon:0});
+		return;
+	}
+	
+	time1 = Date.parse(new Date(startdate));
+    time2 = Date.parse(new Date(enddate));
+    time3 = Math.abs(parseInt((time2 - time1)/1000/3600/24));
+	if(time3<30*paymonths){
+	   layer.msg("合同日期不正确！",{icon:0});
+	   return;
+	}
+	
+	if (price=='') {
+	   layer.msg("单价不能为空！",{icon:0});
+	   return;
+	}
+	if (paymonths=='') {
+	   layer.msg("缴费周期不能为空！",{icon:0});
+	   return;
+	}	
+	
+	$.post("{php echo $this->createWebUrl($mydo);}",
+	{ op:"check",post:'add',title:title,pid:pid,rid:rid,direct:1},
+	function(data,status){
+	 if (data=='ok'){		
+		myprocess(obj);
+		$("#myform").submit();
+	 }
+	 else{
+		layer.msg(data,{icon:0});
+		return ;
+	 }
+	});	
+}
+
+function myreturn(){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'list')).$mywe['direct'];}";	
+	location.href = url;
+}
+
+function check_carno(carno) {
+	var re = /^[\u4e00-\u9fa5]{1}[0-9a-zA-Z]{1}[0-9a-zA-Z]{5,6}$/;
+	if(carno.search(re) == -1) {
+		return false;
+	} else {
+		return true;
+	}
+}
+</script> 
+</body>
+</html>

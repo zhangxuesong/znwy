@@ -1,0 +1,206 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+	
+	{if $_W['uid']} 
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label"> <span class="text-danger">*</span>所属物业</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+					<option value="0">请选择所属物业</option>
+					{loop $myproperty $k $v}
+						<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+					{/loop}
+				</select>				
+			</div>
+		</div>
+	{else}
+		<input type="hidden" class="form-control" id="pid" value="{$mywe['pid']}" name="pid" />
+	{/if}
+		
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>所属主体</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="rid" name="rid" onchange="renderCategory(this,'patrol','positionid')">
+				<option value="0">请选择所属主体</option>	
+				{loop $eregions $i $r}
+					<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+				{/loop}
+				{if $_W['uid']} 
+				{else}
+					{if $operation=='add'}
+						{loop $regions $i $r}
+							<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+						{/loop}
+					{/if}
+				{/if}
+			</select>
+		</div>
+	</div>	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>巡更线路名称</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入巡更线路名称" name="title" />
+		</div>	
+	</div>
+	<input type="hidden" class="form-control" id="positions" value="" name="positions"  />
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"></label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+		<!--效果html开始-->
+		<div class="selectbox">
+			<div class="select-bar">
+				<span class="text-warning">请选择巡更点</span>
+				<select multiple="multiple" id="select1" class="form-control">			
+					{loop $epatrols $patrol}
+					<option value="{$patrol['id']}">{$patrol['title']}</option>				
+					{/loop}
+				</select>				
+			</div>
+
+			<div class="btn-bar">
+				<p><span id="add"><input type="button" class="btn" value=">" title="移动选择项到右侧"/></span></p>
+				<p><span id="add_all"><input type="button" class="btn" value=">>" title="全部移到右侧"/></span></p>
+				<p><span id="remove"><input type="button" class="btn" value="<" title="移动选择项到左侧"/></span></p>
+				<p><span id="remove_all"><input type="button" class="btn" value="<<" title="全部移到左侧"/></span></p>
+			</div>
+			<div class="select-bar">
+				<span class="text-success">已选择巡更点</span>
+				<select multiple="multiple" id="select2" class="form-control">
+					{loop $patrolarr $kk $vpat}
+					<option value="{$vpat}">{$patrolname[$kk]}</option>				
+					{/loop}
+				</select>				
+			</div>	
+			</div>
+			<!--效果html结束-->
+			<span class="help-block">可以为空不选择任何小区</span>
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-3 col-md-2 control-label">巡更时间</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<div class="input-group">
+				<span class="input-group-addon">开始时间</span>
+				<input type="text" class="form-control starttime" name="starttime" id="starttime" value="{$item['starttime']}" readonly />
+				<span class="input-group-addon">结束时间 </span>
+				<input type="text" class="form-control endtime" name="endtime" id="endtime" value="{$item['endtime']}" readonly />							
+			</div>
+			<span class="help-block">为空则任何时间都可以巡更</span>
+		</div> 
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">是否拍照</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<label class='radio-inline'>
+			<input type='radio' name='isimage' value='1'  {if $item['isimage']==1 } checked{/if}/> 必须拍照
+			</label>
+			<label class='radio-inline'>
+				<input type='radio' name='isimage' value='0' {if empty($item['isimage']) || $item['isimage']==0 } checked{/if} /> 不需拍照
+			</label>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">备注</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="remark" value="{$item['remark']}" placeholder="输入备注" name="remark" />
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">状态</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<label class='radio-inline'>
+			<input type='radio' name='status' value='1'  {if $item['status']==1 } checked{/if}/> 启用
+			</label>
+			<label class='radio-inline'>
+				<input type='radio' name='status' value='0' {if empty($item['status']) || $item['status']==0 } checked{/if} /> 禁用
+			</label>
+		</div>
+	</div>
+	</br>
+</form>	
+
+<script type="text/javascript">
+	window._region = {php echo json_encode($myregion);};				
+	window._patrol = {php echo json_encode($mypatrol);};
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择</option>';
+			if (id=='rid'){
+				$("#positions").html(html);				
+			}	
+
+			if(id=='positionid'){				
+				html='';
+				$selectChild = $("#select1");
+				$("#select2").html('');
+			}		
+
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		});
+	}
+	
+	require(['angular.sanitize','clockpicker'], function(angular, $, _){
+		$('.starttime').clockpicker({autoclose: true});
+		$('.endtime').clockpicker({autoclose: true});
+	});
+
+	$(function(){	
+	//移到右边
+		$('#add').click(function(){
+			//先判断是否有选中
+			if(!$("#select1 option").is(":selected")){			
+				layer.msg("请选择需要移动的选项",{icon:0})
+			}
+			//获取选中的选项，删除并追加给对方
+			else{
+				$('#select1 option:selected').appendTo('#select2');
+			}	
+		});
+		
+		//移到左边
+		$('#remove').click(function(){
+			//先判断是否有选中
+			if(!$("#select2 option").is(":selected")){			
+				layer.msg("请选择需要移动的选项",{icon:0})
+			}
+			else{
+				$('#select2 option:selected').appendTo('#select1');
+			}
+		});
+		
+		//全部移到右边
+		$('#add_all').click(function(){
+			//获取全部的选项,删除并追加给对方
+			$('#select1 option').appendTo('#select2');
+		});
+		
+		//全部移到左边
+		$('#remove_all').click(function(){
+			$('#select2 option').appendTo('#select1');
+		});
+		
+		//双击选项
+		$('#select1').dblclick(function(){ //绑定双击事件
+			//获取全部的选项,删除并追加给对方
+			$("option:selected",this).appendTo('#select2'); //追加给对方
+		});
+		
+		//双击选项
+		$('#select2').dblclick(function(){
+			$("option:selected",this).appendTo('#select1');
+		});
+		
+	});	
+
+</script>

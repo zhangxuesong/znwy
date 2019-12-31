@@ -1,0 +1,70 @@
+{template $this->mytpl('_pheader')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170802">
+
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">交易记录</div>
+		<div class="fui-header-right"></div>
+	</div>
+
+	<div class='fui-content'>
+		<form action="{php echo $this->createMobileUrl($mydo,array('op'=>'payfee','sid'=>$sid));}" method="post">
+			<div class="fui-searchbar bar">
+				<div class="searchbar center">				
+					<input type="submit" class="searchbar-cancel searchbtn" value="搜索">
+					<div class="search-input">
+						<i class="icon icon-search"></i>
+						<input type="text" placeholder="请选择起始日期" readonly class="search" value="" name="paydate" id="paydate" />						
+					</div>
+				</div>
+			</div>
+		</form>
+		
+		<div class="container"></div>
+		<div class="content-empty" style="display:none;">
+		<i class="icon icon-information" ></i> <br/>暂时没有任何内容</div>
+        <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+	</div>  
+	<script type="text/html" id="tpl_feebill_list">
+		<%each list as item%>
+			<a class="fui-list" >
+				<div class="fui-list-media">
+					<div class="text-center" >
+						<%if item.avatar=="" %>
+						<i class="icon icon-money text-success" style="font-size:2rem;"></i>
+						<%else%>
+						<img src="<%item.avatar%>" width="30"/>
+						<%/if%>
+					</div>
+				</div>
+				<div class="fui-list-inner">
+					<div class="title"><%item.paytype%></div>
+					<div class="subtitle">交易金额:<font class="text-danger"><%item.fee%></font></div>
+					<div class="text">交易日期:<%item.paydate%>
+					</div>
+				</div>
+			</a>			 
+		<%/each%>
+	</script>
+	<script language='javascript'>		
+		require(['express/fee'], function (modal) {
+			modal.init({
+			sid:"{$sid}",			
+			paydate:"{$_GPC['paydate']}"
+			});
+		});
+	</script>
+ </div>
+<script language='javascript'>		
+	jssdkconfig = {php echo json_encode($_W['account']['jssdkconfig']);} || { jsApiList:[] };
+	jssdkconfig.debug = false;
+	wx.config(jssdkconfig);	
+	wx.ready(function () {
+		wx.hideOptionMenu();
+	});
+</script>
+</body>
+</html>

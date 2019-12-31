@@ -1,0 +1,24 @@
+{php include $this->template('header-enterprise')}
+{php include $this->template('banner-enterprise')}
+		<!--end banner-->
+		<div class="container about">
+			<div class="title">关于我们</div>
+			<div class="con">
+				{$setting['about']}
+			</div>
+			<div class="title">联系我们</div>
+			<div class="con">
+				<div>公司名称：    {$setting['name']}</div>
+				<div>联系QQ ：    {$setting['qq']}</div>
+				<div>公司地址：    {$setting['address']}</div>
+			</div>
+		</div>
+{php include $this->template('footer-enterprise')}
+<script src="{MODULE_URL}template/styles/js/jquery.SuperSlide.2.1.1.js"></script>
+		<script>
+			$(function(){
+				$(".carousel-banner").slide({ mainCell:".bd ul",effect:"fold",autoPlay:true,delayTime:1000,interTime:4000 });
+			});
+		</script>
+	</body>
+</html>

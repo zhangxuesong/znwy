@@ -1,0 +1,555 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<style type="text/css">
+.nav-tabs li a { padding: 3px 10px;}
+</style>
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body"> 
+	<ul class="nav nav-tabs">		 		  
+		  <li><a href="{php echo $this->createWeburl('category',array('op'=>'list','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >分类设置</a></li>		
+		   <li><a href="{php echo $this->createWeburl('sms',array('op'=>'base','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >基本设置</a></li>
+		   <li><a href="{php echo $this->createWeburl('sms',array('op'=>'fee','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >账单设置</a></li>
+		   {if !empty($_W['uid'])}<li><a href="{php echo $this->createWeburl('sms',array('op'=>'market','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >策略设置</a></li>{/if}
+		   <li><a href="{php echo $this->createWeburl('printer',array('op'=>'list','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >云打印机</a></li>
+		   <li><a href="{php echo $this->createWeburl('sms',array('op'=>'index','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >短信设置</a></li>
+		 {if !empty($_W['uid'])}<li class="active"><a href="{php echo $this->createWeburl('sms',array('op'=>'intelligence','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >智慧设置</a></li>{/if}
+		   <li><a href="{php echo $this->createWeburl('sms',array('op'=>'door','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >其他设置</a></li>
+	</ul>
+	<br>
+	<div class="tab-content">			
+		<div class="panel panel-default">	
+			<div class="panel-body ">
+				<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >		
+					<input type="hidden" name="token" value="{$_W['token']}" />			
+					<input type="hidden" name="pid" value="{$pid}" />		
+					<input type="hidden" name="rid" value="{$rid}" />					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">停车设备类别</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+						<label class="radio-inline">
+								<input type="radio" name="pc_type" id="pc_type0" value="0" {if empty($item['pc_type']) || $item['pc_type']==0 } checked{/if} />无</label>
+							<label class="radio-inline">
+								<input type="radio" name="pc_type" id="pc_type9" value="9" {if $item['pc_type']==9 } checked{/if} />门禁控制</label>
+							<label  class="radio-inline" style="display:none;">
+								<input type="radio" name="pc_type" id="pc_type1" value="1" {if $item['pc_type']==1 } checked{/if} />ICAR</label>
+							<label  class="radio-inline">
+								<input type="radio" name="pc_type" id="pc_type2" value="2" {if $item['pc_type']==2 } checked{/if} />IPMS</label>	
+							<label  class="radio-inline">
+								<input type="radio" name="pc_type" id="pc_type3" value="3" {if $item['pc_type']==3 } checked{/if} />CTPCAR</label>	
+							<label  class="radio-inline" style="display:none;">
+								<input type="radio" name="pc_type" id="pc_type4" value="4" {if $item['pc_type']==4 } checked{/if} />BLUECAR</label>	
+							<label  class="radio-inline">
+								<input type="radio" name="pc_type" id="pc_type5" value="5" {if $item['pc_type']==5 } checked{/if} />TENET</label>	
+							<label  class="radio-inline">
+								<input type="radio" name="pc_type" id="pc_type8" value="8" {if $item['pc_type']==8 } checked{/if} />VZICAR</label>
+							<span class="help-block">门禁控制无车牌识别功能，使用门禁进出场扫码控制</span>			
+						</div>
+					</div>
+				<div id="ipms_channelid" style="display:none;">
+					<div class="form-group">
+						<label class="col-sm-2 col-md-2 col-xs-12 control-label">渠道商ID</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<input type="text" class="form-control" id="pc_channelid" value="{$item['pc_channelid']}" placeholder="输入渠道商ID" name="pc_channelid">
+							<span class="help-block"></span>
+						</div>		
+					</div>		
+					<div class="form-group">
+						<label class="col-sm-2 col-md-2 col-xs-12 control-label">商家ID</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<input type="text" class="form-control" id="pc_shopid" value="{$item['pc_shopid']}" placeholder="输入商家ID" name="pc_shopid">
+							<span class="help-block"></span>
+						</div>		
+					</div>	
+				</div>
+		<div class="form-group" id="mypcappid" style="display:none;">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">停车访问用户</label>
+			<div class="col-sm-7 col-lg-8 col-xs-12">
+				<input type="text" class="form-control" id="pc_appid" value="{$item['pc_appid']}" placeholder="输入访问用户" name="pc_appid">
+				<span class="help-block"></span>
+			</div>		
+		</div>			
+		<div class="form-group" id="mypcsecret" style="display:none;">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">停车访问密钥</label>
+			<div class="col-sm-7 col-lg-8 col-xs-12">
+				<input type="text" class="form-control" id="pc_secret" value="{$item['pc_secret']}" placeholder="输入访问密钥" name="pc_secret">
+				<span class="help-block"></span>
+			</div>		
+		</div>	
+		<div class="form-group" id="mypcrid" style="display:none;">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">停车场所属建筑ID</label>
+			<div class="col-sm-7 col-lg-8 col-xs-12">
+				<input type="text" class="form-control" id="pc_rid" value="{$item['pc_rid']}" placeholder="输入停车场所属建筑ID" name="pc_rid">
+				<span class="help-block">门禁控制不需填写，ICAR可自动创建，IPMS则在其系统中创建后填写进去</span>
+			</div>		
+		</div>	
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">智能门禁类别</label>
+			<div class="col-sm-7 col-lg-8 col-xs-12">
+				<label class="radio-inline">
+					<input type="radio" name="doorlock_type" id="doorlock_type0" value="0" {if empty($item['doorlock_type']) || $item['doorlock_type']==0 } checked{/if} />无</label>
+				<label class="radio-inline">
+					<input type="radio" name="doorlock_type" id="doorlock_type1" value="1" {if $item['doorlock_type']==1 } checked{/if} />THINMOO</label>
+				<label class="radio-inline">
+					<input type="radio" name="doorlock_type" id="doorlock_type2" value="2" {if $item['doorlock_type']==2 } checked{/if} />MAILIN</label>
+				<label class="radio-inline" style="display:none;">
+					<input type="radio" name="doorlock_type" id="doorlock_type3" value="3" {if $item['doorlock_type']==3 } checked{/if} />LINGLING</label>
+				<label class="radio-inline" >
+					<input type="radio" name="doorlock_type" id="doorlock_type4" value="4" {if $item['doorlock_type']==4 } checked{/if} />AURINE</label>
+				<span class="help-block">控制读头和视频门禁设备，普通门禁请至系统配置</span>			
+			</div>
+		</div>
+
+		<div class="form-group" id="thinmoo" style="display:none;">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">门禁token</label>
+			<div class="col-sm-7 col-lg-8 col-xs-12">  
+				<div class="input-group">
+					<input type="text" class="form-control" id="thinmoo_token" value="{$item['thinmoo_token']}" placeholder="输入访问token" name="thinmoo_token">
+					<span class="input-group-btn">
+						{if !empty($item['door_pid'])}
+						<button class="btn btn-warning" type="button" onclick="mydoorinit(this,1);">修改智能门禁</button>
+						{else}
+						<button class="btn btn-success" type="button" onclick="mydoorinit(this,0);">初始化智能门禁</button>
+						{/if}
+					</span>
+				</div>	
+				<span class="help-block">请先保存后再进行初始化操作</span>
+			</div>		
+		</div>
+		
+		<div id="mailin" style="display:none;">
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">访问APPID</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" id="mailin_appid" value="{$item['mailin_appid']}" placeholder="输入访问APPID" name="mailin_appid">
+					<span class="help-block"></span>
+				</div>		
+			</div>			
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">访问密钥</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" id="mailin_secret" value="{$item['mailin_secret']}" placeholder="输入访问密钥" name="mailin_secret">
+					<span class="help-block"></span>
+				</div>		
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label"> 门禁token </label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">  
+					<div class="input-group">
+						<input type="text" class="form-control" id="mailin_token" value="{$item['mailin_token']}" placeholder="获取ACCESS_TOKEN" name="mailin_token" >
+						<span class="input-group-btn">
+							<button class="btn btn-warning" type="button" onclick="get_mailin_token(this);">获取ACCESS_TOKEN</button>
+						</span>
+					</div>	
+					<span class="help-block"></span>
+				</div>		
+			</div>
+		</div>
+	
+		<div id="aurine" style="display:none;">
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">访问APPID</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" id="aurine_appid" value="{$item['aurine_appid']}" placeholder="输入访问APPID" name="aurine_appid">
+					<span class="help-block"></span>
+				</div>		
+			</div>			
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">访问密钥</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" id="aurine_secret" value="{$item['aurine_secret']}" placeholder="输入访问密钥" name="aurine_secret">
+					<span class="help-block"></span>
+				</div>		
+			</div>
+		   <div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label"> 门禁token </label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">  
+					<div class="input-group">
+						<input type="text" class="form-control" id="aurine_token" value="{$item['aurine_token']}" placeholder="获取ACCESS_TOKEN" name="aurine_token" >
+						<span class="input-group-btn">
+							<button class="btn btn-warning" type="button" onclick="get_aurine_token(this);">获取ACCESS_TOKEN</button>
+						</span>
+					</div>	
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">对应小区ID</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" id="aurine_rid" value="{$item['aurine_rid']}" placeholder="输入对应ID" name="aurine_rid">
+					<span class="help-block"></span>
+				</div>		
+			</div>		
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">云对讲小区ID</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" id="aurine_yun_rid" value="{$item['aurine_yun_rid']}" placeholder="输入对应ID" name="aurine_yun_rid">
+					<span class="help-block"></span>
+				</div>		
+			</div>		
+		</div>
+		
+		<div class="form-group" id="lingling" style="display:none;">
+
+		</div>
+		
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">门禁小程序链接</label>		
+			<div class="col-sm-7 col-lg-8 col-xs-12">
+				<div class="input-group ">
+					<span class="input-group-addon">小程序APPID</span>
+					<input type="text" class="form-control"  value="{$item['doorwxappid']}" placeholder="输入小程序APPID" name="doorwxappid" />
+					<span class="input-group-addon">小程序页面</span>
+					<input type="text" class="form-control"  value="{$item['doorwxapppage']}" placeholder="输入小程序页面" name="doorwxapppage" />				
+				</div>
+				<span class="help-block">小程序APPID必须输入，页面可以为空，默认小程序首页</span>
+			</div>	
+		</div>	
+		<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">车位锁类别</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<label class="radio-inline">
+						<input type="radio" name="parklock_type" id="parklock_type0" value="0" {if empty($item['parklock_type']) || $item['parklock_type']==0 } checked{/if} />无</label>
+					<label class="radio-inline">
+						<input type="radio" name="parklock_type" id="parklock_type1" value="1" {if $item['parklock_type']==1 } checked{/if} />PSHARE</label>	
+				</div>
+			</div>
+		<div class="form-group" id="pshare">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">车位锁token</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">  							
+				<input type="text" class="form-control" id="parklock_token" value="{$item['parklock_token']}" placeholder="输入访问token" name="parklock_token">
+				</div>		
+			</div>	
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">生活缴费</label>
+			<div class="col-sm-7 col-lg-8 col-xs-12">
+				<label class="radio-inline">
+					<input type="radio" name="lifepay_type" id="lifepay_type0" value="0" {if empty($item['lifepay_type']) || $item['lifepay_type']==0 } checked{/if} />不对接</label>
+				<label  class="radio-inline">
+					<input type="radio" name="lifepay_type" id="lifepay_type1" value="1" {if $item['lifepay_type']==1 } checked{/if} />支付宝生活缴费</label>				
+				<span class="help-block">对接支付宝生活缴费，业主可在支付宝完成缴费</span>			
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label">生活缴费token</label>
+			<div class="col-sm-7 col-lg-8 col-xs-12">
+				<div class="input-group">
+					<input type="text" class="form-control" id="lifepay_token" value="{$item['lifepay_token']}" placeholder="输入访问token" name="lifepay_token">
+					<span class="input-group-btn">
+						{if empty($item['lifepay_init'])}
+						<button class="btn btn-success" type="button" onclick="mylifeinit(this,0);">初始化物业基础服务</button>
+						{else}
+						<button class="btn btn-warning" type="button" onclick="mylifeinit(this,1);">修改物业基础服务</button>
+						{/if}
+					</span>
+				</div>
+				<span class="help-block">输入访问token后，请先保存后再进行初始化操作.{if !empty($item['lifepay_init'])} 如果已经执行初始化，可以<a href="javascript:;" onclick="myaliqrcode()" class="text-info">下载测试二维码</a>，用支付宝扫一扫.{/if}</span>
+			</div>		
+		</div>					
+		
+		<div class="col-lg-9 col-xs-12 col-sm-offset-2" style="margin-top:8px;">   
+			<button  class="btn btn-primary" ><i class="fa fa-save"></i> 保存</button>
+			<a href="javascript:;" class="btn btn-default"  onclick="myreturn()"><i class="fa fa-reply"></i> 返回<a/>
+		</div>
+	</form>
+	</div>  
+	</div>
+	</div>	
+  </div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+var pid = "{$pid}";
+var rid = "{$rid}";
+
+var pc_type = "{$item['pc_type']}";	 
+
+if(pc_type=='1'){
+	 $("#mypcappid").show();
+	 $("#mypcsecret").show();
+	 $("#mypcrid").show()
+	 $("#ipms_channelid").hide();
+}
+else if(pc_type=='2'){
+	 $("#mypcappid").show();
+	 $("#mypcsecret").show();
+	 $("#mypcrid").show()
+	 $("#ipms_channelid").show();
+}  
+else if(pc_type=='4'){
+	 $("#mypcappid").hide();
+	 $("#mypcsecret").show();
+	 $("#mypcrid").hide()
+	 $("#ipms_channelid").hide();
+}  
+else if(pc_type=='5'){
+	 $("#mypcappid").show();
+	 $("#mypcsecret").show();
+	 $("#mypcrid").hide()
+	 $("#ipms_channelid").hide();
+}  
+else{
+	 $("#mypcappid").hide();
+	 $("#mypcsecret").hide();
+	 $("#mypcrid").hide()
+	 $("#ipms_channelid").hide();
+}  
+ 
+ $("input[name=pc_type]").click(function(){	
+	  switch($("input[name=pc_type]:checked").attr("id")){
+	 case "pc_type1":	
+		   $("#mypcappid").show();
+		   $("#mypcsecret").show();
+		   $("#mypcrid").show()
+		   $("#ipms_channelid").hide();
+		   break;
+	  case "pc_type2":	
+		  $("#mypcappid").show();
+		 $("#mypcsecret").show();
+		 $("#mypcrid").show()
+		 $("#ipms_channelid").show();
+		   break;
+	  case "pc_type4":	
+	      $("#mypcappid").hide();
+		 $("#mypcsecret").show();
+		 $("#mypcrid").hide()
+		 $("#ipms_channelid").hide();
+		  break;
+	  case "pc_type5":	
+	     $("#mypcappid").show();
+		 $("#mypcsecret").show();
+		 $("#mypcrid").hide()
+		 $("#ipms_channelid").hide();
+	     break;
+	  default:
+	     $("#mypcappid").hide();
+		 $("#mypcsecret").hide();
+		 $("#mypcrid").hide()
+		 $("#ipms_channelid").hide();
+	     break;
+	}		
+ });
+
+ 
+ var doorlock_type = "{$item['doorlock_type']}";	 
+ if(doorlock_type=='1'){
+	 $("#thinmoo").show();
+	 $("#mailin").hide();
+	 $("#lingling").hide();
+	 $("#aurine").hide();
+}
+else if(doorlock_type=='2'){
+	$("#thinmoo").hide();
+	 $("#mailin").show();
+	 $("#lingling").hide();
+	 $("#aurine").hide();
+}
+else if(doorlock_type=='3'){
+	 $("#thinmoo").hide();
+	 $("#mailin").hide();
+	 $("#lingling").show();
+	 $("#aurine").hide();
+}
+else if(doorlock_type=='4'){
+	$("#thinmoo").hide();
+	 $("#mailin").hide();
+	 $("#lingling").hide();
+	 $("#aurine").show();
+} 
+else{
+	$("#thinmoo").hide();
+	 $("#mailin").hide();
+	 $("#lingling").hide();
+	 $("#aurine").hide();
+}  
+ 
+  $("input[name=doorlock_type]").click(function(){	
+	 switch($("input[name=doorlock_type]:checked").attr("id")){
+	 case "doorlock_type1":	
+		$("#thinmoo").show();
+		$("#mailin").hide();
+		$("#lingling").hide();
+		$("#aurine").hide();
+		break;
+	  case "doorlock_type2":	
+		$("#thinmoo").hide();
+		$("#mailin").show();
+		$("#lingling").hide();
+		$("#aurine").hide();
+		break;
+	 case "doorlock_type3":	
+		$("#thinmoo").hide();
+		$("#mailin").hide();
+		$("#lingling").show();
+		$("#aurine").hide();
+		break;
+	 case "doorlock_type4":	
+		$("#thinmoo").hide();
+		$("#mailin").hide();
+		$("#lingling").hide();
+		$("#aurine").show();
+		break;
+	  default:
+	    $("#thinmoo").hide();
+		$("#mailin").hide();
+		$("#lingling").hide();
+		$("#aurine").hide();
+	    break;
+	}		
+ });
+ 
+var parklock_type = "{$item['parklock_type']}";	 
+if(parklock_type=='1'){
+	 $("#pshare").show();
+}
+else{
+	$("#pshare").hide();
+}  
+ 
+  $("input[name=parklock_type]").click(function(){	
+	 switch($("input[name=parklock_type]:checked").attr("id")){
+	 case "parklock_type1":	
+		 $("#pshare").show();
+		break;
+	  default:
+		$("#pshare").hide();
+	     break;
+	}		
+ });
+
+function showLinkDialog(elm) {
+	var ipt = $(elm).parent().prev();
+	util.linkBrowser(function(href){		
+		ipt.val(href);			
+	});
+}
+function mydoorinit(obj,isinit){
+	var thinmoo_token = $.trim($("#thinmoo_token").val());
+	var loadindex = layer.load(2);
+	$(obj).attr("disabled", "disabled");
+	url = "{php echo $this->createWebUrl('sms',array('op'=>'doorinit')).$mywe['direct'];}";
+	$.ajax({  
+         type : "post",  
+          url : url,  
+          data : {pid:pid,rid:rid,thinmoo_token:thinmoo_token,isinit:isinit},  
+          async : true,  
+          success : function(data){ 
+			if(data=='ok'){
+				layer.close(loadindex);
+				layer.msg('操作成功',{icon:1});
+			}
+			else{
+				layer.close(loadindex);
+				layer.msg(data,{icon:0});
+				$(obj).removeAttr("disabled");
+			}
+         }  
+     }); 
+}
+
+function get_mailin_token(obj){
+	var mailin_appid = $.trim($("#mailin_appid").val());
+	var mailin_secret = $.trim($("#mailin_secret").val());
+	if(mailin_appid==''){
+		layer.msg('APPID不能为空',{icon:0});
+		return
+	}
+	if(mailin_secret==''){
+		layer.msg('密钥不能为空',{icon:0});
+		return
+	}
+	var loadindex = layer.load(2);
+	$(obj).attr("disabled", "disabled");
+	url = "{php echo $this->createWebUrl('sms',array('op'=>'get_mailin_token')).$mywe['direct'];}";
+	$.ajax({  
+          type : "post",  
+          url : url, 
+		  dataType: 'json',
+          data : {pid:pid,rid:rid,mailin_appid:mailin_appid,mailin_secret:mailin_secret},  
+          async : true,  
+          success : function(res){ 
+			layer.close(loadindex);
+			if(res.status == 1){
+				$("#mailin_token").val(res.result.access_token);
+			}
+			else{				
+				layer.msg(res.result.message,{icon:0});
+				$(obj).removeAttr("disabled");
+			}
+         }  
+     }); 
+}
+
+function get_aurine_token(obj){
+	var aurine_appid = $.trim($("#aurine_appid").val());
+	var aurine_secret = $.trim($("#aurine_secret").val());
+	if(aurine_appid==''){
+		layer.msg('APPID不能为空',{icon:0});
+		return
+	}
+	if(aurine_secret==''){
+		layer.msg('密钥不能为空',{icon:0});
+		return
+	}
+	var loadindex = layer.load(2);
+	$(obj).attr("disabled", "disabled");
+	url = "{php echo $this->createWebUrl('sms',array('op'=>'get_aurine_token')).$mywe['direct'];}";
+	$.ajax({  
+          type : "post",  
+          url : url, 
+		  dataType: 'json',
+          data : {pid:pid,rid:rid,aurine_appid:aurine_appid,aurine_secret:aurine_secret},  
+          async : true,  
+          success : function(res){ 
+			layer.close(loadindex);
+			if(res.status == 1){
+				$("#aurine_token").val(res.result.aurine_token);
+				$("#aurine_rid").val(res.result.aurine_rid);
+			}
+			else{				
+				layer.msg(res.result.message,{icon:0});
+				$(obj).removeAttr("disabled");
+			}
+         }  
+     }); 
+}
+
+function mylifeinit(obj,isinit){
+	var lifepay_token = $.trim($("#lifepay_token").val());
+	var loadindex = layer.load(2);
+	$(obj).attr("disabled", "disabled");
+	url = "{php echo $this->createWebUrl('sms',array('op'=>'lifeinit')).$mywe['direct'];}";
+	$.ajax({  
+         type : "post",  
+          url : url,  
+          data : {pid:pid,rid:rid,lifepay_token:lifepay_token,isinit:isinit},  
+          async : true,  
+          success : function(data){ 
+			if(data=='ok'){
+				layer.close(loadindex);
+				layer.msg('操作成功',{icon:1});
+			}
+			else{
+				layer.close(loadindex);
+				layer.msg(data,{icon:0});
+				$(obj).removeAttr("disabled");
+			}
+         }  
+     }); 
+}
+
+function myaliqrcode(){	
+	var url = "{php echo $this->createWebUrl('sms',array('op'=>'aliqrcode','pid'=>$pid,'rid'=>$rid)).$mywe['direct'];}";
+	window.open(url);                 
+}
+
+function myreturn(){
+	var url = "{php echo $this->createWeburl('region',array('op'=>$rlist,'category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid;	
+	window.location.href = url;
+}
+
+</script>
+</body>
+</html>

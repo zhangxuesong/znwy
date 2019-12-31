@@ -1,0 +1,123 @@
+<style>
+.fui-block-child .icon img,.fui-block-child-visit .icon img{width:3rem;height:auto;margin-top:-0.75rem;}
+</style>
+{if empty($doors)}	
+<div class="content-empty">
+<i class="icon icon-lock"></i>
+<br/>暂未开通智能门禁</div>
+{/if}
+
+{if count($doors)>3}
+		
+	<div class="fui-block-group col-3 group-door" style='margin-top:0; overflow: hidden;'>
+		{loop $doors $item}	
+		<a class="fui-block-child" id="{$item['id']}" data-online="{$item['isonline']}" data-qrcode="{php echo !empty($item['devtype']) && $item['isonline']==2?1:0;}">				 
+			<div class="icon" {if $item['image']}><img src="{$item['image']}" {if $item['isonline']==1}{else}class="imggray"{/if}/>{else}{if $item['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+			<div class="title">{$item['title']}</div>
+			<div class="text"></div>
+		</a>	
+		{/loop}	
+		<a class="fui-block-child-visit" href="{php echo $this->createMobileUrl('opendoor',array('op'=>'mydoor'));}">				 
+			<div class="icon" ><img src="{$visitimage}" ></div>
+			<div class="title">添加访客</div>
+			<div class="text"></div>
+		</a>	
+	</div>	
+{else}					
+	<div class="fui-cube">						
+		{if count($doors)==1}
+			<div class="fui-cube-left" style="padding-right:2px;"> 
+				<div class="fui-block-group-door">
+				<a class="fui-block-child" id="{$doors[0]['id']}" style="padding-top:2rem;" data-online="{$doors[0]['isonline']}" data-qrcode="{php echo !empty($item['devtype']) && $doors[0]['isonline']==2?1:0;}">
+					<div class="icon" {if $doors[0]['image']}><img src="{$doors[0]['image']}" {if $doors[0]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[0]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+					<div class="title">{$doors[0]['title']}</div>
+					<div class="text" ></div>
+				</a>
+				</div>				
+			</div>
+			<div class="fui-cube-right" >
+				<div class="fui-block-group-door" style="padding-top:2rem;width:100%;" >			
+					<a class="fui-block-child-visit" href="{php echo $this->createMobileUrl('opendoor',array('op'=>'mydoor'));}">				 
+						<div class="icon" ><img src="{$visitimage}" ></div>
+						<div class="title">添加访客</div>
+						<div class="text"></div>
+					</a>	
+				</div>
+			</div>		
+			
+		{/if}			
+		{if count($doors)==2}
+			<div class="fui-cube-left" style="padding-right:2px;"> 
+				<div class="fui-block-group-door">
+				<a class="fui-block-child" id="{$doors[0]['id']}" style="padding-top:2rem;" data-online="{$doors[0]['isonline']}" data-qrcode="{php echo !empty($item['devtype']) && $doors[0]['isonline']==2?1:0;}">
+					<div class="icon" {if $doors[0]['image']}><img src="{$doors[0]['image']}" {if $doors[0]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[0]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+					<div class="title">{$doors[0]['title']}</div>
+					<div class="text" ></div>
+				</a>
+				</div>				
+			</div>
+			<div class="fui-cube-right">				
+					<div class="fui-cube-right1" style="padding-bottom:2px;">
+							<div class="fui-block-group-door">
+								<a class="fui-block-child" id="{$doors[1]['id']}" data-online="{$doors[1]['isonline']}" data-qrcode="{php echo !empty($item['devtype']) && $doors[1]['isonline']==2?1:0;}">
+									<div class="icon" {if $doors[1]['image']}><img src="{$doors[1]['image']}" {if $doors[1]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[1]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+									<div class="title">{$doors[1]['title']}</div>
+									<div class="text" ></div>
+								</a>
+							</div>				
+					</div>
+					<div class="fui-cube-right2">
+						<div class="fui-block-group-door">			
+							<a class="fui-block-child-visit" href="{php echo $this->createMobileUrl('opendoor',array('op'=>'mydoor'));}">				 
+							<div class="icon" ><img src="{$visitimage}" ></div>
+							<div class="title">添加访客</div>
+							<div class="text"></div>
+							</a>	
+						</div>						
+					</div>
+			</div>
+		{/if}
+		{if count($doors)==3}
+			<div class="fui-cube-left" style="padding-right:2px;"> 
+				<div class="fui-block-group-door">
+				<a class="fui-block-child" id="{$doors[0]['id']}" style="padding-top:2rem;" data-online="{$doors[0]['isonline']}" data-qrcode="{php echo !empty($item['devtype']) && $doors[0]['isonline']==2?1:0;}">
+					<div class="icon" {if $doors[0]['image']}><img src="{$doors[0]['image']}" {if $doors[0]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[0]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+					<div class="title">{$doors[0]['title']}</div>
+					<div class="text" ></div>
+				</a>
+				</div>				
+			</div>
+			<div class="fui-cube-right">				
+					<div class="fui-cube-right1" style="padding-bottom:2px;">
+							<div class="fui-block-group-door">
+							<a class="fui-block-child" id="{$doors[1]['id']}" data-online="{$doors[1]['isonline']}" data-qrcode="{php echo !empty($item['devtype']) && $doors[1]['isonline']==2?1:0;}">
+								<div class="icon" {if $doors[1]['image']}><img src="{$doors[1]['image']}" {if $doors[1]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[1]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+								<div class="title">{$doors[1]['title']}</div>
+								<div class="text" ></div>
+							</a>
+							</div>				
+					</div>
+					<div class="fui-cube-right2">
+						<div class="left" style="padding-right:2px;">
+							<div class="fui-block-group-door">
+							<a class="fui-block-child" id="{$doors[2]['id']}" data-online="{$doors[2]['isonline']}" data-qrcode="{php echo !empty($item['devtype']) && $doors[2]['isonline']==2?1:0;}">
+								<div class="icon" {if $doors[2]['image']}><img src="{$doors[2]['image']}" {if $doors[2]['isonline']==1}{else}class="imggray"{/if} />{else}{if $doors[2]['isonline']==1}style="color:orange;"{else}style="color:gray;"{/if}><i class="icon icon-lock"></i>{/if}</div>
+								<div class="title">{$doors[2]['title']}</div>
+								<div class="text" ></div>
+							</a>	
+							</div>
+						</div>
+						<div class="right">
+							<div class="fui-block-group-door">			
+								<a class="fui-block-child-visit" href="{php echo $this->createMobileUrl('opendoor',array('op'=>'mydoor'));}">				 
+								<div class="icon" ><img src="{$visitimage}" ></div>
+								<div class="title">添加访客</div>
+								<div class="text"></div>
+								</a>	
+							</div>		
+						</div>					
+					</div>
+			</div>				
+		{/if}
+	</div>			
+{/if}

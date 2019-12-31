@@ -1,0 +1,144 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />
+			<input type="hidden" name="pid" value="{$pid}" >
+			<input type="hidden" name="rid" value="{$rid}" >
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">楼幢前缀名称</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="prefix" value="" placeholder="如:第或B-" name="prefix">
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>楼幢起始编号</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="startnum" value="" placeholder="楼幢起始编号" name="startnum">
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">楼幢结束编号</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="endnum" value="" placeholder="楼幢结束编号" name="endnum">
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">编号统一位数</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="digit" value="" placeholder="楼幢编号统一位数，可不设定" name="digit">
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">楼幢后缀名称</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="suffix" value="" placeholder="如:幢或栋" name="suffix">
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">单元数</label>
+				<div class="col-sm-5 col-lg-5 col-xs-12">
+					<input type="number" class="form-control" id="units" value="1" placeholder="输入单元数量" name="units">					
+					<span class="help-block">楼宇的单元数，依单元生成房号</span>
+				</div>	
+				<label class="col-sm-1 col-md-1 control-label">单元名称</label>
+				<div class="col-sm-2 col-lg-2 col-xs-12">
+					<input type="text" class="form-control" id="unitname" placeholder="默认为单元" name="unitname">
+				</div>					
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">总共楼层</label>
+				<div class="col-sm-5 col-lg-5 col-xs-12">
+					<input type="number" class="form-control" id="floors" value="1" placeholder="输入总楼层数量" name="floors">
+				</div>	
+				<label class="col-sm-1 col-md-1 control-label">房屋编号位数</label>
+				<div class="col-sm-2 col-lg-2 col-xs-12">
+					<input type="text" class="form-control" id="roomdigit" value="" placeholder="房屋编号统一位数，默认2位" name="roomdigit">
+				</div>		
+			</div>
+
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">总房屋数</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<div class="input-group">
+						<input type="number" class="form-control" id="rooms" value="" placeholder="输入总房屋数量" name="rooms">
+						 <span class="input-group-btn">
+							<button class="btn btn-success" type="button" id="batchroom" onclick="mybatchroom()" ><i class="fa fa-plus"></i> 自动生成房号</button>
+						 </span>
+					</div>
+					<span class="help-block">此数量只是记录，不参加计算</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="checkbox"  id="isbarn" name="isbarn" value="1"> 是否有储物间&nbsp;&nbsp;&nbsp;&nbsp;	
+					<input type="checkbox"  id="isunit" name="isunit" value="1"> 房屋编号是否依单元从1开始	&nbsp;&nbsp;&nbsp;&nbsp;
+					<span class="help-block">用于楼宇下设有储物间</span>
+				</div>
+			</div>	
+			<div id="myroom"> </div>
+			<br>
+		</form>	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+var pid = "{$pid}";
+var rid = "{$rid}";
+
+function mysubmit(obj){
+
+	var startnum = $.trim($("#startnum").val());
+	
+    if (startnum=='') {
+	   layer.msg("楼幢起始编号不能为空！");
+	   return;
+	}		
+    myprocess(obj);
+	$("#myform").submit();
+
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'list','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid ;
+	 location.href = url;
+}
+
+function mybatchroom(){
+	var units = parseInt($("#units").val());
+	var floors = parseInt($("#floors").val());
+	if ( units >0){
+	}
+	else {
+		layer.msg('请输入单元数.');
+	}
+	var str = '';
+	for(var i=1;i<=units;i++){
+		str = str + '<div class="form-group">\
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">第' + i + '单元</label>\
+		<div class="col-sm-3 col-lg-4 col-xs-12"><div class="input-group">\
+		<input type="number" class="form-control"  value="2" placeholder="输入每层房间数" name="uroom' + i + '">\
+		<span class="input-group-addon">间房屋 / 层</span></div></div>\
+		<div class="col-sm-3 col-lg-4 col-xs-12"><div class="input-group"><span class="input-group-addon">共</span>\
+		<input type="number" class="form-control" value="' + floors +'" placeholder="输入该单元楼层数" name="ufloor' + i + '">\
+		<span class="input-group-addon">层</span>\
+		<div class="col-sm-3 col-lg-4 col-xs-12">\
+		<button class="btn btn-danger" type="button" onclick="mydelete(this)" ><i class="fa fa-trash-o"></i> 删除</button>\
+		</div></div></div></div>';		
+	}
+	$("#myroom").html(str) ;
+}
+function mydelete(obj){
+	 $(obj).parents(".form-group").remove();
+}
+</script> 
+
+</body>
+</html>

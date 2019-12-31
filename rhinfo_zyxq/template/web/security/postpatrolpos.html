@@ -1,0 +1,314 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />	
+			<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+			
+			{if $_W['uid']} 
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"> <span class="text-danger">*</span>所属物业</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+						<option value="0">请选择所属物业</option>
+						{loop $myproperty $k $v}
+							<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+						{/loop}
+					</select>				
+				</div>
+			</div>
+			{else}
+				<input type="hidden" class="form-control" id="pid" value="{$mywe['pid']}" name="pid" />
+			{/if}
+			
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>所属主体</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<select class="form-control" id="rid" name="rid" onchange="renderCategory(this,'location','lid')">
+						<option value="0">请选择所属主体</option>	
+						{loop $eregions $i $r}
+							<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+						{/loop}
+						{if $_W['uid']} 
+						{else}
+							{if $operation=='patroladd'}
+								{loop $regions $i $r}
+									<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+								{/loop}
+							{/if}
+						{/if}
+					</select>
+				</div>
+			</div>	
+
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">区域</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<select class="form-control" id="lid" name="lid" onchange="renderCategory(this,'building','bid')">
+						<option value="0">请选择区域</option>	
+						{loop $elocations $location}
+							<option value="{$location['id']}" {if $item['lid'] == $location['id']} selected {/if} >{$location['title']}</option>
+						{/loop}			
+					</select>
+				</div>
+			</div>
+			
+			
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">楼宇</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<select class="form-control" id="bid" name="bid" onchange="renderCategory(this,'unit','tid')">
+						<option value="0">请选择楼宇</option>	
+						{loop $ebuildings $j $d}
+							<option value="{$d['id']}" {if $item['bid'] == $d['id']} selected {/if} >{$d['title']}</option>
+						{/loop}			
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">单元</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<select class="form-control" id="tid" name="tid" >
+						<option value="0">请选择单元</option>	
+						{loop $eunits $m $t}
+							<option value="{$t['id']}" {if $item['tid'] == $t['id']} selected {/if} >{$t['title']}</option>
+						{/loop}				
+					</select>
+				</div>
+			</div>				
+			
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>巡更点名称</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入巡更点名称" name="title" />
+					<span class="help-block">根据巡更点位置，给巡更点取个名称。</span>
+				</div>	
+			</div>
+
+			<div class="form-group" style="display:none;">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">设备编号</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="devicesn" value="{$item['devicesn']}" placeholder="输入设备序列号" name="devicesn" />
+				</div>	
+			</div>
+		
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">经纬度坐标</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<div class="input-group">
+						<span class="input-group-addon">经度</span>
+						<input type="number" class="form-control" name="lng" id="lng" value="{$item['lng']}" />
+						<span class="input-group-addon">纬度</span>
+						<input type="number" class="form-control" name="lat" id="lat" value="{$item['lat']}" />
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" id="positioning" onclick="showMapDialog(this)">选择坐标</button>
+						</span>
+					</div> 
+				</div> 
+			</div>
+			
+			<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">定位距离</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<div class="input-group">
+					   <input type="number" name="distance" class="form-control" placeholder="输入距离" value="{$item['distance']}" />
+					   <span class="input-group-addon">米</span>		   
+				   </div>
+				   <span class="help-block">巡更定位距离，默认为10米.</span>
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">拍照要求</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="remark" value="{$item['remark']}" placeholder="输入拍照要求" name="remark" />
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>状态</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<label class='radio-inline'><input type="radio" name="status" value="1" {if $item['status'] == 1 || empty($item['status'])} checked="true" {/if} >启用</label>
+					<label class='radio-inline'><input type="radio" name="status" value="2" {if $item['status'] == 2} checked="true" {/if} >禁用</label>										
+				</div>
+			</div>			
+			<br>
+		</form>	
+		<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key={$sysconifg['qq_lbskey']}"></script>
+		<script type="text/javascript">
+			var lbskey = "{$sysconifg['qq_lbskey']}";
+			window._region = {php echo json_encode($myregion);};	
+			window._location = {php echo json_encode($mylocation);};	
+			window._building = {php echo json_encode($mybuilding);};
+			window._buildingall = {php echo json_encode($mybuildingall);};
+			window._unit = {php echo json_encode($myunit);};
+			window._unitall = {php echo json_encode($myunitall);};
+			function renderCategory(obj, name,id){
+				var index = obj.options[obj.selectedIndex].value;
+				$selectChild = $("#"+ id);
+				var html = '<option value="0">请选择</option>';
+				if (id=='rid'){
+					$("#lid").html(html);
+					$("#bid").html(html);
+					$("#tid").html(html);
+				}
+				else if(id=='lid'){
+					var html1 = html;
+					if (window['_buildingall'][index]) {
+						for(var i=0; i< window['_buildingall'][index].length; i++){
+							html1 += '<option value="'+window['_buildingall'][index][i]['id']+'">'+window['_buildingall'][index][i]['title']+'</option>';
+						}
+					}
+					$("#bid").html(html1);
+					$("#tid").html(html);
+				}
+				else if (id=='bid'){
+					$("#bid").html(html);
+					$("#tid").html(html);				
+				}
+				else if (id=='tid'){
+					var lid = $('#lid').val();
+					if(lid==0){
+						if (!window['_unitall'][index]) {
+							$("#tid").html(html);
+							return false;
+						}
+						for(var i=0; i< window['_unitall'][index].length; i++){
+							html += '<option value="'+window['_unitall'][index][i]['id']+'">'+window['_unitall'][index][i]['title']+'</option>';
+						}
+						$("#tid").html(html);
+						return true;
+					}
+				}
+				if (!window['_'+name] || !window['_'+name][index]) {
+					$selectChild.html(html);
+					return false;
+				}
+				for(var i=0; i< window['_'+name][index].length; i++){
+					html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+				}
+				$selectChild.html(html);
+			}
+			
+			function showMapDialog(elm) {
+				require(["util","jquery"], function(u, $){		
+					var content =
+							'<div class="form-group">' +
+								'<div class="input-group">' +
+									'<input type="text" class="form-control" id="seachaddress" placeholder="请输入地址来直接查找相关位置">' +
+									'<div class="input-group-btn">' +
+										'<button class="btn btn-default" id="btnSearch"><i class="fa fa-search"></i> 搜索</button>' +
+									'</div>' +
+								'</div>' +
+							'</div>' +
+							'<div id="map-container" style="height:400px;"></div>';
+						var footer =
+							'<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>';
+						modalobj = util.dialog('请选择坐标', content, footer, {containerName : 'map-dialog'});
+						modalobj.find('.modal-dialog').css('width', '80%');
+						modalobj.modal({'keyboard': false});
+						
+						var container = "#map-container";
+						var map = new qq.maps.Map('map-container', {
+									zoom: 10
+								}),
+						label = new qq.maps.Label({
+							 map: map,
+							 offset: new qq.maps.Size(15,-12),
+							 draggable: false,
+							 clickable: false
+						});
+					
+					  var cityservice = new qq.maps.CityService({
+							complete: function (result) {
+								map.setCenter(result.detail.latLng);
+							}
+						});
+						
+						cityservice.searchLocalCity();
+
+						map.setOptions({
+							draggableCursor: "crosshair"
+						});
+						$(container).mouseenter(function () {
+							label.setMap(map);
+						});
+						$(container).mouseleave(function () {
+							label.setMap(null);
+						});
+						qq.maps.event.addListener(map, "mousemove", function (e) {
+							var latlng = e.latLng;
+							label.setPosition(latlng);
+							label.setContent(latlng.getLat().toFixed(6) + "," + latlng.getLng().toFixed(6));
+						});
+						qq.maps.event.addListener(map, "click", function (e) {					
+							$("#lat").val(e.latLng.getLat().toFixed(6));
+							$("#lng").val(e.latLng.getLng().toFixed(6));
+							modalobj.modal('hide');
+						});				
+						modalobj.modal('show');
+						
+						var btnSearch = btnSearch = document.getElementById("btnSearch");
+						qq.maps.event.addDomListener(btnSearch, 'click', function () {
+							var value = $("#seachaddress").val();							
+							var url = encodeURI("https://apis.map.qq.com/ws/geocoder/v1/?address=" + value + "&key=" + lbskey + "&output=jsonp&&callback=?");
+							$.getJSON(url, function (result) {
+								map.setCenter(new qq.maps.LatLng(result.result.location.lat, result.result.location.lng));
+								map.setZoom(15);
+							});
+						});
+				});
+			}
+		</script>
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	var id = $.trim($("#id").val());
+	var title = $.trim($("#title").val());
+	var pid = $("#pid").find("option:selected").val();
+	var rid = $("#rid").find("option:selected").val(); 
+    
+	if (pid=='0') {
+	   layer.msg("所属物业不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (rid=='0') {
+	   layer.msg("所属主体不能为空！",{icon:0});
+	   return;
+	}
+	if (title=='') {
+	   layer.msg("巡更点名称不能为空！",{icon:0});
+	   return;
+	}
+	
+ $.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+	{ post:"$_GPC['op']",op:"patrolcheck",rid:rid,title:title,id:id},
+	function(data,status){
+	 if (data=='ok'){		
+		myprocess(obj);
+		$("#myform").submit();
+	 }
+	 else{
+		layer.msg(data,{icon:0});
+		return ;
+	 }
+	});	
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'patrol')).$mywe['direct'];}";
+	 location.href = url;
+}
+
+</script> 
+
+</body>
+</html>

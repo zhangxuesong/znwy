@@ -1,0 +1,142 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+    {if $cate==2} 
+		{if $_W['uid']} 
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label"> <span class="text-danger">*</span>所属物业</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+					{if $operation=='add'}<option value="0">请选择</option>{/if}
+					{loop $myproperty $k $v}
+						<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+					{/loop}
+				</select>				
+			</div>
+		</div>
+		{else}
+			<input type="hidden" class="form-control" id="pid" value="{php echo empty($item['pid'])?$mywe['pid']:$item['pid'];}" name="pid" />
+		{/if}
+		
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>所属主体</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<select class="form-control" id="rid" name="rid" onchange="renderCategory(this,'category','cid')">
+					{if $operation=='add'}	<option value="0">请选择</option>{/if}
+					{loop $eregions $i $r}
+						<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+					{/loop}
+					{if $_W['uid']} 
+					{else}
+						{if $operation=='add'}
+							{loop $regions $i $r}
+								<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+							{/loop}
+						{/if}
+					{/if}
+				</select>
+			</div>
+		</div>		
+	{else}
+		<input type="hidden" class="form-control" id="pid" value="0" name="pid" />
+		<input type="hidden" class="form-control" id="rid" value="0" name="rid" />		
+	{/if}
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>资讯分类</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="cid" name="cid">
+			{if $cate==2} 
+				{if $operation=='add'}<option value="0">请选择</option>	{/if}
+				{loop $ecategorys $category}
+					<option value="{$category['id']}" {if $item['cid'] == $category['id']} selected {/if} >{$category['title']}</option>
+				{/loop}	
+			{else}
+				{if $operation=='add'}<option value="0">请选择</option>	{/if}
+				{loop $ecategorys $category}
+					<option value="{$category['id']}" {if $item['cid'] == $category['id']} selected {/if} >{$category['title']}</option>
+				{/loop}	
+			{/if}
+			</select>
+		</div>
+	</div>	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">排序</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" placeholder="数字越大，排名越靠前" name="displayorder" value="{$item['displayorder']}">
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>资讯名称</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入资讯名称" name="title" />
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">缩略图标</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_image('thumb',$item['thumb']);}
+			<span class="help-block">建议尺寸100*100</span>
+		</div>	
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">列表图片</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_multi_image('images',$item['images'],array('multiple'=>true,'direct'=>true));}
+			<span class="help-block">建议尺寸640*320，限三张</span>
+		</div>	
+	</div>	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">资讯详情</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_ueditor('content', $item['content']);}
+		</div>	
+	</div>
+	<div class="form-group">
+	<label class="col-sm-2 col-md-2 col-xs-12 control-label">是否推荐</label>
+	<div class="col-sm-8 col-lg-9 col-xs-12">
+		<label class="radio-inline">
+			<input type="radio" name="isrecommand" value="1" {if $item['isrecommand']==1 } checked{/if} />推荐</label>
+		<label  class="radio-inline">
+			<input type="radio" name="isrecommand" value="2" {if empty($item['isrecommand']) || $item['isrecommand']==2 } checked{/if} /> 不推荐</label>				
+	</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">状态</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<label class='radio-inline'>
+			<input type='radio' name='status' value='1'  {if $item['status']==1 } checked{/if}/> 显示
+			</label>
+			<label class='radio-inline'>
+				<input type='radio' name='status' value='0' {if empty($item['status']) || $item['status']==0 } checked{/if} /> 隐藏
+			</label>
+		</div>
+	</div>
+	</br>
+</form>	
+
+<script type="text/javascript">
+	window._region = {php echo json_encode($myregion);};				
+	window._category = {php echo json_encode($mycategory);};
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择</option>';
+			if (id=='rid'){
+				$("#cid").html(html);				
+			}			
+
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		});
+	}
+</script>

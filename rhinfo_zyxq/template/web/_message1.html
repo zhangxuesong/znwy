@@ -1,0 +1,38 @@
+﻿{template 'web/_layer_header'}
+<br>
+<div class="container-fluid">
+	<div class="jumbotron clearfix alert alert-{$label}">
+		<div class="row">
+			<div class="col-xs-12 col-sm-3 col-lg-2">
+				<i class="fa fa-5x fa-{if $label=='success'}check-circle{/if}{if $label=='danger'}times-circle{/if}{if $label=='info'}info-circle{/if}{if $label=='warning'}exclamation-triangle{/if}"></i>
+			</div>
+			<div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">			
+				<h2>{$caption}</h2>
+				<p>{$msg}</p>
+				{if $redirect}
+				<p><a href="{$redirect}"><span id="mes">5</span>秒钟自动跳转，如果你的浏览器没有自动跳转，请点击此链接</a></p>
+				<script type="text/javascript">							
+					var i = 5; 
+					var intervalid; 
+					intervalid = setInterval("second()", 1000); 
+					function second() { 
+					if (i == 0) {
+						location.href = "{$redirect}";
+						clearInterval(intervalid); 
+					} 
+						document.getElementById("mes").innerHTML = i; 
+						i--; 
+					} 					
+				</script>
+				{else}
+					<p><a href="javascript:window.opener=null;window.open('','_self');window.close();"> 关闭</a></p>
+				{/if}
+			</div>
+		</div>
+	</div>	
+</div>			
+				
+{template 'web/_layer_footer'}
+
+</body>
+</html>

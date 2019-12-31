@@ -1,0 +1,79 @@
+﻿{template 'web/_iframe_header'}
+
+<div class="panel panel-default" >
+  <div class="panel-body">      
+	<div class="panel panel-default">
+	    <div class="panel-heading" style="height:50px">
+			<span class="pull-left" style="line-height:30px;"><strong>账单明细</strong></span> 
+			<span class="pull-right" style="line-height:30px;">金额合计：<strong class="text-danger">{$totalfee}</strong>   共有数据：<strong id="count">{$total}</strong> 条</span> 
+	    </div>
+  
+		<div class="panel-body table-responsive">
+			<table class="table table-bordered table-hover" id="mydatatable">
+				<thead class="navbar-inner">
+				<tr>					
+					<th>序号</th>
+					<th>收费项目</th>			
+					<th>所属主体</th>
+					<th>楼宇或区</th>
+					<th>房屋或商铺</th>
+					<th width="200">账单日期</th>
+					<th>状态</th>
+					<th>费用</th>
+				</tr>
+			</thead>
+			{loop $data $k $v}
+				<tr>					
+					<td>{php echo $k+1;}</td>					
+					<td>{$v['title']}</td>
+					<td>{$v['region']}</td>
+					<td>{$v['building']}</td>
+					<td>{$v['address']}</td>
+					<td>{$v['daterange']}</td>
+					<td class="td-status">
+					{if $v['status']=='1'}<span class="label label-danger radius">未支付</span>{else}<span class="label label-success radius">已支付</span>{/if}
+					</td>
+					<td>{$v['fee']}</td>							
+				</tr>
+			{/loop}				
+		</table>
+	  </div>    	  
+	</div>	
+  </div>
+</div>
+{template 'web/_iframe_footer'}
+
+<script type="text/javascript">
+	$(function(){		
+		$("#mydatatable").dataTable({
+			language:{
+				"sProcessing": "处理中...",
+				"sLengthMenu": "显示 _MENU_ 项结果",
+				"sZeroRecords": "没有匹配结果",
+				"sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+				"sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+				"sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+				"sInfoPostFix": "",
+				"sSearch": "搜索:",
+				"sUrl": "",
+				"sEmptyTable": "表中数据为空",
+				"sLoadingRecords": "载入中...",
+				"sInfoThousands": ",",
+				"oPaginate": {
+					"sFirst": "首页",
+					"sPrevious": "上页",
+					"sNext": "下页",
+					"sLast": "末页"
+				},
+				"oAria": {
+					"sSortAscending": ": 以升序排列此列",
+					"sSortDescending": ": 以降序排列此列"
+				}
+			},
+			renderer: "bootstrap",
+			pagingType: "simple_numbers", 
+		});
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,313 @@
+﻿{template 'web/_layui_header'}
+{template 'web/_navtitle'}
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body">  
+	<div class="panel panel-default">
+	    <div class="panel-heading" style="height:60px;">
+		{if $rights['query'] == 1} 
+			<form action="./index.php" method="get" class="form-inline" role="form" id="form-search">
+				<input type="hidden" name="c" value="site" />
+				<input type="hidden" name="a" value="entry" />
+				<input type="hidden" name="m" value="rhinfo_zyxq" />
+				<input type="hidden" name="do" value="feecalb" />
+				<input type="hidden" name="op" value="paybill" />	
+				<input type="hidden" name="direct" value="1" />						
+		
+				<div class="form-group">
+					<select class="form-control" id="rid" name="rid"  style="width:160px;">	
+						{if empty($regions)}<option value="">选择主体</option>{/if}
+						{loop $regions $regionv}
+							<option value="{$regionv['id']}" {if $regionv['id'] == $_GPC['rid']} selected {/if} >{$regionv['title']}</option>
+						{/loop}
+					</select>
+				</div>
+			   <div class="form-group" >
+					<select class="form-control" id="feebilltype" name="feebilltype" onchange="renderCategory(this,'building','bid')" style="width:110px;">
+						<option value="" {if empty($_GPC['feebilltype'])}selected{/if}>选择类别</option>	
+						<option value="1" {if $_GPC['feebilltype']==1}selected{/if}>房屋</option>
+						<option value="2" {if $_GPC['feebilltype']==2}selected{/if}>商铺</option>
+						<option value="3" {if $_GPC['feebilltype']==3}selected{/if}>储物间</option>
+						<option value="4" {if $_GPC['feebilltype']==4}selected{/if}>车位</option>					
+					</select>
+				</div>
+				<div class="form-group" >
+					<select class="form-control" id="bid" name="bid" onchange="renderCategory(this,'unit','tid')" style="width:150px;">
+						<option value="" {if empty($_GPC['bid'])}selected{/if}>请选择</option>	
+						{loop $select_building $bv}
+							<option value="{$bv['id']}" {if $bv['id'] == $_GPC['bid']} selected {/if} >{$bv['title']}</option>
+						{/loop}	
+					</select>
+				</div>
+				<div class="form-group" {if $_GPC['feebilltype']==1}{else}style="display:none;"{/if} id="unit" >
+					<select class="form-control" id="tid" name="tid" style="width:150px;">
+						<option value="" {if empty($_GPC['tid'])}selected{/if}>选择单元</option>	
+						{loop $select_unit $uv}
+							<option value="{$uv['id']}" {if $uv['id'] == $_GPC['tid']} selected {/if} >{$uv['title']}</option>
+						{/loop}	
+					</select>
+				</div>
+				<div class="form-group" >
+					<select class="form-control" id="paytype" name="paytype" style="width:110px;">
+						<option value="" {if empty($_GPC['paytype'])}selected{/if}>收款方式</option>	
+						<option value="9" {if $_GPC['paytype']==9}selected{/if}>现金</option>
+						<option value="1" {if $_GPC['paytype']==1}selected{/if}>微信支付</option>
+						<option value="2" {if $_GPC['paytype']==2}selected{/if}>支付宝</option>
+						<option value="3" {if $_GPC['paytype']==3}selected{/if}>银联刷卡</option>						
+						<option value="4" {if $_GPC['paytype']==4}selected{/if}>生活缴费</option>
+						<option value="5" {if $_GPC['paytype']==5}selected{/if}>银行托收</option>
+						<option value="6" {if $_GPC['paytype']==6}selected{/if}>减免</option>
+						<option value="8" {if $_GPC['paytype']==8}selected{/if}>冲预收</option>
+						<option value="7" {if $_GPC['paytype']==7}selected{/if}>其他</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<input class="form-control" name="keyword" type="text" value="{$_GPC['keyword']}" placeholder="输入房号或单号" style="width:150px;"/>
+				</div>								
+				<div class="form-group">
+					<input type="text" name="startdate"  value="{$_GPC['startdate']}" placeholder="开始日期" class="datetimepicker form-control" style="width:110px;" />
+					<input type="text" name="enddate"  value="{$_GPC['enddate']}" placeholder="结束日期" class="datetimepicker form-control" style="width:110px;" />
+					<script type="text/javascript">
+						require(["datetimepicker"], function(){
+								var option = {
+									lang : "zh",
+									step : 5,
+									timepicker : false,
+									closeOnDateSelect : true,
+									format : "Y-m-d"
+								};
+							$(".datetimepicker[name = 'startdate']").datetimepicker(option);
+							$(".datetimepicker[name = 'enddate']").datetimepicker(option);
+						});
+					</script>
+				</div>				
+				<div class="form-group">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>					
+					{if $rights['export'] == 1}
+						<button name="export" value="export" class="btn btn-default"><i class="fa fa-download"></i> 导出</button>
+					{/if}
+				</div>
+				<span class="pull-right" style="line-height:38px;">总金额：<strong class="text-success">{php echo $totalpayfee?$totalpayfee:0}</strong>元</span> 	
+			</form>
+		{/if}			
+	    </div>
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+				<tr>
+					<th width="100">所属主体</th>
+					<th width="100">楼宇</th>
+					<th width="60">单元</th>
+					<th width="60">房产</th>
+					<th width="60">费用</th>
+					<th width="60">违约金</th>
+					<th width="60">抵扣</th>
+					<th width="80">实收</th>
+					<th width="80">收款方式</th>
+					<th width="100">收款日期</th>
+					<th width="100">交易单号</th>
+					<th width="60">开票</th>
+					<th width="200">操作</th>
+				</tr>
+				</thead>
+			{loop $data $k $v}
+				<tr>		
+					<td>{$v['region']}</td>
+					<td>{$v['building']}</td>
+					<td>{php echo empty($v['unit'])?'无':$v['unit'];}</td>
+					<td>{$v['address']}</td>
+					<td>{$v['fee']}</td>
+					<td>{$v['latefee']}</td>
+					<td>{$v['creditfee']}</td>
+					<td>{$v['payfee']}</td>
+					<td>{$v['paytype']}</td>
+					<td>{$v['paydate']}</td>
+					<td>{$v['payno']}</td>
+					<td class="td-status">
+					{if $rights['other1'] == 1}
+						<a href="javascript:;" title="登记发票" onclick="myinvoice('{$v['payno']}','{$v['rid']}','{$v['bid']}','{$v['tid']}','{$v['hid']}','{$v['invoicenum']}')">{if $v['invstatus']=='1'}<span class="label label-success radius">已开票</span>{else}<span class="label label-default radius">未开票</span>{/if}</a>
+					{else}
+						{if $v['invstatus']=='1'}<span class="label label-success radius">已开票</span>{else}<span class="label label-defalt radius">未开票</span>{/if}
+					{/if}
+					</td>
+					<td>					
+					{if $rights['edit'] == 1}	
+					<a href="javascript:;" onclick="mybill('{$v['payno']}','{$v['rid']}','{$v['bid']}','{$v['tid']}','{$v['hid']}')" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="查看账单" ><i class="fa fa-edit"></i> 查看</a> {/if}
+					{if $rights['delete'] == 1}
+					<a href="javascript:;" onclick="mydel(this,'{$v['payno']}','{$v['rid']}','{$v['bid']}','{$v['tid']}','{$v['hid']}')" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="还原支付状态"><i class="fa fa-reply"></i> 撤销</a>{/if}
+					{if $rights['print'] == 1}
+					<a href="javascript:;" onclick="myprint('{$v['payno']}','{$v['rid']}','{$v['bid']}','{$v['tid']}','{$v['hid']}')"  class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="打印凭证" ><i class="fa fa-print"></i> 凭证</a> 
+					{/if}
+					{if $rights['other2'] == 1}
+					<a href="javascript:;" onclick="mypayprint(this,'{$v['payno']}')"  class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="补打印小票" ><i class="fa fa-print"></i> 小票</a> 
+					{/if}
+					</td>							
+				</tr>
+			{/loop}				
+		</table>   	  
+	</div>	
+  </div>
+</div>
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">			
+	window._building = {php echo json_encode($mybuilding);};
+	window._unit = {php echo json_encode($myunit);};
+	window._shoplocation = {php echo json_encode($myshoplocation);};
+	window._parklocation = {php echo json_encode($myparklocation);};
+	window._bbuilding = {php echo json_encode($mybbuilding);};
+	function renderCategory(obj,name,id){
+		var html = '';	
+		if(name=='building'){
+			var sindex = obj.options[obj.selectedIndex].value;				
+			if(sindex==1){
+				name = 'building';
+				html = '<option value="0">选择楼宇</option>';
+				$("#unit").show();
+			}
+			else if(sindex==2){
+				name = 'shoplocation';
+				html = '<option value="0">选择区域</option>';
+				$("#unit").hide();
+			}
+			else if(sindex==3){
+				name = 'bbuilding';
+				html = '<option value="0">选择楼宇</option>';
+				$("#unit").hide();
+			}
+			else if(sindex==4){
+				name = 'parklocation';
+				html = '<option value="0">选择区域</option>';
+				$("#unit").hide();
+			}
+			else{
+				html = '<option value="0">请选择</option>';
+				$("#unit").hide();
+			}
+			var index = $("#rid").find("option:selected").val(); 				
+			$selectChild = $("#"+ id);
+			$("#bid").html(html);
+			$("#tid").html('<option value="0">选择单元</option>');
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		}
+		else if(name=='unit'){
+			var index = $("#bid").find("option:selected").val(); 				
+			$selectChild = $("#"+ id);
+			html = '<option value="0">选择单元</option>';
+			$("#tid").html(html);			
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		}		
+	}
+
+function myallselect(select){ 
+	var obj = document.getElementsByName('myselect'); 
+	var tempsta = select.checked; 
+	
+	for(var k in obj){ 
+		if (obj[k].checked != tempsta) {      
+		     $("#myselect_"+k).prop("checked", tempsta);  
+		}
+	}	
+}	
+
+function mydel(obj,payno,rid,bid,tid,hid){
+	layer.confirm('确定整单撤销还原至未支付状态吗？',{btn: ['确定','取消'],icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+			{op:"deletebill",payno:payno,rid:rid,bid:bid,tid:tid,hid:hid},
+			function(data,status){
+				 if (data=='ok'){
+					$(obj).parents("tr").remove();
+					var count = $("#count").html();
+					$("#count").html(count - 1);
+					layer.msg('撤销成功!',{icon:1});
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+				 }
+			});
+		layer.close(index);
+    })
+}
+function mybill(payno,rid,bid,tid,hid){
+	var url = "{php echo $this->createWeburl('feecalb',array('op'=>'viewbill')).$mywe['direct'];}" + "&payno=" + payno + "&rid=" + rid + "&bid=" + bid + "&tid=" + tid + "&hid=" + hid;
+	var index = layer.open({
+   	    type: 2,
+		title:'<i class="fa fa-hand-o-right"></i> 对账单 > 账单明细',
+		content: url,
+		area: ['600px','600px'],
+		fix: false, 
+		shade:0.4,
+		maxmin: true
+	});
+	layer.full(index);
+}
+function myprint(payno,rid,bid,tid,hid){
+	var url = "{php echo $this->createWeburl('feecalb',array('op'=>'printbill')).$mywe['direct'];}" + "&payno=" + payno + "&rid=" + rid + "&bid=" + bid + "&tid=" + tid + "&hid=" + hid;
+	var index = layer.open({
+   	    type: 2,
+		title:'<i class="fa fa-hand-o-right"></i> 对账单 > 收费凭证打印',
+		content: url,
+		area: ['600px','600px'],
+		fix: false, 
+		shade:0.4,
+		maxmin: true
+	});
+	layer.full(index);
+}
+function myinvoice(payno,rid,bid,tid,hid,invoicenum){
+	layer.prompt({title: '输入正确的发票号码',value:invoicenum,area: ['300px', '40px'], formType: 2}, function(invnum, index){
+	layer.close(index);	   
+	var loadindex = layer.load(2);
+	$.post("{php echo $this->createWebUrl('feecalc',array('op'=>'invoicenum')).$mywe['direct'];}",
+		{payno:payno,rid:rid,bid:bid,tid:tid,hid:hid,invoicenum:invnum},
+		function(data,status){
+		 layer.close(loadindex);
+		 if (data=='ok'){								
+			layer.msg('登记成功!',{icon:1});
+			window.location.reload();
+		 }
+		 else{
+			layer.msg(data,{icon:0});
+		 }
+	});	
+  });
+}
+function mypayprint(obj,payno){
+	layer.confirm('确定打印小票吗？',{btn: ['确定','取消'],icon: 3, title:'提示',resize:false},
+	function(index){
+		$(obj).html('<i class="fa fa-print"></i> 打印中');
+		$(obj).attr("disabled", "disabled"); 
+		$.post("{php echo $this->createWebUrl('feecalc',array('op'=>'payprint')).$mywe['direct'];}",
+			{payno:payno},
+			function(data,status){
+				 if (data=='ok'){
+					$(obj).html('<i class="fa fa-print"></i> 小票');
+					layer.msg('打印成功!',{icon:1});
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+					$(obj).html('<i class="fa fa-print"></i> 小票');
+				 }
+				 $(obj).removeAttr("disabled"); 
+			});
+		layer.close(index);
+    })
+}
+</script>
+</body>
+</html>

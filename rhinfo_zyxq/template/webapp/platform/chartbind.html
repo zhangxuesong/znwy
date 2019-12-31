@@ -1,0 +1,45 @@
+<span class="echart-title">住户绑定</span>
+<span class="echart-count">总共有：<strong>{$total}</strong>&nbsp;人</span>
+<div id="chartBind"></div>
+<script type="text/javascript">
+	var chartBind = echarts.init(document.getElementById('chartBind'),'shine');
+	option_bind = {
+		legend: {
+			orient: 'vertical',
+			x: 'left',
+			data: ['业主','成员','租户'],
+			textStyle:{
+				color:'#fff'
+			}
+		},
+		series : [
+			{
+				name: '访问来源',
+				type: 'pie',
+				radius : '55%',
+				center: ['60%', '50%'],
+				data:[
+					{value:{$bind_array[0]}, name:'业主'},
+					{value:{$bind_array[1]}, name:'成员'},
+					{value:{$bind_array[2]}, name:'租户'},
+				],
+				label: {
+					normal: {
+						show: true,
+						textStyle: {
+							fontSize: '10',
+							fontWeight: 'bold',
+							color:'#fff'
+						},
+						formatter:'{b}\n{d}%'
+					}
+				},
+			}
+		]
+	};
+	chartBind.setOption(option_bind);
+	autoPlay(chartBind,option_bind);
+	window.onresize = function() {
+		chartBind.resize();
+	};
+</script>

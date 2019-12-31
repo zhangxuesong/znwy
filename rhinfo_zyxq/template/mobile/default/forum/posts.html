@@ -1,0 +1,46 @@
+{template $this->mytpl('_header')}
+
+<div class='fui-page fui-page-current  fui-page-current sns-board-page'>
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">我的话题</div>
+        <div class="fui-header-right btn-edit">&nbsp;</div>
+    </div>
+    <div class="fui-content">
+         <div class="fui-list-group" id="user-posts-list" style="margin-top:0"></div>
+        <div class="empty" style="display:none;"><i class="icon icon-cascades" style="font-size:4rem;color:#ccc;"></i> <br/>暂时没有任何话题</div>
+        <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+    </div>
+
+
+    <script language='javascript'>
+        require(['forum/user'], function (modal) {
+            modal.init();
+        });		
+    </script>
+</div>
+
+<script type="text/html" id="tpl_user_posts_list">
+    <%each list as row%>
+   
+        <a class='fui-list'  href="{php echo $this->createMobileUrl('forum',array('op'=>'comment'));}&pid=<%row.id%>&bid=<%row.boardid%>">
+		<div class="fui-list-media post-detail-avatar">
+			<img src="<%row.logo%>" class="round">
+		</div>
+		 <div class="fui-list-inner">
+			<div class="subtitle"><%if row.isbest==1 || row.isboardbest==1%><span class="fui-label fui-label-warning level-label">共</span><%/if%><%row.title%>
+				<span class="level-label fui-label fui-label-warning level-label">{$board['title']}</span>
+								
+			</div>
+			<div class="text text-remark">发布时间:<%row.createtime%> &nbsp;&nbsp;&nbsp;<i class="icon icon-comment"></i> <%row.postcount%>&nbsp;&nbsp;&nbsp;<i class="icon icon-good"></i> <%row.goodcount%></div>
+		</div>  
+			 <div class="fui-list-angle">
+                    <div class="angle"> </div>
+                </div>
+        </a> 
+    <%/each%>
+</script>
+
+{template $this->mytpl('_footer')}

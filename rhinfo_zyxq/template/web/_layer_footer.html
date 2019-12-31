@@ -1,0 +1,92 @@
+<script type="text/javascript">
+layer.close(loadindex);
+var direct = "{$mywe['direct']}";
+$(function(){	
+    $(".btn").click(function(){
+		$.get("{php echo $this->createWebUrl('check_login').$mywe['direct'];}",function(data,status){
+         if (data=='1'){
+			if (direct!=""){ //物业
+				parent.location.reload();
+			}
+		 }
+		 else if (data=='2'){  //超时
+		    if (direct==""){
+				parent.location.reload();
+			}
+		 }
+		 else{
+			{if $_W['uid']>0}
+				parent.location.reload();
+			{else}
+				{if $this->syscfg['isproperty']==1}				
+					parent.location.href="{php echo mywurl('property/login',array('direct'=>1),1);}";
+				{else}
+					parent.location.href="{php echo mywurl('auth/login',array('direct'=>1));}";
+				{/if}
+			{/if}
+		 }		 
+	  });
+	});	 
+	$("a").on("click",function(){
+		$.get("{php echo $this->createWebUrl('check_login').$mywe['direct'];}",function(data,status){
+         if (data=='1'){
+			if (direct!=""){ //物业
+				parent.location.reload();
+			}
+		 }
+		 else if (data=='2'){ //超时
+		    if (direct==""){
+				parent.location.reload();
+			}
+		 }
+		 else{
+			{if $_W['uid']>0}
+				parent.location.reload();
+			{else}
+				{if $this->syscfg['isproperty']==1}				
+					parent.location.href="{php echo mywurl('property/login',array('direct'=>1),1);}";
+				{else}
+					parent.location.href="{php echo mywurl('auth/login',array('direct'=>1));}";
+				{/if}
+			{/if}
+		 }		 
+	  });
+	});	
+});
+
+function myclose(){
+	var index = parent.layer.getFrameIndex(window.name);
+	parent.layer.close(index);
+	window.parent.location.reload();
+}
+
+function myhelp(){
+	var url = "{php echo $this->createWebUrl('help',array('op'=>'help','fromdo'=>$mydo,'fromop'=>isset($helpcate)?$helpcate:$operation)).$mywe['direct'];}";
+	var title = "<i class='fa fa-hand-o-right'></i> {$navtitle}&nbsp;&gt;&nbsp;快速帮助";
+	var index = layer.open({
+		type: 2,
+		title: title,
+		content: url,
+		area: ['600px','600px'],
+		fix: false, 
+		maxmin: true,
+		shade:0.4
+	});	
+	layer.full(index);
+}
+$.fn.serializeObject = function() {  
+	var o = {};  
+	var a = this.serializeArray();  
+	$.each(a, function() {  
+		if (o[this.name]) {  
+			if (!o[this.name].push) {  
+				o[this.name] = [ o[this.name] ];  
+			}  
+			o[this.name].push(this.value || '');  
+		} else {  
+			o[this.name] = this.value || '';  
+		}  
+	});  
+	return o;  
+} 
+</script>

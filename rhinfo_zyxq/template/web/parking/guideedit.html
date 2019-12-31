@@ -1,0 +1,206 @@
+﻿{template 'web/_layer_header'}
+<style>
+html { overflow-x:hidden; }
+</style>
+<nav class="navbar navbar-fixed-top" style="margin-top:5px;margin-right:20px;">
+<span class="pull-right"><a href="javascript:;" class="btn btn-success"  onclick="mysubmit(this)"><i class="fa fa-save"></i> 保存</a></span>   
+</nav>
+<div class="panel panel-default" style="width:580px;">
+    <div class="panel-body">    
+		<form action="" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />	
+			<input type="hidden" value="{$item['id']}" id="id" name="id" />	
+			<input type="hidden" name="pid" value="{$pid}" />
+			<input type="hidden" name="rid" value="{$rid}" />
+			<div class="form-group">
+				<label class="control-label">车位区域</label>
+				<select name="lid" class="form-control">						
+					{loop $locations $v}
+						<option value="{$v['id']}" {if $v['id']==$item['lid']} selected {/if} >{$v['title']}</option>
+					{/loop}
+				</select>
+			</div>
+			<div class="form-group">
+				<label class="control-label"><span class="text-danger">*</span>车位名称</label>
+				<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入车位名称" name="title" />
+			</div>
+			<div class="form-group">
+			   <label class="control-label">车位类别</label> 
+				<div class="input-group">
+					<label class='radio-inline'>
+						<input type='radio' name='category' value='0' id="cate0" {if $item['category']==0 || empty($item['category'])}checked{/if} /> 公共无产权
+					</label>
+					<label class='radio-inline'>
+						<input type='radio' name='category' value='1' id="cate1" {if $item['category']==1}checked{/if}/> 自购有产权
+					</label>
+				</div>
+				 <span class="help-block">公共无产权是公共停车位，由物业租赁;</span>
+			</div>
+			<div id="myparking" style="display:none;">
+				<div class="form-group">
+					<label class="control-label">建筑面积</label>
+					<input type="number" class="form-control" id="buildarea" value="{$item['buildarea']}" placeholder="输入建筑面积" name="buildarea">
+				</div>
+
+				<div class="form-group">
+					<label class="control-label">使用面积</label>
+					<input type="number" class="form-control" id="usearea" value="{$item['usearea']}" placeholder="输入建筑面积" name="usearea">
+				</div>
+
+				<div class="form-group">
+					<label class="control-label">附加面积</label>
+					<input type="number" class="form-control" id="addarea" value="{$item['addarea']}" placeholder="输入附加面积" name="addarea">
+				</div>				
+
+				<div class="form-group">
+					<label class="control-label">业主姓名</label>
+					<input type="text" class="form-control" id="ownername" value="{$item['ownername']}" placeholder="输入业主姓名" name="ownername">
+				</div>
+				<div class="form-group">
+					<label class="control-label">手机号码</label>
+					<input type="number" class="form-control" id="mobile" value="{$item['mobile']}" placeholder="输入手机号码" name="mobile">
+					<label class="control-label">备用号码</label>
+					<input type="number" class="form-control" id="mobile1" value="{$item['mobile1']}" placeholder="输入手机号码" name="mobile1">
+				</div>
+				<div class="form-group">
+					<label class="control-label">最后缴费日期</label>
+					{php echo tpl_form_field_date('paydate',$item['paydate']);}
+					<span class="help-block">系统账单上线时，车位缴费截止日期</span>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label">收费状态</label>
+					<div class="input-group">
+						<label class="radio-inline">
+						<input type="radio" name="isfree" id="isfree1" value="0" {if empty($item['isfree']) || $item['isfree']==0 } checked{/if} />收费</label>
+						<label  class="radio-inline">
+						<input type="radio" name="isfree" id="isfree2" value="1" {if $item['isfree']==1 } checked{/if} /> 免费</label>
+						<label  class="radio-inline">
+						<input type="radio" name="isfree" id="isfree3" value="2" {if $item['isfree']==2 } checked{/if} /> 闲置</label>
+					</div>				
+				</div>
+				<div id="freedate" style="display:none;">
+					<div class="form-group">
+						<label class="control-label">免费开始日期</label>
+						{php echo tpl_form_field_date('startdate',$item['startdate']);}
+					</div>
+					<div class="form-group">
+						<label class="control-label">免费终止日期</label>
+						{php echo tpl_form_field_date('enddate',$item['enddate']);}
+					</div>
+				</div>	
+			
+			</div>
+			{if $_W['uid']} 
+			<div class="form-group">
+				<label class="control-label">车位锁MAC</label>
+				<input type="text" class="form-control" id="lockmac" value="{$item['lockmac']}" placeholder="输入车位锁MAC" name="lockmac">
+			</div>
+			{/if}
+			<div class="form-group">
+				<label class="control-label">备注</label>
+				<textarea style="height: 50px;" class="form-control" name="remark">{$item['remark']}</textarea>
+			</div>
+		</form>
+		<script type="text/javascript">
+			var isfree = "{$item['isfree']}";
+			var cate = "{$item['category']}";
+
+			if(isfree=='1'){
+				 $("#freedate").show();
+			}
+
+			if(cate=='1'){
+				$("#myparking").show();
+			}
+
+			 $("input[name=isfree]").click(function(){
+				  switch($("input[name=isfree]:checked").attr("id")){
+				  case "isfree1":			   
+					   $("#freedate").hide();
+					   break;
+				  case "isfree2":			
+					   $("#freedate").show();
+					   break;
+				  default:
+					   $("#freedate").hide();	
+					   break;
+					}
+			 });
+
+			 $("input[name=category]").click(function(){
+				  switch($("input[name=category]:checked").attr("id")){
+				  case "cate0":			   
+					   $("#myparking").hide();
+					   break;	  
+				  default:
+					   $("#myparking").show();	
+					   break;
+					}
+			 }); 
+		</script>
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+
+<script type="text/javascript">
+var pid = "{$pid}";
+var rid = "{$rid}";
+function mysubmit(obj){
+	var id = $.trim($("#id").val());
+	var title = $.trim($("#title").val());
+	var lid = $("#lid").find("option:selected").val(); 
+	
+    if (title=='') {
+	   layer.msg("车位名称不能为空！",{icon:0});
+	   return;
+	}	
+	
+    $.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+	{ op:"check",post:"edit",title:title,pid:pid,rid:rid,id:id,lid:lid},
+	function(data,status){
+	 if (data=='ok'){		
+	    myprocess(obj);
+		var loadindex = layer.load(2);			
+		$.ajax({  
+			 type : "post",  
+			  url : "{php echo $this->createWebUrl($mydo,array('op'=>'guideedit')).$mywe['direct'];}",  
+			  data : $("#myform").serializeObject(),   
+			  async : false,  
+			  success : function(data){
+				  layer.close(loadindex);
+				  if(data!='ok'){
+					 layer.msg(data,{icon:0});
+					 myreset(obj);
+					 return
+				  }			  
+				  layer.msg('保存成功!',{icon:1});
+				  setTimeout(function(){
+					  var index = parent.layer.getFrameIndex(window.name);
+					  parent.layer.close(index);
+				  },2000);
+			  }  
+		 }); 
+	 }
+	 else{
+		layer.msg(data,{icon:0});
+		return ;
+	 }
+	});	
+}
+
+function myprocess(obj){
+	var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/> 处理中...';
+	$(obj).html(html);  
+	$(obj).attr("disabled", "disabled"); 
+}
+function myreset(obj){
+	var html = '<i class="fa fa-save"></i> 保存';
+	$(obj).html(html);  
+	$(obj).removeAttr("disabled"); 
+}
+</script> 
+
+</body>
+</html>

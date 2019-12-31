@@ -1,0 +1,58 @@
+{template $this->mytpl('_header')}
+
+<div class='fui-page  fui-page-current member-cart-page'>
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back"></a>
+	</div>
+	<div class="title">我的成员</div> 
+	<div class="fui-header-right"><a class="btn-edit" {if empty($list)}style="display:none"{/if}>编辑</a></div>
+    </div>
+
+    <div class='fui-content ' >
+    {if empty($list)}
+		<div class='content-empty'>
+			 <i class='icon icon-like'></i><br/>您还没有任何成员<br/>
+			<a href="{php echo $this->createMobileurl('member',array('op'=>'sharehouse','id'=>$_GPC['id']));}" class='nav-item  external' data-nocache="true"><i class="icon icon-add"></i> 添加成员</a>
+		</div>
+	{else}
+		{loop $list $item}
+	    <div class="fui-list goods-item align-start" data-id="{$item['id']}">
+			<div class="fui-list-media editmode" style="height:2rem;">
+			   <input type="checkbox" name="checkbox" class="fui-radio fui-radio-danger edit-item"/>
+			</div> 			
+			<div class="fui-list-media image-media">
+				<img src="{$item['avatar']}" class="round">				
+			</div>
+			<div class="fui-list-inner">		 				
+				<div class="title"> {$item['realname']}</div>
+				<div class="text">绑定时间：{php echo date('Y-m-d H:i',$item['ctime']);}</div>						
+			</div>			
+	    </div>
+		{/loop}
+		<div class="fui-list">
+			<div class="fui-list-inner text-center">
+			<a href="{php echo $this->createMobileurl('member',array('op'=>'sharehouse','id'=>$_GPC['id']));}" class='nav-item  external' data-nocache="true"><i class="icon icon-add"></i> 添加成员</a>
+			</div>
+		</div>
+	 {/if}
+
+    </div>
+	
+    <div class="fui-footer editmode">
+		<div class="fui-list noclick">
+			<div class="fui-list-media">
+			<label class="checkbox-inline editcheckall"><input type="checkbox" name="checkbox" class="fui-radio fui-radio-danger " />&nbsp;全选</label>
+			</div>
+			<div class='fui-list-angle'>
+			<div class="btn btn-sm btn-danger-o btn-delete disabled">删除</div>
+			</div>
+		</div>		
+    </div>
+	
+    <script language='javascript'>require(['member/housemember'], function (modal) {
+        modal.init({});
+     });</script>
+</div>
+
+{template $this->mytpl('_footer')}

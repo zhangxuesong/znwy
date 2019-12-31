@@ -1,0 +1,86 @@
+{template $this->mytpl('_header')}
+<style>
+	.searchbtn{
+		border: 0 !important;
+		background: none;
+		font-size: 0.8rem
+	}
+</style>
+<div class="fui-page fui-page-current" id="fui-page">
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">设备巡检</div>
+        <div class="fui-header-right"></div>
+    </div>
+    <div class="fui-content navbar">        
+		<div id="tab" class="fui-tab fui-tab-success">
+			<a data-tab="tab" class="external active" data-status>全部</a>
+			<a data-tab="tab" class="external " data-status="1">待处理</a>
+			<a data-tab="tab" class="external " data-status="2">处理中</a>
+			<a data-tab="tab" class="external " data-status="3">已处理</a>
+		</div>
+        
+         <div class="fui-content-inner" > 
+			<!--搜索框-->
+            <form action="">
+                <div class="fui-searchbar bar">
+                    <div class="searchbar center searchbar-active">
+                        <input type="hidden" name="status" id="status" value="0">
+                        <input type="submit" class="searchbar-cancel searchbtn" value="搜索">
+                        <div class="search-input">
+                            <i class="icon icon-search"></i>
+                            <input type="text" placeholder="输入关键字..." class="search" value="" name="keyword" id="keyword">       
+                        </div>
+                </div>
+            </div>
+            </form>   
+            <div class="container">
+				<!--1.danger 待处理 2. warning处理中 3. success 已处理 4.  默认灰色 已结案 -->
+                <div class="fui-card fui-card-full fui-card-list">
+					<a class="fui-card-info" data-nocache="true" href="detail.html">
+						<div class="text">
+							<div class="title">
+								巡检项目名称
+								<span class="pull-right text-default" style="font-size:0.6rem;margin-top:-5px">
+									<i class="icon icon-city"></i>
+									巡检小区
+								</span>
+							</div>
+							<div class="subtitle">
+								<font style="font-size:0.75rem;color:#333;">巡检内容</font>
+							</div>
+							<div class="subtitle">2018-06-03 18:17</div>
+						</div>
+					</a>
+					<div class="fui-card-btns">
+						<a data-nocache="true" href="">
+							<span class="fui-label fui-label-danger">待处理</span>
+						</a>
+						<a data-nocache="true" href="">
+							<i class="icon icon-search text-danger"></i>
+							<span class="text-danger">详情</span>
+						</a>
+					</div>
+				</div>
+                
+				
+				
+            <!-- 无内容的时候display:block -->
+            <div class="fui-content-inner" style="display: none;">
+            	<div class="content-empty" style="block">
+            		<i class="icon icon-write"></i>
+            		</br>
+            		暂时没有投诉建议
+            	</div>
+            </div>
+         </div>
+		</div>
+		
+		
+		
+		
+ </div>
+
+{template $this->mytpl('_footer')}

@@ -1,0 +1,48 @@
+{template $this->mytpl('_header')}
+
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+		 <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+		<div class="title">{$item['title']}</div> 
+		<div class="fui-header-right">
+			<a href="{php echo $this->createMobileUrl('service',array('op'=>'recharge'));}">充值</a>
+		</div>
+    </div>
+  <div class='fui-content margin navbar'>
+     <div class="fui-title"><i class="icon icon-electrical"></i> 请选择充电端口</div>	  
+	 <div class="fui-cell-group">
+		<input type="hidden" id="chargid" name="chargid" value="{$id}">
+		<input type="hidden" id="category_port" name="port" value="">			
+		<div class="charging-port">
+			{loop $ports $port}
+			  <span class="fui-lg-1 fui-md-2 fui-sm-3 fui-xs-4"><a href="javascript:void(0);" data-port="{$port[0]}" data-status="{$port[1]}"><font style="font-size:1.2rem;font-weight:bold;">{$port[0]}</font><br>{if $port[1]==1}<font style="color:red;">不可用</font>{else}空闲中{/if}</a></span>
+			{/loop}
+			<div style="clear:both;"></div>
+		</div>
+	</div>
+	<div class="fui-title"><i class="icon icon-time"></i> 请选择充电时间</div>	  
+	 <div class="fui-cell-group">
+		<input type="hidden" id="category_hour" name="hour" value="">			
+		<div class="charging-hour">
+			{loop $rules $rule}
+			 <span class="fui-lg-1 fui-md-2 fui-sm-3 fui-xs-4"><a href="javascript:void(0);" data-hour="{$rule['id']}">{php echo round($rule['hour'],1);}小时<br>{$rule['price']}元</a></span>
+			{/loop}
+			<div style="clear:both;"></div>
+		</div>
+		<div class="fui-cell-tip">温馨提示：充电金额自动从个人中心余额扣除，余额不足{if $this->syscfg['devpaytype']==1}请充充值{else}可在线支付{/if}，充值享受优惠.</div>
+	</div>
+  </div>  
+     <div class='fui-footer'>
+		<a class='btn btn-success btn-submit block'>提交</a>
+	  </div>
+	<script language='javascript'>
+		require(['charging/charging'], function (modal) {
+			modal.initScan({}); 
+		});
+	</script>
+	
+</div> 
+
+{template $this->mytpl('_footer')}

@@ -1,0 +1,4516 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.we7.cc" versionCode="0.8,1.0">
+	<application setting="true">
+		<name><![CDATA[智慧物业]]></name>
+		<identifie><![CDATA[rhinfo_zyxq]]></identifie>
+		<version><![CDATA[3.4.2]]></version>
+		<type><![CDATA[business]]></type>
+		<ability><![CDATA[智慧云物业管理平台]]></ability>
+		<description><![CDATA[以物业管理为核心，打造智慧云物业管理平台.]]></description>
+		<author><![CDATA[淘宝:云创IT学院]]></author>
+		<url><![CDATA[http://www.we7.cc]]></url>
+	</application>
+	<platform>
+		<subscribes>
+		</subscribes>
+		<handles>
+			<message type="image" />
+			<message type="voice" />
+			<message type="location" />
+			<message type="subscribe" />
+			<message type="qr" />
+			<message type="trace" />
+			<message type="click" />
+			<message type="text" />
+		</handles>
+		<rule embed="true" />
+		<card embed="false" />
+		<supports>
+			<item type="app" />
+			<item type="wxapp" />
+		</supports>
+        <plugins></plugins> 
+        <plugin-main name="" />
+
+	</platform>
+
+	<bindings>
+		<cover>
+			<entry title="首页入口" do="home" state="" direct="false"/>
+		</cover>
+		<menu>
+			<entry title="管理中心" do="home" state="" direct="false"/>
+			<entry title="物业后台" do="property" state="" direct="true"/>
+			<entry title="域名验证" do="verify" state="" direct="false"/>
+		</menu>
+		<page>
+			<entry title="首页" do="/pages/index/index" state="" direct="false"/>
+		</page>
+
+	</bindings>
+
+	<permissions>
+	</permissions>
+
+	<install><![CDATA[
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_activity` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `title` varchar(60) DEFAULT NULL,
+  `category` tinyint(1) NOT NULL DEFAULT '0',
+  `startdate` int(11) NOT NULL,
+  `enddate` int(11) NOT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `content` text,
+  `replydesc` varchar(200) DEFAULT NULL,
+  `style` tinyint(1) NOT NULL DEFAULT '0',
+  `checkmethod` tinyint(1) NOT NULL DEFAULT '0',
+  `votetype` tinyint(1) NOT NULL DEFAULT '0',
+  `votemethod` tinyint(1) NOT NULL DEFAULT '0',
+  `votetext` varchar(1000) DEFAULT NULL,
+  `singleimage` varchar(255) DEFAULT NULL,
+  `singledesc` varchar(200) DEFAULT NULL,
+  `multimages` text,
+  `isvotesign` tinyint(1) NOT NULL DEFAULT '0',
+  `signstart` int(11) NOT NULL,
+  `signend` int(11) NOT NULL,
+  `signmoney` int(11) NOT NULL,
+  `signnum` int(6) NOT NULL,
+  `signmeas` tinyint(1) NOT NULL DEFAULT '0',
+  `signextend` varchar(1000) DEFAULT NULL,
+  `question` text,
+  `remark` varchar(200) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `category` (`category`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_activity_sign` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `actid` int(10) NOT NULL,
+  `uid` int(10) NOT NULL DEFAULT '0',
+  `realname` varchar(50) NOT NULL,
+  `mobile` varchar(20) NOT NULL,
+  `extend_1` varchar(100) DEFAULT NULL,
+  `extend_2` varchar(100) DEFAULT NULL,
+  `extend_3` varchar(100) DEFAULT NULL,
+  `extend_4` varchar(100) DEFAULT NULL,
+  `extend_5` varchar(100) DEFAULT NULL,
+  `extend_6` varchar(100) DEFAULT NULL,
+  `extend_7` varchar(100) DEFAULT NULL,
+  `extend_8` varchar(100) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `actid` (`actid`),
+  KEY `uid` (`uid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_activity_vote` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `actid` int(10) NOT NULL,
+  `voteid` int(4) NOT NULL,
+  `votenum` int(10) NOT NULL,
+  `uid` int(10) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `actid` (`actid`),
+  KEY `voteid` (`voteid`),
+  KEY `uid` (`uid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_article` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) DEFAULT '0',
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `cid` int(11) DEFAULT '0',
+  `title` varchar(50) DEFAULT NULL,
+  `thumb` varchar(255) DEFAULT NULL,
+  `images` text,
+  `content` text,
+  `displayorder` tinyint(3) unsigned DEFAULT '0',
+  `status` tinyint(1) DEFAULT '0',
+  `isrecommand` tinyint(3) DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `cid` (`cid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_article_category` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) DEFAULT '0',
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `title` varchar(50) DEFAULT NULL,
+  `thumb` varchar(255) DEFAULT NULL,
+  `displayorder` tinyint(3) unsigned DEFAULT '0',
+  `enabled` tinyint(1) DEFAULT '1',
+  `isrecommand` tinyint(3) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_article_log` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `aid` int(10) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `aid` (`aid`),
+  KEY `uid` (`uid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_banner` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `btype` tinyint(3) DEFAULT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  `wxappid` varchar(30) DEFAULT NULL,
+  `wxapppage` varchar(255) DEFAULT NULL,
+  `thumb` varchar(255) DEFAULT NULL,
+  `displayorder` int(5) DEFAULT '0',
+  `enabled` tinyint(1) DEFAULT '0',
+  `startdate` int(11) NOT NULL,
+  `enddate` int(11) NOT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `bgimage` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `btype` (`btype`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_banner_statistics` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bannerid` int(10) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `openid` varchar(50) DEFAULT NULL,
+  `clicktime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bannerid` (`bannerid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_building` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `lid` int(10) NOT NULL,
+  `flid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `units` int(4) NOT NULL,
+  `floors` int(4) NOT NULL,
+  `rooms` int(4) NOT NULL,
+  `isbarn` tinyint(1) NOT NULL,
+  `isunit` tinyint(1) NOT NULL,
+  `unitname` varchar(60) NOT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `aurine_bid` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_car` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `uid` int(10) NOT NULL DEFAULT '0',
+  `openid` varchar(50) DEFAULT NULL,
+  `title` varchar(60) NOT NULL,
+  `carno` varchar(20) DEFAULT NULL,
+  `ownername` varchar(30) DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL,
+  `remark` varchar(100) NOT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `startdate` int(11) DEFAULT NULL,
+  `enddate` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `mobile` (`mobile`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_car_feeorder` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `parklotid` int(10) NOT NULL,
+  `iologid` int(10) NOT NULL,
+  `carno` varchar(20) DEFAULT NULL,
+  `fee` decimal(8,2) NOT NULL,
+  `paytime` int(11) NOT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `cuid` int(10) NOT NULL DEFAULT '0',
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `parklotid` (`parklotid`),
+  KEY `iologid` (`iologid`),
+  KEY `carno` (`carno`),
+  KEY `status` (`status`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_car_iolog` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `parklotid` int(10) NOT NULL,
+  `ioid` int(10) NOT NULL,
+  `carno` varchar(20) DEFAULT NULL,
+  `io` tinyint(1) DEFAULT '0',
+  `intime` int(11) NOT NULL,
+  `outtime` int(11) NOT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `payfee` int(11) NOT NULL DEFAULT '0',
+  `paystatus` tinyint(1) DEFAULT '0',
+  `payuid` int(10) NOT NULL DEFAULT '0',
+  `payopenid` varchar(60) DEFAULT NULL,
+  `ctime` int(10) NOT NULL DEFAULT '0',
+  `image` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `parklotid` (`parklotid`),
+  KEY `ioid` (`ioid`),
+  KEY `io` (`io`),
+  KEY `carno` (`carno`),
+  KEY `status` (`status`),
+  KEY `paystatus` (`paystatus`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_car_whitelist` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `parklotid` int(10) NOT NULL,
+  `carno` varchar(20) DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL,
+  `realname` varchar(20) DEFAULT NULL,
+  `idcard` varchar(30) DEFAULT NULL,
+  `starttime` int(11) NOT NULL,
+  `endtime` int(11) NOT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `cuid` int(10) NOT NULL DEFAULT '0',
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `parklotid` (`parklotid`),
+  KEY `carno` (`carno`),
+  KEY `status` (`status`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_carbill` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `lid` int(4) NOT NULL,
+  `cid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `price` decimal(8,2) DEFAULT NULL,
+  `startdate` int(11) DEFAULT NULL,
+  `enddate` int(11) DEFAULT NULL,
+  `daterange` varchar(100) NOT NULL,
+  `fee` decimal(10,2) NOT NULL,
+  `payfee` decimal(10,2) NOT NULL,
+  `paydate` int(11) DEFAULT NULL,
+  `paytype` tinyint(1) NOT NULL,
+  `remark` varchar(200) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `cfrom` tinyint(1) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `payuid` int(10) NOT NULL,
+  `printpznum` varchar(30) NOT NULL,
+  `printtimes` tinyint(2) NOT NULL DEFAULT '0',
+  `payno` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `lid` (`lid`),
+  KEY `cid` (`cid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_carmove` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `fromuid` int(10) NOT NULL DEFAULT '0',
+  `fromopenid` varchar(50) DEFAULT NULL,
+  `title` varchar(60) NOT NULL,
+  `touid` int(10) NOT NULL DEFAULT '0',
+  `toopenid` varchar(50) DEFAULT NULL,
+  `ownername` varchar(30) DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL,
+  `images` text,
+  `remark` varchar(100) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_category` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `type` tinyint(4) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `remark` varchar(100) NOT NULL,
+  `tplid` varchar(60) NOT NULL,
+  `topcolor` varchar(20) NOT NULL,
+  `textcolor` varchar(20) DEFAULT NULL,
+  `openid` varchar(60) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `right1` tinyint(1) NOT NULL DEFAULT '0',
+  `right2` tinyint(1) NOT NULL DEFAULT '0',
+  `right3` tinyint(1) NOT NULL DEFAULT '0',
+  `right4` tinyint(1) NOT NULL DEFAULT '0',
+  `right5` tinyint(1) NOT NULL DEFAULT '0',
+  `right6` tinyint(1) NOT NULL DEFAULT '0',
+  `right7` tinyint(1) NOT NULL DEFAULT '0',
+  `right8` tinyint(1) NOT NULL DEFAULT '0',
+  `right9` tinyint(1) NOT NULL DEFAULT '0',
+  `right10` tinyint(1) NOT NULL DEFAULT '0',
+  `right11` tinyint(1) NOT NULL DEFAULT '0',
+  `right12` tinyint(1) NOT NULL DEFAULT '0',
+  `right13` tinyint(1) NOT NULL DEFAULT '0',
+  `right14` tinyint(1) NOT NULL DEFAULT '0',
+  `right15` tinyint(1) NOT NULL DEFAULT '0',
+  `right16` tinyint(1) NOT NULL DEFAULT '0',
+  `right17` tinyint(1) NOT NULL DEFAULT '0',
+  `right18` tinyint(1) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `openids` text,
+  `reporttime` int(6) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `type` (`type`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_costdetail` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `io` tinyint(1) NOT NULL,
+  `cate` tinyint(1) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `itemid` int(10) NOT NULL DEFAULT '0',
+  `money` decimal(10,2) NOT NULL,
+  `remark` varchar(100) DEFAULT NULL,
+  `handling` varchar(30) DEFAULT NULL,
+  `handledate` int(11) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `publicity` tinyint(1) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `printpznum` varchar(30) NOT NULL,
+  `printtimes` tinyint(2) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`),
+  KEY `tid` (`tid`),
+  KEY `hid` (`hid`),
+  KEY `io` (`io`),
+  KEY `itemid` (`itemid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_costitem` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `io` tinyint(1) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `remark` varchar(100) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `io` (`io`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_devpatrol_category` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) DEFAULT '0',
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `title` varchar(50) DEFAULT NULL,
+  `thumb` varchar(255) DEFAULT NULL,
+  `remark` varchar(100) DEFAULT NULL,
+  `enabled` tinyint(1) DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_devpatrol_cateitem` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) DEFAULT '0',
+  `cateid` int(10) NOT NULL,
+  `title` varchar(50) DEFAULT NULL,
+  `desc` varchar(100) DEFAULT NULL,
+  `itemtype` varchar(10) DEFAULT NULL,
+  `value` varchar(300) DEFAULT NULL,
+  `displayorder` int(6) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `cateid` (`cateid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_devpatrol_content` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL DEFAULT '0',
+  `taskid` int(10) NOT NULL,
+  `deviceid` int(10) NOT NULL,
+  `itemtype` varchar(10) DEFAULT NULL,
+  `itemtitle` varchar(50) DEFAULT NULL,
+  `itemdesc` varchar(100) DEFAULT NULL,
+  `itemcontent` varchar(255) DEFAULT NULL,
+  `itemimage` varchar(255) DEFAULT NULL,
+  `remark` varchar(100) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `taskid` (`taskid`),
+  KEY `deviceid` (`deviceid`),
+  KEY `ctime` (`ctime`),
+  KEY `cuid` (`cuid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_devpatrol_device` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL DEFAULT '0',
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `cateid` int(10) NOT NULL DEFAULT '0',
+  `title` varchar(50) DEFAULT NULL,
+  `spec` varchar(60) DEFAULT NULL,
+  `brand` varchar(60) DEFAULT NULL,
+  `suppid` int(10) NOT NULL DEFAULT '0',
+  `images` text,
+  `itemstr` text,
+  `address` varchar(100) DEFAULT NULL,
+  `lng` varchar(10) DEFAULT NULL,
+  `lat` varchar(10) DEFAULT NULL,
+  `remark` varchar(100) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `cateid` (`cateid`),
+  KEY `suppid` (`suppid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_devpatrol_task` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL DEFAULT '0',
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `title` varchar(50) DEFAULT NULL,
+  `itemstr` text,
+  `startdate` int(11) NOT NULL,
+  `cycle` tinyint(1) NOT NULL DEFAULT '0',
+  `day` tinyint(2) NOT NULL DEFAULT '0',
+  `week` tinyint(1) NOT NULL DEFAULT '0',
+  `month` tinyint(2) NOT NULL DEFAULT '0',
+  `year` tinyint(1) NOT NULL DEFAULT '0',
+  `starttime` varchar(10) DEFAULT NULL,
+  `endtime` varchar(10) DEFAULT NULL,
+  `remark` varchar(100) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `cycle` (`cycle`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_devsupplier` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `thumb` varchar(255) DEFAULT NULL,
+  `province` varchar(60) DEFAULT NULL,
+  `city` varchar(60) DEFAULT NULL,
+  `district` varchar(60) DEFAULT NULL,
+  `address` varchar(255) NOT NULL,
+  `contact` varchar(60) NOT NULL,
+  `telphone` varchar(60) DEFAULT NULL,
+  `mobile` varchar(20) NOT NULL,
+  `openid` varchar(60) DEFAULT NULL,
+  `uid` int(10) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_door` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `lid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `doorcate` tinyint(1) NOT NULL DEFAULT '0',
+  `title` varchar(60) NOT NULL,
+  `lng` varchar(10) DEFAULT NULL,
+  `lat` varchar(10) DEFAULT NULL,
+  `locksn` varchar(60) NOT NULL,
+  `lockid` varchar(20) NOT NULL,
+  `sim` varchar(60) NOT NULL,
+  `simdate` int(11) NOT NULL,
+  `remark` varchar(200) NOT NULL,
+  `relationfee` tinyint(1) NOT NULL,
+  `doorrange` int(10) NOT NULL DEFAULT '0',
+  `offline` tinyint(1) NOT NULL DEFAULT '0',
+  `devtype` tinyint(1) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `doortype` tinyint(1) NOT NULL DEFAULT '4',
+  `device_json` varchar(1000) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `lid` (`lid`),
+  KEY `bid` (`bid`),
+  KEY `tid` (`tid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_door_faces` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL DEFAULT '0',
+  `did` int(10) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `mobile` varchar(20) DEFAULT NULL,
+  `faceimg` varchar(255) DEFAULT NULL,
+  `status` int(4) NOT NULL DEFAULT '0',
+  `ctime` int(10) NOT NULL,
+  `startdate` int(10) DEFAULT NULL,
+  `enddate` int(10) DEFAULT NULL,
+  `starttime` varchar(20) DEFAULT NULL,
+  `endtime` varchar(20) DEFAULT NULL,
+  `nickname` varchar(60) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `userid` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `did` (`did`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_door_visit` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `doorid` int(10) NOT NULL,
+  `fromopenid` varchar(50) DEFAULT NULL,
+  `fromuid` int(10) NOT NULL,
+  `toopenid` varchar(50) DEFAULT NULL,
+  `touid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `effedate` varchar(60) DEFAULT NULL,
+  `effetime` int(11) NOT NULL,
+  `opentimes` tinyint(3) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `ctime` int(11) NOT NULL,
+  `reason` varchar(60) DEFAULT NULL,
+  `carno` varchar(20) DEFAULT NULL,
+  `hid` int(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`),
+  KEY `tid` (`tid`),
+  KEY `doorid` (`doorid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_doorlog` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL DEFAULT '0',
+  `uid` int(10) NOT NULL,
+  `did` int(10) NOT NULL,
+  `status` int(4) NOT NULL DEFAULT '0',
+  `result` varchar(60) DEFAULT NULL,
+  `opentime` int(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `did` (`did`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_elevator` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `lng` varchar(10) DEFAULT NULL,
+  `lat` varchar(10) DEFAULT NULL,
+  `locksn` varchar(60) NOT NULL,
+  `sim` varchar(60) NOT NULL,
+  `simdate` int(11) NOT NULL,
+  `remark` varchar(200) NOT NULL,
+  `relationfee` tinyint(1) NOT NULL,
+  `range` int(10) NOT NULL DEFAULT '0',
+  `offline` tinyint(1) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `locktype` tinyint(1) NOT NULL DEFAULT '0',
+  `devtype` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`),
+  KEY `tid` (`tid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_elevatorlog` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL DEFAULT '0',
+  `uid` int(10) NOT NULL,
+  `eid` int(10) NOT NULL,
+  `status` int(4) NOT NULL DEFAULT '0',
+  `result` varchar(60) DEFAULT NULL,
+  `opentime` int(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `eid` (`eid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_environ_arrange` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `pname` varchar(255) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `rname` varchar(255) NOT NULL,
+  `lid` int(10) NOT NULL,
+  `lname` varchar(255) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `bname` varchar(255) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `tname` varchar(255) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `hname` varchar(255) NOT NULL,
+  `areacont` varchar(255) NOT NULL,
+  `ask` varchar(255) NOT NULL,
+  `cycleid` int(11) NOT NULL,
+  `cycle` varchar(255) NOT NULL,
+  `day` varchar(255) NOT NULL,
+  `week` varchar(255) NOT NULL,
+  `month` varchar(255) NOT NULL,
+  `ctime` varchar(255) NOT NULL,
+  `starttime` varchar(255) NOT NULL,
+  `endtime` varchar(255) NOT NULL,
+  `startdate` varchar(255) NOT NULL,
+  `simdate` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_environ_grecord` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `pname` varchar(255) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `rname` varchar(255) NOT NULL,
+  `lid` int(10) NOT NULL,
+  `lname` varchar(255) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `bname` varchar(255) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `tname` varchar(255) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `hname` varchar(255) NOT NULL,
+  `vegeid` varchar(255) NOT NULL,
+  `vegename` varchar(255) NOT NULL,
+  `kind` varchar(255) NOT NULL,
+  `num` int(10) NOT NULL,
+  `planter` varchar(255) NOT NULL,
+  `simdate` varchar(255) NOT NULL,
+  `img` varchar(255) NOT NULL,
+  `note` varchar(255) NOT NULL,
+  `uid` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_environ_greeninfo` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `pname` varchar(255) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `rname` varchar(255) NOT NULL,
+  `lid` int(10) NOT NULL,
+  `lname` varchar(255) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `bname` varchar(255) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `tname` varchar(255) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `hname` varchar(255) NOT NULL,
+  `vegeid` varchar(255) NOT NULL,
+  `vegename` varchar(255) NOT NULL,
+  `kind` varchar(255) NOT NULL,
+  `num` int(10) NOT NULL,
+  `treeage` varchar(255) NOT NULL,
+  `startdate` varchar(255) NOT NULL,
+  `simdate` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_environ_record` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `pname` varchar(255) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `rname` varchar(255) NOT NULL,
+  `lid` int(10) NOT NULL,
+  `lname` varchar(255) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `bname` varchar(255) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `tname` varchar(255) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `hname` varchar(255) NOT NULL,
+  `cname` varchar(255) NOT NULL,
+  `startdate` varchar(255) NOT NULL,
+  `simdate` varchar(255) NOT NULL,
+  `cleantion` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `areacont` varchar(255) NOT NULL,
+  `img` varchar(255) NOT NULL,
+  `note` varchar(255) NOT NULL,
+  `uid` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_feebill` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `address` varchar(100) DEFAULT NULL,
+  `itemid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `price` decimal(8,2) DEFAULT NULL,
+  `feetype` tinyint(3) DEFAULT NULL,
+  `threeqty` decimal(10,2) NOT NULL,
+  `startqty` decimal(10,2) NOT NULL,
+  `endqty` decimal(10,2) NOT NULL,
+  `measure` varchar(30) DEFAULT NULL,
+  `category` tinyint(1) NOT NULL,
+  `startdate` int(11) DEFAULT NULL,
+  `enddate` int(11) DEFAULT NULL,
+  `daterange` varchar(100) NOT NULL,
+  `fee` decimal(10,2) NOT NULL,
+  `payfee` decimal(10,2) NOT NULL,
+  `latefee` decimal(10,2) NOT NULL,
+  `laterate` decimal(6,2) NOT NULL,
+  `creditfee` decimal(10,2) NOT NULL,
+  `latedays` int(11) NOT NULL,
+  `paydate` int(11) DEFAULT NULL,
+  `paytype` tinyint(1) NOT NULL,
+  `remark` varchar(200) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `isalipay` tinyint(1) NOT NULL DEFAULT '0',
+  `cfrom` tinyint(1) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `payuid` int(10) NOT NULL,
+  `printpznum` varchar(30) NOT NULL,
+  `printtimes` tinyint(2) NOT NULL DEFAULT '0',
+  `payno` varchar(128) DEFAULT NULL,
+  `payfrom` tinyint(1) NOT NULL DEFAULT '0',
+  `invoicenum` varchar(20) DEFAULT NULL,
+  `invstatus` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`),
+  KEY `tid` (`tid`),
+  KEY `hid` (`hid`),
+  KEY `category` (`category`),
+  KEY `itemid` (`itemid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_feebill_create` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `category` tinyint(1) NOT NULL,
+  `itemid` varchar(255) DEFAULT NULL,
+  `title` varchar(60) NOT NULL,
+  `lastdate` int(11) DEFAULT NULL,
+  `paymonths` tinyint(4) NOT NULL,
+  `remark` varchar(200) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `category` (`category`),
+  KEY `itemid` (`itemid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_feebillitem` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `itemid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `category` tinyint(1) NOT NULL,
+  `paydate` int(11) DEFAULT NULL,
+  `billdate` int(11) DEFAULT NULL,
+  `remark` varchar(200) NOT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`),
+  KEY `hid` (`hid`),
+  KEY `itemid` (`itemid`),
+  KEY `category` (`category`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_feeitem` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `category` tinyint(1) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `calmethod` varchar(60) NOT NULL,
+  `measure` varchar(30) DEFAULT NULL,
+  `paymonths` int(11) DEFAULT NULL,
+  `price` decimal(8,2) DEFAULT NULL,
+  `laterate` decimal(6,2) DEFAULT NULL,
+  `latedays` int(11) DEFAULT NULL,
+  `remark` varchar(200) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `isimport` tinyint(1) NOT NULL DEFAULT '0',
+  `icon` varchar(30) DEFAULT NULL,
+  `color` varchar(30) DEFAULT NULL,
+  `discount` decimal(2,1) NOT NULL DEFAULT '0.0',
+  `thumb` varchar(255) DEFAULT NULL,
+  `relacost` tinyint(1) NOT NULL DEFAULT '0',
+  `feeround` tinyint(1) NOT NULL DEFAULT '1',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `feemonths` tinyint(1) NOT NULL DEFAULT '1',
+  `finmonths` int(4) NOT NULL DEFAULT '0',
+  `givemonths` int(4) NOT NULL DEFAULT '0',
+  `latedate` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`),
+  KEY `category` (`category`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_feeitem_building` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `flid` int(10) NOT NULL,
+  `itemid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `price` decimal(8,2) DEFAULT NULL,
+  `remark` varchar(200) NOT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`),
+  KEY `flid` (`flid`),
+  KEY `itemid` (`itemid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_feelocation` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `category` tinyint(4) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `price` decimal(8,2) DEFAULT NULL,
+  `pricerule` tinyint(1) NOT NULL,
+  `remark` varchar(100) NOT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `category` (`category`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_garage` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `buildarea` decimal(10,2) NOT NULL,
+  `usearea` decimal(10,2) NOT NULL,
+  `addarea` decimal(10,2) NOT NULL,
+  `ownername` varchar(30) DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL,
+  `mobile1` varchar(20) DEFAULT NULL,
+  `isfree` tinyint(1) NOT NULL DEFAULT '0',
+  `freestart` int(11) NOT NULL,
+  `freeend` int(11) NOT NULL,
+  `isdiscount` decimal(2,1) NOT NULL DEFAULT '0.0',
+  `paydate` int(11) DEFAULT NULL,
+  `billdate` int(11) DEFAULT NULL,
+  `remark` varchar(200) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `lifepay_hid` varchar(60) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `electmeter` varchar(30) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_house_tag` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `tag` varchar(60) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_lease` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `title` varchar(50) DEFAULT NULL,
+  `lesseeid` int(10) NOT NULL,
+  `paymethod` tinyint(1) DEFAULT '0',
+  `contact` varchar(60) DEFAULT NULL,
+  `mobile` varchar(60) DEFAULT NULL,
+  `startdate` int(11) NOT NULL,
+  `enddate` int(11) NOT NULL,
+  `leaseterm` int(6) NOT NULL DEFAULT '0',
+  `area` decimal(16,2) NOT NULL DEFAULT '0.00',
+  `location` text,
+  `feeitem` text,
+  `deposit` decimal(16,2) NOT NULL DEFAULT '0.00',
+  `depositdesc` varchar(255) DEFAULT NULL,
+  `totalfee` decimal(16,2) NOT NULL DEFAULT '0.00',
+  `signdate` int(11) NOT NULL,
+  `attachment` text,
+  `remark` varchar(255) NOT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_leasebill` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `leaseid` int(10) NOT NULL,
+  `lesseeid` int(10) NOT NULL,
+  `itemid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `price` decimal(8,2) DEFAULT NULL,
+  `feetype` tinyint(3) NOT NULL DEFAULT '1',
+  `threeqty` decimal(10,2) NOT NULL,
+  `startqty` decimal(10,2) NOT NULL,
+  `endqty` decimal(10,2) NOT NULL,
+  `measure` varchar(30) DEFAULT NULL,
+  `category` tinyint(1) NOT NULL,
+  `startdate` int(11) DEFAULT NULL,
+  `enddate` int(11) DEFAULT NULL,
+  `daterange` varchar(100) NOT NULL,
+  `fee` decimal(10,2) NOT NULL,
+  `payfee` decimal(10,2) NOT NULL,
+  `paydate` int(11) DEFAULT NULL,
+  `paytype` tinyint(1) NOT NULL,
+  `remark` varchar(200) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `payuid` int(10) NOT NULL,
+  `printpznum` varchar(30) NOT NULL,
+  `printtimes` tinyint(2) NOT NULL DEFAULT '0',
+  `payno` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `leaseid` (`leaseid`),
+  KEY `category` (`category`),
+  KEY `itemid` (`itemid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_leasebillitem` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `leaseid` int(10) NOT NULL,
+  `itemid` int(10) NOT NULL,
+  `months` tinyint(3) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `category` tinyint(1) NOT NULL,
+  `paydate` int(11) DEFAULT NULL,
+  `billdate` int(11) DEFAULT NULL,
+  `remark` varchar(200) NOT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `leaseid` (`leaseid`),
+  KEY `itemid` (`itemid`),
+  KEY `category` (`category`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_leaselocation` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `category` tinyint(1) DEFAULT '0',
+  `location` text,
+  `remark` varchar(100) NOT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_lessee` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `title` varchar(50) DEFAULT NULL,
+  `lesstype` tinyint(1) DEFAULT '0',
+  `contact` varchar(60) NOT NULL,
+  `telphone` varchar(60) NOT NULL,
+  `mobile` varchar(60) NOT NULL,
+  `address` varchar(100) NOT NULL,
+  `certtype` tinyint(1) DEFAULT '0',
+  `certno` varchar(50) DEFAULT NULL,
+  `certphoto` varchar(255) DEFAULT NULL,
+  `attachment` text,
+  `operateitem` varchar(60) DEFAULT NULL,
+  `openid` varchar(100) DEFAULT NULL,
+  `uid` int(10) NOT NULL,
+  `remark` varchar(255) NOT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `uid` (`uid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_location` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `category` tinyint(4) NOT NULL,
+  `flid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `bg` varchar(30) DEFAULT NULL,
+  `remark` varchar(100) NOT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `feemonths` tinyint(1) NOT NULL DEFAULT '1',
+  `finmonths` int(4) NOT NULL DEFAULT '0',
+  `givemonths` int(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `category` (`category`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_mc_members` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL DEFAULT '0',
+  `uid` int(10) unsigned NOT NULL DEFAULT '0',
+  `openid` varchar(50) NOT NULL,
+  `openid_wxapp` varchar(50) NOT NULL,
+  `openid_alipay` varchar(50) NOT NULL,
+  `openid_aliapp` varchar(50) NOT NULL,
+  `openid_haina` varchar(50) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `uid` (`uid`),
+  KEY `openid` (`openid`),
+  KEY `openid_wxapp` (`openid_wxapp`),
+  KEY `openid_alipay` (`openid_alipay`),
+  KEY `openid_aliapp` (`openid_aliapp`),
+  KEY `openid_haina` (`openid_haina`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_member` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `uid` int(10) NOT NULL,
+  `openid` varchar(50) DEFAULT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `realname` varchar(50) NOT NULL,
+  `mobile` varchar(20) NOT NULL,
+  `address` varchar(100) NOT NULL,
+  `remark` varchar(200) NOT NULL,
+  `isdefault` tinyint(1) NOT NULL DEFAULT '0',
+  `isowner` tinyint(1) NOT NULL DEFAULT '0',
+  `otype` tinyint(1) NOT NULL DEFAULT '0',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `category` tinyint(1) NOT NULL DEFAULT '1',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `auditopenid` varchar(60) DEFAULT NULL,
+  `audituid` int(10) NOT NULL DEFAULT '0',
+  `bankcard` varchar(30) DEFAULT NULL,
+  `carno` varchar(20) DEFAULT NULL,
+  `doortime` int(11) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `reason` varchar(100) DEFAULT NULL,
+  `idcard` varchar(30) DEFAULT NULL,
+  `proprietor_json` varchar(1000) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`),
+  KEY `tid` (`tid`),
+  KEY `hid` (`hid`),
+  KEY `category` (`category`),
+  KEY `deleted` (`deleted`),
+  KEY `status` (`status`),
+  KEY `isdefault` (`isdefault`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_member_sub` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `parentid` int(10) NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `address` varchar(100) NOT NULL,
+  `remark` varchar(200) NOT NULL,
+  `otype` tinyint(1) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `ctime` int(11) NOT NULL,
+  `effedate` varchar(60) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`),
+  KEY `tid` (`tid`),
+  KEY `hid` (`hid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_mycar` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `uid` int(10) NOT NULL DEFAULT '0',
+  `openid` varchar(50) DEFAULT NULL,
+  `carno` varchar(20) DEFAULT NULL,
+  `checkdate` varchar(20) DEFAULT NULL,
+  `safeno` varchar(30) DEFAULT NULL,
+  `remark` varchar(30) DEFAULT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `openid` (`openid`),
+  KEY `carno` (`carno`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_nav` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `category` tinyint(4) NOT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  `wxappid` varchar(30) DEFAULT NULL,
+  `wxapppage` varchar(255) DEFAULT NULL,
+  `thumb` varchar(255) DEFAULT NULL,
+  `displayorder` int(5) DEFAULT '0',
+  `enabled` tinyint(1) DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `bgimage` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `category` (`category`)
+) ENGINE=MyISAM AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_navcate` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `remark` varchar(100) NOT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_notice` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` varchar(1000) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `cid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `content` text,
+  `range` tinyint(1) NOT NULL,
+  `reason` varchar(100) NOT NULL,
+  `stime` int(11) NOT NULL,
+  `etime` int(11) NOT NULL,
+  `remark` varchar(200) NOT NULL,
+  `category` tinyint(1) NOT NULL DEFAULT '1',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `audituid` int(10) NOT NULL,
+  `openid` varchar(60) DEFAULT NULL,
+  `uid` int(10) NOT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`(333)),
+  KEY `tid` (`tid`),
+  KEY `hid` (`hid`),
+  KEY `cid` (`cid`),
+  KEY `range` (`range`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_notice_log` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `nid` int(10) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `openid` varchar(60) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `nid` (`nid`),
+  KEY `uid` (`uid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_notice_sendlog` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `nid` int(10) NOT NULL,
+  `openid` varchar(60) NOT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `nid` (`nid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_operationvideo` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `title` varchar(30) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `video` varchar(255) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_pagediy` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL DEFAULT '0',
+  `cateid` int(10) NOT NULL DEFAULT '0',
+  `pid` int(10) NOT NULL DEFAULT '0',
+  `rid` int(10) NOT NULL DEFAULT '0',
+  `title` varchar(255) NOT NULL,
+  `thumb` varchar(255) DEFAULT NULL,
+  `icon` varchar(30) DEFAULT NULL,
+  `color` varchar(30) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `status` tinyint(3) NOT NULL DEFAULT '0',
+  `displayorder` int(11) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `wxappid` varchar(30) DEFAULT NULL,
+  `wxapppage` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `cateid` (`cateid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_pagediy_cate` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL DEFAULT '0',
+  `style` tinyint(1) NOT NULL DEFAULT '0',
+  `pid` int(10) NOT NULL DEFAULT '0',
+  `rid` int(10) NOT NULL DEFAULT '0',
+  `title` varchar(255) NOT NULL,
+  `icon` varchar(30) DEFAULT NULL,
+  `color` varchar(30) DEFAULT NULL,
+  `smalltitle` varchar(255) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `status` tinyint(3) NOT NULL DEFAULT '0',
+  `displayorder` int(11) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `wxappid` varchar(30) DEFAULT NULL,
+  `wxapppage` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `style` (`style`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_parking` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `lid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `category` tinyint(1) NOT NULL DEFAULT '0',
+  `ownername` varchar(30) DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL,
+  `mobile1` varchar(20) DEFAULT NULL,
+  `carno` varchar(20) DEFAULT NULL,
+  `startdate` int(11) NOT NULL,
+  `enddate` int(11) NOT NULL,
+  `buildarea` decimal(10,2) NOT NULL,
+  `usearea` decimal(10,2) NOT NULL,
+  `addarea` decimal(10,2) NOT NULL,
+  `isfree` tinyint(1) NOT NULL DEFAULT '0',
+  `freestart` int(11) NOT NULL,
+  `freeend` int(11) NOT NULL,
+  `paydate` int(11) DEFAULT NULL,
+  `paymonths` int(11) DEFAULT NULL,
+  `price` decimal(8,2) DEFAULT NULL,
+  `remark` varchar(100) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `lifepay_hid` varchar(60) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `lockmac` varchar(30) NOT NULL,
+  `pricemethod` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `lid` (`lid`),
+  KEY `category` (`category`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_parkingio` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `lotid` int(10) NOT NULL,
+  `io` tinyint(1) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `locksn` varchar(60) NOT NULL,
+  `lockid` varchar(20) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `pc_ioid` varchar(60) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `lotid` (`lotid`),
+  KEY `io` (`io`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_parkingiolog` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `lotid` int(10) NOT NULL,
+  `ioid` int(10) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `openid` varchar(50) DEFAULT NULL,
+  `io` tinyint(1) NOT NULL,
+  `result` varchar(60) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `lotid` (`lotid`),
+  KEY `io` (`io`),
+  KEY `stauts` (`status`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_parkinglock` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `parkingid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `lockmac` varchar(30) NOT NULL,
+  `lng` varchar(10) DEFAULT NULL,
+  `lat` varchar(10) DEFAULT NULL,
+  `remark` varchar(100) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `openid` varchar(50) DEFAULT NULL,
+  `realname` varchar(50) NOT NULL,
+  `mobile` varchar(20) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_parkinglog` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `lid` int(4) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `cid` int(10) NOT NULL,
+  `carno` varchar(20) DEFAULT NULL,
+  `ownername` varchar(30) DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL,
+  `startdate` int(11) NOT NULL,
+  `enddate` int(11) NOT NULL,
+  `remark` varchar(100) NOT NULL,
+  `paymonths` int(11) DEFAULT NULL,
+  `price` decimal(8,2) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `lid` (`lid`),
+  KEY `cid` (`cid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_parkinglot` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `lid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `parkingnum` int(11) NOT NULL,
+  `carnum` int(11) NOT NULL DEFAULT '0',
+  `ischarge` tinyint(1) NOT NULL DEFAULT '0',
+  `starttime` varchar(10) DEFAULT NULL,
+  `endtime` varchar(10) DEFAULT NULL,
+  `price` decimal(8,2) NOT NULL,
+  `qty` tinyint(4) NOT NULL DEFAULT '0',
+  `minute` tinyint(4) NOT NULL DEFAULT '0',
+  `dayfee` tinyint(4) NOT NULL DEFAULT '0',
+  `unit` tinyint(1) NOT NULL DEFAULT '1',
+  `getfee` tinyint(1) NOT NULL DEFAULT '1',
+  `pricerule` tinyint(1) NOT NULL DEFAULT '0',
+  `cloudid` varchar(50) NOT NULL,
+  `remark` varchar(100) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `pc_plotid` varchar(60) DEFAULT NULL,
+  `pc_ruleid` varchar(60) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `lng` varchar(10) DEFAULT NULL,
+  `lat` varchar(10) DEFAULT NULL,
+  `address` varchar(255) NOT NULL,
+  `qrurl` varchar(255) DEFAULT NULL,
+  `monthcardprice` decimal(10,2) DEFAULT NULL,
+  `rechargmonths` int(3) NOT NULL DEFAULT '0',
+  `givemonths` int(3) NOT NULL DEFAULT '0',
+  `pc_secret` varchar(60) DEFAULT NULL,
+  `monthmethod` tinyint(1) NOT NULL DEFAULT '0',
+  `paymethod` tinyint(1) NOT NULL DEFAULT '0',
+  `parktype` tinyint(1) NOT NULL DEFAULT '1',
+  `authentication` tinyint(1) NOT NULL DEFAULT '0',
+  `cloudruleid` varchar(50) NOT NULL,
+  `devtype` tinyint(1) NOT NULL DEFAULT '0',
+  `doortype` tinyint(1) NOT NULL DEFAULT '0',
+  `pc_type` tinyint(1) NOT NULL DEFAULT '0',
+  `year_coupon` int(5) NOT NULL DEFAULT '0',
+  `month_coupon` tinyint(4) NOT NULL DEFAULT '0',
+  `maxmoney` tinyint(4) NOT NULL DEFAULT '0',
+  `maxminutes` int(4) NOT NULL DEFAULT '0',
+  `isreserve` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `lid` (`lid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_parkinglot_coupon` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `parkid` int(10) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `ctype` tinyint(1) NOT NULL DEFAULT '0',
+  `qty` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `starttime` int(11) NOT NULL,
+  `endtime` int(11) NOT NULL,
+  `carno` varchar(20) DEFAULT NULL,
+  `couponserial` varchar(50) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `parkid` (`parkid`),
+  KEY `uid` (`uid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_parkingrule` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `lotid` int(10) NOT NULL,
+  `starttime` smallint(2) NOT NULL,
+  `endtime` smallint(2) NOT NULL,
+  `price` decimal(8,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `lotid` (`lotid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_parklock_share` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `parklockid` int(10) NOT NULL,
+  `lng` varchar(10) DEFAULT NULL,
+  `lat` varchar(10) DEFAULT NULL,
+  `fromopenid` varchar(50) DEFAULT NULL,
+  `fromuid` int(10) NOT NULL,
+  `toopenid` varchar(50) DEFAULT NULL,
+  `touid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `starttime` int(11) NOT NULL,
+  `endtime` int(11) NOT NULL,
+  `category` tinyint(1) NOT NULL DEFAULT '0',
+  `price` decimal(8,2) DEFAULT NULL,
+  `remark` varchar(100) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `parklockid` (`parklockid`),
+  KEY `touid` (`touid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_parklocklog` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `lockid` int(10) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `openid` varchar(50) DEFAULT NULL,
+  `updown` tinyint(1) NOT NULL,
+  `result` varchar(60) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `lockid` (`lockid`),
+  KEY `updown` (`updown`),
+  KEY `status` (`status`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_parkpay_log` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `parklotid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `category` tinyint(1) NOT NULL DEFAULT '0',
+  `carno` varchar(20) DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL,
+  `realname` varchar(20) DEFAULT NULL,
+  `starttime` int(11) NOT NULL,
+  `endtime` int(11) NOT NULL,
+  `fee` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `remark` varchar(100) NOT NULL,
+  `cuid` int(10) NOT NULL DEFAULT '0',
+  `ctime` int(11) NOT NULL,
+  `payno` varchar(60) DEFAULT NULL,
+  `idcard` varchar(30) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT '1',
+  `parkingid` int(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `parklotid` (`parklotid`),
+  KEY `cuid` (`cuid`),
+  KEY `carno` (`carno`),
+  KEY `category` (`category`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_parkshare_paylog` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `shareid` int(10) NOT NULL DEFAULT '0',
+  `parklockid` int(10) NOT NULL,
+  `title` varchar(60) DEFAULT NULL,
+  `out_trade_no` varchar(100) DEFAULT NULL,
+  `fee` decimal(6,2) NOT NULL DEFAULT '0.00',
+  `status` tinyint(1) DEFAULT '0',
+  `uid` int(10) NOT NULL,
+  `openid` varchar(60) DEFAULT NULL,
+  `starttime` int(11) NOT NULL,
+  `endtime` int(11) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `shareid` (`shareid`),
+  KEY `parklockid` (`parklockid`),
+  KEY `uid` (`uid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_patrolline` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `positions` varchar(1000) DEFAULT NULL,
+  `starttime` varchar(10) DEFAULT NULL,
+  `endtime` varchar(10) DEFAULT NULL,
+  `isimage` tinyint(1) NOT NULL DEFAULT '0',
+  `remark` varchar(200) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_patrollog` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL DEFAULT '0',
+  `lineid` int(10) NOT NULL,
+  `patid` int(10) NOT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `position` varchar(60) DEFAULT NULL,
+  `distance` int(10) NOT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `lineid` (`lineid`),
+  KEY `patid` (`patid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_patrolpos` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `lid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `lng` varchar(10) DEFAULT NULL,
+  `lat` varchar(10) DEFAULT NULL,
+  `devicesn` varchar(60) NOT NULL,
+  `distance` int(10) NOT NULL,
+  `remark` varchar(200) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `lid` (`lid`),
+  KEY `bid` (`bid`),
+  KEY `tid` (`tid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_paylog` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL DEFAULT '0',
+  `pid` int(10) NOT NULL DEFAULT '0',
+  `rid` int(10) NOT NULL DEFAULT '0',
+  `payno` varchar(60) DEFAULT NULL,
+  `uid` int(10) NOT NULL,
+  `openid` varchar(50) DEFAULT NULL,
+  `fee` decimal(10,2) NOT NULL,
+  `billid` varchar(1000) DEFAULT NULL,
+  `title` varchar(60) NOT NULL,
+  `tid` varchar(128) NOT NULL,
+  `paytype` varchar(20) NOT NULL DEFAULT '0',
+  `bid` int(10) NOT NULL DEFAULT '0',
+  `sid` int(10) NOT NULL DEFAULT '0',
+  `status` int(4) NOT NULL DEFAULT '0',
+  `paytime` int(10) NOT NULL,
+  `ctime` int(10) NOT NULL,
+  `remark` varchar(60) DEFAULT NULL,
+  `feetype` int(3) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `payno` (`payno`),
+  KEY `status` (`status`),
+  KEY `billid` (`billid`(333))
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_pmember` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `rid` int(10) NOT NULL,
+  `realname` varchar(60) NOT NULL,
+  `nickname` varchar(60) NOT NULL,
+  `mobile` varchar(60) NOT NULL,
+  `avatar` varchar(100) NOT NULL,
+  `level` tinyint(1) DEFAULT '0',
+  `remark` varchar(100) NOT NULL,
+  `content` text,
+  `openid` varchar(100) DEFAULT NULL,
+  `uid` int(10) NOT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `rid` (`rid`),
+  KEY `uid` (`uid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_pricerule` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `flid` int(10) NOT NULL,
+  `category` tinyint(1) NOT NULL,
+  `floorstart` int(4) NOT NULL,
+  `floorend` int(4) NOT NULL,
+  `price` decimal(8,2) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `flid` (`flid`),
+  KEY `category` (`category`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_printer` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `printbrand` tinyint(1) NOT NULL,
+  `printtype` tinyint(1) NOT NULL,
+  `apikey` varchar(100) DEFAULT NULL,
+  `printkey` varchar(100) DEFAULT NULL,
+  `printno` varchar(30) DEFAULT NULL,
+  `userid` varchar(30) DEFAULT NULL,
+  `url` varchar(100) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `remark` varchar(60) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_progoods` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL DEFAULT '0',
+  `rid` int(10) NOT NULL DEFAULT '0',
+  `cateid` int(10) NOT NULL DEFAULT '0',
+  `title` varchar(60) DEFAULT NULL,
+  `spec` varchar(60) DEFAULT NULL,
+  `goodssn` varchar(60) DEFAULT NULL,
+  `position` varchar(100) DEFAULT NULL,
+  `price` decimal(6,2) NOT NULL DEFAULT '0.00',
+  `brand` varchar(60) DEFAULT NULL,
+  `startdate` int(11) NOT NULL,
+  `enddate` int(11) NOT NULL,
+  `memo` varchar(100) DEFAULT NULL,
+  `remark` varchar(100) DEFAULT NULL,
+  `ouid` int(10) NOT NULL,
+  `otime` int(11) NOT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `ouid` (`ouid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_progoods_cate` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL DEFAULT '0',
+  `pid` int(10) NOT NULL DEFAULT '0',
+  `rid` int(10) NOT NULL DEFAULT '0',
+  `title` varchar(50) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_property` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `banner` varchar(255) DEFAULT NULL,
+  `content` text,
+  `telphone` varchar(60) DEFAULT NULL,
+  `province` varchar(60) DEFAULT NULL,
+  `city` varchar(60) DEFAULT NULL,
+  `district` varchar(60) DEFAULT NULL,
+  `address` varchar(255) NOT NULL,
+  `service` varchar(255) NOT NULL,
+  `website` varchar(100) DEFAULT NULL,
+  `userno` varchar(60) NOT NULL,
+  `username` varchar(60) NOT NULL,
+  `ispay` tinyint(1) NOT NULL DEFAULT '0',
+  `paytype` tinyint(1) NOT NULL DEFAULT '2',
+  `aliaccount` varchar(100) DEFAULT NULL,
+  `alipartner` varchar(100) DEFAULT NULL,
+  `alisecret` varchar(100) DEFAULT NULL,
+  `submerchid` varchar(100) DEFAULT NULL,
+  `bankmerchid` varchar(50) DEFAULT NULL,
+  `ymfurl` varchar(100) DEFAULT NULL,
+  `ymfkey` varchar(50) DEFAULT NULL,
+  `rsdbankmerchid` varchar(50) DEFAULT NULL,
+  `bankkey` varchar(50) DEFAULT NULL,
+  `paysuccessurl` varchar(100) DEFAULT NULL,
+  `cost` int(6) NOT NULL DEFAULT '0',
+  `credit` int(6) NOT NULL DEFAULT '0',
+  `paycost` int(6) NOT NULL DEFAULT '0',
+  `paycredit` int(6) NOT NULL DEFAULT '0',
+  `payrate` int(3) NOT NULL DEFAULT '0',
+  `wecoupon` tinyint(1) NOT NULL DEFAULT '0',
+  `onhand` int(10) NOT NULL,
+  `inqty` int(10) NOT NULL,
+  `outqty` int(10) NOT NULL,
+  `intime` int(11) NOT NULL,
+  `outtime` int(11) NOT NULL,
+  `pc_pid` varchar(60) DEFAULT NULL,
+  `lifepay_pid` varchar(60) DEFAULT NULL,
+  `door_pid` varchar(60) DEFAULT NULL,
+  `limitqty` int(10) NOT NULL,
+  `mobile` varchar(20) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `isalipay` tinyint(1) NOT NULL DEFAULT '0',
+  `muid` int(10) NOT NULL DEFAULT '0',
+  `startdate` int(11) NOT NULL,
+  `enddate` int(11) NOT NULL,
+  `yearprice` decimal(8,2) NOT NULL DEFAULT '0.00',
+  `starmerchid` varchar(20) DEFAULT NULL,
+  `starkey` varchar(50) DEFAULT NULL,
+  `starorg` varchar(20) DEFAULT NULL,
+  `startrm` varchar(20) DEFAULT NULL,
+  `parentid` int(10) NOT NULL DEFAULT '0',
+  `logo` varchar(255) DEFAULT NULL,
+  `board_password` varchar(60) DEFAULT NULL,
+  `haina_property_id` varchar(60) DEFAULT NULL,
+  `alipay_type` tinyint(1) NOT NULL DEFAULT '0',
+  `alipay_appid` varchar(60) DEFAULT NULL,
+  `alipay_rsa2` text,
+  `alipay_private` text,
+  `alipay_seller_id` varchar(60) DEFAULT NULL,
+  `alipay_app_auth_token` varchar(60) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_qacate` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `title` varchar(50) DEFAULT NULL,
+  `thumb` varchar(255) DEFAULT NULL,
+  `displayorder` int(6) DEFAULT '0',
+  `enabled` tinyint(1) DEFAULT '1',
+  `isrecommand` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `isrecommand` (`isrecommand`),
+  KEY `enabled` (`enabled`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_question` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `cateid` int(11) NOT NULL DEFAULT '0',
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `keywords` varchar(255) NOT NULL DEFAULT '',
+  `content` text,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `isrecommand` tinyint(1) NOT NULL DEFAULT '0',
+  `displayorder` int(6) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `cateid` (`cateid`),
+  KEY `isrecommand` (`isrecommand`),
+  KEY `status` (`status`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_rbanner` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `btype` tinyint(3) DEFAULT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  `wxappid` varchar(30) DEFAULT NULL,
+  `wxapppage` varchar(255) DEFAULT NULL,
+  `thumb` varchar(255) DEFAULT NULL,
+  `displayorder` int(5) DEFAULT '0',
+  `enabled` tinyint(1) DEFAULT '0',
+  `boardcate` int(11) NOT NULL DEFAULT '0',
+  `startdate` int(11) NOT NULL,
+  `enddate` int(11) NOT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `bgimage` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `btype` (`btype`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_region` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `category` tinyint(4) NOT NULL,
+  `contact` varchar(60) NOT NULL,
+  `telphone` varchar(60) NOT NULL,
+  `thumb` varchar(255) DEFAULT NULL,
+  `province` varchar(60) NOT NULL,
+  `city` varchar(60) NOT NULL,
+  `district` varchar(60) NOT NULL,
+  `address` varchar(100) NOT NULL,
+  `lng` varchar(10) DEFAULT NULL,
+  `lat` varchar(10) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `service` varchar(255) DEFAULT NULL,
+  `servicethumb` varchar(255) DEFAULT NULL,
+  `serviceicon` varchar(30) DEFAULT NULL,
+  `serviceright` smallint(6) NOT NULL,
+  `servicebottom` smallint(6) NOT NULL,
+  `servicepagehome` tinyint(1) NOT NULL DEFAULT '0',
+  `servicepageser` tinyint(1) NOT NULL DEFAULT '0',
+  `servicepageste` tinyint(1) NOT NULL DEFAULT '0',
+  `bindverify` tinyint(1) NOT NULL DEFAULT '0',
+  `shareverify` tinyint(1) NOT NULL DEFAULT '0',
+  `repairverify` tinyint(1) NOT NULL DEFAULT '0',
+  `suggestverify` tinyint(1) NOT NULL DEFAULT '0',
+  `payfeeverify` tinyint(1) NOT NULL DEFAULT '0',
+  `smsqty` int(10) NOT NULL DEFAULT '0',
+  `doorimage` varchar(255) DEFAULT NULL,
+  `locationimage` varchar(255) DEFAULT NULL,
+  `buildingimage` varchar(255) DEFAULT NULL,
+  `unitimage` varchar(255) DEFAULT NULL,
+  `visitimage` varchar(255) DEFAULT NULL,
+  `register` tinyint(1) NOT NULL DEFAULT '0',
+  `regbanner` varchar(255) DEFAULT NULL,
+  `replyimage` varchar(255) DEFAULT NULL,
+  `replydesc` varchar(255) DEFAULT NULL,
+  `discount` decimal(2,1) NOT NULL DEFAULT '0.0',
+  `freebill` tinyint(1) NOT NULL DEFAULT '0',
+  `emptybill` tinyint(1) NOT NULL DEFAULT '0',
+  `feebillmonth` tinyint(1) NOT NULL DEFAULT '0',
+  `groupid` int(11) NOT NULL,
+  `openid` varchar(60) DEFAULT NULL,
+  `uid` int(10) NOT NULL,
+  `qrurl` varchar(100) DEFAULT NULL,
+  `ispay` tinyint(1) NOT NULL DEFAULT '0',
+  `paytype` tinyint(1) NOT NULL DEFAULT '2',
+  `aliaccount` varchar(100) DEFAULT NULL,
+  `alipartner` varchar(100) DEFAULT NULL,
+  `alisecret` varchar(100) DEFAULT NULL,
+  `submerchid` varchar(100) DEFAULT NULL,
+  `bankmerchid` varchar(50) DEFAULT NULL,
+  `ymfurl` varchar(100) DEFAULT NULL,
+  `ymfkey` varchar(50) DEFAULT NULL,
+  `rsdbankmerchid` varchar(50) DEFAULT NULL,
+  `bankkey` varchar(50) DEFAULT NULL,
+  `cost` int(6) NOT NULL DEFAULT '0',
+  `credit` int(6) NOT NULL DEFAULT '0',
+  `paycost` int(6) NOT NULL DEFAULT '0',
+  `paycredit` int(6) NOT NULL DEFAULT '0',
+  `payrate` int(3) NOT NULL DEFAULT '0',
+  `bindcredit` int(6) NOT NULL DEFAULT '0',
+  `bindstrategyid` int(10) NOT NULL DEFAULT '0',
+  `feestrategyid` int(10) NOT NULL DEFAULT '0',
+  `invitestrategyid` int(10) NOT NULL DEFAULT '0',
+  `paysuccessurl` varchar(100) DEFAULT NULL,
+  `wecoupon` tinyint(1) NOT NULL DEFAULT '0',
+  `repairnotice` tinyint(1) NOT NULL DEFAULT '0',
+  `suggestnotice` tinyint(1) NOT NULL DEFAULT '0',
+  `tplnoticefirst` varchar(60) DEFAULT NULL,
+  `finishdays` int(3) NOT NULL DEFAULT '0',
+  `abnbill` tinyint(1) NOT NULL DEFAULT '0',
+  `regbannerurl` varchar(255) DEFAULT NULL,
+  `isprintfeedetail` tinyint(1) NOT NULL DEFAULT '0',
+  `feecontrol` tinyint(1) NOT NULL DEFAULT '0',
+  `bindsuccessurl` varchar(255) DEFAULT NULL,
+  `arrearagelimit1` tinyint(1) NOT NULL DEFAULT '0',
+  `arrearagelimit2` tinyint(1) NOT NULL DEFAULT '0',
+  `arrearagelimit3` tinyint(1) NOT NULL DEFAULT '0',
+  `arrearagelimit4` tinyint(1) NOT NULL DEFAULT '0',
+  `arrearagelimit5` tinyint(1) NOT NULL DEFAULT '0',
+  `arrearagelimit6` tinyint(1) NOT NULL DEFAULT '0',
+  `arrearagelimit7` tinyint(1) NOT NULL DEFAULT '0',
+  `arrearagelimit8` tinyint(1) NOT NULL DEFAULT '0',
+  `arrearagelimit9` tinyint(1) NOT NULL DEFAULT '0',
+  `arrearagemonths` smallint(3) NOT NULL DEFAULT '0',
+  `onhand` int(10) NOT NULL,
+  `inqty` int(10) NOT NULL,
+  `outqty` int(10) NOT NULL,
+  `intime` int(11) NOT NULL,
+  `outtime` int(11) NOT NULL,
+  `thirdauth` tinyint(1) NOT NULL DEFAULT '0',
+  `thirdurl` varchar(100) DEFAULT NULL,
+  `isrepairdisp` tinyint(1) NOT NULL DEFAULT '1',
+  `issuggestdisp` tinyint(1) NOT NULL DEFAULT '1',
+  `nobindlimit` tinyint(1) NOT NULL DEFAULT '0',
+  `forcebind` tinyint(1) NOT NULL DEFAULT '0',
+  `pc_type` tinyint(1) NOT NULL DEFAULT '0',
+  `pc_rid` varchar(60) DEFAULT NULL,
+  `pc_appid` varchar(60) DEFAULT NULL,
+  `pc_secret` varchar(60) DEFAULT NULL,
+  `lifepay_type` tinyint(1) NOT NULL DEFAULT '0',
+  `lifepay_token` varchar(60) DEFAULT NULL,
+  `lifepay_rid` varchar(60) DEFAULT NULL,
+  `lifepay_init` tinyint(1) NOT NULL DEFAULT '0',
+  `doordays` int(3) NOT NULL DEFAULT '0',
+  `thinmoo_token` varchar(60) DEFAULT NULL,
+  `wxminiappid` varchar(30) DEFAULT NULL,
+  `wxminiappsecret` varchar(100) DEFAULT NULL,
+  `wxminiappurl` varchar(100) DEFAULT NULL,
+  `roomfix` varchar(10) DEFAULT NULL,
+  `asktype` tinyint(1) NOT NULL DEFAULT '0',
+  `roomqty` int(10) NOT NULL DEFAULT '0',
+  `coveredarea` decimal(16,2) NOT NULL DEFAULT '0.00',
+  `buildarea` decimal(16,2) NOT NULL DEFAULT '0.00',
+  `askopenid` varchar(100) DEFAULT NULL,
+  `askuid` int(10) NOT NULL,
+  `asktime` int(11) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `propctime` int(11) NOT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `isalipay` tinyint(1) NOT NULL DEFAULT '0',
+  `pc_channelid` varchar(60) DEFAULT NULL,
+  `doorwxappid` varchar(30) DEFAULT NULL,
+  `doorwxapppage` varchar(255) DEFAULT NULL,
+  `starmerchid` varchar(20) DEFAULT NULL,
+  `starkey` varchar(50) DEFAULT NULL,
+  `starorg` varchar(20) DEFAULT NULL,
+  `startrm` varchar(20) DEFAULT NULL,
+  `isprintremark` tinyint(1) NOT NULL DEFAULT '0',
+  `pznopre` varchar(10) DEFAULT NULL,
+  `repairpnotice` tinyint(1) NOT NULL DEFAULT '0',
+  `doorlock_type` tinyint(1) NOT NULL DEFAULT '1',
+  `parklock_type` tinyint(1) NOT NULL DEFAULT '0',
+  `parklock_token` varchar(60) DEFAULT NULL,
+  `isonlinepay` tinyint(1) NOT NULL DEFAULT '1',
+  `isprintdate` tinyint(1) NOT NULL DEFAULT '0',
+  `muid` int(10) NOT NULL,
+  `mobile` varchar(20) NOT NULL,
+  `sealimage` varchar(255) DEFAULT NULL,
+  `feeshowtype` tinyint(1) NOT NULL DEFAULT '0',
+  `mailin_token` varchar(60) DEFAULT NULL,
+  `mailin_appid` varchar(60) DEFAULT NULL,
+  `mailin_secret` varchar(60) DEFAULT NULL,
+  `board_password` varchar(60) DEFAULT NULL,
+  `latemethod` tinyint(1) NOT NULL DEFAULT '0',
+  `fsealimage` varchar(255) DEFAULT NULL,
+  `repairsort` tinyint(1) NOT NULL DEFAULT '0',
+  `ylbid` varchar(20) DEFAULT NULL,
+  `undodays` tinyint(3) NOT NULL DEFAULT '0',
+  `feebillgrant` tinyint(1) NOT NULL DEFAULT '0',
+  `aurine_token` varchar(60) DEFAULT NULL,
+  `aurine_appid` varchar(60) DEFAULT NULL,
+  `aurine_secret` varchar(60) DEFAULT NULL,
+  `aurine_rid` varchar(60) DEFAULT NULL,
+  `aurine_yun_rid` varchar(60) DEFAULT NULL,
+  `pc_shopid` varchar(60) DEFAULT NULL,
+  `haina_community_id` varchar(60) DEFAULT NULL,
+  `alipay_type` tinyint(1) NOT NULL DEFAULT '0',
+  `alipay_appid` varchar(60) DEFAULT NULL,
+  `alipay_seller_id` varchar(60) DEFAULT NULL,
+  `alipay_app_auth_token` varchar(60) DEFAULT NULL,
+  `alipay_rsa2` text,
+  `alipay_private` text,
+  `thinmoo_uuid` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `category` (`category`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_region_account` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `rid` int(10) NOT NULL,
+  `company` varchar(60) DEFAULT NULL,
+  `contact` varchar(20) DEFAULT NULL,
+  `telphone` varchar(60) DEFAULT NULL,
+  `licimage` varchar(255) DEFAULT NULL,
+  `icardaimage` varchar(255) DEFAULT NULL,
+  `icardbimage` varchar(255) DEFAULT NULL,
+  `accimage` varchar(255) DEFAULT NULL,
+  `doorimage` varchar(255) DEFAULT NULL,
+  `payimage` varchar(255) DEFAULT NULL,
+  `remark` varchar(60) DEFAULT NULL,
+  `cuid` int(10) NOT NULL DEFAULT '0',
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `rid` (`rid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_region_comment` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `uid` int(10) NOT NULL,
+  `openid` varchar(50) DEFAULT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `stars` int(10) NOT NULL,
+  `nickname` varchar(255) DEFAULT NULL,
+  `headimgurl` varchar(255) DEFAULT NULL,
+  `comment` varchar(255) DEFAULT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_region_follow` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `uid` int(10) NOT NULL,
+  `openid` varchar(50) DEFAULT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_region_smslog` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL DEFAULT '0',
+  `rid` int(10) NOT NULL DEFAULT '0',
+  `title` varchar(255) DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL,
+  `io` tinyint(4) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `rid` (`rid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_regionav` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `category` tinyint(4) NOT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  `wxappid` varchar(30) DEFAULT NULL,
+  `wxapppage` varchar(255) DEFAULT NULL,
+  `thumb` varchar(255) DEFAULT NULL,
+  `displayorder` int(5) DEFAULT '0',
+  `enabled` tinyint(1) DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `bgimage` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `category` (`category`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_regionmenu` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `menucolor` varchar(10) DEFAULT NULL,
+  `menu1` varchar(30) DEFAULT NULL,
+  `menu2` varchar(30) DEFAULT NULL,
+  `menu3` varchar(30) DEFAULT NULL,
+  `menu4` varchar(30) DEFAULT NULL,
+  `menu5` varchar(30) DEFAULT NULL,
+  `icon1` varchar(30) NOT NULL DEFAULT 'icon-home',
+  `icon2` varchar(30) NOT NULL DEFAULT 'icon-mark1',
+  `icon3` varchar(30) NOT NULL DEFAULT 'icon-like1',
+  `icon4` varchar(30) NOT NULL DEFAULT 'icon-lights',
+  `icon5` varchar(30) NOT NULL DEFAULT 'icon-person2',
+  `menu1url` varchar(100) DEFAULT NULL,
+  `menu2url` varchar(100) DEFAULT NULL,
+  `menu3url` varchar(100) DEFAULT NULL,
+  `menu4url` varchar(100) DEFAULT NULL,
+  `menu5url` varchar(100) DEFAULT NULL,
+  `servicedisplay` tinyint(1) DEFAULT '0',
+  `enabled` tinyint(1) DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_repair` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `cid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `address` varchar(100) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `openid` varchar(60) NOT NULL,
+  `nickname` varchar(255) DEFAULT NULL,
+  `headimgurl` varchar(255) DEFAULT NULL,
+  `content` varchar(255) NOT NULL,
+  `images` text,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `star` tinyint(3) NOT NULL,
+  `comment` varchar(255) NOT NULL,
+  `getopenid` varchar(60) DEFAULT NULL,
+  `getuid` int(10) NOT NULL DEFAULT '0',
+  `lasttime` int(11) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `reporttime` int(11) NOT NULL DEFAULT '0',
+  `reporttimes` smallint(3) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`),
+  KEY `tid` (`tid`),
+  KEY `hid` (`hid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_repair_comment` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `repairid` int(10) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `openid` varchar(50) DEFAULT NULL,
+  `updown` tinyint(1) NOT NULL,
+  `nickname` varchar(255) DEFAULT NULL,
+  `headimgurl` varchar(255) DEFAULT NULL,
+  `comment` varchar(255) DEFAULT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `repairid` (`repairid`),
+  KEY `uid` (`uid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_repair_record` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `rid` int(10) NOT NULL,
+  `openid` varchar(60) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `nickname` varchar(255) DEFAULT NULL,
+  `headimgurl` varchar(255) DEFAULT NULL,
+  `content` varchar(255) NOT NULL,
+  `image` text,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `rid` (`rid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_repairp` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `cid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `address` varchar(100) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `openid` varchar(60) NOT NULL,
+  `nickname` varchar(255) DEFAULT NULL,
+  `headimgurl` varchar(255) DEFAULT NULL,
+  `content` varchar(255) NOT NULL,
+  `images` text,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `star` tinyint(3) NOT NULL,
+  `comment` varchar(255) NOT NULL,
+  `getopenid` varchar(60) DEFAULT NULL,
+  `getuid` int(10) NOT NULL DEFAULT '0',
+  `lasttime` int(11) NOT NULL,
+  `reporttime` int(11) NOT NULL,
+  `reporttimes` smallint(3) NOT NULL DEFAULT '0',
+  `ctime` int(11) NOT NULL,
+  `getmutiuid` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`),
+  KEY `tid` (`tid`),
+  KEY `hid` (`hid`),
+  KEY `uid` (`uid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_repairp_record` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `rid` int(10) NOT NULL,
+  `openid` varchar(60) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `nickname` varchar(255) DEFAULT NULL,
+  `headimgurl` varchar(255) DEFAULT NULL,
+  `content` varchar(255) NOT NULL,
+  `image` text,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `rid` (`rid`),
+  KEY `uid` (`uid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_replyrule` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `replyid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `qr` tinyint(1) NOT NULL DEFAULT '0',
+  `uid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `parkid` int(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `replyid` (`replyid`),
+  KEY `rid` (`rid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_room` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `floor` int(10) NOT NULL,
+  `buildarea` decimal(10,2) NOT NULL,
+  `usearea` decimal(10,2) NOT NULL,
+  `addarea` decimal(10,2) NOT NULL,
+  `ownername` varchar(30) DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL,
+  `mobile1` varchar(20) DEFAULT NULL,
+  `isfree` tinyint(1) NOT NULL DEFAULT '0',
+  `freestart` int(11) NOT NULL,
+  `freeend` int(11) NOT NULL,
+  `isdiscount` decimal(2,1) NOT NULL DEFAULT '0.0',
+  `paydate` int(11) DEFAULT NULL,
+  `billdate` int(11) DEFAULT NULL,
+  `remark` varchar(200) NOT NULL,
+  `isnotice` tinyint(1) NOT NULL DEFAULT '1',
+  `deposit` decimal(10,2) NOT NULL,
+  `preelectric` decimal(10,2) NOT NULL,
+  `prewater` decimal(10,2) NOT NULL,
+  `prepayment` decimal(10,2) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `lifepay_hid` varchar(60) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `birthyear` smallint(6) DEFAULT NULL,
+  `birthmonth` tinyint(3) DEFAULT NULL,
+  `birthday` tinyint(3) DEFAULT NULL,
+  `idcard` varchar(30) DEFAULT NULL,
+  `watermeter` varchar(30) NOT NULL,
+  `electmeter` varchar(30) NOT NULL,
+  `gasmeter` varchar(30) NOT NULL,
+  `aurine_hid` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`),
+  KEY `tid` (`tid`),
+  KEY `mobile` (`mobile`),
+  KEY `mobile1` (`mobile1`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_room_abnlog` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `content` varchar(255) DEFAULT NULL,
+  `remark` varchar(255) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`),
+  KEY `tid` (`tid`),
+  KEY `hid` (`hid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_room_chglog` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `ownername` varchar(30) DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL,
+  `newownername` varchar(30) DEFAULT NULL,
+  `newmobile` varchar(20) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`),
+  KEY `tid` (`tid`),
+  KEY `hid` (`hid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_room_feeitem` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL DEFAULT '0',
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `calmethod` varchar(30) NOT NULL,
+  `qty` decimal(10,2) unsigned NOT NULL DEFAULT '0.00',
+  `measure` varchar(30) DEFAULT NULL,
+  `price` decimal(8,2) DEFAULT NULL,
+  `paymonths` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `billdate` int(11) NOT NULL,
+  `remark` varchar(60) DEFAULT NULL,
+  `cuid` int(10) NOT NULL DEFAULT '0',
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `hid` (`hid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_room_mp` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `ownername` varchar(30) DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL,
+  `otype` tinyint(1) NOT NULL DEFAULT '1',
+  `isnotice` tinyint(1) NOT NULL DEFAULT '0',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `birthyear` smallint(6) DEFAULT NULL,
+  `birthmonth` tinyint(3) DEFAULT NULL,
+  `birthday` tinyint(3) DEFAULT NULL,
+  `idcard` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`),
+  KEY `tid` (`tid`),
+  KEY `hid` (`hid`),
+  KEY `mobile` (`mobile`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_room_parking` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL DEFAULT '0',
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `parkingid` int(10) NOT NULL,
+  `remark` varchar(60) DEFAULT NULL,
+  `cuid` int(10) NOT NULL DEFAULT '0',
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `hid` (`hid`),
+  KEY `parkingid` (`parkingid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_room_tag` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `tagid` int(10) NOT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`),
+  KEY `tid` (`tid`),
+  KEY `hid` (`hid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_roomprice` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `itemid` int(10) NOT NULL,
+  `category` tinyint(1) NOT NULL,
+  `price` decimal(8,2) DEFAULT NULL,
+  `isdiscount` decimal(2,1) NOT NULL DEFAULT '0.0',
+  `startdate` int(11) NOT NULL,
+  `enddate` int(11) NOT NULL,
+  `remark` varchar(200) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`),
+  KEY `tid` (`tid`),
+  KEY `hid` (`hid`),
+  KEY `category` (`category`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_secacc` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL,
+  `limitqty` int(10) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `issysset` tinyint(1) NOT NULL DEFAULT '1',
+  `ispayset` tinyint(1) NOT NULL DEFAULT '1',
+  `chargingqty` int(10) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_secaprg` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL,
+  `sid` int(10) NOT NULL,
+  `pid` int(10) NOT NULL,
+  `aid` int(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `sid` (`sid`),
+  KEY `pid` (`pid`),
+  KEY `aid` (`aid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_secasys` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL,
+  `sid` int(10) NOT NULL,
+  `aid` int(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `sid` (`sid`),
+  KEY `aid` (`aid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_secgprg` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL,
+  `gid` int(10) NOT NULL,
+  `sid` int(10) NOT NULL,
+  `pid` int(10) NOT NULL,
+  `add` tinyint(1) NOT NULL DEFAULT '0',
+  `edit` tinyint(1) NOT NULL DEFAULT '0',
+  `delete` tinyint(1) NOT NULL DEFAULT '0',
+  `export` tinyint(1) NOT NULL DEFAULT '0',
+  `query` tinyint(1) NOT NULL DEFAULT '0',
+  `view` tinyint(1) NOT NULL DEFAULT '0',
+  `print` tinyint(1) NOT NULL DEFAULT '0',
+  `enabled` tinyint(1) NOT NULL DEFAULT '0',
+  `audit` tinyint(1) NOT NULL DEFAULT '0',
+  `other1` tinyint(1) NOT NULL DEFAULT '0',
+  `other2` tinyint(1) NOT NULL DEFAULT '0',
+  `other3` tinyint(1) NOT NULL DEFAULT '0',
+  `other4` tinyint(1) NOT NULL DEFAULT '0',
+  `other5` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `gid` (`gid`),
+  KEY `sid` (`sid`),
+  KEY `pid` (`pid`)
+) ENGINE=MyISAM AUTO_INCREMENT=165 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_secgroup` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL,
+  `pid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `remark` varchar(100) NOT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_secgsys` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL,
+  `gid` int(10) NOT NULL,
+  `sid` int(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `gid` (`gid`),
+  KEY `sid` (`sid`)
+) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_sechelp` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `sid` int(10) NOT NULL,
+  `pid` int(10) NOT NULL,
+  `do` varchar(30) DEFAULT NULL,
+  `op` varchar(30) DEFAULT NULL,
+  `title` varchar(60) DEFAULT NULL,
+  `content` text,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `sid` (`sid`),
+  KEY `pid` (`pid`),
+  KEY `do` (`do`),
+  KEY `op` (`op`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_secprg` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `sid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `do` varchar(60) DEFAULT NULL,
+  `op` varchar(60) DEFAULT NULL,
+  `iconfont` varchar(60) DEFAULT NULL,
+  `displayorder` int(5) NOT NULL DEFAULT '0',
+  `isdisplay` tinyint(1) NOT NULL DEFAULT '1',
+  `issys` tinyint(1) NOT NULL DEFAULT '0',
+  `add` tinyint(1) NOT NULL DEFAULT '1',
+  `edit` tinyint(1) NOT NULL DEFAULT '1',
+  `delete` tinyint(1) NOT NULL DEFAULT '1',
+  `export` tinyint(1) NOT NULL DEFAULT '1',
+  `query` tinyint(1) NOT NULL DEFAULT '1',
+  `view` tinyint(1) NOT NULL DEFAULT '1',
+  `print` tinyint(1) NOT NULL DEFAULT '1',
+  `enabled` tinyint(1) NOT NULL DEFAULT '1',
+  `audit` tinyint(1) NOT NULL DEFAULT '1',
+  `other1` tinyint(1) NOT NULL DEFAULT '0',
+  `other2` tinyint(1) NOT NULL DEFAULT '0',
+  `other3` tinyint(1) NOT NULL DEFAULT '0',
+  `other4` tinyint(1) NOT NULL DEFAULT '0',
+  `other5` tinyint(1) NOT NULL DEFAULT '0',
+  `name1` varchar(60) DEFAULT NULL,
+  `name2` varchar(60) DEFAULT NULL,
+  `name3` varchar(60) DEFAULT NULL,
+  `name4` varchar(60) DEFAULT NULL,
+  `name5` varchar(60) DEFAULT NULL,
+  `isdismenu` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `sid` (`sid`),
+  KEY `issys` (`issys`),
+  KEY `isdisplay` (`isdisplay`),
+  KEY `isdismenu` (`isdismenu`)
+) ENGINE=MyISAM AUTO_INCREMENT=117 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_secsys` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(60) NOT NULL,
+  `displayorder` tinyint(4) NOT NULL DEFAULT '0',
+  `issys` tinyint(4) NOT NULL DEFAULT '0',
+  `isdisplay` tinyint(1) NOT NULL DEFAULT '1',
+  `iconfont` varchar(60) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `issys` (`issys`),
+  KEY `isdisplay` (`isdisplay`)
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_secuser` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `gid` int(10) NOT NULL,
+  `userno` varchar(60) NOT NULL,
+  `username` varchar(60) NOT NULL,
+  `password` varchar(60) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `usergroup` tinyint(4) NOT NULL,
+  `name` varchar(60) DEFAULT NULL,
+  `mobilephone` varchar(30) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `remark` varchar(100) DEFAULT NULL,
+  `lastvisit` int(10) DEFAULT NULL,
+  `lastip` varchar(15) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `haina_uid` varchar(60) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `gid` (`gid`),
+  KEY `userno` (`userno`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_shop` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `lid` int(4) NOT NULL,
+  `floor` int(10) NOT NULL,
+  `buildarea` decimal(10,2) NOT NULL,
+  `usearea` decimal(10,2) NOT NULL,
+  `addarea` decimal(10,2) NOT NULL,
+  `ownername` varchar(30) DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL,
+  `mobile1` varchar(20) DEFAULT NULL,
+  `isfree` tinyint(1) NOT NULL DEFAULT '0',
+  `freestart` int(11) NOT NULL,
+  `freeend` int(11) NOT NULL,
+  `isdiscount` decimal(2,1) NOT NULL DEFAULT '0.0',
+  `paydate` int(11) NOT NULL,
+  `billdate` int(11) NOT NULL,
+  `shopname` varchar(60) NOT NULL,
+  `remark` varchar(100) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `lifepay_hid` varchar(60) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `isnotice` tinyint(1) NOT NULL DEFAULT '1',
+  `watermeter` varchar(30) NOT NULL,
+  `electmeter` varchar(30) NOT NULL,
+  `gasmeter` varchar(30) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `lid` (`lid`),
+  KEY `mobile` (`mobile`),
+  KEY `mobile1` (`mobile1`)
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_shop_abnlog` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `lid` int(10) NOT NULL,
+  `sid` int(10) NOT NULL,
+  `content` varchar(255) DEFAULT NULL,
+  `remark` varchar(255) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_shop_chglog` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `lid` int(10) NOT NULL,
+  `sid` int(10) NOT NULL,
+  `ownername` varchar(30) DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL,
+  `newownername` varchar(30) DEFAULT NULL,
+  `newmobile` varchar(20) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `lid` (`lid`),
+  KEY `sid` (`sid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_shop_mp` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `rid` int(10) NOT NULL,
+  `lid` int(4) NOT NULL,
+  `sid` int(10) NOT NULL,
+  `ownername` varchar(30) DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL,
+  `otype` tinyint(1) NOT NULL DEFAULT '1',
+  `isnotice` tinyint(1) NOT NULL DEFAULT '0',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `rid` (`rid`),
+  KEY `lid` (`lid`),
+  KEY `sid` (`sid`),
+  KEY `mobile` (`mobile`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_sns_board` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) DEFAULT '0',
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `cid` int(11) DEFAULT '0',
+  `title` varchar(50) DEFAULT '',
+  `logo` varchar(255) DEFAULT '',
+  `desc` varchar(255) DEFAULT '',
+  `displayorder` int(11) DEFAULT '0',
+  `enabled` int(11) DEFAULT '0',
+  `showgroups` text,
+  `showlevels` text,
+  `postgroups` text,
+  `postlevels` text,
+  `showagentlevels` text,
+  `postagentlevels` text,
+  `postcredit` int(11) DEFAULT '0',
+  `replycredit` int(11) DEFAULT '0',
+  `bestcredit` int(11) DEFAULT '0',
+  `bestboardcredit` int(11) DEFAULT '0',
+  `notagent` tinyint(3) DEFAULT '0',
+  `notagentpost` tinyint(3) DEFAULT '0',
+  `topcredit` int(11) DEFAULT '0',
+  `topboardcredit` int(11) DEFAULT '0',
+  `status` tinyint(3) DEFAULT '0',
+  `noimage` tinyint(3) DEFAULT '0',
+  `novoice` tinyint(3) DEFAULT '0',
+  `needfollow` tinyint(3) DEFAULT '0',
+  `needpostfollow` tinyint(3) DEFAULT '0',
+  `share_title` varchar(255) DEFAULT '',
+  `share_icon` varchar(255) DEFAULT '',
+  `share_desc` varchar(255) DEFAULT '',
+  `keyword` varchar(255) DEFAULT '',
+  `isrecommand` tinyint(3) DEFAULT '0',
+  `banner` varchar(255) DEFAULT '',
+  `needcheck` tinyint(3) DEFAULT '0',
+  `needcheckmanager` tinyint(3) DEFAULT '0',
+  `needcheckreply` int(11) DEFAULT '0',
+  `needcheckreplymanager` int(11) DEFAULT '0',
+  `showsnslevels` text,
+  `postsnslevels` text,
+  `showpartnerlevels` text,
+  `postpartnerlevels` text,
+  `notpartner` tinyint(3) DEFAULT '0',
+  `notpartnerpost` tinyint(3) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `cid` (`cid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_sns_board_follow` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) DEFAULT '0',
+  `bid` int(11) DEFAULT '0',
+  `openid` varchar(255) DEFAULT NULL,
+  `uid` int(10) NOT NULL,
+  `nickname` varchar(255) DEFAULT NULL,
+  `headimgurl` varchar(255) DEFAULT NULL,
+  `ctime` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `bid` (`bid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_sns_category` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL DEFAULT '0',
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `title` varchar(50) DEFAULT NULL,
+  `thumb` varchar(255) DEFAULT NULL,
+  `displayorder` tinyint(3) unsigned DEFAULT '0',
+  `enabled` tinyint(1) DEFAULT '1',
+  `isrecommand` tinyint(3) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_sns_complain` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) DEFAULT '0',
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `type` tinyint(3) NOT NULL,
+  `postsid` int(11) NOT NULL DEFAULT '0',
+  `defendant` varchar(255) NOT NULL DEFAULT '0',
+  `complainant` varchar(255) NOT NULL DEFAULT '0',
+  `complaint_type` int(10) NOT NULL DEFAULT '0',
+  `complaint_text` text NOT NULL,
+  `images` text NOT NULL,
+  `createtime` int(11) NOT NULL DEFAULT '0',
+  `checkedtime` int(11) NOT NULL DEFAULT '0',
+  `checked` tinyint(3) NOT NULL DEFAULT '0',
+  `checked_note` varchar(255) NOT NULL,
+  `deleted` tinyint(3) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `type` (`type`),
+  KEY `postsid` (`postsid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_sns_complaincate` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) DEFAULT '0',
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `status` tinyint(3) NOT NULL DEFAULT '0',
+  `displayorder` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_sns_level` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) DEFAULT '0',
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `levelname` varchar(255) DEFAULT '',
+  `credit` int(11) DEFAULT '0',
+  `enabled` tinyint(3) DEFAULT '0',
+  `post` int(11) DEFAULT '0',
+  `color` varchar(255) DEFAULT '',
+  `bg` varchar(255) DEFAULT '',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `enabled` (`enabled`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_sns_like` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) DEFAULT '0',
+  `pid` int(10) NOT NULL,
+  `openid` varchar(255) DEFAULT '',
+  `uid` int(10) NOT NULL,
+  `nickname` varchar(255) DEFAULT NULL,
+  `headimgurl` varchar(255) DEFAULT NULL,
+  `ctime` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_sns_manager` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) DEFAULT '0',
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(11) DEFAULT '0',
+  `openid` varchar(255) DEFAULT '',
+  `uid` int(10) NOT NULL,
+  `nickname` varchar(255) DEFAULT NULL,
+  `headimgurl` varchar(255) DEFAULT NULL,
+  `enabled` tinyint(3) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_sns_member` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) DEFAULT '0',
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `openid` varchar(255) DEFAULT NULL,
+  `uid` int(10) NOT NULL,
+  `level` int(11) DEFAULT '0',
+  `createtime` int(11) DEFAULT '0',
+  `credit` int(11) DEFAULT '0',
+  `sign` varchar(255) DEFAULT '',
+  `isblack` tinyint(3) DEFAULT '0',
+  `notupgrade` tinyint(3) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_sns_post` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) DEFAULT '0',
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `boardid` int(11) DEFAULT '0',
+  `postid` int(11) DEFAULT '0',
+  `replypostid` int(11) DEFAULT '0',
+  `openid` varchar(255) DEFAULT '',
+  `uid` int(10) NOT NULL,
+  `avatar` varchar(255) DEFAULT '',
+  `nickname` varchar(255) DEFAULT '',
+  `title` varchar(50) DEFAULT '',
+  `content` text,
+  `images` text,
+  `voice` varchar(255) DEFAULT NULL,
+  `createtime` int(11) DEFAULT '0',
+  `replytime` int(11) DEFAULT '0',
+  `credit` int(11) DEFAULT '0',
+  `views` int(11) DEFAULT '0',
+  `islock` tinyint(1) DEFAULT '0',
+  `istop` tinyint(1) DEFAULT '0',
+  `isboardtop` tinyint(1) DEFAULT '0',
+  `isbest` tinyint(1) DEFAULT '0',
+  `isboardbest` tinyint(3) DEFAULT '0',
+  `deleted` tinyint(3) DEFAULT '0',
+  `deletedtime` int(11) DEFAULT '0',
+  `checked` tinyint(3) DEFAULT NULL,
+  `checktime` int(11) DEFAULT '0',
+  `isadmin` tinyint(3) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `boardid` (`boardid`),
+  KEY `postid` (`postid`),
+  KEY `replypostid` (`replypostid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_suggest` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `cid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `tid` int(10) NOT NULL,
+  `hid` int(10) NOT NULL,
+  `address` varchar(100) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `openid` varchar(60) NOT NULL,
+  `nickname` varchar(255) DEFAULT NULL,
+  `headimgurl` varchar(255) DEFAULT NULL,
+  `content` varchar(255) NOT NULL,
+  `images` text,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `star` tinyint(3) NOT NULL,
+  `comment` varchar(255) NOT NULL,
+  `getopenid` varchar(60) DEFAULT NULL,
+  `getuid` int(10) NOT NULL DEFAULT '0',
+  `lasttime` int(11) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  `reporttime` int(11) NOT NULL DEFAULT '0',
+  `reporttimes` smallint(3) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `cid` (`cid`),
+  KEY `bid` (`bid`),
+  KEY `tid` (`tid`),
+  KEY `hid` (`hid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_suggest_comment` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `suggestid` int(10) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `openid` varchar(50) DEFAULT NULL,
+  `updown` tinyint(1) NOT NULL,
+  `nickname` varchar(255) DEFAULT NULL,
+  `headimgurl` varchar(255) DEFAULT NULL,
+  `comment` varchar(255) DEFAULT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `suggestid` (`suggestid`),
+  KEY `uid` (`uid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_suggest_record` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `sid` int(10) NOT NULL,
+  `openid` varchar(60) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `nickname` varchar(255) DEFAULT NULL,
+  `headimgurl` varchar(255) DEFAULT NULL,
+  `content` varchar(255) NOT NULL,
+  `image` text,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `sid` (`sid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_sysagreement` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL,
+  `content1` text,
+  `content2` text,
+  `content3` text,
+  `cuid` int(10) NOT NULL DEFAULT '0',
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_syslog` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL,
+  `pid` int(10) NOT NULL,
+  `do` varchar(60) DEFAULT NULL,
+  `op` varchar(60) DEFAULT NULL,
+  `title` varchar(60) NOT NULL,
+  `content` varchar(200) DEFAULT NULL,
+  `ip` varchar(30) DEFAULT NULL,
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `do` (`do`)
+) ENGINE=MyISAM AUTO_INCREMENT=76 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_syspub` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) DEFAULT NULL,
+  `logo` varchar(100) DEFAULT NULL,
+  `copyright` text,
+  `ptitle` varchar(100) DEFAULT NULL,
+  `plogo` varchar(100) DEFAULT NULL,
+  `pbackground` varchar(255) DEFAULT NULL,
+  `pbgcolor` varchar(20) DEFAULT NULL,
+  `isclose` tinyint(1) NOT NULL DEFAULT '0',
+  `closereason` varchar(60) DEFAULT NULL,
+  `closeurl` varchar(255) DEFAULT NULL,
+  `wxtitle` varchar(100) DEFAULT NULL,
+  `statistics` varchar(1000) DEFAULT NULL,
+  `wxcopyright` text,
+  `haina_appid` varchar(30) DEFAULT NULL,
+  `haina_secret` varchar(100) DEFAULT NULL,
+  `haina_agentid` varchar(30) DEFAULT NULL,
+  `haina_token` varchar(60) DEFAULT NULL,
+  `haina_encodingaeskey` varchar(100) DEFAULT NULL,
+  `ishaina` tinyint(1) NOT NULL DEFAULT '0',
+  `wecopyright` tinyint(1) NOT NULL DEFAULT '0',
+  `isalilife` tinyint(1) NOT NULL DEFAULT '0',
+  `alilife_appid` varchar(60) DEFAULT NULL,
+  `alilife_rsa2` text,
+  `board_password` varchar(60) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_sysset` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `logo` varchar(100) DEFAULT NULL,
+  `copyright` text,
+  `telphone` varchar(20) DEFAULT NULL,
+  `wxtitle` varchar(100) DEFAULT NULL,
+  `wxcopyright` text,
+  `ptitle` varchar(100) DEFAULT NULL,
+  `plogo` varchar(100) DEFAULT NULL,
+  `style` varchar(60) DEFAULT NULL,
+  `isclose` tinyint(1) NOT NULL DEFAULT '0',
+  `closereason` varchar(60) DEFAULT NULL,
+  `closeurl` varchar(255) DEFAULT NULL,
+  `adminstyle` varchar(60) DEFAULT 'web',
+  `menucolor` varchar(10) DEFAULT NULL,
+  `btncolor` varchar(10) DEFAULT NULL,
+  `bgcolor` varchar(10) DEFAULT NULL,
+  `servicedisplay` tinyint(1) NOT NULL,
+  `statistics` varchar(1000) DEFAULT NULL,
+  `topcolor` varchar(20) DEFAULT NULL,
+  `textcolor` varchar(20) DEFAULT NULL,
+  `feecolor` varchar(20) DEFAULT NULL,
+  `tplid1` varchar(80) DEFAULT NULL,
+  `tplid2` varchar(80) DEFAULT NULL,
+  `tplid3` varchar(80) DEFAULT NULL,
+  `tplid4` varchar(80) DEFAULT NULL,
+  `tplid5` varchar(80) DEFAULT NULL,
+  `tplid6` varchar(80) DEFAULT NULL,
+  `tplid7` varchar(80) DEFAULT NULL,
+  `tplid8` varchar(80) DEFAULT NULL,
+  `tplid9` varchar(80) DEFAULT NULL,
+  `tplid10` varchar(80) DEFAULT NULL,
+  `tplid11` varchar(80) DEFAULT NULL,
+  `tplid12` varchar(80) DEFAULT NULL,
+  `bindverify` tinyint(1) NOT NULL DEFAULT '0',
+  `shareverify` tinyint(1) NOT NULL DEFAULT '0',
+  `smstype` tinyint(1) NOT NULL DEFAULT '1',
+  `appkey` varchar(100) DEFAULT NULL,
+  `app_key` varchar(100) DEFAULT NULL,
+  `app_serve` varchar(100) DEFAULT NULL,
+  `signname` varchar(30) DEFAULT NULL,
+  `verifyid` varchar(60) DEFAULT NULL,
+  `repairid` varchar(60) DEFAULT NULL,
+  `suggestid` varchar(60) DEFAULT NULL,
+  `feeid` varchar(60) DEFAULT NULL,
+  `noticeid` varchar(60) DEFAULT NULL,
+  `movecarid` varchar(60) DEFAULT NULL,
+  `cost` int(6) NOT NULL DEFAULT '0',
+  `minmoney` int(6) NOT NULL DEFAULT '0',
+  `credit` int(6) NOT NULL DEFAULT '0',
+  `credit2` int(3) NOT NULL DEFAULT '0',
+  `doortype` tinyint(1) NOT NULL DEFAULT '1',
+  `lockurl` varchar(60) NOT NULL,
+  `apikey` varchar(100) NOT NULL,
+  `apiid` varchar(100) NOT NULL,
+  `servicemerchid` varchar(60) NOT NULL,
+  `merchsecret` varchar(60) NOT NULL,
+  `locationdoor` tinyint(1) NOT NULL DEFAULT '1',
+  `regionrange` int(10) NOT NULL DEFAULT '0',
+  `doorrange` int(10) NOT NULL DEFAULT '0',
+  `isweaddress` tinyint(1) NOT NULL DEFAULT '0',
+  `memberfield` tinyint(1) NOT NULL DEFAULT '0',
+  `isrraddress` tinyint(1) NOT NULL DEFAULT '0',
+  `menu1` varchar(30) DEFAULT NULL,
+  `menu2` varchar(30) DEFAULT NULL,
+  `menu3` varchar(30) DEFAULT NULL,
+  `menu4` varchar(30) DEFAULT NULL,
+  `menu5` varchar(30) DEFAULT NULL,
+  `icon1` varchar(30) NOT NULL DEFAULT 'icon-home',
+  `icon2` varchar(30) NOT NULL DEFAULT 'icon-mark1',
+  `icon3` varchar(30) NOT NULL DEFAULT 'icon-like1',
+  `icon4` varchar(30) NOT NULL DEFAULT 'icon-lights',
+  `icon5` varchar(30) NOT NULL DEFAULT 'icon-person2',
+  `menu1url` varchar(100) DEFAULT NULL,
+  `menu2url` varchar(100) DEFAULT NULL,
+  `menu3url` varchar(100) DEFAULT NULL,
+  `menu4url` varchar(100) DEFAULT NULL,
+  `menu5url` varchar(100) DEFAULT NULL,
+  `stetext1` varchar(30) DEFAULT NULL,
+  `stetext2` varchar(30) DEFAULT NULL,
+  `stetext3` varchar(30) DEFAULT NULL,
+  `stetext4` varchar(30) DEFAULT NULL,
+  `followurl` varchar(100) DEFAULT NULL,
+  `qrcode` varchar(100) DEFAULT NULL,
+  `sharetitle` varchar(60) DEFAULT NULL,
+  `shareicon` varchar(100) DEFAULT NULL,
+  `sharedesc` varchar(200) DEFAULT NULL,
+  `outtime` tinyint(4) NOT NULL DEFAULT '5',
+  `ishome` tinyint(1) NOT NULL DEFAULT '0',
+  `stewarddisplay` tinyint(1) NOT NULL DEFAULT '0',
+  `isoneregion` tinyint(1) NOT NULL DEFAULT '0',
+  `service` tinyint(1) NOT NULL DEFAULT '0',
+  `imagesize` int(6) NOT NULL DEFAULT '0',
+  `listtype` tinyint(1) NOT NULL DEFAULT '0',
+  `app_code` varchar(100) DEFAULT NULL,
+  `alisignname` varchar(30) DEFAULT NULL,
+  `pagesize` smallint(6) NOT NULL DEFAULT '0',
+  `membertext` varchar(30) DEFAULT NULL,
+  `isshowfeebill` tinyint(1) NOT NULL DEFAULT '1',
+  `isshowhouse` tinyint(1) NOT NULL DEFAULT '1',
+  `isshowrepair` tinyint(1) NOT NULL DEFAULT '1',
+  `isshowforum` tinyint(1) NOT NULL DEFAULT '1',
+  `isshowtask` tinyint(1) NOT NULL DEFAULT '1',
+  `isshowvisit` tinyint(1) NOT NULL DEFAULT '1',
+  `isshowlike` tinyint(1) NOT NULL DEFAULT '1',
+  `isshowdevice` tinyint(1) NOT NULL DEFAULT '1',
+  `iswegroup` tinyint(1) NOT NULL DEFAULT '0',
+  `binddomain` varchar(255) DEFAULT NULL,
+  `pbackground` varchar(255) DEFAULT NULL,
+  `pbgcolor` varchar(20) DEFAULT NULL,
+  `bindlocation` tinyint(1) NOT NULL DEFAULT '1',
+  `isplatformcredit` tinyint(1) NOT NULL DEFAULT '0',
+  `paynopre` varchar(10) NOT NULL DEFAULT 'Property',
+  `businesstplid` varchar(80) DEFAULT NULL,
+  `redpackettplid` varchar(80) DEFAULT NULL,
+  `apiclient_cert` varchar(100) DEFAULT NULL,
+  `apiclient_key` varchar(100) DEFAULT NULL,
+  `rootca` varchar(100) DEFAULT NULL,
+  `siteurl` varchar(100) DEFAULT NULL,
+  `alipay_appid` varchar(60) DEFAULT NULL,
+  `alipay_rsa2` text,
+  `limitqty` int(10) NOT NULL,
+  `iswap` tinyint(1) NOT NULL DEFAULT '0',
+  `wxappid` varchar(30) DEFAULT NULL,
+  `wxappsecret` varchar(100) DEFAULT NULL,
+  `wxmerchid` varchar(30) DEFAULT NULL,
+  `wxmerchsecret` varchar(100) DEFAULT NULL,
+  `access_key_id` varchar(60) DEFAULT NULL,
+  `access_key_secret` varchar(60) DEFAULT NULL,
+  `aliaccsignname` varchar(30) DEFAULT NULL,
+  `isreg` tinyint(1) NOT NULL DEFAULT '0',
+  `wxminiappid` varchar(30) DEFAULT NULL,
+  `wxminiappsecret` varchar(100) DEFAULT NULL,
+  `wxminimerchid` varchar(30) DEFAULT NULL,
+  `wxminimerchsecret` varchar(100) DEFAULT NULL,
+  `wxminiappurl` varchar(100) DEFAULT NULL,
+  `wxminititle` varchar(30) DEFAULT NULL,
+  `devpaytype` tinyint(1) NOT NULL DEFAULT '0',
+  `mx_appid` varchar(60) DEFAULT NULL,
+  `mx_appkey` varchar(60) DEFAULT NULL,
+  `yk_appid` varchar(60) DEFAULT NULL,
+  `yk_appkey` varchar(60) DEFAULT NULL,
+  `smsprice` decimal(6,4) DEFAULT NULL,
+  `isworkersound` tinyint(1) NOT NULL DEFAULT '0',
+  `workermanurl` varchar(100) DEFAULT NULL,
+  `isdisptel` tinyint(1) NOT NULL DEFAULT '0',
+  `displayweather` tinyint(1) NOT NULL DEFAULT '0',
+  `memberheaderstyle` tinyint(1) NOT NULL DEFAULT '0',
+  `memberliststyle` tinyint(1) NOT NULL DEFAULT '0',
+  `isdevreg` tinyint(1) NOT NULL DEFAULT '0',
+  `isdidplayscan` tinyint(1) NOT NULL DEFAULT '0',
+  `followtip` varchar(100) DEFAULT NULL,
+  `wethercolor` varchar(10) DEFAULT NULL,
+  `forumthumb` varchar(255) DEFAULT NULL,
+  `forumicon` varchar(30) DEFAULT NULL,
+  `forumright` smallint(6) NOT NULL,
+  `forumbottom` smallint(6) NOT NULL,
+  `openid` varchar(100) DEFAULT NULL,
+  `uid` int(10) NOT NULL,
+  `qashowtype` tinyint(1) NOT NULL DEFAULT '0',
+  `isshowqa` tinyint(1) NOT NULL DEFAULT '0',
+  `isalipay` tinyint(1) NOT NULL DEFAULT '0',
+  `aliaccount` varchar(100) DEFAULT NULL,
+  `alisecret` varchar(100) DEFAULT NULL,
+  `alipartner` varchar(100) DEFAULT NULL,
+  `iswxpay` tinyint(1) NOT NULL DEFAULT '0',
+  `appid` varchar(30) DEFAULT NULL,
+  `secret` varchar(100) DEFAULT NULL,
+  `merchid` varchar(30) DEFAULT NULL,
+  `serviceappid` varchar(30) DEFAULT NULL,
+  `serviceappsecret` varchar(100) DEFAULT NULL,
+  `servicemerchsecret` varchar(100) DEFAULT NULL,
+  `submerchid` varchar(30) DEFAULT NULL,
+  `credit3` int(3) NOT NULL,
+  `expressid` varchar(30) DEFAULT NULL,
+  `nobindhome` tinyint(1) NOT NULL DEFAULT '0',
+  `expresssendid` varchar(30) DEFAULT NULL,
+  `isopenapi` tinyint(1) NOT NULL DEFAULT '0',
+  `api_token` varchar(60) DEFAULT NULL,
+  `isshowexpress` tinyint(1) NOT NULL DEFAULT '0',
+  `expresstplid` varchar(80) DEFAULT NULL,
+  `isdiscredit` tinyint(1) NOT NULL DEFAULT '1',
+  `rsdmerchid` varchar(30) DEFAULT NULL,
+  `rsdmerchsecret` varchar(100) DEFAULT NULL,
+  `ymfmerchid` varchar(30) DEFAULT NULL,
+  `ymfmerchsecret` varchar(100) DEFAULT NULL,
+  `ymfurl` varchar(255) DEFAULT NULL,
+  `starmerchid` varchar(20) DEFAULT NULL,
+  `starkey` varchar(50) DEFAULT NULL,
+  `starorg` varchar(20) DEFAULT NULL,
+  `startrm` varchar(20) DEFAULT NULL,
+  `managemenustyle` tinyint(1) NOT NULL DEFAULT '0',
+  `isaddregion` tinyint(1) NOT NULL DEFAULT '0',
+  `ds_appid` varchar(60) DEFAULT NULL,
+  `ds_appkey` varchar(60) DEFAULT NULL,
+  `bl_apikey` varchar(100) DEFAULT NULL,
+  `bl_apiid` varchar(100) DEFAULT NULL,
+  `mj_apikey` varchar(100) DEFAULT NULL,
+  `mj_apiid` varchar(100) DEFAULT NULL,
+  `board_password` varchar(60) DEFAULT NULL,
+  `iswepay` tinyint(1) NOT NULL DEFAULT '0',
+  `haina_appid` varchar(30) DEFAULT NULL,
+  `haina_secret` varchar(100) DEFAULT NULL,
+  `haina_agentid` varchar(30) DEFAULT NULL,
+  `forcefollow` tinyint(1) NOT NULL DEFAULT '0',
+  `ylb_token` varchar(20) DEFAULT NULL,
+  `wxminibgimage` varchar(255) DEFAULT NULL,
+  `isproperty` tinyint(1) NOT NULL DEFAULT '0',
+  `isvisitor` tinyint(1) NOT NULL DEFAULT '0',
+  `alipay_private` text,
+  `alipay_life_appid` varchar(60) DEFAULT NULL,
+  `alipay_life_key` text,
+  `alipay_app_appid` varchar(60) DEFAULT NULL,
+  `alipay_app_key` text,
+  `alipay_app_title` varchar(60) DEFAULT NULL,
+  `alipay_app_url` varchar(60) DEFAULT NULL,
+  `alipay_type` tinyint(1) NOT NULL DEFAULT '0',
+  `alipay_seller_id` varchar(60) DEFAULT NULL,
+  `alipay_app_auth_token` varchar(60) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_team` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `cid` int(10) NOT NULL,
+  `realname` varchar(60) NOT NULL,
+  `nickname` varchar(60) NOT NULL,
+  `mobile` varchar(60) NOT NULL,
+  `avatar` varchar(100) NOT NULL,
+  `remark` varchar(100) NOT NULL,
+  `entrydate` int(11) NOT NULL,
+  `content` varchar(1000) NOT NULL,
+  `workyears` tinyint(3) NOT NULL,
+  `openid` varchar(100) DEFAULT NULL,
+  `uid` int(10) NOT NULL,
+  `ridstr` varchar(1000) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL,
+  `isdefault` tinyint(1) NOT NULL DEFAULT '0',
+  `displayorder` smallint(6) NOT NULL DEFAULT '0',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `cid` (`cid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_team_comment` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `teamid` int(10) NOT NULL,
+  `openid` varchar(50) DEFAULT NULL,
+  `uid` int(10) NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `updown` tinyint(1) NOT NULL,
+  `nickname` varchar(255) DEFAULT NULL,
+  `headimgurl` varchar(255) DEFAULT NULL,
+  `comment` varchar(255) DEFAULT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `teamid` (`teamid`),
+  KEY `openid` (`openid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_telcate` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL DEFAULT '0',
+  `parentid` int(10) NOT NULL DEFAULT '0',
+  `title` varchar(50) DEFAULT NULL,
+  `thumb` varchar(255) DEFAULT NULL,
+  `displayorder` tinyint(3) DEFAULT '0',
+  `enabled` tinyint(1) DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `parentid` (`parentid`),
+  KEY `enabled` (`enabled`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_telphone` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) NOT NULL DEFAULT '0',
+  `cateid` int(10) NOT NULL DEFAULT '0',
+  `title` varchar(60) NOT NULL,
+  `thumb` varchar(255) DEFAULT NULL,
+  `contact` varchar(60) NOT NULL,
+  `starttime` varchar(10) DEFAULT NULL,
+  `endtime` varchar(10) DEFAULT NULL,
+  `telphone` varchar(60) DEFAULT NULL,
+  `province` varchar(60) DEFAULT NULL,
+  `city` varchar(60) DEFAULT NULL,
+  `district` varchar(60) DEFAULT NULL,
+  `address` varchar(255) NOT NULL,
+  `lng` varchar(10) DEFAULT NULL,
+  `lat` varchar(10) DEFAULT NULL,
+  `displayorder` smallint(6) NOT NULL,
+  `status` tinyint(1) DEFAULT '1',
+  `cuid` int(10) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `cateid` (`cateid`),
+  KEY `status` (`status`),
+  KEY `city` (`city`),
+  KEY `district` (`district`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_unit` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `pid` int(10) NOT NULL,
+  `rid` int(10) NOT NULL,
+  `bid` int(10) NOT NULL,
+  `title` varchar(60) NOT NULL,
+  `floors` int(10) NOT NULL,
+  `rooms` int(10) NOT NULL,
+  `cuid` int(11) NOT NULL,
+  `ctime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `weid` (`weid`),
+  KEY `pid` (`pid`),
+  KEY `rid` (`rid`),
+  KEY `bid` (`bid`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_version` (
+  `version` varchar(60) NOT NULL,
+  `secretkey` varchar(255) DEFAULT NULL,
+  `siteurl` varchar(255) DEFAULT NULL,
+  `siteip` varchar(255) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+
+
+CREATE TABLE IF NOT EXISTS `ims_rhinfo_zyxq_wepay_log` (
+  `plid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `type` varchar(20) NOT NULL,
+  `uniacid` int(11) NOT NULL,
+  `acid` int(10) NOT NULL,
+  `openid` varchar(40) NOT NULL,
+  `uniontid` varchar(64) NOT NULL,
+  `tid` varchar(128) NOT NULL,
+  `fee` decimal(10,2) NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `module` varchar(50) NOT NULL,
+  `tag` varchar(2000) NOT NULL,
+  `is_usecard` tinyint(3) unsigned NOT NULL,
+  `card_type` tinyint(3) unsigned NOT NULL,
+  `card_id` varchar(50) NOT NULL,
+  `card_fee` decimal(10,2) unsigned NOT NULL,
+  `encrypt_code` varchar(100) NOT NULL,
+  `uid` int(10) NOT NULL DEFAULT '0',
+  `pid` int(10) NOT NULL DEFAULT '0',
+  `rid` int(10) NOT NULL DEFAULT '0',
+  `feetype` int(3) NOT NULL DEFAULT '0',
+  `paytime` int(11) NOT NULL DEFAULT '0',
+  `cfrom` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`plid`),
+  KEY `uniacid` (`uniacid`),
+  KEY `tid` (`tid`),
+  KEY `status` (`status`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('164','16','1','8','88','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('163','16','1','8','87','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('162','16','1','8','56','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('161','16','1','8','55','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('160','16','1','8','54','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('159','16','1','8','23','1','1','1','0','1','0','0','1','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('158','16','1','8','22','1','1','1','0','1','0','0','1','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('157','16','1','15','75','1','1','1','0','1','0','0','0','0','1','1','1','1','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('156','16','1','15','74','1','1','1','0','1','0','0','0','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('155','16','1','15','73','1','1','1','0','1','0','0','0','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('154','16','1','15','72','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('153','16','1','15','71','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('152','16','1','15','70','0','0','0','0','1','0','0','0','0','1','1','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('151','16','1','14','69','1','1','1','0','1','0','0','0','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('150','16','1','14','68','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('149','16','1','13','82','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('148','16','1','13','81','1','1','1','0','1','0','0','0','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('147','16','1','13','80','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('146','16','1','12','49','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('145','16','1','12','48','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('144','16','1','11','47','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('143','16','1','11','46','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('142','16','1','11','45','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('141','16','1','11','44','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('140','16','1','11','43','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('139','16','1','11','33','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('138','16','1','11','32','1','1','1','0','1','0','0','0','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('137','16','1','9','67','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('136','16','1','9','66','1','1','1','0','1','0','0','0','0','1','1','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('135','16','1','9','65','1','1','1','0','1','0','0','0','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('134','16','1','9','29','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('133','16','1','9','28','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('132','16','1','4','63','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('131','16','1','4','62','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('130','16','1','4','39','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('129','16','1','4','38','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('128','16','1','4','37','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('127','16','1','3','60','1','1','1','0','1','0','0','0','1','1','1','1','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('126','16','1','3','20','1','1','1','1','1','0','1','1','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('125','16','1','3','36','1','1','1','1','1','0','0','0','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('124','16','1','3','52','1','1','1','0','1','0','0','1','0','1','1','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('123','16','1','3','35','1','1','1','1','1','0','0','0','0','1','1','1','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('122','16','1','3','34','1','1','1','1','1','0','1','0','0','1','1','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('121','16','1','3','18','1','1','1','0','1','0','0','1','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('120','16','1','7','64','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('119','16','1','7','59','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('118','16','1','7','58','1','1','1','0','1','0','0','0','0','1','1','1','1','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('117','16','1','7','57','1','1','1','0','1','0','1','0','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('116','16','1','7','21','1','1','1','0','1','0','0','0','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('115','16','1','7','19','1','1','1','0','1','0','0','0','0','1','1','1','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('114','16','1','16','86','1','1','1','0','1','0','1','0','0','1','1','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('113','16','1','16','85','1','1','1','0','1','0','0','0','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('112','16','1','16','84','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('111','16','1','16','83','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('110','16','1','6','31','1','1','1','1','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('109','16','1','6','53','1','1','1','0','1','0','0','1','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('108','16','1','6','50','1','1','1','1','1','0','0','0','0','1','1','1','1','1');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('107','16','1','6','30','1','1','1','1','1','0','0','0','0','1','1','1','1','1');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('106','16','1','5','17','1','1','1','0','1','0','0','0','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('105','16','1','5','89','1','1','1','0','1','0','0','0','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('104','16','1','5','61','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('103','16','1','5','16','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('102','16','1','5','15','1','1','1','1','1','1','0','0','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('101','16','1','5','14','1','1','1','1','1','1','0','0','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('100','16','1','5','13','1','1','1','0','1','0','0','0','1','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('99','16','1','2','51','1','1','1','0','1','0','0','1','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('98','16','1','2','41','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('97','16','1','2','40','1','1','1','0','1','0','0','1','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('96','16','1','2','12','1','1','1','0','1','0','0','0','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('95','16','1','2','11','1','1','1','0','1','0','0','0','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('94','16','1','2','10','1','1','1','0','1','0','0','0','0','0','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('93','16','1','2','9','1','1','1','0','1','0','0','0','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('92','16','1','2','8','1','1','1','0','1','0','0','0','0','1','0','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('91','16','1','2','78','1','1','1','0','1','0','0','0','0','1','1','1','1','1');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('90','16','1','2','77','1','1','1','0','1','0','0','0','0','1','1','1','1','1');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('89','16','1','2','76','1','1','1','0','1','0','0','0','0','1','1','1','1','1');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('88','16','1','2','7','1','1','1','0','1','0','0','0','0','1','1','1','1','1');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('87','16','1','2','6','1','1','1','0','1','0','0','0','0','1','1','1','1','1');
+INSERT INTO ims_rhinfo_zyxq_secgprg VALUES 
+('86','16','1','2','5','1','1','1','0','1','0','0','0','0','1','1','0','0','0');
+INSERT INTO ims_rhinfo_zyxq_secgroup VALUES 
+('1','16','0','admin0595','1','','1','1527038373');
+INSERT INTO ims_rhinfo_zyxq_secgsys VALUES 
+('29','16','1','8');
+INSERT INTO ims_rhinfo_zyxq_secgsys VALUES 
+('28','16','1','15');
+INSERT INTO ims_rhinfo_zyxq_secgsys VALUES 
+('27','16','1','14');
+INSERT INTO ims_rhinfo_zyxq_secgsys VALUES 
+('26','16','1','13');
+INSERT INTO ims_rhinfo_zyxq_secgsys VALUES 
+('25','16','1','12');
+INSERT INTO ims_rhinfo_zyxq_secgsys VALUES 
+('24','16','1','11');
+INSERT INTO ims_rhinfo_zyxq_secgsys VALUES 
+('23','16','1','9');
+INSERT INTO ims_rhinfo_zyxq_secgsys VALUES 
+('22','16','1','4');
+INSERT INTO ims_rhinfo_zyxq_secgsys VALUES 
+('21','16','1','3');
+INSERT INTO ims_rhinfo_zyxq_secgsys VALUES 
+('20','16','1','7');
+INSERT INTO ims_rhinfo_zyxq_secgsys VALUES 
+('19','16','1','16');
+INSERT INTO ims_rhinfo_zyxq_secgsys VALUES 
+('18','16','1','6');
+INSERT INTO ims_rhinfo_zyxq_secgsys VALUES 
+('17','16','1','5');
+INSERT INTO ims_rhinfo_zyxq_secgsys VALUES 
+('16','16','1','2');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('1','1','角色管理','','role','list','','0','1','0','1','1','1','0','1','0','0','1','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('2','1','用户管理','','user','list','','0','1','0','1','1','1','0','1','0','0','1','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('3','1','系统配置','','sysset','index','','0','1','0','0','1','0','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('4','1','系统日志','','syslog','list','','0','1','0','0','0','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('5','2','物业公司','','property','list','','0','1','1','1','1','1','0','1','0','0','0','0','1','1','0','0','0','支付参数','管理权限','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('6','2','小区管理','','region','list','','1','1','0','1','1','1','0','1','0','0','0','0','1','1','1','1','1','楼宇','商铺','车位','支付导航广告','基础设置','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('7','2','商圈管理','','region','blist','','2','1','0','1','1','1','0','1','0','0','0','0','1','1','1','1','1','楼宇','商铺','车位','支付导航广告','基础设置','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('8','2','楼宇管理','','building','list','','0','0','0','1','1','1','0','1','0','0','0','0','1','0','0','0','0','批量添加','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('9','2','单元管理','','unit','list','','0','0','0','1','1','1','0','1','0','0','0','0','1','0','0','0','0','添加房屋','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('10','2','房屋管理','','room','list','','0','0','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('11','2','车位管理','','parking','list','','0','0','0','1','1','1','0','1','0','0','0','0','1','0','0','0','0','批量添加','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('12','2','商铺管理','','shop','list','','0','0','0','1','1','1','0','1','0','0','0','0','1','0','0','0','0','批量添加','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('13','5','物业通知','','notify','list','','0','1','0','1','1','1','0','1','0','0','0','1','1','0','0','0','0','发送','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('14','5','业主报修','','repair','list','','0','1','0','1','1','1','1','1','1','0','0','0','1','0','0','0','0','评价','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('15','5','投诉建议','','suggest','list','','0','1','0','1','1','1','1','1','1','0','0','0','1','0','0','0','0','评价','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('16','5','智能门禁','','door','list','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('17','5','服务团队','','team','list','','9','1','0','1','1','1','0','1','0','0','0','0','1','0','0','0','0','评价','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('18','3','收费项目','','fee','item','','0','1','0','1','1','1','0','1','0','0','1','0','1','0','0','0','0','个性单价','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('19','7','车位信息','','car','list','','0','1','0','1','1','1','0','1','0','0','0','0','1','1','1','0','0','租赁','租赁记录','月卡','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('20','3','已缴账单','','feecal','report','','9','1','0','1','1','1','1','1','0','1','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('21','7','车辆管理','','car','carlist','','0','1','0','1','1','1','0','1','0','0','0','0','1','0','0','0','0','月卡','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('22','8','默认广告','','banner','list','','0','1','1','1','1','1','0','1','0','0','1','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('23','8','导航图标','','sysnav','list','','0','1','1','1','1','1','0','1','0','0','1','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('24','10','保洁记录','','environ','clist','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('25','10','保洁安排','','environ','cleaning','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('26','10','绿化信息','','environ','green','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('27','10','绿化记录','','environ','glist','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('28','9','巡更分布','','security','patrol','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('29','9','巡更路线','','security','list','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('30','6','房屋住户','','member','list','','0','1','0','1','1','1','1','1','0','0','0','0','1','1','1','1','1','登记','变更','变更记录','异常登记','异常记录','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('31','6','房产绑定','','member','weixin','','9','1','0','1','1','1','1','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('32','11','版块分类','','forum','catelist','','0','1','0','1','1','1','0','1','0','0','0','0','1','0','0','0','0','广告','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('33','11','版块管理','','forum','list','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('34','3','物业账单','','fee','bill','','0','1','0','1','1','1','1','1','0','1','0','0','1','1','0','0','0','导入','缴费通知','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('35','3','抄表账单','','fee','three','','0','1','0','1','1','1','1','1','0','0','0','0','1','1','1','0','0','录入','收费','导入','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('36','3','收银台','','fee','list','','8','1','0','1','1','1','1','1','0','0','0','0','1','0','0','0','0','收费','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('37','4','物业缴费统计','','report','paylist','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('38','4','物业未缴统计','','report','billlist','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('39','4','微信绑定统计','','report','bindlist','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('40','2','广告管理','','rbanner','list','','0','0','1','1','1','1','0','1','0','0','1','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('41','2','基础设置','','category','list','','0','0','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('42','1','系统维护','','update','index','','98','1','1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('43','11','话题管理','','forum','postlist','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('44','11','回复管理','','forum','replylist','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('45','11','投诉管理','','forum','complain','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('46','11','版主管理','','forum','manager','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('47','11','社区会员','','forum','member','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('48','12','资讯分类','','article','category','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('49','12','资讯列表','','article','list','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('50','6','商铺住户','','member','slist','','0','1','0','1','1','1','1','1','0','0','0','0','1','1','1','1','1','登记','变更','变更记录','异常登记','异常记录','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('51','2','导航管理','','regionav','list','','0','0','1','1','1','1','0','1','0','0','1','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('52','3','账单事务','','feecal','list','','0','1','0','1','1','1','0','1','0','0','1','0','1','1','0','0','0','生成账单','上传支付宝','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('53','6','成员管理','','member','userlist','','0','1','0','1','1','1','0','1','0','0','1','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('54','8','指定广告','','rbanner','rlist','','0','1','1','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('55','8','指定导航','','regionav','rlist','','0','1','1','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('56','8','业主中心','','pagediy','list','','0','1','1','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('57','7','续租账单','','car','carbill','','0','1','0','1','1','1','0','1','0','1','0','0','1','0','0','0','0','收款','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('58','7','停车场管理','','parkinglot','list','','0','1','0','1','1','1','0','1','0','0','0','0','1','1','1','1','0','入口','出口','计费规则','进出记录','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('59','7','车位共享','','car','carshare','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('60','3','收支登记','','feecal','costlist','','10','1','0','1','1','1','1','1','0','1','0','1','1','1','1','0','0','收支项目','装修保证金','预收款项','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('61','5','智能梯控','','elevator','list','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('62','4','业主报修分析','','report','repairlist','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('63','4','投诉建议分析','','report','suggestlist','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('64','7','挪车记录','','car','movecar','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('65','9','巡检类别','','devpatrol','category','','0','1','0','1','1','1','0','1','0','0','0','0','1','0','0','0','0','巡检标准','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('66','9','巡检项目','','devpatrol','device','','0','1','0','1','1','1','0','1','0','0','0','0','1','1','0','0','0','维保厂商','巡检记录','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('67','9','巡检计划','','devpatrol','list','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('68','14','业委会申请','','proprietor','list','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('69','14','业委会成员','','proprietor','mlist','','0','1','0','1','1','1','0','1','0','0','0','0','1','0','0','0','0','成员','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('70','15','积分策略','','platform','list','','0','1','1','0','0','0','0','1','0','0','0','0','1','1','0','0','0','发行积分','销售积分','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('71','15','红包策略','','redpacket','list','','0','1','1','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('72','15','任务策略','','task','list','','0','1','1','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('73','15','智能充电站','','charging','list','','0','1','1','1','1','1','0','1','0','0','0','0','1','0','0','0','0','设定价格','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('74','15','自助智能设备','','selfwashcar','list','','0','1','1','1','1','1','0','1','0','0','0','0','1','0','0','0','0','设备分类','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('75','15','快递驿站','','express','list','','0','1','1','1','1','1','0','1','0','0','0','0','1','1','1','1','0','快件管理','快递公司','快递柜','支付参数','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('76','2','园区管理','','region','glist','','3','1','0','1','1','1','0','1','0','0','0','0','1','1','1','1','1','楼宇','商铺','车位','支付导航广告','基础设置','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('77','2','市场管理','','region','mlist','','4','1','0','1','1','1','0','1','0','0','0','0','1','1','1','1','1','楼宇','商铺','车位','支付导航广告','基础设置','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('78','2','公寓管理','','region','alist','','5','1','0','1','1','1','0','1','0','0','0','0','1','1','1','1','1','楼宇','商铺','车位','支付导航广告','基础设置','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('79','1','系统帮助','','help','list','','99','1','1','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('80','13','商家分类','','business','catelist','','0','1','1','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('81','13','商家管理','','business','list','','0','1','1','1','1','1','0','1','0','0','0','0','1','0','0','0','0','支付参数','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('82','13','商家活动','','business','actlist','','0','1','1','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('87','8','常见问题','','question','list','','0','1','1','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('88','8','便民电话','','telphone','list','','0','1','1','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('83','16','承租人','','lease','plist','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('84','16','租赁区域','','lease','location','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('85','16','租赁合同','','lease','list','','0','1','0','1','1','1','0','1','0','0','0','0','1','0','0','0','0','收费项目','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('86','16','租赁账单','','lease','bill','','0','1','0','1','1','1','0','1','0','1','0','0','1','1','0','0','0','收款','催费','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('89','5','物品登记','','progoods','list','','0','1','0','1','1','1','0','1','0','0','0','0','1','0','0','0','0','物品分类','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('112','3','对账单','','feecalb','paybill','','9','1','0','1','1','1','1','1','0','1','0','0','1','1','0','0','0','发票登记','打小票','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('101','7','月卡记录','','car','monthcarlog','','0','1','0','1','1','1','1','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('102','7','停车缴费','','car','parkpaylog','','0','1','0','1','1','1','1','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('103','7','续租记录','','car','carbillpay','','0','1','0','1','1','1','1','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('104','16','缴费记录','','leasea','list','','0','1','0','1','1','1','1','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('105','4','智能充电统计','','report','charging','','0','1','1','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('106','4','自助设备统计','','report','selfdevice','','0','1','1','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('107','4','停车缴费统计','','report','carpay','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('108','5','内部工单','','repairp','list','','0','1','0','1','1','1','1','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('109','4','内部工单分析','','report','repairplist','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('110','4','收支统计分析','','report','costlist','','0','1','0','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('111','5','临时访客','','visit','list','','0','1','0','1','1','1','1','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('113','12','活动管理','','activity','list','','0','1','0','1','1','1','1','1','0','0','0','0','1','1','0','0','0','参数设置','查看数据','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('114','6','会员管理','','member','fans','','0','1','1','1','1','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('115','1','支付日志','','paylog','list','','0','1','0','0','0','1','0','1','0','0','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secprg VALUES 
+('116','3','账单分析','','feecalc','feebill','','9','1','0','1','1','1','1','1','0','1','0','0','0','0','0','0','0','','','','','','1');
+INSERT INTO ims_rhinfo_zyxq_secsys VALUES 
+('1','系统管理','99','0','1','Hui-iconfont-manage');
+INSERT INTO ims_rhinfo_zyxq_secsys VALUES 
+('2','主体管理','1','0','1','Hui-iconfont-home');
+INSERT INTO ims_rhinfo_zyxq_secsys VALUES 
+('3','费用管理','5','0','1','Hui-iconfont-money');
+INSERT INTO ims_rhinfo_zyxq_secsys VALUES 
+('4','决策分析','6','0','1','Hui-iconfont-tongji');
+INSERT INTO ims_rhinfo_zyxq_secsys VALUES 
+('5','物业管家','2','0','1','Hui-iconfont-quanbudingdan');
+INSERT INTO ims_rhinfo_zyxq_secsys VALUES 
+('6','住户管理','3','0','1','Hui-iconfont-usergroup2');
+INSERT INTO ims_rhinfo_zyxq_secsys VALUES 
+('7','车位管理','4','0','1','Hui-iconfont-align-justify');
+INSERT INTO ims_rhinfo_zyxq_secsys VALUES 
+('8','页面管理','98','1','1','Hui-iconfont-yuedu');
+INSERT INTO ims_rhinfo_zyxq_secsys VALUES 
+('9','安防管理','7','0','1','Hui-iconfont-yanjing');
+INSERT INTO ims_rhinfo_zyxq_secsys VALUES 
+('10','环境管理','8','0','0','Hui-iconfont-huangguan');
+INSERT INTO ims_rhinfo_zyxq_secsys VALUES 
+('11','社区论坛','9','0','1','Hui-iconfont-user-zhanzhang');
+INSERT INTO ims_rhinfo_zyxq_secsys VALUES 
+('12','动态管理','10','0','1','Hui-iconfont-tuwenxiangqing');
+INSERT INTO ims_rhinfo_zyxq_secsys VALUES 
+('13','周边商家','81','1','1','Hui-iconfont-jifen');
+INSERT INTO ims_rhinfo_zyxq_secsys VALUES 
+('14','事务管理','82','1','1','Hui-iconfont-user-group');
+INSERT INTO ims_rhinfo_zyxq_secsys VALUES 
+('15','运营策略','97','1','1','Hui-iconfont-tongji-bing');
+INSERT INTO ims_rhinfo_zyxq_secsys VALUES 
+('16','租赁管理','4','0','1','Hui-iconfont-hetong');
+]]></install>
+	<uninstall><![CDATA[DROP TABLE IF EXISTS `ims_rhinfo_zyxq_activity`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_activity_sign`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_activity_vote`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_article`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_article_category`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_article_log`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_banner`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_banner_statistics`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_building`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_car`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_car_feeorder`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_car_iolog`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_car_whitelist`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_carbill`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_carmove`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_category`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_costdetail`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_costitem`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_devpatrol_category`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_devpatrol_cateitem`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_devpatrol_content`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_devpatrol_device`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_devpatrol_task`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_devsupplier`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_door`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_door_faces`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_door_visit`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_doorlog`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_elevator`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_elevatorlog`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_environ_arrange`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_environ_grecord`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_environ_greeninfo`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_environ_record`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_feebill`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_feebill_create`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_feebillitem`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_feeitem`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_feeitem_building`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_feelocation`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_garage`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_house_tag`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_lease`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_leasebill`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_leasebillitem`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_leaselocation`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_lessee`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_location`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_mc_members`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_member`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_member_sub`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_mycar`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_nav`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_navcate`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_notice`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_notice_log`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_notice_sendlog`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_operationvideo`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_pagediy`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_pagediy_cate`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_parking`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_parkingio`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_parkingiolog`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_parkinglock`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_parkinglog`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_parkinglot`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_parkinglot_coupon`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_parkingrule`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_parklock_share`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_parklocklog`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_parkpay_log`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_parkshare_paylog`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_patrolline`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_patrollog`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_patrolpos`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_paylog`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_pmember`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_pricerule`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_printer`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_progoods`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_progoods_cate`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_property`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_qacate`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_question`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_rbanner`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_region`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_region_account`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_region_comment`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_region_follow`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_region_smslog`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_regionav`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_regionmenu`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_repair`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_repair_comment`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_repair_record`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_repairp`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_repairp_record`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_replyrule`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_room`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_room_abnlog`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_room_chglog`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_room_feeitem`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_room_mp`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_room_parking`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_room_tag`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_roomprice`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_secacc`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_secaprg`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_secasys`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_secgprg`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_secgroup`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_secgsys`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_sechelp`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_secprg`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_secsys`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_secuser`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_shop`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_shop_abnlog`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_shop_chglog`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_shop_mp`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_sns_board`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_sns_board_follow`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_sns_category`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_sns_complain`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_sns_complaincate`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_sns_level`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_sns_like`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_sns_manager`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_sns_member`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_sns_post`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_suggest`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_suggest_comment`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_suggest_record`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_sysagreement`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_syslog`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_syspub`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_sysset`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_team`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_team_comment`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_telcate`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_telphone`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_unit`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_version`;
+DROP TABLE IF EXISTS `ims_rhinfo_zyxq_wepay_log`;
+]]></uninstall>
+	<upgrade><![CDATA[upgrade.php]]></upgrade>
+
+</manifest>

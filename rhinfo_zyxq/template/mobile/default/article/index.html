@@ -1,0 +1,125 @@
+{template $this->mytpl('_header')}
+<style>
+.verify-pop {
+    position: fixed;
+}
+
+.verify-pop .qrcode {
+    width: 250px;
+    margin-left: -125px;
+    border-radius: 0.3rem;
+    height: auto;
+    overflow: hidden;
+}
+
+.verify-pop.pop .qrcode {
+    width: 90%;
+    margin-left: -45%;
+    overflow: hidden;
+    display: block;
+}
+
+.verify-pop.pop .qrcode .inner .title {
+    text-align: center;
+    font-size: 1rem;
+    height: 1.5rem;
+}
+		
+</style>
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">最新资讯</div>
+		<div class="fui-header-right">
+		{if !empty($categorys)}<span id="articlecate"><i class="icon icon-app"></i></span>{/if}
+		</div>
+	</div>
+	<div class='fui-content'>
+		
+		{if !empty($banners)}
+			<div class='fui-swipe'>
+				<div class='fui-swipe-wrapper'>
+					{loop $banners $banner}
+						<a class='fui-swipe-item' href="javascript:;" {if !empty($banner['link'])} onclick="countHit(this,'{$banner['pid']}','{$banner['rid']}','{$banner['id']}','{$banner['link']}','{$banner['wxappid']}','{$banner['wxapppage']}','{php echo !empty($banner['bgimage'])?tomedia($banner['bgimage']):$this->syscfg['wxminibgimage'];}')"{/if}><img src="{php echo tomedia($banner['thumb'])}" /></a>
+					{/loop}
+				</div>
+				<div class='fui-swipe-page'></div>
+			</div>
+		{/if}
+	
+		
+		<div class="fui-tab-scroll">
+			<div class='article-container'>
+				<span class='item {if empty($cateid) || $cateid==0}on{/if}' data-cate >全部资讯</span>
+				{loop $categorys $category}
+					<span class="item {if $cateid==$category['id']}on{/if}" data-cateid="{$category['id']}" id="cate{$category['id']}">{$category['title']}</span>
+				{/loop}
+			</div>
+		</div>
+	
+		<div class="threadlist box_bg">
+			<ul><div class="container"></div></ul>
+		</div>		
+		<div class="content-empty" style="display:none;">
+		<i class="icon icon-text1"></i> <br/>暂时没有任何内容</div>
+        <div class='infinite-loading'>
+		<span class='fui-preloader'></span><span class='text'> 正在加载...</span>
+		</div>	
+
+		{if !empty($categorys)}
+		<div class="pop-article-hidden" style="display: none;">
+			<div class="verify-pop pop">
+			 <div class="close"><i class="icon icon-roundclose"></i></div>
+				<div class="qrcode">
+					<div class="fui-icon-group noborder">
+						{loop $categorys $nav}
+							<div class="fui-icon-col" data-cateid="{$nav['id']}" >
+								<div class="icon">{if !empty($nav['thumb'])}<img src="{php echo tomedia($nav['thumb'])}" />{/if}</div>
+								<div class="text">{$nav['title']}</div>
+							</div>
+						{/loop}
+					</div>										
+				</div>
+			</div>
+		</div>
+		{/if}
+	</div>	
+	<script language='javascript'>
+		require(['article/index'], function (modal) {
+			modal.init({			  
+			   rid:"{$rid}",total:"{$total}"
+			});
+		});
+
+		function countHit(obj,pid,rid,bannerid,link,wxappid,wxapppage,bgimage){	
+		 core.json('service/bannerhit', {
+				pid:pid,rid:rid,bannerid:bannerid
+			}, function(ret) {
+				if (ret.status == 1) {
+					wx.miniProgram.getEnv(function(res){
+						if(res.miniprogram){
+							if(wxappid !==''){
+								var path = '/pages/index/navto?wxappid=' + wxappid +'&wxapppage=' + wxapppage + '&bgimage=' + bgimage;
+								wx.miniProgram.navigateTo({
+									url: path
+								}); 							
+							}
+							else{
+								 location.href = link;
+							}
+							return
+						}
+						else{
+							location.href = link;
+							return
+						}
+					});			   
+				}				
+			},false, true)
+		}
+	</script>
+ </div>
+
+{template $this->mytpl('_footer')}

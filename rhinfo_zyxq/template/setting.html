@@ -1,0 +1,128 @@
+{template 'common/header'}
+<form action="" method="post" class="form-horizontal form" enctype="multipart/form-data" id="form1">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			参数设置
+		</div>
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">服务商公众号appid</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" id="serviceappid" value="{$settings['serviceappid']}" placeholder="服务商公众号appid" name="serviceappid">
+					<span class="help-block">申请公众号服务商支付,且须开启微信支付功能，微擎功能选项-支付参数-<a href="{php echo url('profile/payment')}" target="_blank">微信支付</a>.</span>
+				</div>		
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">服务商公众号appSecret</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" id="serviceappsecret" value="{$settings['serviceappsecret']}" placeholder="服务商公众号appsecret" name="serviceappsecret">
+					<span class="help-block">申请公众号服务商支付,且须开启微信支付功能，微擎功能选项-支付参数-<a href="{php echo url('profile/payment')}" target="_blank">微信支付</a>.</span>
+				</div>		
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">服务商户号</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" id="servicemerchid" value="{$settings['servicemerchid']}" placeholder="输入服务商户号" name="servicemerchid">
+					<span class="help-block">申请公众号服务商支付,且须开启微信支付功能，微擎功能选项-支付参数-<a href="{php echo url('profile/payment')}" target="_blank">微信支付</a>.</span>
+				</div>		
+			</div>
+			 <div class="form-group">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">商户支付密钥</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<div class="input-group">
+						<input type="text" name="merchsecret" id="merchsecret" class="form-control" maxlength="32" value="{$settings['merchsecret']}" autocomplete="off"/>
+						<span onclick="tokenGen('merchsecret');" style="cursor:pointer" class="input-group-addon">生成新的</span>
+					</div>
+					<span class="help-block">此商户秘钥为服务商户对应的支付秘钥。</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">腾讯地图key</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" id="qq_lbskey" value="{$settings['qq_lbskey']}" placeholder="输入腾讯地图key" name="qq_lbskey">
+					<span class="help-block"><a href="http://lbs.qq.com/" target="_blank">申请腾讯地图key</a>.</span>
+				</div>		
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">百度地图ak</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" id="bd_lbsak" value="{$settings['bd_lbsak']}" placeholder="输入百度地图ak" name="bd_lbsak">
+					<span class="help-block"><a href="http://lbsyun.baidu.com/" target="_blank">申请百度地图ak</a>.</span>
+				</div>		
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">极速数据key</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" id="js_appkey" value="{$settings['js_appkey']}" placeholder="输入极速数据key" name="js_appkey">
+					<span class="help-block">可用于天气数据、图片识别、快递查询等<a href="https://www.jisuapi.com/" target="_blank">申请极速数据key</a>.</span>
+				</div>		
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">快递查询方式</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<label class="radio-inline">
+						<input type="radio" name="expressapi" value="0" {if empty($settings['expressapi']) || $settings['expressapi']==0 } checked{/if} /> 免费接口</label>
+					<label  class="radio-inline">
+						<input type="radio" name="expressapi" value="1" {if $settings['expressapi']==1 } checked{/if} /> 快递100免费用户</label>
+					<label  class="radio-inline">
+						<input type="radio" name="expressapi" value="2" {if $settings['expressapi']==2 } checked{/if} /> 快递100企业用户</label>
+					<label  class="radio-inline">
+						<input type="radio" name="expressapi" value="3" {if $settings['expressapi']==3 } checked{/if} /> 极速数据接口</label>
+					<span class="help-block">用于查询快递轨迹.</span>			
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">快递100用户id</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" id="kd_uid" value="{$settings['kd_uid']}" placeholder="输入快递100用户id" name="kd_uid">
+					<span class="help-block">可为空，开通企业服务须填写，<a href="https://www.kuaidi100.com/" target="_blank">申请快递100用户</a>.</span>
+				</div>		
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">腾讯优图AI开发者QQ</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" value="{$settings['yt_qq']}" placeholder="输入创建应用时的QQ号" name="yt_qq">
+					<span class="help-block"><a href="https://open.youtu.qq.com/#/open/developer/join" target="_blank">申请腾讯优图AI</a>.</span>
+				</div>		
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">腾讯优图AI应用AppId</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" value="{$settings['yt_appid']}" placeholder="输入应用AppId" name="yt_appid">
+					<span class="help-block"><a href="https://open.youtu.qq.com/#/open/developer/join" target="_blank">申请腾讯优图AI</a>.</span>
+				</div>		
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">腾讯优图AI应用SecretID</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" value="{$settings['yt_secretid']}" placeholder="输入应用SecretId" name="yt_secretid">
+					<span class="help-block"><a href="https://open.youtu.qq.com/#/open/developer/join" target="_blank">申请腾讯优图AI</a>.</span>
+				</div>		
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">腾讯优图AI应用SecretKey</label>
+				<div class="col-sm-7 col-lg-8 col-xs-12">
+					<input type="text" class="form-control" value="{$settings['yt_secretkey']}" placeholder="输入应用SecretID" name="yt_secretkey">
+					<span class="help-block"><a href="https://open.youtu.qq.com/#/open/developer/join" target="_blank">申请腾讯优图AI</a>.</span>
+				</div>		
+			</div>
+			<script type="text/javascript">
+				function tokenGen(id) {
+					var letters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+					var token = '';
+					for(var i = 0; i < 32; i++) {
+						var j = parseInt(Math.random() * (31 + 1));
+						token += letters[j];
+					}
+					$('#'+id).val(token);
+				}
+			</script>
+		</div>	
+	</div>
+	<div class="form-group col-sm-12">
+		<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" />
+		<input type="hidden" name="token" value="{$_W['token']}" />
+	</div>	
+	<br>
+</form>
+{template 'common/footer'}

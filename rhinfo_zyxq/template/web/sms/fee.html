@@ -1,0 +1,253 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<style type="text/css">
+.nav-tabs li a { padding: 3px 10px;}
+.file{ position:absolute; top:0; left:0;height:36px;filter:alpha(opacity:0);opacity:0;width:85px;cursor:pointer; }
+</style>
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body"> 
+	<ul class="nav nav-tabs">		 		  
+		  <li><a href="{php echo $this->createWeburl('category',array('op'=>'list','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >分类设置</a></li>		
+		   <li><a href="{php echo $this->createWeburl('sms',array('op'=>'base','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >基本设置</a></li>
+		    <li class="active"><a href="{php echo $this->createWeburl('sms',array('op'=>'fee','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >账单设置</a></li>
+		  {if !empty($_W['uid'])}<li><a href="{php echo $this->createWeburl('sms',array('op'=>'market','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >策略设置</a></li>{/if}
+		   <li><a href="{php echo $this->createWeburl('printer',array('op'=>'list','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >云打印机</a></li>
+		   <li><a href="{php echo $this->createWeburl('sms',array('op'=>'index','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >短信设置</a></li>
+		  {if !empty($_W['uid'])}<li><a href="{php echo $this->createWeburl('sms',array('op'=>'intelligence','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >智慧设置</a></li>{/if}
+		   <li><a href="{php echo $this->createWeburl('sms',array('op'=>'door','pid'=>$pid,'rid'=>$rid,'category'=>$category)).$mywe['direct'];}" >其他设置</a></li>
+	</ul>
+	<br>
+	<div class="tab-content">			
+		<div class="panel panel-default">	
+			<div class="panel-body ">
+				<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >		
+					<input type="hidden" name="token" value="{$_W['token']}" />			
+					<input type="hidden" name="pid" value="{$pid}" />		
+					<input type="hidden" name="rid" value="{$rid}" />								
+
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">缴费期数推算</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="feebillmonth" value="0" {if empty($item['feebillmonth']) || $item['feebillmonth']==0 } checked{/if} />自然月</label>
+							<label  class="radio-inline">
+								<input type="radio" name="feebillmonth" value="1" {if $item['feebillmonth']==1 } checked{/if} />依30天推算</label>
+							<label  class="radio-inline">
+								<input type="radio" name="feebillmonth" value="2" {if $item['feebillmonth']==2 } checked{/if} />依周期推算</label>
+							<span class="help-block">自然月缴费截止日期为每月最后一天，依30天推算和周期推算缴费截止日期不限，依周期推算28~31日自动补齐到当月最后一天</span>			
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">免费是否生成账单</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="freebill" value="1" {if $item['freebill']==1 } checked{/if} />生成</label>
+							<label  class="radio-inline">
+								<input type="radio" name="freebill" value="2" {if empty($item['freebill']) || $item['freebill']==2 } checked{/if} /> 不生成</label>
+							<span class="help-block">依据房产收费状态设置</span>			
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">空置是否生成账单</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="emptybill" value="1" {if $item['emptybill']==1 } checked{/if} />生成</label>
+							<label  class="radio-inline">
+								<input type="radio" name="emptybill" value="2" {if empty($item['emptybill']) || $item['emptybill']==2 } checked{/if} /> 不生成</label>
+							<span class="help-block">依据房产收费状态设置</span>			
+						</div>
+					</div>	
+
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">异常是否生成账单</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="abnbill" value="1" {if $item['abnbill']==1 } checked{/if} />生成</label>
+							<label  class="radio-inline">
+								<input type="radio" name="abnbill" value="2" {if empty($item['abnbill']) || $item['abnbill']==2 } checked{/if} /> 不生成</label>
+							<span class="help-block">依据房产收费状态设置</span>			
+						</div>
+					</div>					
+
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">空置享受折扣</label>
+							<div class="col-sm-7 col-lg-8 col-xs-12">
+								<input type="number" class="form-control" id="discount" value="{$item['discount']}" placeholder="输入折扣" name="discount">
+								<span class="help-block">请输入折扣1~10这间的数值，为空则不折扣</span>
+							</div>	
+					</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">账单显示样式</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="feeshowtype" value="1" {if $item['feeshowtype']==1 } checked{/if} />按年份分类显示</label>
+							<label  class="radio-inline">
+								<input type="radio" name="feeshowtype" value="0" {if empty($item['feeshowtype']) || $item['feeshowtype']==0 } checked{/if} /> 按时间顺序全部显示</label>
+							<span class="help-block">在线缴费时，账单显示样式</span>			
+						</div>
+					</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">缴费账单选择控制</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="feecontrol" value="2" {if $item['feecontrol']==2 } checked{/if} />全部收费项目且不可选择性缴费</label>
+							<label class="radio-inline">
+								<input type="radio" name="feecontrol" value="1" {if $item['feecontrol']==1 } checked{/if} />全部收费项目按日期先后顺序缴费</label>
+							<label  class="radio-inline">
+								<input type="radio" name="feecontrol" value="0" {if empty($item['feecontrol']) || $item['feecontrol']==0 } checked{/if} /> 依收费项目和日期先后顺序缴费</label>
+							<span class="help-block">在线缴费时，账单选择控制</span>			
+						</div>
+					</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">违约金计算方法</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="latemethod" value="1" {if $item['latemethod']==1 } checked{/if} />不含起算天数</label>
+							<label  class="radio-inline">
+								<input type="radio" name="latemethod" value="0" {if empty($item['latemethod']) || $item['latemethod']==0 } checked{/if} /> 含起算天数</label>
+							<span class="help-block">计算违约金时，不含起算天数是指账单截止日期之后的起算天数开始计算，含超算天数是指超过超算天数后从账单截止日期开始计算</span>			
+						</div>
+					</div>	
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">账单撤销控制</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<div class="input-group">
+							   <input type="number" name="undodays" class="form-control" placeholder="输入天数" value="{$item['undodays']}" />
+							   <span class="input-group-addon">天</span>		   
+						   </div>
+						   <span class="help-block">为０和支付已超过天数则不可以撤销.</span>
+						</div>	
+					</div>
+					{if $_W['role'] == 'founder' || $_W['role']=='owner' || $_W['role']=='manager'}
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">账单特权控制</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="feebillgrant" value="1" {if $item['feebillgrant']==1 } checked{/if} />允许</label>
+							<label  class="radio-inline">
+								<input type="radio" name="feebillgrant" value="0" {if empty($item['feebillgrant']) || $item['feebillgrant']==0 } checked{/if} /> 不允许</label>
+							<span class="help-block">此控制开启后，补历史账单、删除撤销账单不受任何控制，谨慎开启</span>			
+						</div>
+					</div>
+					{/if}
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">缴费凭证是否打印备注</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="isprintremark" value="1" {if $item['isprintremark']==1 } checked{/if} />打印</label>
+							<label  class="radio-inline">
+								<input type="radio" name="isprintremark" value="0" {if empty($item['isprintremark']) || $item['isprintremark']==0 } checked{/if} /> 不打印</label>
+							<span class="help-block">控制缴费凭证打印时是否打印备注内容，不打印则显示空白栏位</span>			
+						</div>
+					</div>	
+
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">缴费凭证号前缀</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							   <input type="text" name="pznopre" class="form-control" placeholder="输入单号前缀" value="{php echo !empty($item['pznopre'])?$item['pznopre']:'FEE';}" />
+						   <span class="help-block">打印缴费凭证单号前置字符定义，不能超过10个字符.</span>
+						</div>	
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">缴费凭证印章图片</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<div class="input-group">
+								 <input type='text' name='sealimage' id='sealimage' value="{$item['sealimage']}" class='form-control' />  
+								 <span class="input-group-btn">
+									<input type='button' class="btn btn-default" value='选择图片' />
+									<input type="file" name="upfile" class="file" id="upfile" size="28" accept="image/*" onchange="document.getElementById('sealimage').value=this.value" />
+								 </span>								
+							</div>	
+							{if !empty($item['sealimage'])}
+							<div class="input-group " style="margin-top:.5em;">
+								<img src="{media $item['sealimage']}" onerror="this.src='./resource/images/nopic.jpg'; this.title='图片未找到.'" class="img-responsive img-thumbnail"  width="150" />
+								<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片" onclick="deleteImage(this)">×</em>
+							</div>	
+							{/if}
+							<span class="help-block"></span>
+						</div>	
+					</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">催费凭证印章图片</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<div class="input-group">
+								 <input type='text' name='fsealimage' id='fsealimage' value="{$item['fsealimage']}" class='form-control' />  
+								 <span class="input-group-btn">
+									<input type='button' class="btn btn-default" value='选择图片' />
+									<input type="file" name="upfile1" class="file" id="upfile1" size="28" accept="image/*" onchange="document.getElementById('fsealimage').value=this.value" />
+								 </span>								
+							</div>	
+							{if !empty($item['fsealimage'])}
+							<div class="input-group " style="margin-top:.5em;">
+								<img src="{media $item['fsealimage']}" onerror="this.src='./resource/images/nopic.jpg'; this.title='图片未找到.'" class="img-responsive img-thumbnail"  width="150" />
+								<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片" onclick="deleteImage(this)">×</em>
+							</div>	
+							{/if}
+							<span class="help-block"></span>
+						</div>	
+					</div>	
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">抄表账单周期是否精确打印</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="isprintdate" value="1" {if $item['isprintdate']==1 } checked{/if} />是</label>
+							<label  class="radio-inline">
+								<input type="radio" name="isprintdate" value="0" {if empty($item['isprintdate']) || $item['isprintdate']==0 } checked{/if} /> 否</label>
+							<span class="help-block">抄表账单周期精确打印是指显示具体日期范围，选择“是”则显示日期，选择“否”则显示月份</span>			
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">缴费是否打印明细</label>
+						<div class="col-sm-7 col-lg-8 col-xs-12">
+							<label class="radio-inline">
+								<input type="radio" name="isprintfeedetail" value="1" {if $item['isprintfeedetail']==1 } checked{/if} />打印</label>
+							<label  class="radio-inline">
+								<input type="radio" name="isprintfeedetail" value="0" {if empty($item['isprintfeedetail']) || $item['isprintfeedetail']==0 } checked{/if} /> 不打印</label>
+							<span class="help-block">缴费后小票打印机的打印内容</span>			
+						</div>
+					</div>		
+										
+
+					<div class="col-lg-9 col-xs-12 col-sm-offset-2" style="margin-top:8px;">   
+						<button  class="btn btn-primary" ><i class="fa fa-save"></i> 保存</button>
+						<a href="javascript:;" class="btn btn-default"  onclick="myreturn()"><i class="fa fa-reply"></i> 返回<a/>
+					</div>
+				</form>
+				
+			</div> 
+	</div>  
+	</div>
+	</div>	
+  </div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+var pid = {$pid};
+var rid = {$rid};
+
+function showLinkDialog(elm) {
+	var ipt = $(elm).parent().prev();
+	util.linkBrowser(function(href){		
+		ipt.val(href);			
+	});
+}
+function deleteImage(elm){
+	$(elm).prev().attr("src", "./resource/images/nopic.jpg");
+	$(elm).parent().prev().find(".form-control").val("");
+}
+function myreturn(){
+	var url = "{php echo $this->createWeburl('region',array('op'=>$rlist,'category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid;	
+	window.location.href = url;
+}
+
+</script>
+</body>
+</html>

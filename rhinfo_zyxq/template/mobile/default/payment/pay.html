@@ -1,0 +1,135 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:after{border-bottom:0px;}
+.fui-list-group:not(.fui-list-group-o):before {
+	border-top: 0px;	
+}
+.fui-list-group:not(.fui-list-group-o):after {	
+	border-top: 0px;	
+}
+.fui-list:before{
+	border-top: 0px;
+}
+</style>
+<div class='fui-page  fui-page-current order-pay-page'>
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">收银台</div>
+        <div class="fui-header-right">
+			{if $params['feetype']==1}
+            <a href="{php echo $this->createMobileUrl('member',array('op'=>'myfee'))}" class="external">账单</a>
+			{/if}
+        </div>
+    </div>
+    <div class='fui-content margin'>
+        <div class="fui-cell-group">
+		    <div class="fui-cell">
+                <div class="fui-cell-label">{if $params['feetype']==1}房产编号{elseif $params['feetype']==2}车位编号{elseif $params['feetype']==11}承租人{/if}</div>
+                <div class="fui-cell-info"></div>
+                <div class="fui-cell-remark noremark">{$params['title']}</div>
+            </div>
+            <div class="fui-cell">
+                <div class="fui-cell-label">账单编号</div>
+                <div class="fui-cell-info"></div>
+                <div class="fui-cell-remark noremark">{$params['ordersn']}</div>
+            </div>
+            <div class="fui-cell">
+                <div class="fui-cell-label">账单金额</div>
+                <div class="fui-cell-info"></div>
+                <div class="fui-cell-remark noremark"><span class='text-danger'>￥{php echo number_format($params['fee'],2)}</span>
+                </div>
+            </div>
+        </div>
+        <div class='fui-list-group' style="margin-top:10px;"> 
+			{if $this->rhinfo_isalipay}				
+				<form id="al_payform" action="{php echo $this->createMobileUrl('mycash',array('op' => 'alipay'));}" method="post">
+					<input type="hidden" name="params" id="payparams" value="{php echo base64_encode(json_encode($params));}" />
+				</form>
+				<div class='fui-list pay-btn' id='aliapp-btn'>
+					 <div class='fui-list-media'>
+					  <img src="../addons/rhinfo_zyxq/static/mobile/images/alipay.png" width="30" />
+					</div>
+					<div class='fui-list-inner'>
+						<div class="title">支付宝支付</div>
+						<div class="subtitle">支付宝安全支付</div>				
+					</div>
+					<div class='fui-list-angle'><span class="angle"></span></div>
+				</div>				
+			{else}			
+				{if ($setting['payment']['wechat']['switch']==1 || !empty($this->syscfg['iswxpay'])) && empty($_GPC['iswxapp'])}
+				<form id="wx_payform" action="{php echo $this->createMobileUrl('mycash',array('op' => 'wechat'));}" method="post">
+					<input type="hidden" name="params" id="payparams" value="{php echo base64_encode(json_encode($params));}" />
+				</form>
+				<div class='fui-list pay-btn' id='weixin-btn'>
+					<div class='fui-list-media'>
+					   <img src="../addons/rhinfo_zyxq/static/mobile/images/wxpay.png" width="40" />
+					</div>
+					<div class='fui-list-inner'>
+						<div class="title">微信支付</div>
+						<div class="subtitle">微信安全支付</div>					
+					</div>
+					<div class='fui-list-angle'><span class="angle"></span></div>
+				</div>
+				{/if}
+				
+				{if ($setting['payment']['wechat']['switch']==1 || !empty($this->syscfg['iswxpay'])) && $_GPC['iswxapp']==1}
+				<input type="hidden" id="wxapp_params" name="params" value="{php echo base64_encode(json_encode($params));}" />
+				<div class='fui-list pay-btn' id='wxapp-btn'>
+					<div class='fui-list-media'>
+					   <img src="../addons/rhinfo_zyxq/static/mobile/images/wxpay.png" width="40" />
+					</div>
+					<div class='fui-list-inner'>
+						<div class="title">微信支付</div>
+						<div class="subtitle">微信安全支付</div>					
+					</div>
+					<div class='fui-list-angle'><span class="angle"></span></div>
+				</div>
+				{/if}
+				<!--
+				{if ($setting['payment']['alipay']['switch']==1 || $this->syscfg['isalipay']==1) && $this->rhinfo_wap && $isalipay==1}
+				<form id="al_payform" action="{php echo $this->createMobileUrl('mycash',array('op' => 'alipay'));}" method="post">
+					<input type="hidden" name="params" value="{php echo base64_encode(json_encode($params));}" />
+					<input type="hidden" name="code" value="" />
+					<input type="hidden" name="coupon_id" value="" />
+				</form>
+				<div class='fui-list pay-btn' id='alipay-btn'>
+					 <div class='fui-list-media'>
+					  <img src="../addons/rhinfo_zyxq/static/mobile/images/alipay.png" width="30" />
+					</div>
+					<div class='fui-list-inner'>
+						<div class="title">支付宝支付</div>
+						<div class="subtitle">支付宝安全支付</div>				
+					</div>
+					<div class='fui-list-angle'><span class="angle"></span></div>
+				</div>
+				{elseif $this->syscfg['isalipay']==2 && $_GPC['iswxapp']!=1 && $isalipay==1}
+				<form id="al_payform" action="{php echo $this->createMobileUrl('mycash',array('op' => 'alipay'));}" method="post">
+					<input type="hidden" name="params" value="{php echo base64_encode(json_encode($params));}" />
+					<input type="hidden" name="code" value="" />
+					<input type="hidden" name="coupon_id" value="" />
+				</form>
+				<div class='fui-list pay-btn' id='alipay-btn'>
+					 <div class='fui-list-media'>
+					  <img src="../addons/rhinfo_zyxq/static/mobile/images/alipay.png" width="30" />
+					</div>
+					<div class='fui-list-inner'>
+						<div class="title">支付宝支付</div>
+						<div class="subtitle">支付宝安全支付</div>				
+					</div>
+					<div class='fui-list-angle'><span class="angle"></span></div>
+				</div>
+				{/if}-->
+			{/if}						
+        </div>
+    </div>
+    <script language='javascript'>
+		require(['member/pay'], function (modal) {
+			modal.init({});
+		});
+	</script>
+</div>
+
+{template $this->mytpl('_footer')}

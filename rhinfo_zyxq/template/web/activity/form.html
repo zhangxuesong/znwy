@@ -1,0 +1,144 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+    {if $cate==2} 
+		{if $_W['uid']} 
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label"> <span class="text-danger">*</span>所属物业</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+					{if $operation=='add'}<option value="0">请选择</option>{/if}
+					{loop $myproperty $k $v}
+						<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+					{/loop}
+				</select>				
+			</div>
+		</div>
+		{else}
+			<input type="hidden" class="form-control" id="pid" value="{php echo empty($item['pid'])?$mywe['pid']:$item['pid'];}" name="pid" />
+		{/if}
+		
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>所属主体</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<select class="form-control" id="rid" name="rid" onchange="renderCategory(this,'category','cid')">
+					{if $operation=='add'}	<option value="0">请选择</option>{/if}
+					{loop $eregions $i $r}
+						<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+					{/loop}
+					{if $_W['uid']} 
+					{else}
+						{if $operation=='add'}
+							{loop $regions $i $r}
+								<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+							{/loop}
+						{/if}
+					{/if}
+				</select>
+			</div>
+		</div>		
+	{else}
+		<input type="hidden" class="form-control" id="pid" value="{$item['pid']}" name="pid" />
+		<input type="hidden" class="form-control" id="rid" value="{$item['rid']}" name="rid" />		
+	{/if}
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>活动类别</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control" id="category" name="category" {if $operation=='edit'}disabled{/if}>							
+				<option value="1" {if $item['category'] == 1} selected {/if} >投票活动</option>	
+				<option value="2" {if $item['category'] == 2} selected {/if} >报名活动</option>	
+				<option value="3" {if $item['category'] == 3} selected {/if} >问券调查</option>	
+			</select>
+			<span class="help-block">添加后不可更改，请正确选择</span>	
+		</div>
+	</div>		
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>活动名称</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入活动名称" name="title" />
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">开始日期</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_date('startdate',$item['startdate']);}
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">结束日期</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_date('enddate',$item['enddate']);}
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">参加要求</label>
+		<div class="col-sm-7 col-lg-8 col-xs-12">
+			<label class="radio-inline">
+				<input type="radio" name="checkmethod"  value="0" {if empty($item['checkmethod']) || $item['checkmethod']==0 } checked{/if} />不限</label>
+			<label  class="radio-inline">
+				<input type="radio" name="checkmethod"  value="1" {if $item['checkmethod']==1 } checked{/if} />必须关注公众号</label>
+			<label  class="radio-inline">
+				<input type="radio" name="checkmethod"  value="2" {if $item['checkmethod']==2 } checked{/if} />必须是业主身份</label>
+			<label  class="radio-inline">
+				<input type="radio" name="checkmethod"  value="3" {if $item['checkmethod']==3 } checked{/if} />业主身份且关注</label>
+			<span class="help-block">参加活动的人员要求是否关注公众号或绑定房产</span>			
+		</div>
+	</div>		
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">标题图片</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_image('image',$item['image']);}
+			<span class="help-block">建议尺寸640*320，活动标题及分享显示图片</span>
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">简单描述</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<textarea style="height: 60px;" class="form-control" name="replydesc" placeholder="输入简单描述" >{$item['replydesc']}</textarea>							
+			<span class="help-block">活动描述内容</span>
+		</div>	
+	</div>	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">详细说明</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_ueditor('content', $item['content']);}
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">备注</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="remark" value="{$item['remark']}" placeholder="输入备注" name="remark" />
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">状态</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<label class='radio-inline'>
+			<input type='radio' name='status' value='1'  {if $item['status']==1 } checked{/if}/> 启用
+			</label>
+			<label class='radio-inline'>
+				<input type='radio' name='status' value='0' {if empty($item['status']) || $item['status']==0 } checked{/if} /> 禁用
+			</label>
+		</div>
+	</div>
+	</br>
+</form>	
+
+<script type="text/javascript">
+	window._region = {php echo json_encode($myregion);};
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择</option>';
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		});
+	}
+</script>

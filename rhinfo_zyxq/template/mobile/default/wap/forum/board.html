@@ -1,0 +1,355 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/rhui/css/mui.min.css?v=3.3">
+<style>
+	.mui-preview-image.mui-fullscreen {
+		position: fixed;
+		z-index: 20;
+		background-color: #000;
+	}
+	.mui-preview-header,
+	.mui-preview-footer {
+		position: absolute;
+		width: 100%;
+		left: 0;
+		z-index: 10;
+	}
+	.mui-preview-header {
+		height: 44px;
+		top: 0;
+	}
+	.mui-preview-footer {
+		height: 50px;
+		bottom: 0px;
+	}
+	.mui-preview-header .mui-preview-indicator {
+		display: block;
+		line-height: 25px;
+		color: #fff;
+		text-align: center;
+		margin: 15px auto 4;
+		width: 70px;
+		background-color: rgba(0, 0, 0, 0.4);
+		border-radius: 12px;
+		font-size: 16px;
+	}
+	.mui-preview-image {
+		display: none;
+		-webkit-animation-duration: 0.5s;
+		animation-duration: 0.5s;
+		-webkit-animation-fill-mode: both;
+		animation-fill-mode: both;
+	}
+	.mui-preview-image.mui-preview-in {
+		-webkit-animation-name: fadeIn;
+		animation-name: fadeIn;
+	}
+	.mui-preview-image.mui-preview-out {
+		background: none;
+		-webkit-animation-name: fadeOut;
+		animation-name: fadeOut;
+	}
+	.mui-preview-image.mui-preview-out .mui-preview-header,
+	.mui-preview-image.mui-preview-out .mui-preview-footer {
+		display: none;
+	}
+	.mui-zoom-scroller {
+		position: absolute;
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: flex;
+		-webkit-box-align: center;
+		-webkit-align-items: center;
+		align-items: center;
+		-webkit-box-pack: center;
+		-webkit-justify-content: center;
+		justify-content: center;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		-webkit-backface-visibility: hidden;
+	}
+	.mui-zoom {
+		-webkit-transform-style: preserve-3d;
+		transform-style: preserve-3d;
+	}
+	.mui-slider .mui-slider-group .mui-slider-item img {
+		width: auto;
+		height: auto;
+		max-width: 100%;
+		max-height: 100%;
+	}
+	.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+		width: 100%;
+	}
+	.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
+		display: inline-table;
+	}
+	.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+		display: table-cell;
+		vertical-align: middle;
+	}
+	.mui-preview-loading {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		display: none;
+	}
+	.mui-preview-loading.mui-active {
+		display: block;
+	}
+	.mui-preview-loading .mui-spinner-white {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin-left: -25px;
+		margin-top: -25px;
+		height: 50px;
+		width: 50px;
+	}
+	.mui-preview-image img.mui-transitioning {
+		-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+		transition: transform 0.5s ease, opacity 0.5s ease;
+	}
+	@-webkit-keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+	@keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+	@-webkit-keyframes fadeOut {
+		0% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
+	@keyframes fadeOut {
+		0% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
+	.fui-images img {
+		max-width: 100%;
+		height: auto;
+	}
+
+    .sns-content-info{max-height:4rem;line-height: 1rem;overflow: hidden;}
+	.sns-card-show{padding:0 0.5rem 0.5rem;height:1.5rem;display: block;font-style: normal;color:#0290be;font-size:0.7rem;}
+	.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+	.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+	.btn.btn-primary {
+		background: none;
+		color: #fff;
+		border:none;
+	}
+	.sns-board-page .btn-add-post{
+		position: absolute;
+		bottom:{php echo $this->syscfg['forumbottom']?$this->syscfg['forumbottom']:4;}rem;
+		right:{php echo $this->syscfg['forumright']?$this->syscfg['forumright']:1;}rem;
+		width:2rem;
+		height:2rem;
+		-webkit-border-radius:2rem;
+		-moz-border-radius:2rem;
+		border-radius:2rem;
+		line-height:2rem;
+		background-color:{php echo $this->syscfg['forumthumb']?'none':'#ff6600';};
+		border:{php echo $this->syscfg['forumthumb']?'none':'#ff6600';};
+		opacity:0.8;
+		text-align:center;
+	}
+</style>
+<div class='fui-page fui-page-current sns-board-page'>
+    <div class="fui-content navbar">
+        <div class="fui-shopsign">
+            <div class="store">
+                <img class="storeimg"
+                     src="{php echo empty($board['banner']) ? MODULE_URL.'static/mobile/images/banner.jpg':tomedia($board['banner'])}"/>
+                <div class="fui-list-group" style="margin:5px;">
+                    <div class="fui-list">
+                        <div class="fui-list-media">
+                            <img src="{php echo tomedia($board['logo'])}">
+                        </div>
+                        <div class="fui-list-inner" style="background:rgba(0,0,0,0.6);border-radius:5px;padding:5px;">
+                            <div class="title" >{$board['title']}</div>
+                            <div class="text" style="color:#fff;">话题 {php echo number_format($postcount,0)} 关注 {php echo number_format($followcount,0)}</div>
+                        </div>
+                        <div class="fui-list-media follow">                           
+                            <span class="btn {if !$isfollow}btn-warning{else}btn-default{/if} btn-sm" id="btnFollow">
+                                {if $isfollow}
+                                <i class="icon icon-check"></i> 已关注
+                                {else}
+                                <i class="icon icon-add"></i> 关注
+                                {/if}
+                            </span>
+                          
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {if count($tops)>0}
+            <div class="fui-cell-group sns-top-group" style="margin-top:0">
+                {loop $tops $top}
+                <a class="fui-cell" href="#" >
+                    <div class="fui-cell-info">
+                        <div class="fui-label {if $top['istop']}fui-label-warning{else}fui-label-primary{/if}">置顶</div>
+                        {$top['title']}
+                    </div>
+                    <div class="fui-cell-remark"></div>
+                </a>
+                {/loop}
+
+            </div>
+            {/if}
+
+        </div>
+        <div class="container"></div>
+        <div class="content-empty" style="display:none;"><i class="icon icon-comment"></i> <br/>暂时没有任何话题</div>
+        <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+    </div>
+		<a class="btn btn-primary btn-add-post" href="#sns-board-post-page" >{if $this->syscfg['forumthumb']}<img src="{php echo tomedia($this->syscfg['forumthumb']);}" width="40"/>{else}{if $this->syscfg['forumicon']}<i class="icon {php echo $this->syscfg['forumicon']}"></i>{else}<i class="icon icon-edit2"></i>{/if}{/if}</a>
+</div>
+
+<div id="sns-board-post-page" class='fui-page sns-board-post-page'>
+    <script type="text/javascript">
+        $(function () {
+            $(".btn-add-post").off('click').on('click',function () {
+                $(".fui-cell-info .post-input").val('');
+                $(".fui-cell-info .icon-pic").empty();
+            })
+        })
+    </script>
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back">取消</a>
+        </div>
+        <div class="title">发表话题</div>
+        <div class="fui-header-right"><span id="btnSend" class="btn btn-warning btn-sm"><i class="icon icon-check1"></i> 提交</span></div>
+    </div>
+    <div class="fui-content navbar">
+
+        <div class="fui-cell-group" style="margin-top:0;">
+
+            <div class="fui-cell">
+                <div class="fui-cell-info">
+                    <input type="text" class="fui-input post-input" placeholder="标题 3-25个字" id="title" minlength="3" maxlength="25"/>
+                </div>
+            </div>
+
+            <div class="fui-cell">
+                <div class="fui-cell-info">
+                    <textarea placeholder="内容 10-100个字" class="post-input" rows="6" id="content" minlength="10" maxlength="100"></textarea>
+                </div>
+            </div>
+            <div class="fui-cell reply-func-cell">
+                <div class="fui-cell-info post-func">
+                    <i class="icon icon-emoji"></i>  <i class="icon icon-pic"></i>
+                </div>
+            </div>
+
+            <div class="post-face">
+                <?php for($i=1;$i<=75;$i++) {?>
+                <div class="item" data-face="{$i}"><img src="../addons/rhinfo_zyxq/static/mobile/images/face/{$i}.gif" /></div>
+                <?php } ?>
+            </div>
+
+            {if empty($board['noimage'])}
+            <div class='fui-cell post-image' id="cell-images">
+                <div class='fui-cell-info'>
+                    <ul class="fui-images fui-images-md" id="myimages1"></ul>
+                    <div class="fui-uploader fui-uploader-md" id="uploadimages1"  data-max="5"  data-count="0">
+                       <input type="file" multiple="multiple" aria-multiselectable="true" name="imgFile[]"  id="imgFile{$borad['id']}" accept="image/*"  >
+                    </div>
+                </div>
+            </div>
+            {/if}
+        </div>
+        
+    </div>
+
+</div>
+<!--投诉start-->
+<div id="sns-board-complain-page" class='fui-page sns-board-reply-page'>
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back">取消</a>
+        </div>
+        <div class="title">投诉</div>
+        <div class="fui-header-right"></div>
+    </div>
+    <div class="fui-content navbar">
+        <div class="fui-cell-group" style="margin-top:0;">
+            <div class="complain-title">
+                我要投诉的是<span id="post_member"></span>的<span class="complain-type-span"></span>
+            </div>
+            <input type="hidden" id="complain_type" name="complain_type" value="">
+            <div class="complain-type">
+                <p>请您选择投诉类别：</p>
+                {loop $catelist $item}
+                <span class="fui-lg-1 fui-md-2 fui-sm-3 fui-xs-4"><a href="javascript:void(0);" data-type="{$item['id']}">{$item['name']}</a></span>
+                {/loop}
+                <span class="fui-lg-1 fui-md-2 fui-sm-3 fui-xs-4"><a href="javascript:void(0);" data-type="-1">其他</a></span>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="fui-cell">
+                <div class="fui-cell-info">
+                    <textarea placeholder="内容 10-100个字" rows="6" id="complain_text"></textarea>
+                </div>
+            </div>
+            <div class="fui-cell reply-func-cell">
+                <div class="fui-cell-info post-func">
+                    <i class="icon icon-pic" id="complain-pic"></i>
+                </div>
+            </div>
+
+            {if empty($board['noimage'])}
+            <div class='fui-cell complain-image'>
+                <div class='fui-cell-info'>
+                    <ul class="fui-images fui-images-md" id="myimages2"></ul>
+                    <div class="fui-uploader fui-uploader-md" data-max="5" data-count="0" id="uploadimages2">
+                       <input type="file" name="complainimg[]" id="complainimg{$board['id']}" multiple="" accept="image/*" />
+                    </div>
+                </div>
+            </div>
+            {/if}
+        </div>
+        <a href="javascript:void(0);" id="btnCompSend" class="btn btn-sns-submit">提交</a>
+    </div>
+</div>
+<!--投诉end-->
+{template $this->mytpl('forum/boarditem')}
+
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.min.js"></script>		
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.zoom.js"></script>		
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/mui.previewimage.js"></script>	
+<script language='javascript'>
+    require(['forum/boardwap'], function (modal) {
+        modal.init({
+			bid:"{$_GPC['id']}",
+			total:"{$total}"
+		});
+    });
+	mui.previewImage();
+</script>
+{template $this->mytpl('_footer')}

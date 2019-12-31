@@ -1,0 +1,39 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />
+	<input type="hidden" value="{$item['id']}" id="id" name="id">	
+	<input type="hidden" name="pid" value="{$pid}" >
+	<input type="hidden" name="rid" value="{$rid}" >
+	<input type="hidden" name="bid" value="{$bid}" >
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>单元名称</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入单元名称" name="title">
+		</div>	
+	</div>						
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">总共楼层</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="number" class="form-control" id="floors" value="{$item['floors']}" placeholder="输入总楼层数" name="floors">
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">每层户数</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="number" class="form-control" id="rooms" value="{$item['rooms']}" placeholder="输入每层户数" name="rooms">						
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<div class="input-group">
+				<span class="input-group-addon">
+					<input type="checkbox" id="batchroom" name="batchroom" value="1"> 自动生成房号						
+				</span>
+				<input type="text" class="form-control" id="startnum" value="" placeholder="输入开始房号" name="startnum">				
+			</div>
+			<span class="help-block">编号统一位数可以补0，三位就输入001</span>
+		</div>
+	</div>		
+</form>

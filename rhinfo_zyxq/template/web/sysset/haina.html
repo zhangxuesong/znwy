@@ -1,0 +1,115 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />	
+			<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">海纳接入状态</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<label class="radio-inline">
+						<input type="radio" name="ishaina" value="1" {if $item['ishaina']==1 } checked{/if} /> 开启</label>
+					<label  class="radio-inline">
+						<input type="radio" name="ishaina" value="0" {if empty($item['ishaina']) || $item['ishaina']==0 } checked{/if} /> 关闭</label>
+					<span class="help-block">关闭状态将不获取海纳对接信息</span>			
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">海纳应用APPID</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" value="{$item['haina_appid']}" placeholder="输入APPID" name="haina_appid">
+					<span class="help-block">海纳套件ID.</span>
+				</div>		
+			</div>
+			 <div class="form-group" >
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label">海纳应用SECRET</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">		
+					<input type="text" name="haina_secret" class="form-control" value="{$item['haina_secret']}" placeholder="输入SECRET"  autocomplete="off"/>
+					<span class="help-block">海纳套件密钥.</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">海纳应用agentId</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" value="{$item['haina_agentid']}" placeholder="输入agentId" name="haina_agentid">
+					<span class="help-block">海纳套件agentId.</span>
+				</div>		
+			</div>
+			<div class="form-group" style="display:none;">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">海纳事件接收URL</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" value="{$_W['siteroot']}hnapi.php" disabled />
+					<span class="help-block">请复制链接填写至海纳套件开发信息</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">海纳访问TOKEN</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" name="haina_token" class="form-control" value="{$item['haina_token']}" />
+					<span class="help-block">查看海纳套件开发信息</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">海纳访问EncodeingAESkey</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" name="haina_encodingaeskey" class="form-control" value="{$item['haina_encodingaeskey']}" />
+					<span class="help-block">查看海纳套件开发信息</span>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">蚂蚁金服接入状态</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<label class="radio-inline">
+						<input type="radio" name="isalilife" value="1" {if $item['isalilife']==1 } checked{/if} /> 开启</label>
+					<label  class="radio-inline">
+						<input type="radio" name="isalilife" value="0" {if empty($item['isalilife']) || $item['isalilife']==0 } checked{/if} /> 关闭</label>
+					<span class="help-block">关闭状态将不对接阿里生活缴费</span>			
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">蚂蚁金服应用appid</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<input type="text" class="form-control" id="alilife_appid" value="{$item['alilife_appid']}" placeholder="输入支付宝应用appid" name="alilife_appid">
+					<span class="help-block">蚂蚁金服开放平台创建应用，<a href="https://open.alipay.com" target="_blank"><span class="text-danger">我要申请</span></a>.</span>
+				</div>		
+			</div>	
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">蚂蚁金服RSA2(SHA256)私钥</label>
+				<div class="col-sm-6 col-lg-6 col-xs-12">
+					<textarea class="form-control" name="alilife_rsa2" rows="6" id="alilife_rsa2" autocomplete="off">{$item['alilife_rsa2']}</textarea>	
+					<span class="help-block">此私钥用于对接阿里蚂蚁金服开放平台第三方应用，请粘贴整个文件内容包含头部和尾部内容。</span>
+				</div>	
+			</div>	
+		</form>
+	</div>
+</div>
+
+<nav class="navbar navbar-default navbar-fixed-bottom">
+   <div class="col-sm-8 col-lg-9 col-xs-12 col-sm-offset-2" style="margin-top:8px;">   
+	   <a href="javascript:;" class="btn btn-primary"  onclick="mysubmit(this)"><i class="fa fa-check"></i> 保存<a/>
+   </div>
+</nav>
+
+{template 'web/_iframe_footer'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	myprocess(obj);
+	$("#myform").submit();
+}
+function myprocess(obj){
+	var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/> 处理中...';
+	$(obj).html(html);  
+	$(obj).attr("disabled", "disabled"); 
+}
+function myreturn(){
+	 parent.removeIframe();
+}
+</script>
+
+</body>
+</html>

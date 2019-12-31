@@ -1,0 +1,82 @@
+{template $this->mytpl('_header')}
+<style>
+.verify-pop {
+    position: fixed;
+}
+.verify-pop .qrcode {
+    width: 250px;
+    margin-left: -125px;
+    border-radius: 0.3rem;
+    height: auto;
+    overflow: hidden;
+}
+
+.verify-pop.pop .qrcode {
+    width: 90%;
+    margin-left: -45%;
+    overflow: hidden;
+    display: block;
+}
+.verify-pop.pop .qrcode .inner .title {
+    text-align: center;
+    font-size: 0.75rem;
+    height: 1.5rem;
+	margin-top:0.5rem;
+}
+.fui-card .fui-card-info img {
+	width: 0.8rem;
+	height: 0.8rem;
+}
+</style>
+<div class="fui-page fui-current-page">
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">快速取件</div>
+       <div class="fui-header-right"></div>
+    </div>
+    <div class="fui-content">
+		{if !empty($list)}
+			{loop $list $v}
+			<div class="fui-card fui-card-list " style="overflow:hidden;">
+				<a class='fui-card-info'>
+					<div class="text">                        
+						<div class="title" style="font-size:1rem;">{$v['expresssn']}<span class="pull-right">{if !empty($v['thumb'])}<img src="{$v['thumb']}"/>{/if} {$v['comptitle']}</span></div>
+						<div class="subtitle">{php echo date('Y-m-d H:i',$v['ctime']);}</div>
+						{if !empty($v['location']) || !empty($v['label'])}<div class="subtitle">{$v['location']}&nbsp;{$v['label']}</div>{/if}
+					</div>	
+				</a>
+				<div class='fui-card-btns'> 
+					<a data-qrcode="{$v['qrcode']}" data-toggle='qrcode'><i class="icon icon-qrcode"></i> 取件码</a>					
+					<a data-sn="{$v['orderno']}" data-id="{$v['id']}" data-toggle='take'><i class="icon icon-similarproduct"></i> 领取</a>
+				</div>
+			</div>
+			{/loop}
+		{else}
+		<div class="content-empty">
+			<i class="icon icon-similarproduct" ></i> <br/>暂时还没有快件</div> 
+		{/if}
+    </div>
+	<div class="pop-express-hidden" style="display:none;">
+		<div class="verify-pop pop">
+			<div class="close"><i class="icon icon-roundclose"></i></div> 
+			<div class="qrcode">
+				<div class="inner">
+					<div class="title">取件二维码</div>
+				</div>			
+				<div class="fui-cell-group fui-cell-click external">
+					<div style="text-align:center;" id="eqrcode"></div>
+					<div class="fui-cell-tip" style="text-align:center;">请让驿站管理人员扫一扫</div>
+				</div>	
+			</div>
+		</div>
+	</div>
+	<script language='javascript'>
+		require(['express/index'], function (modal) {
+			modal.init({sid:"{$sid}"}); 
+		});
+	</script>
+</div>
+
+{template $this->mytpl('_footer')}

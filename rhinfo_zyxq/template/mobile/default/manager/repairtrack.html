@@ -1,0 +1,96 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170801">
+<div class='fui-page fui-page-current shop-index-page sns-board-page repair-page'>
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back" ></a>
+	</div>
+	<div class="title">工单记录</div> 
+	<div class="fui-header-right"></div>
+    </div>
+  <div class='fui-content {if $isview}{else}navbar{/if}'>    
+
+	  <div class="fui-title"><i class="icon icon-city"></i> {$housename}</div>
+	  
+	 <div class="fui-cell-group">	
+			<div class="goods-label-list">
+				<div class="goods-label-style3">
+				{loop $cate $item}
+					{if $item['id']==$repair['cid']}
+						<span class="cl-3 cl-4 cl-2" ><strong>{$item['title']}</strong></span>
+					{/if}
+				{/loop}
+				</div>
+			<div class="pull-right">
+				<span><strong class="{$repair['css']}">{$repair['statustext']}</strong></span>			
+			</div>
+			<div style="clear:both;"></div>
+		</div>
+	 
+	 
+		 <div class='fui-cell'>			
+			 <div class='fui-cell-text'>{$repair['content']}</div>
+		 </div> 
+         		 
+	     {if !empty($images)}
+		 <div class='fui-cell'>
+			 <div class='fui-cell-info myrepairimg'>			 
+				 <div class="fui-images fui-images-md image repair-images">
+				 {loop $images $image}
+					<img src="{php echo tomedia($image);}" align='top' onload="if (this.height> 100) {this.style.marginTop = (100 - this.height)/2 + 'px';}" />
+				  {/loop}
+				 </div>			
+			 </div>
+		 </div>
+		 {/if}		 
+	</div>
+	 {if !empty($repair_records)}
+	  <div class="fui-title">工单流程</div>
+		{loop $repair_records $repair_record}
+			 <div class="fui-cell-group">
+				 <div class='fui-cell'>
+					 <div class='fui-cell-label'>
+					 <img class="round" data-lazy="{$repair_record['headimgurl']}" style="width:35px;"/>
+					  <br>
+					  <span style="color: #999;font-size: 0.5rem;">{$repair_record['ctime']}</span>
+					 </div>
+					 <div class='fui-cell-text'>
+						 {$repair_record['content']}
+					 </div>		 
+				 </div>  
+				
+				  {if !empty($repair_record['images'])}  		 
+				 <div class='fui-cell'>
+					 <div class='fui-cell-info myreplyimg'>			 
+						 <div class="fui-images fui-images-md image repair-images" >
+						 {loop $repair_record['images'] $reply_image}				    
+							<img src="{php echo tomedia($reply_image);}" align='top' onload="if (this.height> 100) {this.style.marginTop = (100 - this.height)/2 + 'px';}" />					
+						  {/loop}
+						 </div>			
+					 </div>
+				 </div>	
+				{/if}
+			</div>
+		{/loop}
+	 {/if}
+	<br><br>
+	</div>	 
+	{if $isview} 
+	{else}
+		{if $repair['status'] !=='8'}
+			<a class="btn btn-primary btn-add-post" href="{php echo $this->createMobileurl($mydo,array('op'=>'repairmtrack','id'=>$repair['id']));}"><i class="icon icon-edit2"></i></a>
+			<input type="hidden" id="repair_id" name="repair_id" value="{$repair['id']}">
+			<div class='fui-footer'>
+				<a class='btn btn-success btn-submit block'>已处理好</a>
+			</div>			
+		{/if}
+	{/if}
+	<script language='javascript'>
+		require(['manager/repair'], function (modal) {
+		modal.initTrack({
+			rid: "{$myrid}"
+			}); 
+		});
+	</script>	
+</div> 
+{template $this->mytpl('_footer')}

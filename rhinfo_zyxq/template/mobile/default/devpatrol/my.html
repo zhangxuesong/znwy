@@ -1,0 +1,80 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" href="../addons/rhinfo_zyxq/static/mobile/css/task.css">
+<style type="text/css">
+    .icon {
+        width: 1em; height: 1em;
+        fill: currentColor;
+        overflow: hidden;
+    }
+	.my-icon{
+		height: 1.8rem;
+		width: 100%;
+		float: left;
+		text-align: center;
+		color: #ff9f05;
+	}
+	.my-statustext{
+		height: 1rem;
+		width: 100%;
+		float: left;
+		text-align: center;
+		font-size: 0.6rem;
+		line-height: 0.8rem;
+		color: #ff9f05;
+	}
+</style>
+<div class="fui-page fui-page-current">
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">我的充电</div>
+        <div class="fui-header-right">
+		<a href="{php echo $this->CreateMobileUrl($mydo,array('op'=>'list'));}">充电</a>
+		</div>
+    </div>
+
+    <div class="fui-content mytask-page">
+		<div class='fui-content-inner'>
+            <div class='content-empty' style='display:none;'>
+                <i class='icon icon-lights'></i><br/>您还没有没有充过电<br/>	
+            </div>
+			<div class="zt ing">
+				<div class='container'></div>
+			</div>  
+            <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+        </div>     
+        <div class="task-footer"></div>
+    </div>
+	<script language='javascript'>
+		require(['charging/charging'], function (modal) {
+			modal.initMy();
+		});		
+	</script>
+</div>
+<script type="text/html" id="tpl_mycharging_list">
+	<%each list as row%>
+	   <div class="my-item">
+			<div class="my-title">
+				<div class="my-right">
+					<div class="my-task-title"><%row.title%></div>
+					<div class="my-task-time">充电小时：<%row.hour%></div>
+					<div class="my-task-time">充电时间：<%row.ctime%></div>
+				</div>
+			</div>
+			<div class="my-status">
+				<div class="my-icon">
+				 <span style="<%row.css%>"><%if row.restart==1%><a data-logid="<%row.id%>" class="btn-restart">重试开启</a><%else%><%row.statustxt%><%/if%></span>
+				</div>
+				<div class="my-statustext" style="<%row.css%>">端口：<%row.port%></div>
+				<div class="my-detail">
+					<svg class="icon" aria-hidden="true">
+						<use xlink:href="#icon-unfold"></use>
+					</svg>
+				</div>
+			</div>
+		</div>
+	<%/each%>
+</script>
+
+{template $this->mytpl('_footer')}

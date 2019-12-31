@@ -1,0 +1,181 @@
+{template $this->mytpl('_header')}
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/activity.css?v={TIMESTAMP}">
+{if !empty($this->syscfg['btncolor'])}
+    <style>
+		#btnSubmit {
+			background-color:{php echo $this->syscfg['btncolor']};
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+		}
+		#btnSubmit:active,
+		#btnSubmit.disabled {
+			background: {php echo $this->syscfg['btncolor']};			
+			border: 1px solid {php echo $this->syscfg['btncolor']};
+			opacity:0.5;
+		}
+    </style>
+{/if}
+<style>
+	.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+	.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+	.verify-pop .bind {
+		width: 250px;
+		padding:0 10px 10px 10px;
+		position: absolute;
+		top: 100px;
+		z-index: 1001;
+		background:#ffa64d;
+		opacity:0.9;
+		left: 50%;
+		margin-left: -125px;
+		border-radius:6px;
+	}
+	.verify-pop .bind .fui-cell-group{
+		border-radius:6px;
+		background:#fff;	
+	}
+	.verify-pop .bind .title{
+		text-align:center;
+		padding-top:5px;
+		color:#fff;
+	}
+</style>
+<div class="fui-page fui-page-current">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back"></a>
+		</div>
+		<div class="title">参加活动</div>
+		<div class="fui-header-right"></div>
+	</div>
+	<div class="fui-content navbar">
+		<div class="activity-info">
+			<h3>{$item['title']}</h3>
+			<span class="range"><i class="icon icon-clock"></i>起止日期:&nbsp;&nbsp;<font>{php echo date('Y-m-d',$item['startdate']).'~'.date('Y-m-d',$item['enddate']);}</font></span>
+			<span class="range"><i class="icon icon-group"></i>活动人数:&nbsp;&nbsp;<font>{$item['sign']}人</font></span>
+			{if !empty($item['signmoney'])}<span class="cost"><i class="icon icon-recharge"></i>活动费用:&nbsp;&nbsp;<font>{$item['signmoney']}元/{php echo $item['signmeas']==1?'户':'人';}</font></span>{/if}
+		</div>
+		<div class="fui-cell-group">
+			<form id="myform">		
+			<input type="hidden" class="fui-input" name="id" value="{$item['id']}">
+			<div class="fui-cell must">
+				<div class="fui-cell-label">姓名</div>
+				<div class="fui-cell-info">
+					<input type="text" class="fui-input" name="realname" value="{$_W['member']['realname']}" placeholder="请输入姓名">
+				</div>
+			</div>
+			<div class="fui-cell must">
+				<div class="fui-cell-label">手机号码</div>
+				<div class="fui-cell-info">
+					<input type="text" class="fui-input" name="mobile" value="{$_W['member']['mobile']}" placeholder="请输入手机号码">
+				</div>
+			</div>
+			{loop $signextend $sign}
+				{if $sign['itemtype']=='text'}
+				<div class="fui-cell {if $sign['ischecked']=='1'}must{/if}">
+					<div class="fui-cell-label">{$sign['itemtitle']}</div>
+					<div class="fui-cell-info">
+						<input type="text" name="extend_{$sign['id']}" class="fui-input" placeholder="请输入{$sign['itemtitle']}">
+					</div>
+				</div>
+				{/if}
+				{if $sign['itemtype']=='number'}
+				<div class="fui-cell {if $sign['ischecked']=='1'}must{/if}">
+					<div class="fui-cell-label">{$sign['itemtitle']}</div>
+					<div class="fui-cell-info">
+						<input type="number" name="extend_{$sign['id']}" class="fui-input" placeholder="请输入{$sign['itemtitle']}">
+					</div>
+				</div>
+				{/if}
+				{if $sign['itemtype']=='radio'}
+				<div class="fui-cell ">
+					<div class="fui-cell-label">{$sign['itemtitle']}</div>
+					<div class="fui-cell-info">
+						{loop $sign['itemvalue'] $v}
+						 <input type="radio" name="extend_{$sign['id']}" value="{$v}"  class="fui-radio fui-radio-success"/><label class="fui-label">{$v}</label>
+						 {/loop}	
+					</div>
+				</div>
+				{/if}
+				{if $sign['itemtype']=='checkbox'}
+				<div class="fui-cell ">
+					<div class="fui-cell-label">{$sign['itemtitle']}</div>
+					<div class="fui-cell-info">
+					{loop $sign['itemvalue'] $v}
+						<input type="checkbox" name="extend_{$sign['id']}" value="{$v}"  class="fui-checkbox fui-checkbox-success"/><label class="fui-label">{$v}</label>
+					{/loop}	
+					</div>
+				</div>
+				{/if}
+				{if $sign['itemtype']=='select'}
+				<div class="fui-cell ">
+					<div class="fui-cell-label">{$sign['itemtitle']}</div>
+					<div class="fui-cell-info">
+						<select name="extend_{$sign['id']}">
+							<option value ="">请选择</option>
+							{loop $sign['itemvalue'] $v}
+								<option value ="{$v}">{$v}</option>
+							{/loop}
+						</select>
+					</div>
+				</div>
+				{/if}
+				{if $sign['itemtype']=='textarea'}
+				<div class="fui-cell {if $sign['ischecked']=='1'}must{/if}">
+					<div class="fui-cell-label">{$sign['itemtitle']}</div>
+					<div class="fui-cell-info">
+						 <textarea rows="5" cols="" name="extend_{$sign['id']}" placeholder="内容 10-100个字"></textarea>
+					</div>
+				</div>
+				{/if}
+				{if $sign['itemtype']=='image'}
+				<div class="fui-cell {if $sign['ischecked']=='1'}must{/if}">
+					<input type="hidden" class="fui-input" name="extend_{$sign['id']}" value="">
+					<div class="fui-cell-label">{$sign['itemtitle']}</div>
+					<div class="fui-cell-info">
+							<ul class="fui-images fui-images-md" data-image="extend_{$sign['id']}"></ul>
+							<div class="fui-uploader fui-uploader-md" data-max="1" data-count="0"> 								 
+								  <input type="file" name="imgFile{$sign['id']}" id="imgFile{$sign['id']}" multiple="" accept="image/*" >							
+							</div>
+					</div>
+				</div>
+				{/if}
+			{/loop}
+			</form>
+		</div>
+	</div>
+	<div class="fui-footer">
+		<a  class="btn btn-success btn-submit block" id="btnSubmit" >填好啦</a>
+	</div>
+	{if $_W['fans']['follow']=='1'}
+	{else}
+		{if $this->rhinfo_wap}
+		{elseif $item['checkmethod']==1 || $item['checkmethod']==3}
+			<div class="pop-region-hidden pop-region-wxapp" >
+				<div class='fui-mask-m visible'></div>
+				<div class="verify-pop pop">	
+						<div class="bind">
+							<div class="title">欢迎访问<span class="pull-right"><i class="icon icon-roundclose"></i></span></div>
+							<div class="fui-cell-group fui-cell-click external">
+								<a class="fui-cell"  href="{php echo $this->syscfg['followurl']}">
+									<div class="fui-cell-icon"><i class="icon icon-friendadd"></i></div>
+									<div class="fui-cell-text"><p class="text text-danger">请关注公众号</p></div>
+									<div class="fui-cell-remark"></div>
+								</a>
+								<div class="fui-cell-tip">您还未关注【{$_W['account']['name']}】</div>
+							</div>						
+							<div class="fui-cell-group fui-cell-click external">
+								<div style="text-align:center;">{if $this->syscfg['qrcode']}<img src="{php echo tomedia($this->syscfg['qrcode']);}" width="150px;"/>{/if}</div>
+								<div class="fui-cell-tip">{php echo empty($this->syscfg['followtip'])?'请关注公众号，享受更好的服务.':$this->syscfg['followtip'];}</div>
+							</div>							
+						</div>
+				</div>
+			</div>
+		{/if}
+	{/if}	
+	<script language='javascript'>		
+		require(['activity/activity'], function (modal) {
+		  	modal.init();
+		});
+	</script>	
+</div>
+{template $this->mytpl('_footer')}

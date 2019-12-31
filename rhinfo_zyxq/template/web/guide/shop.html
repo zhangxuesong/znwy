@@ -1,0 +1,240 @@
+﻿<div class="panel panel-default">
+	<div class="panel-heading">
+		<div class="panel-title">商铺信息</div>
+	</div>
+	<div class="panel-body">
+		<div id="workarea">
+			{if $rights['query'] == 1}  
+			<div class="collapse" id="mycollapse">
+			<form action="" method="post" class="form-horizontal" role="form" enctype="multipart/form-data" id="myform">
+				<input type="hidden" name="mycon" id="mycon" value="1" />				
+				<div class="form-inline form-group" >
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">选择区域</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">			
+						<select class="form-control" id="bid" name="bid" style="width:70%">
+							<option value="0">请选择区域</option>	
+							{loop $buildings $bv}
+								<option value="{$bv['id']}" {if $_GPC['bid']==$bv['id']}selected{/if} >{$bv['title']}</option>
+							{/loop}
+						</select>	
+					</div>					
+				</div>
+				<div class="form-inline form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">状态</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+						<select class="form-control" name="isfree" style="width:15%">
+							<option value="">不限</option>
+							<option value="0">收费</option>
+							<option value="1">免费</option>
+							<option value="2">空置</option>
+							<option value="3">异常</option>
+						</select>
+						<input class="form-control" name="keyword"   type="text" value="{$_GPC['keyword']}" placeholder="请输入姓名或手机号或房屋号" style="width:45%"/>
+						<a href="javascript:;" class="btn btn-default" onclick="mysearch(this)"><i class="fa fa-search"></i> 搜索</a>		
+					</div>
+				</div>
+			</form>
+			</div>
+			{/if}
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					{if $rights['add'] == 1}
+					<div class="btn-group">
+					  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					  <i class="fa fa-plus"></i> 导入商铺 <span class="caret"></span>
+					  </button>
+					  <ul class="dropdown-menu">
+							<li>
+							<a href="../addons/rhinfo_zyxq/upfile/shop.xls" >下载模板</a>
+							</li>
+							<li role="separator" class="divider"></li>
+							<li>
+							<a href="javascript:;" onclick="myimport('{$_GPC['rid']}')">导入数据</a>	
+							</li>	
+					  </ul>
+					</div>
+					{/if}					
+					{if $rights['query'] == 1}  			
+					<a class="btn btn-primary" onclick="mycondition(this)"  data-toggle="collapse" href="#mycollapse" aria-expanded="false" aria-controls="mycollapse">
+					<i class="fa fa-angle-double-down"></i> 筛选条件</a>
+					{/if}
+					<span class="pull-right" style="line-height:38px;">共有数据：<strong id="count">{$total}</strong> 条</span> 
+				</div>
+		  
+				<div class="panel-body table-responsive" style="min-height:500px;">
+					<table class="table table-bordered table-hover" id="mydatatable">
+						<thead class="navbar-inner">
+						<tr>
+							<th>ID</th>
+							<th>区域</th>
+							<th>楼层</th>
+							<th>编号</th>
+							<th>名称</th>
+							<th>状态</th>
+							<th>业主姓名</th>					
+							<th>手机号码</th>
+							<th>备用号码</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					{loop $data $k $v}
+						<tr>
+							<td>{$v['id']}</td>
+							<td>{$v['building']}</td>
+							<td>{$v['floor']}</td>
+							<td>{$v['title']}</td>
+							<td>{$v['shopname']}</td>
+							<td class="td-status">					
+							<span class="label {if $v['isfree']==0 || empty($v['isfree'])}label-success{elseif $v['isfree']==1}label-info{elseif $v['isfree']==2}label-warning{elseif $v['isfree']==3}label-danger{/if}">
+							{if $v['isfree']==0 || empty($v['isfree'])}收费{elseif $v['isfree']==1}免费{elseif $v['isfree']==2}空置{elseif $v['isfree']==3}异常{/if}</span>							
+							</td>		
+							<td>{$v['ownername']}</td>
+							<td><a style="color:#000;" href="javascript:;" title="{$v['mobile']}">{php echo !empty($v['mobile']) ? substr_replace($v['mobile'],'****',3,4):'';}</a></td>
+							<td><a style="color:#000;" href="javascript:;" title="{$v['mobile1']}">{php echo !empty($v['mobile1']) ? substr_replace($v['mobile1'],'****',3,4):'';}</a></td>
+							<td>
+							{if $rights['edit'] == 1}	
+							<a href="javascript:;" onclick="myedit('{$_GPC['rid']}','{$v['id']}')" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="编辑" ><i class="fa fa-edit"></i></a>{/if}	
+							{if $rights['delete'] == 1}
+							<a href="javascript:;" onclick="mydel(this,'{$v['id']}')" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="删除"><i class="fa fa-trash"></i></a>{/if}		
+							</td>					
+						</tr>
+					{/loop}				
+				</table>
+				{$pager}
+			  </div>   
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$(function(){		
+	$("#mydatatable").dataTable({
+		language:{
+			"sProcessing": "处理中...",
+			"sLengthMenu": "显示 _MENU_ 项结果",
+			"sZeroRecords": "没有匹配结果",
+			"sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+			"sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+			"sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+			"sInfoPostFix": "",
+			"sSearch": "搜索:",
+			"sUrl": "",
+			"sEmptyTable": "表中数据为空",
+			"sLoadingRecords": "载入中...",
+			"sInfoThousands": ",",
+			"oPaginate": {
+				"sFirst": "首页",
+				"sPrevious": "上页",
+				"sNext": "下页",
+				"sLast": "末页"
+			},
+			"oAria": {
+				"sSortAscending": ": 以升序排列此列",
+				"sSortDescending": ": 以降序排列此列"
+			}
+		},
+		renderer: "bootstrap",
+		pagingType: "simple_numbers",
+		paging: true, 
+		ordering: true 
+	});	
+	
+});
+
+function mysearch(obj){
+	var index = layer.msg('正在加载...', {icon: 16});
+	$.ajax({  
+         type : "get",  
+          url : "{php echo $this->createWebUrl($mydo,array('op'=>'shop','rid'=>$_GPC['rid'])).$mywe['direct'];}",  
+          data : $("#myform").serializeObject(),   
+          async : false,  
+          success : function(data){  
+			 layer.close(index);
+			 $("#guide-output").html(data);
+          }  
+     }); 
+}	
+function myedit(rid,id){
+	var url = "{php echo $this->createWeburl('member',array('op'=>'shop_enter')).$mywe['direct'];}" + "&id=" + id;
+	var title = "修改商铺";
+	var index = layer.open({
+		type: 2,
+		title:title,
+		content: url,
+		area: ['600px','600px'],
+		fix: true, 
+		shade:0.4,
+		resize:false,
+		end: function() {
+			var index = layer.msg('正在加载...', {icon: 16});
+			var url = "{php echo mywurl($mydo,array('op'=>'shop')).$mywe['direct'];}"; 
+			$.get(url,{rid:rid}, function(data){
+				layer.close(index);
+				$("#guide-output").html(data);
+			});		
+		}
+	});		
+}
+
+function myimport(rid){
+    var url = "{php echo $this->createWeburl('shop',array('op'=>'guideimport','pid'=>$region['pid'],'rid'=>$_GPC['rid'])).$mywe['direct'];}"; 
+	var title = "导入商铺";
+	var index = layer.open({
+		type: 2,
+		title:title,
+		content: url,
+		area: ['600px','250px'],
+		fix: true, 
+		shade:0.4,
+		resize:false,
+		end: function() {
+			var index = layer.msg('正在加载...', {icon: 16});
+			var url = "{php echo mywurl($mydo,array('op'=>'shop')).$mywe['direct'];}"; 
+			$.get(url,{rid:rid}, function(data){
+				layer.close(index);
+				$("#guide-output").html(data);
+			});		
+		}
+	});		
+}
+function mydel(obj,id){
+	layer.confirm('将删除下属所有相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl('shop').$mywe['direct'];}",
+			{op:"delete",id:id},
+			function(data,status){
+			 if (data=='ok'){
+				$(obj).parents("tr").remove();
+				var count = $("#count").html();
+				$("#count").html(count - 1);
+				layer.msg('删除成功!',{icon:1});
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+			 }
+		});		
+		layer.close(index);
+    });
+}
+function mycondition(obj){    
+    var mycon = $("#mycon").val();
+	var html = '';
+	if (mycon==1){
+		html = '<i class="fa fa-angle-double-up"></i> 隐藏筛选';
+		$("#mycon").val("2");
+		$("#mycollapse").show("slow");
+	}
+	else {
+		html = '<i class="fa fa-angle-double-down"></i> 筛选条件';
+		$("#mycon").val("1");
+		$("#mycollapse").hide("slow");
+	}
+	$(obj).html(html);
+}
+function mypage(url,page){
+	$.get(url,{page:page}, function(data){
+		$('#guide-output').html(data);
+	});	
+}
+	$("#workarea").height($(window).height()- 150);
+</script>

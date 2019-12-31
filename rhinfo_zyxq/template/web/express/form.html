@@ -1,0 +1,149 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />
+	<input type="hidden" name="id" id="id" value="{$item['id']}" />	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>所属驿站</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="sid" id="sid" onchange="{if $_GPC['io']==2}renderCategory(this,'cabs','cabid'){else}renderCategory(this,'comps','compid'){/if}">
+				{if $operation=='add'}<option value="0">请选择</option>{/if}
+				{loop $stores $k $v}
+					<option value="{$v['id']}" {if $item['sid'] == $v['id']} selected {/if} >{$v['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>	
+	<div class="form-group" {if ($operation=='add' && $_GPC['io']==2) || ($operation=='edit' && $item['io']==2)}style="display:none;"{/if}>
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>快递公司</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="compid" id="compid">
+				<option value="0">请选择</option>
+				{loop $ecomps $comp}
+					<option value="{$comp['id']}" {if $item['compid'] == $comp['id']} selected {/if} >{$comp['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>快件名称</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入快件名称" name="title" />
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>快件编号</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<input type="text" class="form-control" id="expresssn" value="{$item['expresssn']}" placeholder="输入快件编号" name="expresssn" />
+		</div>	
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">包装标签</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="label" id="label">
+				{if $operation=='add'}<option value="0">请选择</option>{/if}
+				{loop $labels $vl}
+					<option value="{$vl['title']}" {if $item['label'] == $vl['title']} selected {/if} >{$vl['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>
+	<div class="form-group" {if ($operation=='add' && $_GPC['io']==1) || ($operation=='edit' && $item['io']==1)}style="display:none;"{/if}>
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">快递柜</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="cabid" id="cabid" onchange="renderCategory(this,'locals','stid')">
+				<option value="0">请选择</option>
+				{loop $ecabs $cab}
+					<option value="{$cab['id']}" {if $item['cabid'] == $cab['id']} selected {/if} >{$cab['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>	
+	<div class="form-group" {if ($operation=='add' && $_GPC['io']==1) || ($operation=='edit' && $item['io']==1)}style="display:none;"{/if}>
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">存放位置</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<select class="form-control"  name="stid" id="stid">
+				<option value="0">请选择</option>
+				{loop $elocals $local}
+					<option value="{$local['id']}" {if $item['stid'] == $local['id']} selected {/if} >{$local['title']}</option>
+				{/loop}
+			</select>				
+		</div>
+	</div>	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">收件人</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+		<input type="text" class="form-control" placeholder="输入收件人" name="contact" value="{$item['contact']}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">手机号码</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+		<input type="number" class="form-control" placeholder="输入手机号码" name="mobile" value="{$item['mobile']}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">快件图片</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_image('image',$item['image']);}
+			<span class="help-block"></span>
+		</div>	
+	</div>
+	<div class="form-group" {if ($operation=='add' && $_GPC['io']==2) || ($operation=='edit' && $item['io']==2)}style="display:none;"{/if}>
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>省/市/区</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			{php echo tpl_form_field_district('area', array('province' => $item['province'], 'city' => $item['city'], 'district' => $item['district'] ));}
+		</div>	
+	</div>
+	<div class="form-group" {if ($operation=='add' && $_GPC['io']==2) || ($operation=='edit' && $item['io']==2)}style="display:none;"{/if}>
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>收件地址</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+		<input type="text" class="form-control" placeholder="输入收件地址" id="address" name="address" value="{$item['address']}">
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">备注</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="remark" value="{$item['remark']}" placeholder="输入备注" name="remark" />
+		</div>	
+	</div>	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">状态</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+			<label class='radio-inline'>
+				<input type='radio' name='status' value='0' {if empty($item['status']) || $item['status']==0 } checked{/if} /> 待取
+			</label>
+			<label class='radio-inline'>
+			<input type='radio' name='status' value='1'  {if $item['status']==1 } checked{/if}/> 已取
+			</label>
+			<label class='radio-inline'>
+				<input type='radio' name='status' value='2' {if $item['status']==2 } checked{/if} /> 未取
+			</label>
+			<label class='radio-inline'>
+				<input type='radio' name='status' value='3' {if $item['status']==3 } checked{/if} /> 退回
+			</label>
+		</div>
+	</div>
+	</br>
+</form>	
+<script type="text/javascript">
+	window._comps = {php echo json_encode($mycomp);};	
+	window._cabs = {php echo json_encode($mycab);};	
+	window._locals = {php echo json_encode($mylocal);};
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择</option>';
+			if (id=='cabid'){
+				$("#stid").html(html);
+			}
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		});
+	}
+</script>

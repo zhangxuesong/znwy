@@ -1,0 +1,68 @@
+{template $this->mytpl('_header')}
+<script src="../addons/rhinfo_zyxq/static/lib/rhui/js/rharea.min.js"></script>  
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/lib/rhui/css/rharea.css">
+<link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/css/mstyle.css?v=20170802">
+
+<div class="fui-page fui-page-current ">
+	<div class="fui-header">
+		<div class="fui-header-left">
+			<a class="back" ></a>
+		</div>
+		<div class="title">住户管理</div>
+		<div class="fui-header-right"></div>
+	</div>
+
+	<div class='fui-content navbar'>
+		<div id="tab" class="fui-tab fui-tab-success">
+		   <a data-tab="tab0" class="external {if $status=='9'}active{/if}"  data-status='9'>全部</a>
+		    <a data-tab="tab1" class="external {if $status=='0'}active{/if}"  data-status='0'>业主</a>
+			<a data-tab="tab2" class="external {if $status=='1'}active{/if}"  data-status='1'>成员</a>
+			<a data-tab="tab3" class="external {if $status=='2'}active{/if}"  data-status='2'>租户</a>
+		</div>
+		<form action="{php echo $this->createMobileUrl('manage',array('op'=>'memberdate'));}" method="post">
+		<div class="fui-searchbar bar">
+			<div class="searchbar center">
+				<input type="hidden" name="status" id="status" value="{$status}" />
+				<input type="submit" class="searchbar-cancel searchbtn" value="搜索">
+				<div class="search-input">
+					<i class="icon icon-search"></i>
+					<input type="text" placeholder="请选择绑定日期" readonly class="search" value="" name="binddate" id="binddate" />						
+				</div>
+			</div>
+		</div>
+		</form>
+		
+		<div class="container"></div>
+		<div class="content-empty" style="display:none;">
+		<i class="icon icon-friends"></i> <br/>暂时没有任何内容</div>
+        <div class='infinite-loading'><span class='fui-preloader'></span><span class='text'> 正在加载...</span></div>
+	</div>  
+	<script type="text/html" id="tpl_member_list">
+		<%each list as item%>
+			<a class="fui-list" href="<%item.url%>">
+				<div class="fui-list-media round">
+					<img src="<%item.avatar%>" class="round" onerror="this.src='../addons/rhinfo_zyxq/static/mobile/images/head.jpg';" />               
+				</div>
+				<div class="fui-list-inner">
+					<div class="title" style="vertical-align:middle;"><font class="<%item.css%>"><%item.realname%></font>&nbsp;&nbsp;<span class="<%item.bg%>"  style="font-size:0.5rem;-webkit-border-radius: 0.1rem;border-radius: 0.1rem;"><%item.otypelabel%></span><%if item.status==1%><span class="pull-right fui-label fui-label-warning">待审核</span><%/if%><%if item.status==2%><span class="pull-right fui-label fui-label-warning">未通过审核</span><%/if%></div>
+					<div class="subtitle"><%item.address%></div>
+					<div class="text"><%item.ctime%></div>					
+				</div>
+				 <div class="angle"></div>
+			</a>			 
+		<%/each%>
+	</script>
+	<script language='javascript'>				
+		require(['manage/memberdate'], function (modal) {
+			modal.init({
+			rid:"{$myrid}",			
+			binddate:"{$_GPC['binddate']}",
+			status:"{$status}"
+			});
+		});
+	</script>
+ </div>
+
+{template $this->mytpl('_mmenu')}
+</body>
+</html>

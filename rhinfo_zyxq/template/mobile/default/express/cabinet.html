@@ -1,0 +1,57 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-according-group:after,.fui-cell-group:not(.fui-cell-group-o):after{border-bottom:0px;}
+.fui-according-group:not(.fui-according-group-o):before,.fui-cell-group:not(.fui-cell-group-o):before,.fui-list-group:not(.fui-list-group-o):before,.fui-list-group:not(.fui-list-group-o):after{border-top:0px;}
+.fui-according-content .content-block {	font-size:0.75rem;}
+</style>
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">快递柜管理</div>
+        <div class="fui-header-right">
+            &nbsp;
+        </div>
+    </div>
+    <div class='fui-content'>
+        <div class="fui-cell-group qa-title question-title" style="display: none">
+            <div class="fui-cell">
+                <div class="fui-cell-text">{if !empty($category['title'])}{$category['title']}{else}全部问题{/if}</div>
+            </div>
+        </div>
+		{if empty($cabinet)}
+        <div class="fui-message empty">
+            <div class="icon ">
+                <i class="icon icon-information" style="font-size:3rem;"></i>
+            </div>
+            <div class="content">内容为空</div>
+            <div class="button">
+                <a href="javascript:history.back(-1);" class="btn btn-default  external block">返回</a>
+            </div>
+        </div>
+		{else}
+        <div class="fui-according-group" id="container">
+			 {loop $cabinet $cab}
+				<div class="fui-according">
+					<div class="fui-according-header">
+						<span class="text">{$cab['title']}</span>
+						<span class="remark"></span>
+					</div>
+					<div class="fui-according-content">
+						<div class="fui-cell-group">
+							{loop $cab['cabstloca'] $v}
+								<div class="fui-cell">
+									<div class="fui-cell-icon"><i class="icon icon-box"></i></div>
+									<div class="fui-cell-info">{$v['title']}</div>
+								</div>
+							{/loop}
+						</div>	
+					</div>
+				</div>
+			{/loop}
+		</div>
+		{/if}
+    </div>  
+</div>
+{template $this->mytpl('_footer')}

@@ -1,0 +1,24 @@
+﻿<div class="panel panel-default">
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>					
+					<th width="80">ID</th>
+					<th>异常描述</th>		
+					<th>备注</th>	
+					<th>记录时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				{loop $abnlog $av}
+				<tr>					
+					<td>{$av['id']}</td>				
+					<td>{$av['content']}</td>
+					<td>{$av['remark']}</td>					
+					<td>{php echo date('Y-m-d', $av['ctime'])}</td>			
+				</tr>
+			{/loop}	
+			</tbody>
+		</table>    	  
+	</div>	
+</div>

@@ -1,0 +1,108 @@
+﻿<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />		
+    <input type="hidden" name="id" value="{$item['id']}" />	
+	 <input type="hidden" name="cate" value="{$cate}" />	
+	{if $cate==2} 	
+		{if $_W['uid']} 
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label"> <span class="text-danger">*</span>所属物业</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+				{if $operation=='leveladd'}	<option value="0">请选择所属物业</option>{/if}
+					{loop $myproperty $k $v}
+						<option value="{$v['id']}" {if $item['pid'] == $v['id']} selected {/if} >{$v['title']}</option>
+					{/loop}
+				</select>				
+			</div>
+		</div>
+		{else}
+			<input type="hidden" class="form-control" id="pid" value="{php echo empty($item['pid'])?$mywe['pid']:$item['pid'];" name="pid" />
+		{/if}
+		
+		<div class="form-group">
+			<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>所属主体</label>
+			<div class="col-sm-6 col-lg-6 col-xs-12">
+				<select class="form-control" id="rid" name="rid">
+				{if $operation=='leveladd'}	<option value="0">请选择所属主体</option>{/if}
+					{loop $eregions $i $r}
+						<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+					{/loop}
+					{if $_W['uid']} 
+					{else}
+						{if $operation=='leveladd'}
+							{loop $regions $i $r}
+								<option value="{$r['id']}" {if $item['rid'] == $r['id']} selected {/if} >{$r['title']}</option>
+							{/loop}
+						{/if}
+					{/if}
+				</select>
+			</div>
+		</div>
+	{else}
+		<input type="hidden" class="form-control" id="pid" value="0" name="pid" />
+		<input type="hidden" class="form-control" id="rid" value="0" name="rid" />
+	{/if}
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>等级名称</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<input type="text" class="form-control" id="levelname" value="{$item['levelname']}" placeholder="输入等级名称" name="levelname" />
+			
+		</div>	
+	</div>
+	
+    <div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label">升级要求</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<div class="input-group"><span class="input-group-addon">发布话题数</span>
+				<input type="text" class="form-control"  value="" placeholder="输入话题数" name="post">
+				<span class="input-group-addon">个</span>
+			</div>
+			<span class="help-block">发布话题数达到数量自动升级，为空则不升级。</span>
+		</div>	
+	</div>
+	
+	<div class="form-group">
+	   <label class="col-sm-2 col-md-2 col-xs-12 control-label">标签背景</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+		  {php echo tpl_form_field_color('bg',$item['bg'])}
+		  <span class="help-block">会员等级背景颜色，为空取默认颜色</span>
+		</div>
+	</div>
+	
+	<div class="form-group">
+	   <label class="col-sm-2 col-md-2 col-xs-12 control-label">标签颜色</label>
+		<div class="col-sm-8 col-lg-9 col-xs-12">
+		  {php echo tpl_form_field_color('color',$item['color'])}
+		  <span class="help-block">会员等级文字颜色，为空取默认颜色</span>
+		</div>
+ </div>
+	
+	<div class="form-group">
+		<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>状态</label>
+		<div class="col-sm-6 col-lg-6 col-xs-12">
+			<label class='radio-inline'><input type="radio" name="enabled" value="1" {if $item['enabled'] == 1 || empty($item['enabled'])} checked="true" {/if} >启用</label>
+			<label class='radio-inline'><input type="radio" name="enabled" value="2" {if $item['enabled'] == 2} checked="true" {/if} >禁用</label>										
+		</div>
+	</div>
+	
+</form>	
+  
+<script type="text/javascript">
+	window._region = {php echo json_encode($myregion);};				
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择所属主体</option>';			
+
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		});
+	}
+</script>

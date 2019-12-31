@@ -1,0 +1,100 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />
+			<input type="hidden" value="{$item['id']}" id="id" name="id" />
+			<input type="hidden" name="pid" value="{$pid}" />
+			<input type="hidden" name="rid" value="{$rid}" />			
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>区域名称</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="title" value="{$item['title']}" placeholder="输入区域名称" name="title" />
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="text-danger">*</span>价格</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<div class="input-group">
+						<input type="number" class="form-control" id="price" value="{$item['price']}" placeholder="输入单价" name="price" />
+						 <span class="input-group-addon"> 元 / 月</span>
+					 </div>
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">缴费周期</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<div class="input-group">
+						<input type="number" class="form-control" id="feemonths" value="{php echo empty($item['feemonths'])?1:$item['feemonths'];}" placeholder="输入缴费周期" name="feemonths" />
+						 <span class="input-group-addon">个月</span>
+					 </div>
+					 <span class="help-block">租赁时最低缴费周期</span>
+				</div>	
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label">缴费优惠</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<div class="input-group">
+					   <span class="input-group-addon">缴费</span>
+					   <input type="number" name="finmonths" class="form-control" value="{$item['finmonths']}" />
+					   <span class="input-group-addon">月，免单</span>
+					   <input type="number" name="givemonths" class="form-control" value="{$item['givemonths']}" />
+					   <span class="input-group-addon">个月</span>
+					</div>
+					<span class="help-block">为０则无优惠，低于缴费月数则不免单</span>
+			   </div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">备注</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">
+					<input type="text" class="form-control" id="remark" value="{$item['remark']}" placeholder="输入备注" name="remark" />
+				</div>	
+			</div>
+			
+		</form>	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+{template 'web/_bottom'}
+
+<script type="text/javascript">
+
+var pid = "{$pid}";
+var rid = "{$rid}";
+
+function mysubmit(obj){
+	var id = $.trim($("#id").val());
+	var title = $.trim($("#title").val());
+	
+    if (title=='') {
+	   layer.msg("区域名称不能为空！",{icon:0});
+	   return;
+	}	
+	
+    $.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+	{ post:"{$_GPC['op']}",op:"check_location",title:title,pid:pid,rid:rid,id:id},
+	function(data,status){
+	 if (data=='ok'){
+		myprocess(obj);
+		$("#myform").submit();
+	 }
+	 else{
+		layer.msg(data);
+		return ;
+	 }
+	});	
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'list','category'=>$category)).$mywe['direct'];}" + "&pid=" + pid + "&rid=" + rid;
+	 location.href = url;
+}
+
+</script> 
+
+</body>
+</html>

@@ -1,0 +1,142 @@
+﻿{template 'web/_layer_header'}
+<style>
+html { overflow-x:hidden; }
+</style>
+<div class="panel panel-default" style="width:580px;">
+    <div class="panel-body">    
+	<form action="" method="post" role="form" enctype="multipart/form-data" id="myform" >
+	<input type="hidden" name="token" value="{$_W['token']}" />	
+    
+	{if $_W['uid']} 
+	<div class="form-group">
+		<label class="control-label"> <span class="text-danger">*</span>所属物业</label>
+		<select class="form-control"  name="pid" id="pid" onchange="renderCategory(this,'region','rid')">
+			<option value="0">请选择所属物业</option>
+			{loop $myproperty $k $v}
+				<option value="{$v['id']}">{$v['title']}</option>
+			{/loop}
+		</select>				
+	</div>
+	{else}
+		<input type="hidden" class="form-control" id="pid" value="{$mywe['pid']}" name="pid" />
+	{/if}
+	
+	<div class="form-group">
+		<label class="control-label"><span class="text-danger">*</span>所属主体</label>
+		<select class="form-control" id="rid" name="rid">
+			<option value="0">请选择所属主体</option>	
+			{if $_W['uid']} 
+			{else}
+				{loop $regions $i $r}
+					<option value="{$r['id']}" >{$r['title']}</option>
+				{/loop}
+			{/if}
+		</select>
+	</div>		
+	
+	<div class="form-group">
+		<label class="control-label"><span class="text-danger">*</span>变更物业</label>
+		<select class="form-control" id="npid" name="npid" >
+			<option value="0">请选择变更物业</option>
+			{loop $myproperty $nv}
+				<option value="{$nv['id']}">{$nv['title']}</option>
+			{/loop}
+		</select>
+	</div>
+
+	 <div class="col-lg-9 col-xs-12 col-sm-offset-2" style="margin-top:8px;">  
+		<a href="javascript:;" class="btn btn-primary"  onclick="mysubmit(this)"><i class="fa fa-check"></i> 确定</a>
+	     <a href="javascript:;" class="btn btn-default"  onclick="myclose()"><i class="fa fa-reply"></i> 返回</a>
+	</div>
+		
+</form>	
+
+<script type="text/javascript">
+	window._region = {php echo json_encode($myregion);};				
+	function renderCategory(obj, name,id){
+		var index = obj.options[obj.selectedIndex].value;
+		require(['jquery', 'util'], function($, u){
+			$selectChild = $("#"+ id);
+			var html = '<option value="0">请选择</option>';
+			if (id=='rid'){
+				$("#bid").html(html);				
+			}
+			
+			if (!window['_'+name] || !window['_'+name][index]) {
+				$selectChild.html(html);
+				return false;
+			}
+			for(var i=0; i< window['_'+name][index].length; i++){
+				html += '<option value="'+window['_'+name][index][i]['id']+'">'+window['_'+name][index][i]['title']+'</option>';
+			}
+			$selectChild.html(html);
+		});
+	}
+</script>
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	var pid = $("#pid").find("option:selected").val();
+	var rid = $("#rid").find("option:selected").val(); 
+	var npid = $("#npid").find("option:selected").val(); 
+	
+	if (pid=='0') {
+	   layer.msg("所属物业不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (rid=='0') {
+	   layer.msg("所属主体不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (npid=='0') {
+	   layer.msg("变更物业不能为空！",{icon:0});
+	   return;
+	}
+	
+	if(pid==npid){
+	   layer.msg("变更物业不能与所属物业相同！",{icon:0});
+	   return;
+	}
+	
+	layer.confirm('确认要变更吗？',{icon: 3, title:'提示'},
+	function(index){	
+		myprocess(obj);		
+		$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+		{ op:"modify",pid:pid,rid:rid,npid:npid},
+		function(data,status){
+		 if (data=='ok'){		
+			layer.msg('变更成功!',{icon:1});
+			myreset(obj)
+			setTimeout("myclose()",1000);
+		 }
+		 else{
+			layer.msg(data,{icon:0});
+			myreset(obj)
+			return ;
+		 }
+		});
+		layer.close(index);
+	});
+}
+function myprocess(obj){
+	var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/> 处理中...';
+	$(obj).html(html);  
+	$(obj).attr("disabled", "disabled"); 
+}
+function myreset(obj){
+	var html = '<i class="fa fa-check"></i> 确定';
+	$(obj).html(html);  
+	$(obj).removeAttr("disabled"); 
+}
+
+</script> 
+
+</body>
+</html>

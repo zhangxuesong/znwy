@@ -1,0 +1,287 @@
+{template 'web/_layer_header'}
+ <link rel="stylesheet" type="text/css" href="../addons/rhinfo_zyxq/static/mobile/fonts/iconfont.css?v=20170703">
+<style>
+html { overflow-x:hidden; }
+</style>
+<nav class="navbar navbar-fixed-top" style="margin-top:5px;margin-right:20px;">
+<span class="pull-right"><a href="javascript:;" class="btn btn-success"  onclick="mysubmit(this)"><i class="fa fa-save"></i> 保存</a></span>   
+</nav> 
+<div class="panel panel-default">
+    <div class="panel-body">  		
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />		
+			<input type="hidden" class="form-control" id="pid" value="{$_GPC['pid']}" name="pid" />
+			<input type="hidden" class="form-control" id="rid" value="{$_GPC['rid']}" name="rid" />
+			<div class="form-group">
+			   <label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+				<div class="col-sm-6 col-lg-7 col-xs-12">  
+					<div class="alert alert-success">依小区定义页面底部菜单</div>
+				</div>
+			</div>
+			<div class="form-group">
+			   <label class="col-xs-12 col-sm-2 col-md-2 control-label">是否启用</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">                   	
+					<label class='radio-inline'>
+						<input type='radio' name='enabled' value='1' {if $item['enabled']==1}checked{/if} /> 启用
+					</label>
+					<label class='radio-inline'>
+						<input type='radio' name='enabled' value='0' {if empty($item['enabled']) || $item['enabled']==0 }checked{/if} /> 不启用
+					</label>
+					 <span class="help-block"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				   <label class="col-xs-12 col-sm-2 col-md-2 control-label">菜单颜色</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+					  {php echo tpl_form_field_color(menucolor,$item['menucolor'])}
+					  <span class="help-block">底部导航菜单颜色，为空取默认颜色</span>
+					</div>
+			 </div> 
+			 <div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">菜单设置</label>	
+				<div class="col-sm-2 col-lg-3 col-xs-12">
+				<div class="input-group">
+				<span class="input-group-addon">菜单一</span>
+				<input type="text" class="form-control" value="{if empty($item['menu1'])}社区{else}{$item['menu1']}{/if}" name="menu1"></div></div>
+				<div class="col-sm-4 col-lg-4 col-xs-12">
+				<div class="input-group">
+					<input type="text" id="icon1" value="{if empty($item['icon1'])}icon-home{else}{$item['icon1']}{/if}" name="icon1" class="form-control" autocomplete="off">
+					<span class="input-group-addon"><i class="icon {if empty($item['icon1'])}icon-home{else}{$item['icon1']}{/if}"></i></span>
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="button" onclick="showIconDialog(this);">选择图标</button>
+					</span>
+				</div></div>
+			</div>
+
+			 <div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>	
+				<div class="col-sm-6 col-lg-7 col-xs-12">
+				<div class="input-group ">
+					<input type="text" class="form-control" id="menu1url" value="{$item['menu1url']}" placeholder="输入链接地址" name="menu1url">
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="button" onclick="myshowLinkDialog(this);">内部链接</button>
+						<button class="btn btn-default" type="button" onclick="showLinkDialog(this);">系统链接</button>
+					</span>
+				</div>
+				</div>
+			</div>
+
+			 <div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>	
+				<div class="col-sm-2 col-lg-3 col-xs-12">
+				<div class="input-group">
+				<span class="input-group-addon">菜单二</span>
+				<input type="text" class="form-control"  value="{if empty($item['menu2'])}公告{else}{$item['menu2']}{/if}" name="menu2"></div></div>
+				<div class="col-sm-4 col-lg-4 col-xs-12">
+				<div class="input-group">
+					<input type="text" id="icon2" value="{if empty($item['icon2'])}icon-mark1{else}{$item['icon2']}{/if}" name="icon2" class="form-control" autocomplete="off">
+					<span class="input-group-addon"><i class="icon {if empty($item['icon2'])}icon-mark1{else}{$item['icon2']}{/if}"></i></span>
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="button" onclick="showIconDialog(this);">选择图标</button>
+					</span>
+				</div></div>
+			</div>
+			 <div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>	
+				<div class="col-sm-6 col-lg-7 col-xs-12">
+				<div class="input-group ">
+					<input type="text" class="form-control" id="menu2url" value="{$item['menu2url']}" placeholder="输入链接地址" name="menu2url">
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="button" onclick="myshowLinkDialog(this);">内部链接</button>
+						<button class="btn btn-default" type="button" onclick="showLinkDialog(this);">系统链接</button>
+					</span>
+				</div>
+				</div>
+			</div>
+			 <div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>	
+				<div class="col-sm-2 col-lg-3 col-xs-12">
+				<div class="input-group">
+				<span class="input-group-addon">菜单三</span>
+				<input type="text" class="form-control" value="{if empty($item['menu3'])}服务{else}{$item['menu3']}{/if}" name="menu3"></div></div>
+				<div class="col-sm-4 col-lg-4 col-xs-12">
+				<div class="input-group">
+					<input type="text" id="icon3" value="{if empty($item['icon3'])}icon-like1{else}{$item['icon3']}{/if}" name="icon3" class="form-control" autocomplete="off">
+					<span class="input-group-addon"><i class="icon {if empty($item['icon3'])}icon-like1{else}{$item['icon3']}{/if}"></i></span>
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="button" onclick="showIconDialog(this);">选择图标</button>
+					</span>
+				</div></div>
+			</div>
+			 <div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>	
+				<div class="col-sm-6 col-lg-7 col-xs-12">
+				<div class="input-group ">
+					<input type="text" class="form-control" id="menu3url" value="{$item['menu3url']}" placeholder="输入链接地址" name="menu3url">
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="button" onclick="myshowLinkDialog(this);">内部链接</button>
+						<button class="btn btn-default" type="button" onclick="showLinkDialog(this);">系统链接</button>
+					</span>
+				</div>
+				</div>
+			</div>
+			 <div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>	
+				<div class="col-sm-2 col-lg-3 col-xs-12">
+				<div class="input-group">
+				<span class="input-group-addon">菜单四</span>
+				<input type="text" class="form-control"  value="{if empty($item['menu4'])}管家{else}{$item['menu4']}{/if}" name="menu4"></div></div>
+				<div class="col-sm-4 col-lg-4 col-xs-12">
+				<div class="input-group">
+					<input type="text" id="icon4" value="{if empty($item['icon4'])}icon-lights{else}{$item['icon4']}{/if}" name="icon4" class="form-control" autocomplete="off">
+					<span class="input-group-addon"><i class="icon {if empty($item['icon4'])}icon-lights{else}{$item['icon4']}{/if}"></i></span>
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="button" onclick="showIconDialog(this);">选择图标</button>
+					</span>
+				</div></div>
+			</div>
+			 <div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>	
+				<div class="col-sm-6 col-lg-7 col-xs-12">
+				<div class="input-group ">
+					<input type="text" class="form-control" id="menu4url" value="{$item['menu4url']}" placeholder="输入链接地址" name="menu4url">
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="button" onclick="myshowLinkDialog(this);">内部链接</button>
+						<button class="btn btn-default" type="button" onclick="showLinkDialog(this);">系统链接</button>
+					</span>
+				</div>
+				</div>
+			</div>
+			 <div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>	
+				<div class="col-sm-2 col-lg-3 col-xs-12">
+				<div class="input-group">
+				<span class="input-group-addon">菜单五</span>
+				<input type="text" class="form-control"  value="{if empty($item['menu5'])}我的{else}{$item['menu5']}{/if}" name="menu5"></div></div>
+				<div class="col-sm-4 col-lg-4 col-xs-12">
+				<div class="input-group">
+					<input type="text" id="icon5" value="{if empty($item['icon5'])}icon-person2{else}{$item['icon5']}{/if}" name="icon5" class="form-control" autocomplete="off">
+					<span class="input-group-addon"><i class="icon {if empty($item['icon5'])}icon-person2{else}{$item['icon5']}{/if}"></i></span>
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="button" onclick="showIconDialog(this);">选择图标</button>
+					</span>
+				</div></div>
+			</div>
+			  <div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>	
+				<div class="col-sm-6 col-lg-7 col-xs-12">
+				<div class="input-group ">
+					<input type="text" class="form-control" id="menu5url" value="{$item['menu5url']}" placeholder="输入链接地址" name="menu5url">
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="button" onclick="myshowLinkDialog(this);">内部链接</button>
+						<button class="btn btn-default" type="button" onclick="showLinkDialog(this);">系统链接</button>
+					</span>
+				</div>
+				 <span class="help-block">以上链接地址中输入“#”，则此菜单将不显示</span>
+				</div>
+			</div>
+			<div class="form-group">
+			   <label class="col-xs-12 col-sm-2 col-md-2 control-label">服务菜单</label>
+				<div class="col-sm-8 col-lg-9 col-xs-12">                   	
+					<label class='radio-inline'>
+						<input type='radio' name='servicedisplay' value='1' {if $item['servicedisplay']==1}checked{/if} /> 显示
+					</label>
+					<label class='radio-inline'>
+						<input type='radio' name='servicedisplay' value='2' {if $item['servicedisplay']==2}checked{/if} /> 突出显示
+					</label>
+					<label class='radio-inline'>
+						<input type='radio' name='servicedisplay' value='0' {if empty($item['servicedisplay']) || $item['servicedisplay']==0 }checked{/if} /> 不显示
+					</label>
+					 <span class="help-block">是否显示服务菜单，服务菜单为菜单三，突出显示为圆形按钮</span>
+				</div>
+			</div>
+		</form>	
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+
+<script type="text/javascript">
+	function mysubmit(obj){
+		
+		myprocess(obj);
+		$.post("{php echo $this->createWeburl($mydo,array('op'=>'menu')).$mywe['direct'];}",
+		$("#myform").serializeObject(),
+		function(data,status){
+			if(data=='ok'){
+				var index = parent.layer.getFrameIndex(window.name); 
+				parent.layer.close(index);	
+			}
+			else{			
+				layer.msg(data,{icon:0});
+				myreset(obj);
+			}
+		 });	
+		 return
+		var loadindex = layer.load(2);
+		
+		$.ajax({  
+			 type : "post",  
+			  url : "{php echo $this->createWebUrl($mydo,array('op'=>'menu')).$mywe['direct'];}",  
+			  data :$("#myform").serializeObject(),   
+			  success : function(data){  
+				  layer.close(loadindex);
+				  var ret = data.replace(/(^\s*)|(\s*$)/g, "");  
+				 if(ret=='ok'){
+					layer.msg('保存成功',{icon:1});	
+					var index = parent.layer.getFrameIndex(window.name); 
+					parent.layer.close(index);	
+				 }
+				 else{				
+					layer.msg(data,{icon:0});
+				 }
+			  }  
+		 }); 
+	}
+
+	function myprocess(obj){
+		var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/> 处理中...';
+		$(obj).html(html);  
+		$(obj).attr("disabled", "disabled"); 
+	}
+	function myreset(obj){
+		var html = '<i class="fa fa-save"></i> 保存';
+		$(obj).html(html);  
+		$(obj).removeAttr("disabled"); 
+	}
+	function showLinkDialog(elm) {
+		var ipt = $(elm).parent().prev();
+		util.linkBrowser(function(href){		
+			ipt.val(href);			
+		});
+	}
+	function myshowLinkDialog(elm) {
+		var ipt = $(elm).parent().prev();
+		require(["util","jquery"], function(u, $){
+			var myurl = ipt.attr('id');			
+			var footer = '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>';
+			var modalobj = util.dialog('请选择链接',["{php echo $this->createWeburl('query',array('op'=>'url')).$mywe['direct'];}&myurl=" + myurl],footer,{containerName:'icon-container'});
+			modalobj.modal({'keyboard': false});
+			modalobj.find('.modal-dialog').css({'width':'70%'});
+			modalobj.find('.modal-body').css({'height':'70%','overflow-y':'scroll'});
+			modalobj.modal('show');
+		});	
+	}
+	function showIconDialog(elm) {
+		require(["util","jquery"], function(u, $){
+			var btn = $(elm);
+			var spview = btn.parent().prev();
+			var ipt = spview.prev();
+			if(!ipt.val()){
+				spview.css("display","none");
+			}
+			
+			var myicon = ipt.attr('id');
+			
+			var footer = '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>';
+			var modalobj = util.dialog('请选择图标',["{php echo $this->createWeburl('query',array('op'=>'icon')).$mywe['direct'];}&myicon=" + myicon],footer,{containerName:'icon-container'});
+			modalobj.modal({'keyboard': false});
+			modalobj.find('.modal-dialog').css({'width':'70%'});
+			modalobj.find('.modal-body').css({'height':'70%','overflow-y':'scroll'});
+			modalobj.modal('show');
+		});
+	}
+</script> 
+
+</body>
+</html>

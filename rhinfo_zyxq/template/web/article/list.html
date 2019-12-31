@@ -1,0 +1,255 @@
+﻿{template 'web/_iframe_header'}
+{template 'web/_navtitle'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+  <div class="panel-body">  
+    {if $rights['query'] == 1} 
+	<div class="collapse" id="mycollapse">	
+	<form action="./index.php" method="get" class="form-horizontal" role="form" id="form-search">
+		<input type="hidden" name="c" value="site" />
+		<input type="hidden" name="a" value="entry" />
+		<input type="hidden" name="m" value="rhinfo_zyxq" />
+		<input type="hidden" name="do" value="article" />
+		<input type="hidden" name="op" value="list" />	
+		<input type="hidden" name="direct" value="1" />
+		<input type="hidden" name="mycon" id="mycon" value="1" />
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">省/市/区</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				{php echo tpl_form_field_district('area', array('province' => $_GPC['area']['province'], 'city' => $_GPC['area']['city'], 'district' => $_GPC['area']['district'] ));}
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">所属主体</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<input class="form-control" name="regionname"   type="text" value="{$_GPC['regionname']}" placeholder="请输入所属主体名称" />
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label">关键字</label>
+			<div class="col-sm-8 col-lg-9 col-xs-12">
+				<input class="form-control" name="keyword"   type="text" value="{$_GPC['keyword']}" placeholder="请输入版块名称" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+			<div class="col-sm-4 col-xs-12">
+				<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>				
+			</div>
+		</div>
+	</form>
+	</div>
+	{/if}
+	<div class="panel panel-default">
+	    <div class="panel-heading">
+		{if $rights['delete'] == 1}
+			{if $_W['role'] == 'founder' || $_W['role']=='owner' || $_W['role']=='manager'}
+			<a href="javascript:;" onclick="mydelselect()" class="btn btn-danger"><i class="fa fa-trash-o"></i> 批量删除</a> {/if}
+		{/if}
+		{if $rights['add'] == 1}   		   
+			{if $_W['uid']}
+				{if !empty($mywe['pid'])}
+				 <a href="javascript:;" onclick="myadd(2)" class="btn btn-info">
+				 <i class="fa fa-plus"></i> 添加资讯</a>
+				{else}
+				<div class="btn-group">
+				  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="fa fa-plus"></i> 添加资讯 <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu">
+					<li><a href="javascript:;" onclick="myadd(1)">系统默认</a></li>     
+					<li role="separator" class="divider"></li>
+					<li> <a href="javascript:;" onclick="myadd(2)">指定所属主体</a></li>			  
+				  </ul>
+				</div>
+				{/if}
+			{else}
+			 <a href="javascript:;" onclick="myadd(2)" class="btn btn-info">
+			 <i class="fa fa-plus"></i> 添加资讯</a>
+			{/if}
+		{/if}
+			{if $rights['query'] == 1}  
+			<a class="btn btn-primary" onclick="mycondition(this)"  data-toggle="collapse" href="#mycollapse" aria-expanded="false" aria-controls="mycollapse">
+			<i class="fa fa-angle-double-down"></i> 筛选条件</a>
+			{/if}
+			<span class="pull-right" style="line-height:38px;">共有数据：<strong id="count">{$total}</strong> 条</span> 
+	    </div>
+  
+		<div class="panel-body table-responsive">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+				<tr>
+					<th width="25"><input type="checkbox" name="selectall" id="selectall" value="" onClick="myallselect(this)"></th>
+					<th width="40">ID</th>
+					<th width="40">顺序</th>
+					<th width="40">图标</th>
+					<th width="100">资讯名称</th>	
+					<th width="60">资讯类别</th>					
+					<th width="150">所属主体</th>
+					<th width="40">状态</th>
+					<th width="200">操作</th>
+				</tr>
+			</thead>
+			{loop $data $k $v}
+				<tr>
+					<td><input type="checkbox" value="{$v['id']}" name="myselect" id="myselect_{$k}"  ></td>
+					<td>{$v['id']}</td>					
+					<td>{$v['displayorder']}</td>							
+					<td>{if !empty($v['thumb'])}<img src="{media $v['thumb']}"  width="36" />{/if}</td>
+					<td>{$v['title']}<span style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$v['qrcode']}' width='130' alt='链接二维码'>" data-placement="auto right">
+						<i class="fa fa-qrcode"></i>
+					</span>					
+					</td>										
+					<td>{$v['category']}</td>
+					<td>{$v['region']}</td>	
+					<td class="td-status"><span class="label {if $v['status']=='1'}label-success{else}label-default{/if} radius">{$v['statustxt']}</span></td>									
+					<td>
+					{if $rights['edit'] == 1}	
+					<a href="javascript:;" onclick="myedit({$v['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="编辑" ><i class="fa fa-edit"></i> 编辑</a> {/if}
+					{if $rights['delete'] == 1}
+					<a href="javascript:;" onclick="mydel(this,{$v['id']})" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="bottom" title="删除"><i class="fa fa-trash"></i> 删除</a>{/if}			
+					{if $_W['uid']}<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#formModal{$v['id']}">链接地址</button>
+						<div class="modal fade" id="formModal{$v['id']}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-lg">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+										<h4 class="modal-title">链接地址</h4>
+									</div>
+									<div class="modal-body" style="white-space:normal;">					
+										{$v['url']}	
+									</div>
+								</div>
+							</div>
+						</div>
+					{/if}
+					</td>					
+				</tr>
+			{/loop}				
+		</table>
+	  </div>    	  
+	</div>	
+  </div>
+
+{template 'web/_iframe_footer'}
+{template 'web/_bottom1'}
+
+<script type="text/javascript">
+/*全选*/
+function myallselect(select){ 
+
+	var obj = document.getElementsByName('myselect'); 
+	var tempsta = select.checked; 
+	
+	for(var k in obj){ 
+		if (obj[k].checked != tempsta) {      
+		     $("#myselect_"+k).prop("checked", tempsta);  
+		}
+	}	
+}	
+/*删除所选*/
+function mydelselect(){   
+	var count = parseInt($("#count").html());
+	if (count == 0){
+		return;
+	}
+
+	var obj = document.getElementsByName('myselect'); //选择所有name="myselect" id="myselect_{$k}" 的对象，返回数组 
+	var i = 0;
+	for(var j in obj){ 
+		if (obj[j].checked) {//如果选中,则删除   
+			i++;
+		}
+	}
+	
+	if (i==0){
+		layer.msg('请选择要删除的对象.',{icon:0});
+	   return ;
+	}
+	layer.confirm('将删除下属所有相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		//取到对象数组后，循环检测它是不是被选中 
+			//取到对象数组后，循环检测它是不是被选中 
+		layer.load(1);
+		layer.close(index);
+		for(var k in obj){ 
+			if (obj[k].checked) {//如果选中,则删除                
+				$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+				{op:"delete",id:obj[k].value},
+				function(data,status){
+					 if (data=='ok'){
+					 }
+					 else{
+						layer.msg(data,{icon:0});
+						return false;
+					 }
+				});		
+			}
+		}
+		setTimeout(function(){
+			 layer.closeAll();
+			 location.reload();
+		  },5000);	
+	});
+}
+/*新增*/
+function myadd(cate){
+    var url = "{php echo $this->createWeburl($mydo,array('op'=>'add')).$mywe['direct'];}"+ "&cate=" + cate;
+	window.location.href = url;
+}
+/*删除*/
+function mydel(obj,id){
+	layer.confirm('将删除下属所有相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+	function(index){
+		$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+			{op:"delete",id:id},
+			function(data,status){
+			 if (data=='ok'){
+				$(obj).parents("tr").remove();
+				var count = $("#count").html();
+				$("#count").html(count - 1);
+				layer.msg('删除成功!',{icon:1});
+			 }
+			 else{
+				layer.msg(data,{icon:0});
+			 }
+		});		
+		layer.close(index);
+    });
+}
+/*编辑*/
+function myedit(id){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'edit')).$mywe['direct'];}" + "&id=" + id;
+	window.location.href = url;
+}
+
+function mypost(id){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'postlist1')).$mywe['direct'];}" + "&id=" + id;
+	window.location.href = url;
+}
+
+function mycondition(obj){
+    var mycon = $("#mycon").val();
+	var html = '';
+	if (mycon==1){
+		html = '<i class="fa fa-angle-double-up"></i> 隐藏筛选';
+		$("#mycon").val("2");
+		$("#mycollapse").show("slow");
+	}
+	else {
+		html = '<i class="fa fa-angle-double-down"></i> 筛选条件';
+		$("#mycon").val("1");
+		$("#mycollapse").hide("slow");
+	}
+	$(obj).html(html);
+}
+
+
+$('[data-toggle="popover"]').popover({
+	container: $(document.body)
+});
+
+</script>
+</body>
+</html>

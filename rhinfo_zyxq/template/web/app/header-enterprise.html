@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html">
+	<meta keyword="">
+	<title>首页</title>
+	<link rel="stylesheet" href="{MODULE_URL}template/styles/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{MODULE_URL}template/styles/css/common.css">
+	<script src="{MODULE_URL}template/styles/js/jquery-1.11.1.min.js"></script>
+	<script src="{MODULE_URL}template/styles/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="header">
+	<div class="container flex">
+		<div class="nav-left">
+			{if !empty($setting['flogo'])}
+			<img src="{$_W['attachurl']}{$setting['flogo']}" alt="" class="img-responsive logo">
+			{else}
+			<img src="{MODULE_URL}template/styles/images/logo.png" alt="" class="img-responsive logo">
+			{/if}
+		</div>
+		<div class="nav-right">
+			<a {if empty($_GPC['do']) || $_GPC['do'] == 'fengmian'}class="active"{/if} href="{php echo url('entry/webapp/Fengmian', array('eid' => $_GPC['eid'], 'm' => 'we7_enterprise'))}">首页</a>
+			<a {if $_GPC['do'] == 'list' || $_GPC['do'] == 'detail'}class="active"{/if} href="{php echo url('entry/webapp/list', array('eid' => $_GPC['eid'], 'm' => 'we7_enterprise'))}">新闻资讯</a>
+			<a {if $_GPC['do'] == 'about'}class="active"{/if} href="{php echo url('entry/webapp/about', array('eid' => $_GPC['eid'], 'm' => 'we7_enterprise'))}">关于我们</a>
+		</div>
+	</div>
+</div>

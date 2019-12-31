@@ -1,0 +1,44 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+<div class="panel panel-default" style="padding-top:30px;">
+    <div class="panel-body">    
+		{template 'web/'.$mydo.'/exportthreeform'}
+		<div class="col-lg-9 col-xs-12 col-sm-offset-2" style="margin-top:8px;">   
+		   <a href="javascript:;" class="btn btn-primary"  onclick="mysubmit(this)"><i class="fa fa-save"></i> 导出<a/>
+		   <a href="javascript:;" class="btn btn-default"  onclick="myreturn()"><i class="fa fa-reply"></i> 返回列表<a/>		
+		</div>
+</div>
+
+{template 'web/_layer_footer'}
+
+<script type="text/javascript">
+
+function mysubmit(obj){
+	var id = $.trim($("#id").val());
+	var title = $.trim($("#title").val());
+	var pid = $("#pid").find("option:selected").val();
+	var rid = $("#rid").find("option:selected").val(); 
+    
+	if (pid=='0') {
+	   layer.msg("所属物业不能为空！",{icon:0});
+	   return;
+	}
+	
+	if (rid=='0') {
+	   layer.msg("小区或商圈不能为空！",{icon:0});
+	   return;
+	}
+
+	$("#myform").submit();	
+	
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'three')).$mywe['direct'];}";
+	 location.href = url;
+}
+
+</script> 
+
+</body>
+</html>

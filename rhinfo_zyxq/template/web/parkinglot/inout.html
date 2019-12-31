@@ -1,0 +1,181 @@
+﻿{template 'web/_layer_header'}
+{template 'web/_navtitle1'}
+
+<div class="panel panel-default" style="padding-top:50px;">
+    <div class="panel-body">    
+		<form action="" class="form-horizontal form" method="post" role="form" enctype="multipart/form-data" id="myform" >
+			<input type="hidden" name="token" value="{$_W['token']}" />		   
+			<input type="hidden" id="lotid" value="{$parkinglot['id']}" name="lotid" />
+			<input type="hidden" name="io" value="{$io}" />	
+			<div class="form-group">
+				<label class="col-sm-2 col-md-2 col-xs-12 control-label"><span class="text-danger">*</span>停车场名称</label>
+				<div class="col-sm-6 col-lg-7 col-xs-12">
+					<input type="text" class="form-control" disabled value="{$region['title']}-{$parkinglot['title']}" />	
+				</div>
+			</div>	
+			{if empty($list)}
+			<div class="form-group">
+				<input type="hidden" name="ioid[]" value="0" >
+				<input type="hidden"  name="status[]" value="1" > 
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">{php echo $io==1?'入口设置':'出口设置';}</label>
+				<div class="col-sm-6 col-lg-7 col-xs-12">					
+					<div class="input-group">
+						<span class="input-group-addon">{php echo $io==1?'入口':'出口';}名称</span>
+						<input type="text" class="form-control"  value="" placeholder="输入{php echo $io==1?'入口':'出口';}名称" name="title[]">
+						{if $parkinglot['parktype']==1}
+						<span class="input-group-addon">通道编号</span>
+						<input type="text" class="form-control" value="" placeholder="输入通道编号" name="pc_ioid[]">
+						{else}
+						<span class="input-group-addon">控制编号</span>
+						<input type="text" class="form-control" value="" placeholder="输入控制编号" name="locksn[]">
+						{/if}
+						<span class="input-group-btn">
+							<button class="btn btn-warning" type="button" onclick="mydelete(this,0)" ><i class="fa fa-close"></i></button>
+							<button class="btn" type="button"><i class="fa fa-qrcode" style="color:#ccc;"></i></button>
+						</span>
+					</div>
+				</div>
+			</div>
+			{else}
+				{loop $list $item}
+					<div class="form-group">
+						<input type="hidden" name="ioid[]" value="{$item['id']}" >
+						<input type="hidden"  name="status[]" value="{$item['status']}" > 
+						<label class="col-xs-12 col-sm-2 col-md-2 control-label">{php echo $io==1?'入口设置':'出口设置';}</label>
+						<div class="col-sm-6 col-lg-7 col-xs-12">					
+							<div class="input-group">
+								<span class="input-group-addon">{php echo $io==1?'入口':'出口';}名称</span>
+								<input type="text" class="form-control"  value="{$item['title']}" placeholder="输入{php echo $io==1?'入口':'出口';}名称" name="title[]">
+								{if $parkinglot['parktype']==1}
+								<span class="input-group-addon">通道编号</span>
+								<input type="text" class="form-control" value="{$item['pc_ioid']}" placeholder="输入通道编号" name="pc_ioid[]">
+								{else}
+								<span class="input-group-addon">控制编号</span>
+								<input type="text" class="form-control" value="{$item['locksn']}" placeholder="输入控制编号" name="locksn[]">
+								{/if}
+								<span class="input-group-btn">
+									<button class="btn btn-warning" type="button" onclick="mydelete(this,{$item['id']})" ><i class="fa fa-close"></i></button>
+									<button class="btn btn-success" style="cursor: pointer;" data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img src='{$item['qrcode']}' width='130' alt='链接二维码'>" data-placement="auto right">
+									<a href="{$item['qrcode']}" target="_blank" style="color:#fff;"><i class="fa fa-qrcode"></i></a>
+									</button>		
+								</span>
+							</div>
+							{if $region['pc_type']=='8'}
+							<div class="help-block">推送地址：{php echo $this->syscfg['siteurl'].'addons/rhinfo_zyxq/vzicar.php?i='.$mywe['weid'].'&ioid='.$item['id'];}&nbsp;<a class="js-clip" href="javascript:;" data-url="{php echo $this->syscfg['siteurl'].'addons/rhinfo_zyxq/vzicar.php?i='.$mywe['uniacid'].'&ioid='.$item['id'];}">复制链接</a></div>
+							{/if}
+						</div>
+					</div>
+				{/loop}
+			{/if}
+		    <div id="cateitems"></div>				
+		</form>	
+		<div class="col-lg-9 col-xs-12 col-sm-offset-2" style="margin-top:8px;">  
+			<a href="javascript:;" class="btn btn-primary"  onclick="myadd()"><i class="fa fa-plus"></i> 添加</a>
+		   <a href="javascript:;" class="btn btn-success"  onclick="mysave(this)"><i class="fa fa-save"></i> 保存</a>
+		   <a href="javascript:;" class="btn btn-default"  onclick="myreturn()"><i class="fa fa-reply"></i> 返回</a>
+		</div>
+    </div>
+</div>
+
+{template 'web/_layer_footer'}
+
+<script type="text/javascript">
+function mysave(obj){
+	var url = "{php echo $this->createWeburl($mydo,array('op'=>'list')).$mywe['direct'];}";
+	var title='';
+    var i=0, j=0;
+    $('input[name="title[]"]').each(function(){  
+	    title=$(this).val();
+		j++;
+		if (title=='') {
+			layer.msg("第"+j+"行{php echo $io==1?'入口':'出口';}名称不能为空！",{icon:0});
+			i++
+			return false;
+		}		
+    });
+	if(i==0 && j>0){
+		myprocess(obj);
+		$.post("{php echo $this->createWebUrl($mydo,array('op'=>$_GPC['op'])).$mywe['direct'];}",
+			$("#myform").serializeObject(),
+			function(data,status){
+				 if (data=='ok'){
+					layer.msg('提交成功！',{icon:1});				
+					location.href = url;
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+					$(obj).html('<i class="fa fa-check"></i> 提交'); 
+					$(obj).removeAttr("disabled"); 
+				 }
+			});  
+	}
+	else{
+		layer.msg("没有输入内容呢！",{icon:0});
+	    return;
+	}
+}
+
+function myadd(){	
+	var html ='<div class="form-group"><input type="hidden" name="ioid[]" value="0" >\
+		<input type="hidden"  name="status[]" value="1" >\
+		<label class="col-xs-12 col-sm-2 col-md-2 control-label">{php echo $io==1?"入口设置":"出口设置";}</label>\
+		<div class="col-sm-6 col-lg-7 col-xs-12">\
+		<div class="input-group"><span class="input-group-addon">{php echo $io==1?"入口":"出口";}名称</span>\
+		<input type="text" class="form-control"  value="" placeholder="输入{php echo $io==1?"入口":"出口";}名称" name="title[]">\
+		{if $parkinglot["parktype"]==1}\
+		<span class="input-group-addon">通道编号</span>\
+		<input type="text" class="form-control" value="" placeholder="输入通道编号" name="pc_ioid[]">\
+		{else}\
+		<span class="input-group-addon">控制编号</span>\
+		<input type="text" class="form-control" value="" placeholder="输入控制编号" name="locksn[]">\
+		{/if}\
+		<span class="input-group-btn">\
+			<button class="btn btn-warning" type="button" onclick="mydelete(this,0)" ><i class="fa fa-close"></i></button>\
+			<button class="btn" type="button"><i class="fa fa-qrcode" style="color:#ccc;" ></i></button>\
+		</span></div></div></div>';
+	 $('#cateitems').append(html);
+}
+
+function mydelete(obj,id){
+	if(id>0){
+		layer.confirm('将删除相关内容，确认要删除吗？',{icon: 3, title:'提示'},
+		function(index){
+			$.post("{php echo $this->createWebUrl($mydo).$mywe['direct'];}",
+				{op:"iodel",id:id},
+				function(data,status){
+				 if (data=='ok'){
+					$(obj).parents(".form-group").remove();
+					layer.msg('删除成功!',{icon:1});
+				 }
+				 else{
+					layer.msg(data,{icon:0});
+				 }
+			});		
+			layer.close(index);
+		});
+	}
+	else{
+		$(obj).parents(".form-group").remove();
+	}
+}
+
+function myreturn(){
+	 var url = "{php echo $this->createWeburl($mydo,array('op'=>'list')).$mywe['direct'];}";
+	 location.href = url;
+}
+function myprocess(obj){
+	var html = '<img src="../addons/rhinfo_zyxq/static/web/images/loading-s.gif" style="width:15px;height:15px;"/> 处理中...';
+	$(obj).html(html);  
+	$(obj).attr("disabled", "disabled"); 
+}
+$('.js-clip').each(function(){
+	util.clip(this, $(this).attr('data-url'));
+});	
+
+$('[data-toggle="popover"]').popover({
+	container: $(document.body)
+});
+</script> 
+
+</body>
+</html>

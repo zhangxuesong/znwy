@@ -1,0 +1,105 @@
+{template $this->mytpl('_header')}
+<style>
+.fui-cell-group .fui-cell .fui-cell-label {	
+	width: 6rem;
+}
+.fui-cell-group:not(.fui-cell-group-o):before{border-top:0px;}
+.fui-cell-group:after{border-bottom:0px;}
+</style>
+<div class='fui-page  fui-page-current member-cart-page'>
+    <div class="fui-header">
+	<div class="fui-header-left">
+	    <a class="back"></a>
+	</div>
+	<div class="title">我的账单</div> 
+	<div class="fui-header-right">{if $list}<a href="{php echo $this->CreateMobileUrl('member',array('op'=>'myhisfeebill','pid'=>$_GPC['pid'],'rid'=>$_GPC['rid'],'bid'=>$_GPC['bid'],'tid'=>$_GPC['tid'],'hid'=>$_GPC['hid']));}">历史</a>{/if}</div>
+    </div>
+
+    <div class='fui-content navbar' >
+    {if empty($list)}
+		<div class='content-empty'>
+			 <i class='icon icon-money'></i><br/>您还没有任何待缴账单<br/>	
+			<a href="{php echo $this->CreateMobileUrl('member',array('op'=>'myhisfeebill','pid'=>$_GPC['pid'],'rid'=>$_GPC['rid'],'bid'=>$_GPC['bid'],'tid'=>$_GPC['tid'],'hid'=>$_GPC['hid']));}" class='btn btn-default-o external'>看看历史账单吧</a>			 
+		</div>
+	{else}
+	<div class="fui-cell-group" style="margin-top:0;">		
+		<div class="fui-cell">			
+			<div class="fui-cell-info"><i class="icon icon-city"></i> {$member['address']}</div>					
+		</div>	
+		<div class="fui-cell-tip" >温馨提示：{if $region['feecontrol']==2}不可选择性缴费.{else}如需选择缴费，请从下往上选择取消.{/if}<br>{if $iscreditpay && $creditset['mycredit']>0 && $creditcost>0}可用积分：<font style="color:red;">{$creditset['mycredit']}</font>，{$creditset['paycredit']}积分可抵扣{$creditset['paycost']}元，不超过总金额的{$creditset['payrate']}%.{/if}</div>
+		{if $member['category']==1 || !empty($room['buildarea'])}
+		<div class="fui-cell">
+				<div class="fui-cell-label">建筑面积</div>
+				<div class="fui-cell-info">{$room['buildarea']}</div>				
+		</div>
+		<div class="fui-cell">
+				<div class="fui-cell-label">使用面积</div>
+				<div class="fui-cell-info">{$room['usearea']}</div>				
+		</div>
+		<div class="fui-cell">
+				<div class="fui-cell-label">附加面积</div>
+				<div class="fui-cell-info">{$room['addarea']}</div>				
+		</div>
+		{/if}
+		
+		{loop $list $i $item}						
+			<div class="fui-cell">			
+				<div class="fui-cell-label">{$item['title']}{if $item['feetype']==3}公摊{/if}</div>
+				<div class="fui-cell-info">{php echo $item['fee'] + $item['latefee'];}元</div>	
+				<div class="fui-cell-remark noremark feebill-item" style="padding-right:20px;" data-billid="{$item['id']}" data-fee="{$item['fee']}" data-latefee="{$item['latefee']}" >{if $item['price']>0}{$item['price']}元/{$item['measure']}{/if}
+				&nbsp;&nbsp;{if $region['feecontrol']==2}{else}<input type="checkbox" name="checkbox" id="fee{$i}" {if $i + 1 < count($list)}disabled{/if} class="fui-radio fui-radio-danger check-item" checked />{/if}</div>					
+			</div>				
+			<div class="fui-cell-tip" >	
+			交费周期：{$item['daterange']}	{if $item['latefee']>0}含违约金：<font class="text-danger">{$item['latefee']}</font>{/if}
+			{if $item['feetype']==2}&nbsp;用量：{$item['threeqty']}	上期期读数：{$item['startqty']}&nbsp;本期读数：{$item['endqty']}
+			{/if}
+			</div>				
+		{/loop}
+		
+		<div class="fui-cell" style="display:none;">
+			<div class="fui-cell-title">
+			总计：<span class="text-danger" id="totalfee1">￥{$totalfee}</span>
+			</div>			
+		</div>		
+	</div>
+	 {/if}
+    </div>
+	 {if !empty($list)}
+		{if $region['isonlinepay']==1}
+		 <div class='fui-navbar'>
+			<div class='nav-item'>总计：<span class="text-danger" id="totalfee">￥{$totalfee}</span>	
+				<input type="hidden" id="iscreditpay" value="{$iscreditpay}" />
+				{if $iscreditpay && $creditset['mycredit']>0 && $creditcost>0}
+				<br>
+				<input type="hidden" id="paycredit" value="{$creditset['paycredit']}" />
+				<input type="hidden" id="paycost" value="{$creditset['paycost']}" />
+				<input type="hidden" id="payrate" value="{$creditset['payrate']}" />					
+				<input type="checkbox" name="mycredit" id="mycredit" value="{$creditset['mycredit']}" style="vertical-align:top;"/> <label for="mycredit" style="vertical-align:top;font-size:0.7rem;" id="mylabel">使用积分可抵扣<font style="color:red;vertical-align:top;">{$creditcost}</font>元</label>
+				{/if}				 
+			</div>			
+			<a id="billpay" class='nav-item btn btn-danger external' data-nocache="true"><i class="icon icon-money"></i> 结算</a>
+		</div>
+		 <script language='javascript'>
+			 require(['member/fee'], function (modal) {
+					modal.init({totalfee:"{$totalfee}",billids:"{$billid}",count:"{php echo count($list);}",creditfee:"{php echo $creditcost;}",iswap:"{php echo $this->rhinfo_wap?1:0;}"});									
+			});
+		</script>
+		{else}
+		<div class='fui-navbar'>
+			<div class='nav-item'>总计：<span class="text-danger" id="totalfee">￥{$totalfee}</span>	
+				<input type="hidden" id="iscreditpay" value="{$iscreditpay}" />
+				{if $iscreditpay && $creditset['mycredit']>0 && $creditcost>0}
+				<br>
+				<input type="hidden" id="paycredit" value="{$creditset['paycredit']}" />
+				<input type="hidden" id="paycost" value="{$creditset['paycost']}" />
+				<input type="hidden" id="payrate" value="{$creditset['payrate']}" />					
+				<input type="checkbox" name="mycredit" id="mycredit" value="{$creditset['mycredit']}" style="vertical-align:top;"/> <label for="mycredit" style="vertical-align:top;font-size:0.7rem;" id="mylabel">使用积分可抵扣<font style="color:red;vertical-align:top;">{$creditcost}</font>元</label>
+				{/if}				 
+			</div>			
+			<a  class='nav-item btn btn-danger external' data-nocache="true"><i class="icon icon-money"></i> 暂未开通支付</a>
+		</div>
+		{/if}
+	{/if}
+</div>
+
+{template $this->mytpl('_footer')}

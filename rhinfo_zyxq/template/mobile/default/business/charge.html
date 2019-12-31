@@ -1,0 +1,371 @@
+{template $this->mytpl('_pheader')}
+
+<style>
+#weiKeyBoard {
+    border-spacing: 0px;
+    height: 40%;
+    width: 100%;
+    background-color: #ffffff;
+    position: absolute;
+    bottom: -100%;
+    left: 1px;
+    right: 0px;
+
+    -moz-transition-duration: 300ms;
+    -webkit-transition-duration: 300ms;
+    transition-duration: 300ms;
+    -webkit-transform: translate3d(0, 0, 0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+#weiKeyBoard.in {
+    bottom: 0px;
+}
+
+#weiKeyBoard tr {
+}
+
+#weiKeyBoard td {
+    border-left: 1px solid #f2f2f2;
+    font-size: 21pt;
+    border-spacing: 0px;
+    border-top: 1px solid #f2f2f2;
+    color:#555;
+}
+
+#weiKeyBoard td.weiKeyNum {
+    width: 25%;
+    height: 50px;
+    text-align: center;
+	vertical-align:middle;
+}
+#weiKeyBoard td.weiKeyNum img{
+    height:1.2rem;
+	margin-top:0.5rem;
+	margin-bottom:0;
+	opacity:0.7;
+}
+#weiKeyBoard td.weiKeyNum1 {
+    width: 25%;
+    text-align: center;
+    border: none;
+}
+input[type=radio] {
+    display: inline-block;
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: 0;
+    outline: 0 !important;
+    line-height: 20px;
+    color: #d8d8d8;
+}
+input[type=radio]:after {
+    content: "";
+    display:block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 14px;
+    font-size: 16px;
+    color: #fff;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    box-sizing:border-box;
+}
+input[type=radio]:checked:after {
+    content: "L";
+    transform:matrix(-0.766044,-0.642788,-0.642788,0.766044,0,0);
+    -webkit-transform:matrix(-0.766044,-0.642788,-0.642788,0.766044,0,0);
+    border-color: #04ab02;
+    background-color: #04ab02;
+}
+
+.pay-page {
+    background: #ff3f3;
+    margin: 0;
+    position: absolute;
+    top: 2.2rem;
+}
+
+.pay-page .headinfo {
+    position: relative;
+    height: auto;   
+    padding-top: 1rem;
+	background: #fff;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+	text-align: center;
+}
+
+.pay-page .headinfo .setbtn {
+    height: 1.2rem;
+    width: 1.2rem;
+    position: absolute;
+    top: 0.2rem;
+    right: 0.5rem;
+    font-size: 1.2rem;
+    color: #fff;
+    line-height: 1.2rem;
+    text-align: center;
+}
+
+.pay-page .headinfo .child {
+    width: 100%;
+    height: auto;
+    padding-bottom: 1.2rem;
+    text-align: center;
+}
+
+.pay-page .headinfo .child.userinfo {
+    width: 100%;
+    color: #fff;
+}
+
+.pay-page .headinfo .child.userinfo .face {
+    height: 3.2rem;
+    width: 3.2rem;
+    background: #fff;
+    margin: auto;
+    border-radius: 0.5rem;
+    border: 0.1rem solid #fff;
+}
+
+.pay-page .headinfo .child.userinfo .face img {
+    height: 3rem;
+    width: 3rem;
+    border-radius: 0.5rem;
+    display: block;
+}
+.pay-page .headinfo .child.userinfo .name {
+    height: 1rem;
+    padding-top: 0.2rem;
+    font-size: 0.6rem;
+    color: #666;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.pay-page .headinfo .child.userinfo .face.radius{
+    border-radius: 0.5rem;
+}
+.pay-page .headinfo .child.userinfo .face.radius img{
+    border-radius: 0.5rem;
+}
+.fui-cell-group:not(.fui-cell-group-o):before,.fui-cell-group .fui-cell:before{border-top:0px;}
+.fui-cell-group:after {border-bottom:0px;}
+
+</style>
+
+<div class='fui-page  fui-page-current'>
+    <div class="fui-header">
+        <div class="fui-header-left">
+            <a class="back"></a>
+        </div>
+        <div class="title">收银台</div>
+        <div class="fui-header-right"></div>
+    </div>
+
+    <div class='fui-content pay-page'>
+		<div class="headinfo" >			
+			<div class="child userinfo">
+				<div class="face">{if !empty($business['thumb'])}<img src="{php echo tomedia($business['thumb']);}" />{/if}</div>
+				<div class="name">{$business['title']}</div>
+				<div class="level" ></div>
+			</div>
+		</div>
+
+        <div class="fui-cell-group">
+			<input type="hidden" name="id" id="businessid" value="{$_GPC['id']}" />
+            <div class="fui-cell">
+                <div class="fui-cell-label">实付金额</div>
+                <div class="fui-cell-info"></div>
+				<div class="fui-cell-remark noremark">
+				<input style="height:1.5rem;font-size:0.85rem;color:#666;text-align:right;" type="text" placeholder="请输入支付金额" class="fui-input" id="money" readonly value="" />
+				</div>
+            </div>
+			<div class="fui-cell noactive">
+                <div class="fui-cell-label ">扫码收款</div>
+                <div class="fui-cell-info">
+                    <input type="checkbox" class="fui-switch fui-switch-small fui-switch-success pull-right" name="isscan" checked id="isscan"/>
+                </div>
+            </div>
+			<div class="fui-cell" id="paytype" style="display:none;">
+				<div class="fui-cell-label">支付方式</div>
+				<div class="fui-cell-info">
+					<input type="radio" name="paytype" value="9" checked />现金
+					<input type="radio" name="paytype" value="3" />银联刷卡									
+				</div>				
+			</div>	
+        </div>
+    </div>
+	    <table id="weiKeyBoard">
+        <tbody>
+        <tr>
+            <td class="weiKeyNum">1</td>
+            <td class="weiKeyNum">2</td>
+            <td class="weiKeyNum">3</td>
+            <td value="back" class="weiKeyNum"><img src="../addons/rhinfo_zyxq/static/mobile/images/backspace.png"/></td>
+        </tr>
+        <tr>
+            <td class="weiKeyNum">4</td>
+            <td class="weiKeyNum">5</td>
+            <td class="weiKeyNum">6</td>
+
+            <td rowspan="3" class="weiKeyNum1" style="background: #04be02;color: #fff;" id="btn-pay">收款</td>
+        </tr>
+        <tr>
+            <td class="weiKeyNum">7</td>
+            <td class="weiKeyNum">8</td>
+            <td class="weiKeyNum">9</td>
+        </tr>
+        <tr>
+            <td class="weiKeyNum" style="padding: 0" id="firstTd"><i class="icon icon-sanjiao1" style="font-size: 1rem"></i></td>
+            <td class="weiKeyNum">0</td>
+            <td class="weiKeyNum">.</td>
+        </tr>
+        </tbody>
+    </table> 
+	<script language="javascript">
+		$(function () {
+			var $money = $("#money");
+			var weiKeyBoard = $("#weiKeyBoard");
+			var weiKeyNum = $(".weiKeyNum");
+			$money.click(function (e) {
+				var $this = $(this);
+				weiKeyBoard.addClass('in');
+			});
+			$("#firstTd").click(function () {
+				weiKeyBoard.removeClass('in');
+			});
+			weiKeyNum.on('touchstart', function () {
+				var $this = $(this);
+				$(this).css( {"background-color": "#f8f8f8",'color':'#333333'});
+				if ($this.attr('value') == 'back'){
+					$money.val($money.val().substring(0, $money.val().length - 1));
+				}
+				if ($this.text()){
+					if ($this.text() == '.'){
+						if ($money.val().indexOf('.') != -1){
+							return;
+						}
+					}
+					var newValue = $money.val() + $this.text();
+
+					if (newValue != -1){
+						var str = newValue.split('.');
+						if (typeof str[1] != 'undefined' && str[1].length>2){
+							return;
+						}
+					}
+
+					$money.val(newValue);
+
+				}
+			});
+			weiKeyNum.on('touchend', function () {
+				var $this = $(this);
+				$(this).css({"background-color":"#ffffff","color":"#555"});
+			});
+			$money.trigger('click');
+		});
+	</script>
+
+</div>
+
+<script language="javascript">	
+	$("#isscan").on('click',function () {
+		var ischecked=$('#isscan').is(':checked');
+		if(ischecked){
+			$('#paytype').hide();
+		}
+		else{
+			$('#paytype').show();
+		}
+	});
+
+	$("#btn-pay").on('click',function () {
+		var money = $.trim( $("#money").val());
+		if (isNaN(money) || money<=0){
+			RhUI.toast.show('输入金额有误!');
+			return;
+		}
+		var bid = $.trim( $("#businessid").val());
+		var isscan = 0;
+		var ischecked=$('#isscan').is(':checked');
+		if(ischecked) isscan = 1;
+		var paytype = $.trim($("input[name=paytype]:checked").val());			
+		if(isscan ==0){
+			RhUI.confirm('确认收款金额为: ' + money + " 元?",'收款确认',function(){					
+				 core.json('business/charge', {id:bid,payfee:money,isscan:isscan,paytype:paytype}, function (json) {
+					if (json.status == 1) {
+						RhUI.toast.show("收款成功");
+						location.href = core.getUrl('business/mindex') + '&id=' + bid;							
+					} else {
+						RhUI.toast.show(json.result.message);
+					}
+					return;
+				}, true, true);
+			});
+		}
+		else{
+			RhUI.confirm('确认收款金额为: ' + money + " 元?",'收款确认',function(){
+				wx.ready(function () {					
+					wx.scanQRCode({
+						needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+						scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+						success: function (res) {
+							RhUI.defaults.loaderText = '支付结果等待中!';
+							RhUI.loader.show('loading');
+							var result = res.resultStr.replace('CODE_128,',''); // 当needResult 为 1 时，扫码返回的结果
+							core.json('business/charge', {id:bid,payfee:money,isscan:isscan,paytype:paytype,auth_code:result},function (json) {
+								if(json.status == 1){
+									RhUI.toast.show("收款成功");
+									location.href = core.getUrl('business/mindex') + '&id=' + bid;									
+								}
+								else {
+									RhUI.loader.hide();
+									RhUI.alert(json.result.message);
+								}
+							},false,true);
+						}
+					});
+				});
+			});
+		}
+	});
+</script>
+
+<script language='javascript'>	
+	clearTimeout(window.interval);
+	window.interval = setTimeout(function () {    
+		jssdkconfig = {php echo json_encode($_W['account']['jssdkconfig']);} || { jsApiList:[] };
+		jssdkconfig.debug = false;
+		jssdkconfig.jsApiList = ['scanQRCode'];
+		wx.config(jssdkconfig);	
+		wx.ready(function () {
+			wx.hideOptionMenu();
+		});
+	},500);
+</script>
+</body>
+</html>
